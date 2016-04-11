@@ -20,9 +20,9 @@ public:
 protected:
 	bool InitDirect3D();
 	void createDeviceAndContext() throw(...);
+	// checks the quality level support for 4x MSAA
 	void check4xMsaaQualitySupp() throw(...);
-	void D3DHandler::describeSwapChain() throw(...);
-
+	void describeSwapChain() throw(...);
 
 	void CalculateFrameStats();
 protected:
