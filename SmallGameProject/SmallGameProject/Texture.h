@@ -4,7 +4,7 @@
 class Texture {
 
 private:
-
+		//Material struct should go here
 public:
 
 };
