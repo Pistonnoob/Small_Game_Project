@@ -21,6 +21,8 @@ protected:
 	bool InitDirect3D();
 	void createDeviceAndContext() throw(...);
 	void check4xMsaaQualitySupp() throw(...);
+	void D3DHandler::describeSwapChain() throw(...);
+
 
 	void CalculateFrameStats();
 protected:
