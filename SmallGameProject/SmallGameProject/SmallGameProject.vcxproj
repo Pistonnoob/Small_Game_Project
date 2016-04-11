@@ -146,7 +146,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Command.cpp" />
+    <ClCompile Include="D3DHandler.cpp" />
+    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GameStateHandler.cpp" />
+    <ClCompile Include="GraphicHandler.cpp" />
+    <ClCompile Include="HubState.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="MoveDownCommand.cpp" />
+    <ClCompile Include="MoveLeftCommand.cpp" />
+    <ClCompile Include="MoveRightCommand.cpp" />
+    <ClCompile Include="MoveUpCommand.cpp" />
+    <ClCompile Include="StageState.cpp" />
+    <ClCompile Include="StartState.cpp" />
+    <ClCompile Include="System.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Command.h" />
+    <ClInclude Include="D3DHandler.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStateHandler.h" />
+    <ClInclude Include="GraphicHandler.h" />
+    <ClInclude Include="HubState.h" />
+    <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="MenuState.h" />
+    <ClInclude Include="MoveDownCommand.h" />
+    <ClInclude Include="MoveLeftCommand.h" />
+    <ClInclude Include="MoveRightCommand.h" />
+    <ClInclude Include="MoveUpCommand.h" />
+    <ClInclude Include="StageState.h" />
+    <ClInclude Include="StartState.h" />
+    <ClInclude Include="System.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
