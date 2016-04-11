@@ -1,7 +1,9 @@
 #ifndef PROJECTILEHANDLER_H
 #define PROJECTILEHANDLER_H
 
-class ProjectileHandler {
+#include "Observer.h"
+
+class ProjectileHandler : public Observer {
 
 private:
 
