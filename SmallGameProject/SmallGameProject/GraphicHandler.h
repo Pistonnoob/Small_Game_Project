@@ -1,8 +1,10 @@
 #ifndef GRAPHICHANDLER_H
 #define GRAPHICHANDLER_H
 
-class GraphicHandler {
 
+
+class GraphicHandler 
+{
 private:
 
 public:

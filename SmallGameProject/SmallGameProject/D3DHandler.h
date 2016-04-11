@@ -6,6 +6,9 @@
 
 #include <D3D11.h>
 #include <windows.h>
+#include <string>
+
+using namespace std;
 
 
 class D3DHandler 
@@ -16,7 +19,8 @@ public:
 
 protected:
 	bool InitDirect3D();
-	bool createDeviceAndContext();
+	void createDeviceAndContext() throw(...);
+	void check4xMsaaQualitySupp() throw(...);
 
 	void CalculateFrameStats();
 protected:
@@ -33,9 +37,11 @@ protected:
 
 	D3D_DRIVER_TYPE clientDriverType;
 	D3D_FEATURE_LEVEL featureSupport;
+	
 	int clientWidth;
 	int clientHeight;
 
+	UINT m4xMsaaQuality;
 	bool msaa4xEnabled;
 };
 

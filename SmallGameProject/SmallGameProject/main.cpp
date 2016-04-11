@@ -1,7 +1,8 @@
+#include "D3DHandler.h"
 
-
-int main() {
-
+int main() 
+{
+	D3DHandler test = D3DHandler();
 
 
 

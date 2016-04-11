@@ -1,20 +1,38 @@
 #include "D3DHandler.h"
+#include <iostream>
+#include <assert.h> 
 
 D3DHandler::D3DHandler()
 {
+
 	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
 	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
+
+	try
+	{
+		createDeviceAndContext();
+		check4xMsaaQualitySupp();
+	}
+	catch (char* errorMessage)
+	{
+		cout << errorMessage << endl;
+	}
+
 }
 
 D3DHandler::~D3DHandler()
 {
 }
 
-bool D3DHandler::createDeviceAndContext()
+void D3DHandler::createDeviceAndContext() throw(...)
 {
-	HRESULT result;
+	HRESULT resultHelper;
+	bool result = true;
 	D3D_FEATURE_LEVEL featureLevel;
-	HRESULT hr = D3D11CreateDevice(
+	string errorMessage;
+
+
+	resultHelper = D3D11CreateDevice(
 		0,							// default adapter
 		this->clientDriverType,		// D3D_DRIVER_TYPE_HARDWARE, created in the default constructor
 		0,							// no software device
@@ -22,24 +40,44 @@ bool D3DHandler::createDeviceAndContext()
 		0, 
 		0,						// default feature level array
 		D3D11_SDK_VERSION,
-		&md3dDevice,
+		&this->gDevice,
 		&featureLevel,
-		&md3dImmediateContext);
+		&this->gDeviceContext);
 
-	if (FAILED(hr))
+	if (FAILED(resultHelper))
 	{
-		MessageBox(0, L"D3D11CreateDevice Failed.", 0, 0);
-		return false;
+		errorMessage = "D3D11CreateDevice Failed.";
+		result = false;
 	}
 
 	if (featureLevel != D3D_FEATURE_LEVEL_11_0)
 	{
-		MessageBox(0, L"Direct3D Feature Level 11 unsupported.", 0, 0);
-		return false;
+		errorMessage = "Direct3D Feature Level 11 unsupported. I messed up featurelevel somehow";
+		result = false;
 	}
+	if (result == false)
+	{
+		throw(errorMessage);
+	}
+}
 
+void D3DHandler::check4xMsaaQualitySupp() throw(...)
+{
+	string errorMessage = "Check4XMSAA quality support function error";
+	UINT sampleCount = 4;
+	HRESULT resultHelper;
 
+	resultHelper = this->gDevice->CheckMultisampleQualityLevels
+		(
+			DXGI_FORMAT_R8G8B8A8_UNORM,
+			sampleCount,
+			&this->m4xMsaaQuality
+		);
 
-	result = D3D11CreateDevice();
+	if(FAILED(resultHelper))
+	{
+		throw(errorMessage);
+	}
+	assert(m4xMsaaQuality > 0);
 }
 
