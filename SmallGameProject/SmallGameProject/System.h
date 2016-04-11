@@ -6,6 +6,8 @@
 #include "GraphicHandler.h"
 #include "InputHandler.h"
 
+const bool FULL_SCREEN = false;
+
 class System {
 
 private:
@@ -19,7 +21,7 @@ private:
 
 	void InitWindow(int& screenWidth, int& screenHeight);
 	void ShutdownWindow();
-	bool Frame(float);
+	bool Update(float dTime);
 
 public:
 	System();
@@ -29,10 +31,10 @@ public:
 	void Run();
 	void Shutdown();
 
-	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
+	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 };
 
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT unmessage, WPARAM wparam, LPARAM lparam);
 static System* ApplicationHandle = nullptr;
 
 #endif

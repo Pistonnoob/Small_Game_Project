@@ -2,18 +2,8 @@
 
 //#include <windows.h>
 #include "System.h"
-
 #include <stdio.h>
-#include <io.h>
-#include <fcntl.h>
 #include <crtdbg.h>
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <iostream>
-
-#pragma comment (lib, "d3d11.lib")
-#pragma comment (lib, "d3dcompiler.lib")
-
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
