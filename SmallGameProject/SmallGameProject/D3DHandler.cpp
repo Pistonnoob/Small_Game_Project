@@ -25,7 +25,7 @@ D3DHandler::~D3DHandler()
 	this->shutdown();
 }
 
-void D3DHandler::setWindowToEngine(HWND &setWindow) throw(...)
+void D3DHandler::SetWindowToEngine(HWND &setWindow) throw(...)
 {
 	this->activeWindow = &setWindow;
 	if (this->activeWindow == nullptr)
@@ -34,7 +34,7 @@ void D3DHandler::setWindowToEngine(HWND &setWindow) throw(...)
 	}
 }
 
-bool D3DHandler::initialize() throw(...)
+bool D3DHandler::Initialize() throw(...)
 {
 	std::string errorMessage;
 	bool result = true;
@@ -64,7 +64,7 @@ bool D3DHandler::initialize() throw(...)
 	return result;
 }
 
-void D3DHandler::createDeviceAndContext() throw(...)
+void D3DHandler::CreateDeviceAndContext() throw(...)
 {
 	HRESULT resultHelper;
 	bool result = true;
@@ -101,7 +101,7 @@ void D3DHandler::createDeviceAndContext() throw(...)
 	}
 }
 
-void D3DHandler::check4xMsaaQualitySupp() throw(...)
+void D3DHandler::Check4xMsaaQualitySupp() throw(...)
 {
 	std::string errorMessage = "Check4XMSAA quality support function error";
 	UINT sampleCount = 4;
@@ -121,7 +121,7 @@ void D3DHandler::check4xMsaaQualitySupp() throw(...)
 	assert(m4xMsaaQuality > 0);
 }
 
-DXGI_SWAP_CHAIN_DESC D3DHandler::describeSwapChain() throw(...)
+DXGI_SWAP_CHAIN_DESC D3DHandler::DescribeSwapChain() throw(...)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	swapChainDesc.BufferDesc.Width = this->clientWidth;
@@ -155,7 +155,7 @@ DXGI_SWAP_CHAIN_DESC D3DHandler::describeSwapChain() throw(...)
 	return swapChainDesc;
 }
 
-bool D3DHandler::createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...)
+bool D3DHandler::CreateSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...)
 {
 	HRESULT resultHelper;
 	bool result = true;
@@ -201,7 +201,7 @@ bool D3DHandler::createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...)
 	return result;
 }
 
-void D3DHandler::createRenderTargetViewDS() throw(...)
+void D3DHandler::CreateRenderTargetViewDS() throw(...)
 {
 	HRESULT resultHandler;
 	ID3D11Texture2D* backBuffer;
@@ -218,12 +218,12 @@ void D3DHandler::createRenderTargetViewDS() throw(...)
 	backBuffer->Release();
 }
 
-void D3DHandler::createDepthBufferAndView() throw(...)
+void D3DHandler::CreateDepthBufferAndView() throw(...)
 {
 
 }
 
-void D3DHandler::startUpValues()
+void D3DHandler::StartUpValues()
 {
 	this->gDevice			= nullptr;
 	this->gDeviceContext	= nullptr;
@@ -235,7 +235,7 @@ void D3DHandler::startUpValues()
 	this->mDepthStencilView		= nullptr;
 }
 
-void D3DHandler::shutdown()
+void D3DHandler::Shutdown()
 {
 	this->gSwapChain->Release();
 	this->gDeviceContext->Release();

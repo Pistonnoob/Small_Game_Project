@@ -15,28 +15,28 @@ public:
 	D3DHandler(HWND &window);
 	virtual ~D3DHandler();
 
-	void setWindowToEngine(HWND &setWindow) throw(...);
-	bool initialize() throw(...);
+	void SetWindowToEngine(HWND &setWindow) throw(...);
+	bool Initialize() throw(...);
 
 protected:
 	bool InitDirect3D();
-	void createDeviceAndContext() throw(...);
+	void CreateDeviceAndContext() throw(...);
 	// checks the quality level support for 4x MSAA
-	void check4xMsaaQualitySupp() throw(...);
+	void Check4xMsaaQualitySupp() throw(...);
 	
 	//swapChain
-	DXGI_SWAP_CHAIN_DESC describeSwapChain() throw(...);
-	bool createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...);
+	DXGI_SWAP_CHAIN_DESC DescribeSwapChain() throw(...);
+	bool CreateSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...);
 
 	//depth stencil
-	void createRenderTargetViewDS() throw(...);
-	void createDepthBufferAndView() throw(...);
+	void CreateRenderTargetViewDS() throw(...);
+	void CreateDepthBufferAndView() throw(...);
 
 	//setAllVariablestToNullPtr
-	void startUpValues();
+	void StartUpValues();
 	void CalculateFrameStats();
 
-	void shutdown();
+	void Shutdown();
 protected:
 	ID3D11Device* gDevice;
 	ID3D11DeviceContext* gDeviceContext;
