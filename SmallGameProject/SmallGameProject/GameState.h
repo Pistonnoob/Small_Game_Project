@@ -14,11 +14,11 @@ public:
 	GameState();	//This will initialize the GSH pointer to NULL
 	virtual ~GameState();
 
-	void InitializeBase(GameStateHandler* handler);
-	virtual int Initialize() = 0;
-
 	virtual void Shutdown();
 
+	int InitializeBase(GameStateHandler* GSH);
+	virtual int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH) = 0;
+	
 	virtual int HandleInput(InputHandler* input) = 0;
 	virtual int Update(float deltaTime) = 0;
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd) = 0;

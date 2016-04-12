@@ -13,3 +13,10 @@ void GameState::Shutdown()
 {
 	this->m_GSH = NULL;
 }
+
+int GameState::InitializeBase(GameStateHandler * GSH)
+{
+	int result = 1;
+	this->m_GSH = GSH;
+	return result;
+}
