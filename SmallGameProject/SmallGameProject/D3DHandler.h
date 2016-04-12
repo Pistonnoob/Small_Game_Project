@@ -12,11 +12,13 @@ class D3DHandler
 {
 public:
 	D3DHandler();
-	D3DHandler(HWND &window);
 	virtual ~D3DHandler();
 
 	void SetWindowToEngine(HWND &setWindow) throw(...);
-	bool Initialize() throw(...);
+	bool Initialize(HWND* window) throw(...);
+
+	ID3D11Device* GetDevice() const;
+	ID3D11DeviceContext* GetDeviceContext() const;
 
 protected:
 	bool InitDirect3D();

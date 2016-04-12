@@ -4,25 +4,12 @@
 
 D3DHandler::D3DHandler()
 {
-	this->startUpValues();
-
-	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
-	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
-	this->activeWindow = nullptr;
-}
-
-D3DHandler::D3DHandler(HWND & window)
-{
-	this->startUpValues();
-
-	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
-	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
-	this->activeWindow = &window;
+	this->StartUpValues();
 }
 
 D3DHandler::~D3DHandler()
 {
-	this->shutdown();
+	this->Shutdown();
 }
 
 void D3DHandler::SetWindowToEngine(HWND &setWindow) throw(...)
@@ -34,10 +21,14 @@ void D3DHandler::SetWindowToEngine(HWND &setWindow) throw(...)
 	}
 }
 
-bool D3DHandler::Initialize() throw(...)
+bool D3DHandler::Initialize(HWND* window) throw(...)
 {
 	std::string errorMessage;
 	bool result = true;
+
+	this->activeWindow = window;
+	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
+	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
 
 	if (this->activeWindow == nullptr)
 	{
@@ -47,14 +38,14 @@ bool D3DHandler::Initialize() throw(...)
 
 	try
 	{
-		this->createDeviceAndContext();
-		this->check4xMsaaQualitySupp();
+		this->CreateDeviceAndContext();
+		this->Check4xMsaaQualitySupp();
 		
 		DXGI_SWAP_CHAIN_DESC scDesc;
-		scDesc = this->describeSwapChain();
+		scDesc = this->DescribeSwapChain();
 
-		this->createSwapChain(&scDesc);
-		this->createRenderTargetViewDS();
+		this->CreateSwapChain(&scDesc);
+		this->CreateRenderTargetViewDS();
 	}
 	catch (char* errorMessage)
 	{
@@ -62,6 +53,16 @@ bool D3DHandler::Initialize() throw(...)
 	}
 
 	return result;
+}
+
+ID3D11Device * D3DHandler::GetDevice() const
+{
+	return this->gDevice;
+}
+
+ID3D11DeviceContext * D3DHandler::GetDeviceContext() const
+{
+	return this->gDeviceContext;
 }
 
 void D3DHandler::CreateDeviceAndContext() throw(...)
@@ -247,8 +248,28 @@ void D3DHandler::CreateDepthBufferAndView() throw(...)
 	depthStencilDesc.CPUAccessFlags = 0;
 	depthStencilDesc.MiscFlags = 0;
 
-	
+	resultHandler = gDevice->CreateTexture2D
+		(
+		&depthStencilDesc,
+		nullptr,
+		&this->mDepthStencilBuffer
+		);
 
+	if (FAILED(resultHandler))
+	{
+		throw("Cant create the 2D texture for the depthbuffer");
+	}
+
+	resultHandler = gDevice->CreateDepthStencilView
+		(
+			this->mDepthStencilBuffer,
+			nullptr,
+			&this->mDepthStencilView
+		);
+	if (FAILED(resultHandler))
+	{
+		throw("Create DepthStencilView");
+	}
 }
 
 void D3DHandler::StartUpValues()
