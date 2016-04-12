@@ -58,4 +58,3 @@ bool GraphicHandler::initialize(HWND hwnd, int screenWidth, int screenHeight)
 	return true;
 }
 
-

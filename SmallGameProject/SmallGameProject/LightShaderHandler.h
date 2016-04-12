@@ -7,6 +7,8 @@
 #include <directxmath.h>
 #include <fstream>
 
+#include "ShaderStructLibrary.h"
+
 class LightShaderHandler {
 private:
 	struct LightConstantBuffer
@@ -29,9 +31,7 @@ private:
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix,
-		DirectX::XMMATRIX projectionMatrix, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjectionMatrix, 
-		ID3D11ShaderResourceView** deferredTextures, DirectX::XMFLOAT4 lightPos, DirectX::XMFLOAT4 camPos); 
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters params); 
 
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
@@ -42,9 +42,7 @@ public:
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
 
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix,
-		DirectX::XMMATRIX projectionMatrix, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjectionMatrix,
-		ID3D11ShaderResourceView** deferredTextures, DirectX::XMFLOAT4 lightPos, DirectX::XMFLOAT4 camPos);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters params);
 };
 
 #endif
