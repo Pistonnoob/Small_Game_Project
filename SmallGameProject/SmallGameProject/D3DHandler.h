@@ -28,6 +28,8 @@ protected:
 	DXGI_SWAP_CHAIN_DESC describeSwapChain() throw(...);
 	bool createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...);
 
+	//setAllVariablestToNullPtr
+	void startUpValues();
 	void CalculateFrameStats();
 protected:
 	ID3D11Device* gDevice;

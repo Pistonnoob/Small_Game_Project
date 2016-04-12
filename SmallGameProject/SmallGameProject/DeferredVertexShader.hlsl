@@ -16,7 +16,7 @@ cbuffer CBPerObj
 
 struct VSInput
 {
-	float4 position : POSITION;
+	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
 };
@@ -30,7 +30,7 @@ struct GSInput
 	float3 viewDir : NORMAL1;
 };
 
-GSInput main(VertexInput input)
+GSInput main(VSInput input)
 {
 	GSInput output;
 
