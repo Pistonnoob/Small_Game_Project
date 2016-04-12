@@ -234,9 +234,22 @@ void InputHandler::KeyUp(unsigned int key)
 	return;
 }
 
+bool InputHandler::isKeyPressed(unsigned int key)
+{
+	if (this->KeyboarState[key]) {
+		return true;
+	}
+
+	return false;
+}
+
 bool InputHandler::isKeyDown(unsigned int key)
 {
-	return this->KeyboarState[key];
+	if (!this->OldKeyboardState[key] && this->KeyboarState[key]) {
+		return true;
+	}
+
+	return false;
 }
 
 bool InputHandler::isKeyReleased(unsigned int key)

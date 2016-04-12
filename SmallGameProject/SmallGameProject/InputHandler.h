@@ -39,6 +39,7 @@ public:
 
 	void KeyDown(unsigned int key);
 	void KeyUp(unsigned int key);
+	bool isKeyPressed(unsigned int key);
 	bool isKeyDown(unsigned int key);
 	bool isKeyReleased(unsigned int key);
 
