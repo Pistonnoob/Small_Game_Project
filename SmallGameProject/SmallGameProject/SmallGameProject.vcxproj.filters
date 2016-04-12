@@ -246,6 +246,7 @@
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="StartState.h">
+      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
