@@ -2,11 +2,12 @@
 #define _GAMESTATEHANDLER_H_
 #include "InputHandler.h"
 #include "GraphicHandler.h"
-#include "StartState.h"
 #include <d3d11.h>
 #include <vector>
 #include <Windows.h>
 
+#include "GameState.h"
+class GameState;
 class GameStateHandler {
 
 private:

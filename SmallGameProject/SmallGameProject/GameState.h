@@ -1,6 +1,9 @@
+
 #ifndef _GAMESTATE_H_
 #define _GAMESTATE_H_
-
+#include "InputHandler.h"
+#include <Windows.h>
+#include "GraphicHandler.h"
 #include "GameStateHandler.h"
 class GameState {
 

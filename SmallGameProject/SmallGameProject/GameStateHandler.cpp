@@ -51,7 +51,7 @@ int GameStateHandler::Render(GraphicHandler * gHandler, HWND hwnd)
 	int result = 0;
 	if (m_gameStates.size())
 	{
-		result = m_gameStates.back()->Render(gHandler);
+		result = m_gameStates.back()->Render(gHandler, hwnd);
 	}
 	return result;
 }

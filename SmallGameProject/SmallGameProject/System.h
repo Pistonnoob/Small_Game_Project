@@ -2,7 +2,7 @@
 #define SYSTEM_H
 
 #include <Windows.h>
-#include "GameStateHandler.h"
+//#include "GameStateHandler.h"
 #include "GraphicHandler.h"
 #include "InputHandler.h"
 
@@ -15,7 +15,7 @@ private:
 	HINSTANCE hinstance;
 	LPCWSTR applicationName;
 
-	GameStateHandler* gameSH;
+	//GameStateHandler* gameSH;
 	GraphicHandler* graphicH;
 	InputHandler* inputH;
 

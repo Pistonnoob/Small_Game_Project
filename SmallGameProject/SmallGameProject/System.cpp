@@ -2,7 +2,7 @@
 
 System::System()
 {
-	this->gameSH = nullptr;
+	//this->gameSH = nullptr;
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
 }
