@@ -2,30 +2,22 @@
 
 GraphicHandler::GraphicHandler()
 {
-	this->engine = new D3DHandler();
-}
-
-GraphicHandler::GraphicHandler(HWND & window)
-{
-	this->engine = new D3DHandler(window);
+	this->engine = nullptr;
 }
 
 GraphicHandler::~GraphicHandler()
 {
-	delete this->engine;
-	this->engine = nullptr;
 }
 
-bool GraphicHandler::setWindow(HWND & setWindow)
-{
-	this->engine->setWindowToEngine(setWindow);
-	return true;
-}
-
-bool GraphicHandler::initialize()
+bool GraphicHandler::initialize(HWND hwnd, int screenWidth, int screenHeight)
 {
 	std::string errorMessage;
+	bool result;
 
+	this->engine = new D3DHandler;
+	if (!this->engine) {
+		return false;
+	}
 	try
 	{
 		this->engine->initialize();
@@ -35,8 +27,35 @@ bool GraphicHandler::initialize()
 	{
 		errorMessage = e;
 	}
+
+	this->deferredShaderH = new DeferredShaderHandler;
+	if (!this->deferredShaderH) {
+		return false;
+	}
+	result = this->deferredShaderH->Initialize(this->engine->GetDevice(), hwnd, screenWidth, screenHeight);
+	if (!result) {
+		return false;
+	}
+
+	this->lightShaderH = new LightShaderHandler;
+	if (!this->lightShaderH) {
+		return false;
+	}
+	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd);
+	if (!result) {
+		return false;
+	}
+
+	this->screenQuad = new ScreenQuad;
+	if (!this->screenQuad) {
+		return false;
+	}
+	result = this->screenQuad->Initialize(this->engine->GetDevice(), this->engine->GetDeviceContext(), screenWidth, screenHeight);
+	if (!result) {
+		return false;
+	}
 	
-	return false;
+	return true;
 }
 
 

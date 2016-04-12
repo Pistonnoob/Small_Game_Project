@@ -14,13 +14,17 @@ protected:
 	LightShaderHandler* lightShaderH;
 	ScreenQuad* screenQuad;
 
+	int screenWidth;
+	int screenHeight;
+
 public:
 	GraphicHandler();
-	GraphicHandler(HWND &window);
 	virtual ~GraphicHandler();
 
-	bool setWindow(HWND &setWindow);
-	bool initialize();
+	bool initialize(HWND hwnd, int screenWidth, int screenHeight);
+	void DeferredRender();
+	void LightRender();
+	void Shutdown();
 };
 
 #endif
