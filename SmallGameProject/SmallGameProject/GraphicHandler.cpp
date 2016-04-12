@@ -28,7 +28,7 @@ bool GraphicHandler::initialize()
 
 	try
 	{
-		this->engine->initialize();
+		this->engine->Initialize();
 	}
 
 	catch (char* e)

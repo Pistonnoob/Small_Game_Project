@@ -26,7 +26,7 @@ bool System::Initialize()
 	//Initialize the InputHandler
 
 	//Create the graphicHandler.
-	this->graphicH = new GraphicHandler(this->hwnd);
+	this->graphicH = new GraphicHandler();
 	//Initialize the graphicHandler
 	this->graphicH->initialize();
 
