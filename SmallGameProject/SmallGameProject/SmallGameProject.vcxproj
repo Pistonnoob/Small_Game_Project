@@ -219,6 +219,7 @@
     <ClInclude Include="ProjectileHandler.h" />
     <ClInclude Include="RangedEnemy.h" />
     <ClInclude Include="ScreenQuad.h" />
+    <ClInclude Include="ShaderStructLibrary.h" />
     <ClInclude Include="StageState.h" />
     <ClInclude Include="StartState.h" />
     <ClInclude Include="Subject.h" />

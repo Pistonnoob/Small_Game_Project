@@ -20,7 +20,7 @@ DeferredShaderHandler::~DeferredShaderHandler()
 {
 }
 
-bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int screenWidth, int screenHeight)
+bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int screenWidth, int screenHeight)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
@@ -49,7 +49,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -61,7 +61,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 			OutputShaderErrorMessage(errorMessage, hwnd, gsFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(Geo)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(Geo)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -73,7 +73,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -82,21 +82,21 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create the vertex shader from buffer
 	hresult = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->vertexShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
 		return false;
 	}
 
 	//Create the geometry shader from buffer
 	hresult = device->CreateGeometryShader(geoShaderBuffer->GetBufferPointer(), geoShaderBuffer->GetBufferSize(), NULL, &this->geoShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateGeometryShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateGeometryShader", L"Error", MB_OK);
 		return false;
 	}
 
 	//Create the pixel shader from buffer
 	hresult = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->pixelShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
 		return false;
 	}
 
@@ -133,7 +133,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create the vertex input layout.
 	hresult = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
 		return false;
 	}
 
@@ -157,7 +157,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	hresult = device->CreateBuffer(&matrixBufferDesc, NULL, &this->matrixBuffer);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateBuffer", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateBuffer", L"Error", MB_OK);
 		return false;
 	}
 
@@ -180,7 +180,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
 	if (FAILED(hresult))
 	{
-		MessageBox(hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
 		return false;
 	}
 
@@ -207,7 +207,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	for (int i = 0; i < BUFFER_COUNT; i++) {
 		hresult = device->CreateTexture2D(&renderTextureDesc, NULL, &this->deferredRenderTargetTextures[i]);
 		if (FAILED(hresult)) {
-			MessageBox(hwnd, L"device->CreateTexture2D", L"Error", MB_OK);
+			MessageBox(*hwnd, L"device->CreateTexture2D", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -221,7 +221,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	for (int i = 0; i<BUFFER_COUNT; i++) {
 		hresult = device->CreateRenderTargetView(this->deferredRenderTargetTextures[i], &renderTargetViewDesc, &this->deferredRenderTargetViews[i]);
 		if (FAILED(hresult)) {
-			MessageBox(hwnd, L"device->CreateRenderTargetView", L"Error", MB_OK);
+			MessageBox(*hwnd, L"device->CreateRenderTargetView", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -236,7 +236,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	for (int i = 0; i < BUFFER_COUNT; i++) {
 		hresult = device->CreateShaderResourceView(this->deferredRenderTargetTextures[i], &shaderResourceViewDesc, &this->deferredShaderResources[i]);
 		if (FAILED(hresult)) {
-			MessageBox(hwnd, L"device->CreateShaderResourceView", L"Error", MB_OK);
+			MessageBox(*hwnd, L"device->CreateShaderResourceView", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -263,7 +263,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create depth texture
 	hresult = device->CreateTexture2D(&depthBufferDesc, NULL, &this->depthStencilBuffer);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"this->device->CreateTexture2D", L"Error", MB_OK);
+		MessageBox(*hwnd, L"this->device->CreateTexture2D", L"Error", MB_OK);
 		return false;
 	}
 
@@ -278,7 +278,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create the depth stencil view
 	hresult = device->CreateDepthStencilView(this->depthStencilBuffer, &depthStencilViewDesc, &this->depthStencilView);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"this->device->CreateDepthStencilView", L"Error", MB_OK);
+		MessageBox(*hwnd, L"this->device->CreateDepthStencilView", L"Error", MB_OK);
 		return false;
 	}
 
@@ -324,13 +324,12 @@ void DeferredShaderHandler::Shutdown()
 }
 
 
-bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix,
-	ID3D11ShaderResourceView* diffTexture, DirectX::XMFLOAT4 diffColor, DirectX::XMFLOAT4 ambientColor, DirectX::XMFLOAT4 specColor, DirectX::XMFLOAT4 camPos)
+bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters params)
 {
 	bool result = false;
 
 	//Set shader parameters used for rendering
-	result = this->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, diffTexture, diffColor, ambientColor, specColor, camPos);
+	result = this->SetShaderParameters(deviceContext, params);
 	if (!result) {
 		return false;
 	}
@@ -340,7 +339,7 @@ bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int index
 	return true;
 }
 
-void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -369,13 +368,12 @@ void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, H
 	errorMessage = nullptr;
 
 	//Notify the user to check error log
-	MessageBox(hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
+	MessageBox(*hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
 
 	return;
 }
 
-bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* diffTexture,
-	DirectX::XMFLOAT4 diffColor, DirectX::XMFLOAT4 ambientColor, DirectX::XMFLOAT4 specColor, DirectX::XMFLOAT4 camPos)
+bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DeferredShaderParameters params)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -383,9 +381,9 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	worldMatrix = XMMatrixTranspose(worldMatrix);
-	viewMatrix = XMMatrixTranspose(viewMatrix);
-	projectionMatrix = XMMatrixTranspose(projectionMatrix);
+	params.worldMatrix = XMMatrixTranspose(params.worldMatrix);
+	params.viewMatrix = XMMatrixTranspose(params.viewMatrix);
+	params.projectionMatrix = XMMatrixTranspose(params.projectionMatrix);
 
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -397,17 +395,17 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	dataPtr = (CBPerObj*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
-	dataPtr->world = worldMatrix;
-	dataPtr->view = viewMatrix;
-	dataPtr->projection = projectionMatrix;
+	dataPtr->world = params.worldMatrix;
+	dataPtr->view = params.viewMatrix;
+	dataPtr->projection = params.projectionMatrix;
 
-	dataPtr->diffColor = diffColor;
-	dataPtr->ambientColor = ambientColor;
-	dataPtr->specColor = specColor;
+	dataPtr->diffColor = params.diffColor;
+	dataPtr->ambientColor = params.ambientColor;
+	dataPtr->specColor = params.specColor;
 
-	dataPtr->camPos = camPos;
+	dataPtr->camPos = params.camPos;
 
-	if (!diffTexture) {
+	if (!params.diffTexture) {
 		dataPtr->hasTexture = false;
 	}
 	else {
@@ -424,9 +422,9 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 	//deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
-	if (diffTexture) {
+	if (params.diffTexture) {
 		//Set shader texture resource for pixel shader
-		deviceContext->PSSetShaderResources(0, 1, &diffTexture);
+		deviceContext->PSSetShaderResources(0, 1, &params.diffTexture);
 	}
 	return true;
 }

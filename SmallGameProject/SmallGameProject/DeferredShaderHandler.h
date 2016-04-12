@@ -7,6 +7,8 @@
 #include <directxmath.h>
 #include <fstream>
 
+#include "ShaderStructLibrary.h"
+
 const int BUFFER_COUNT = 5;
 
 class DeferredShaderHandler {
@@ -40,11 +42,9 @@ private:
 	ID3D11Texture2D* depthStencilBuffer;
 	ID3D11DepthStencilView* depthStencilView;
 
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
+	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, 
-		DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* diffTexture, DirectX::XMFLOAT4 diffColor, 
-		DirectX::XMFLOAT4 ambientColor, DirectX::XMFLOAT4 specColor, DirectX::XMFLOAT4 camPos);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, DeferredShaderParameters params);
 
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart);
 
@@ -52,12 +52,10 @@ public:
 	DeferredShaderHandler();
 	~DeferredShaderHandler();
 
-	bool Initialize(ID3D11Device* device, HWND hwnd, int screenWidth, int screenHeight);
+	bool Initialize(ID3D11Device* device, HWND* hwnd, int screenWidth, int screenHeight);
 	void Shutdown();
 
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, 
-		DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* diffTexture, DirectX::XMFLOAT4 diffColor, DirectX::XMFLOAT4 ambientColor,
-		DirectX::XMFLOAT4 specColor, DirectX::XMFLOAT4 camPos);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters params);
 
 	void SetDeferredRenderTargets(ID3D11DeviceContext* deviceContext);
 	void ClearRenderTargets(ID3D11DeviceContext* deviceContext);

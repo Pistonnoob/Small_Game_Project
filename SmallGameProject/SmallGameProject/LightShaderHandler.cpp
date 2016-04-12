@@ -13,7 +13,7 @@ LightShaderHandler::~LightShaderHandler()
 {
 }
 
-bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
+bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
@@ -41,7 +41,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -53,7 +53,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -62,14 +62,14 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	//Create the vertex shader from buffer
 	hresult = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->vertexShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
 		return false;
 	}
 
 	//Create the pixel shader from buffer
 	hresult = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->pixelShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
 		return false;
 	}
 
@@ -98,7 +98,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	//Create the vertex input layout.
 	hresult = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
 		return false;
 	}
 
@@ -120,7 +120,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	hresult = device->CreateBuffer(&matrixBufferDesc, NULL, &this->matrixBuffer);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateBuffer", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateBuffer", L"Error", MB_OK);
 		return false;
 	}
 
@@ -143,7 +143,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
 	if (FAILED(hresult))
 	{
-		MessageBox(hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
 		return false;
 	}
 
@@ -183,14 +183,12 @@ void LightShaderHandler::Shutdown()
 }
 
 
-bool LightShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix,
-	DirectX::XMMATRIX projectionMatrix, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjectionMatrix,
-	ID3D11ShaderResourceView** deferredTextures, DirectX::XMFLOAT4 lightPos, DirectX::XMFLOAT4 camPos)
+bool LightShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters params)
 {
 	bool result = false;
 
 	//Set shader parameters used for rendering
-	result = this->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, lightViewMatrix, lightProjectionMatrix, deferredTextures, lightPos, camPos);
+	result = this->SetShaderParameters(deviceContext, params);
 	if (!result) {
 		return false;
 	}
@@ -200,7 +198,7 @@ bool LightShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCou
 	return true;
 }
 
-void LightShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void LightShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -229,14 +227,12 @@ void LightShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND
 	errorMessage = nullptr;
 
 	//Notify the user to check error log
-	MessageBox(hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
+	MessageBox(*hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
 
 	return;
 }
 
-bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix,
-	DirectX::XMMATRIX projectionMatrix, DirectX::XMMATRIX lightViewMatrix, DirectX::XMMATRIX lightProjectionMatrix,
-	ID3D11ShaderResourceView** deferredTextures, DirectX::XMFLOAT4 lightPos, DirectX::XMFLOAT4 camPos)
+bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters params)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -244,9 +240,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	worldMatrix = XMMatrixTranspose(worldMatrix);
-	viewMatrix = XMMatrixTranspose(viewMatrix);
-	projectionMatrix = XMMatrixTranspose(projectionMatrix);
+	params.worldMatrix = XMMatrixTranspose(params.worldMatrix);
+	params.viewMatrix = XMMatrixTranspose(params.viewMatrix);
+	params.projectionMatrix = XMMatrixTranspose(params.projectionMatrix);
+	params.lightViewMatrix = XMMatrixTranspose(params.lightViewMatrix);
+	params.lightProjectionMatrix = XMMatrixTranspose(params.lightProjectionMatrix);
 
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -258,13 +256,14 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	dataPtr = (LightConstantBuffer*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
-	dataPtr->world = worldMatrix;
-	dataPtr->view = viewMatrix;
-	dataPtr->projection = projectionMatrix;
-	dataPtr->view = lightViewMatrix;
-	dataPtr->projection = lightProjectionMatrix;
+	dataPtr->world = params.worldMatrix;
+	dataPtr->view = params.viewMatrix;
+	dataPtr->projection = params.projectionMatrix;
+	dataPtr->view = params.lightViewMatrix;
+	dataPtr->projection = params.lightProjectionMatrix;
 
-	dataPtr->camPos = camPos;
+	dataPtr->lightPos = params.lightPos;
+	dataPtr->camPos = params.camPos;
 
 	//Unmap the constant buffer to give the GPU access agin
 	deviceContext->Unmap(this->matrixBuffer, 0);
@@ -276,9 +275,9 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
-	if (deferredTextures) {
+	if (params.deferredTextures) {
 		//Set shader texture resource for pixel shader
-		deviceContext->PSSetShaderResources(0, 5, deferredTextures);
+		deviceContext->PSSetShaderResources(0, 5, params.deferredTextures);
 	}
 
 	return true;

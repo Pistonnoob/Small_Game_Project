@@ -6,6 +6,11 @@
 
 class ScreenQuad {
 private:
+	struct VertexSimple {
+		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT2 texture;
+	};
+
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 public:
