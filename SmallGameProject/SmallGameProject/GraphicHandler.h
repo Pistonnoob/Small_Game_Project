@@ -9,9 +9,11 @@ protected:
 	D3DHandler* engine;
 public:
 	GraphicHandler();
+	GraphicHandler(HWND &window);
 	virtual ~GraphicHandler();
 
 	bool setWindow(HWND &setWindow);
+	bool initialize();
 };
 
 #endif
