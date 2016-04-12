@@ -22,7 +22,7 @@ struct PSInput
 	float2 tex : TEXCOORD0;
 };
 
-PSInput main(VertexInput input)
+PSInput main(VSInput input)
 {
 	PSInput output;
 
