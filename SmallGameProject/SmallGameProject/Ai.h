@@ -7,6 +7,6 @@ private:
 
 public:
 
-}
+};
 
 #endif
