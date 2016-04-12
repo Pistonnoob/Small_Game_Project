@@ -22,12 +22,14 @@ protected:
 	void createDeviceAndContext() throw(...);
 	// checks the quality level support for 4x MSAA
 	void check4xMsaaQualitySupp() throw(...);
+	void setWindowToEngine(HWND &setWindow) throw(...);
 	void describeSwapChain() throw(...);
 
 	void CalculateFrameStats();
 protected:
 	ID3D11Device* gDevice;
 	ID3D11DeviceContext* gDeviceContext;
+	HWND* activeWindow;
 	IDXGISwapChain* gSwapChain;
 
 	//data to depthStencil

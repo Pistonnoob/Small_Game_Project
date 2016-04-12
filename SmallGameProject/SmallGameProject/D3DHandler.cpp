@@ -81,6 +81,15 @@ void D3DHandler::check4xMsaaQualitySupp() throw(...)
 	assert(m4xMsaaQuality > 0);
 }
 
+void D3DHandler::setWindowToEngine(HWND &setWindow) throw(...)
+{
+	this->activeWindow = &setWindow;
+	if (this->activeWindow == nullptr)
+	{
+		throw("error in setWindowToEngine");
+	}
+}
+
 void D3DHandler::describeSwapChain() throw(...)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
