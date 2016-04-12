@@ -178,6 +178,7 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileHandler.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
+    <ClCompile Include="ScreenQuad.cpp" />
     <ClCompile Include="StageState.cpp" />
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="Subject.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileHandler.h" />
     <ClInclude Include="RangedEnemy.h" />
+    <ClInclude Include="ScreenQuad.h" />
     <ClInclude Include="StageState.h" />
     <ClInclude Include="StartState.h" />
     <ClInclude Include="Subject.h" />

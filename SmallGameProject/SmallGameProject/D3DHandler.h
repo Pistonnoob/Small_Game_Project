@@ -31,6 +31,8 @@ protected:
 	//setAllVariablestToNullPtr
 	void startUpValues();
 	void CalculateFrameStats();
+
+	void shutdown();
 protected:
 	ID3D11Device* gDevice;
 	ID3D11DeviceContext* gDeviceContext;

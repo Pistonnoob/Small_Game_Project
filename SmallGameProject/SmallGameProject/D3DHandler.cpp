@@ -22,6 +22,7 @@ D3DHandler::D3DHandler(HWND & window)
 
 D3DHandler::~D3DHandler()
 {
+	this->shutdown();
 }
 
 void D3DHandler::setWindowToEngine(HWND &setWindow) throw(...)
@@ -209,4 +210,11 @@ void D3DHandler::startUpValues()
 	this->mDepthStencilBuffer	= nullptr;
 	this->mDepthStencilRTV		= nullptr;
 	this->mDepthStencilView		= nullptr;
+}
+
+void D3DHandler::shutdown()
+{
+	this->gSwapChain->Release();
+	this->gDeviceContext->Release();
+	this->gDevice->Release();
 }
