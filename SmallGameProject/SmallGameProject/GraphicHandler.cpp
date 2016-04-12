@@ -58,3 +58,40 @@ bool GraphicHandler::initialize(HWND hwnd, int screenWidth, int screenHeight)
 	return true;
 }
 
+void GraphicHandler::DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters shaderParams)
+{
+
+
+	return;
+}
+
+void GraphicHandler::LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters shaderParams)
+{
+
+
+	return;
+}
+
+void GraphicHandler::Shutdown()
+{
+	//Delete the D3DHandler object
+	if (this->engine) {
+		this->engine->Shutdown();
+		delete this->engine;
+		this->engine = nullptr;
+	}
+	//Delete the DeferredShaderHandler object
+	if (this->deferredShaderH) {
+		this->deferredShaderH->Shutdown();
+		delete this->deferredShaderH;
+		this->deferredShaderH = nullptr;
+	}
+	//Delete the LightShaderHandler object
+	if (this->lightShaderH) {
+		this->lightShaderH->Shutdown();
+		delete this->lightShaderH;
+		this->lightShaderH = nullptr;
+	}
+
+	return;
+}

@@ -22,8 +22,8 @@ public:
 	virtual ~GraphicHandler();
 
 	bool initialize(HWND hwnd, int screenWidth, int screenHeight);
-	void DeferredRender();
-	void LightRender();
+	void DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters shaderParams);
+	void LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters shaderParams);
 	void Shutdown();
 };
 
