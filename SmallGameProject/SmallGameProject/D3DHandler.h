@@ -19,9 +19,8 @@ public:
 
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;
-
+	void Shutdown();
 protected:
-	bool InitDirect3D();
 	void CreateDeviceAndContext() throw(...);
 	// checks the quality level support for 4x MSAA
 	void Check4xMsaaQualitySupp() throw(...);
@@ -37,8 +36,7 @@ protected:
 	//setAllVariablestToNullPtr
 	void StartUpValues();
 	void CalculateFrameStats();
-
-	void Shutdown();
+	
 protected:
 	ID3D11Device* gDevice;
 	ID3D11DeviceContext* gDeviceContext;

@@ -20,7 +20,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* geoShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;

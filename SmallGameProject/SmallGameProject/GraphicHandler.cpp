@@ -20,7 +20,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 	}
 	try
 	{
-		this->engine->Initialize();
+		this->engine->Initialize(hwnd);
 	}
 
 	catch (char* e)

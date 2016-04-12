@@ -28,7 +28,7 @@ bool System::Initialize()
 	//Create the graphicHandler.
 	this->graphicH = new GraphicHandler();
 	//Initialize the graphicHandler
-	this->graphicH->initialize();
+	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight);
 
 	//Create the GameStateHandler.
 

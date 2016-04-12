@@ -133,7 +133,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	//Create the vertex input layout.
 	hresult = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
 	if (FAILED(hresult)) {
-		MessageBox(*hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateInputLayout Deferred", L"Error", MB_OK);
 		return false;
 	}
 

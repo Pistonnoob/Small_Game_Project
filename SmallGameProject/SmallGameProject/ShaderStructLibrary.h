@@ -1,3 +1,5 @@
+#ifndef SHADERSTRUCTLIBRARY_H
+#define SHADERSTRUCTLIBRARY_H
 
 #include <d3d11.h>
 #include <directxmath.h>
@@ -27,3 +29,5 @@ struct LightShaderParameters {
 	DirectX::XMFLOAT4 lightPos;
 	DirectX::XMFLOAT4 camPos;
 };
+
+#endif
