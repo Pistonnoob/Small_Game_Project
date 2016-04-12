@@ -41,8 +41,8 @@ public:
 	void Shutdown();
 	void Render(ID3D11DeviceContext* deviceContext);
 
-	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
+	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
 };
 
 #endif
