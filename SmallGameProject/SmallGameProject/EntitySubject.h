@@ -5,9 +5,15 @@
 
 class EntitySubject : public Subject{
 
-private:
+	private:
+		std::set<Observer*> observers;
+		void notify(const Entity& entity, Events::ENTITY evnt);
 
-public:
+	public:
+		EntitySubject();
+		virtual ~EntitySubject();
+		virtual void addObserver(Observer* observer);
+		virtual void removeObserver(Observer* observer);
 
 };
 

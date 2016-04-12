@@ -8,11 +8,13 @@ class Subject {
 
 private:
 	std::set<Observer*> observers;
-	void notify(const Entity& entity, Events::ENTITY evnt);
+	virtual void notify(const Entity& entity, Events::ENTITY evnt) = 0;
 
 public:
-	void addObserver(Observer* observer);
-	void removeObserver(Observer* observer);
+	Subject();
+	virtual ~Subject();
+	virtual void addObserver(Observer* observer) = 0;
+	virtual void removeObserver(Observer* observer) = 0;
 };
 
 #endif
