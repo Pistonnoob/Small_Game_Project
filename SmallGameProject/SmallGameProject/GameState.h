@@ -11,10 +11,10 @@ protected:
 public:
 
 	GameState();	//This will initialize the GSH pointer to NULL
+	GameState(GameStateHandler* GSH);
 	virtual ~GameState();
 
 	virtual void Shutdown();
-	virtual void Initialize(GameStateHandler* GSH);
 
 	virtual int HandleInput(InputHandler* input) = 0;
 	virtual int Update(float deltaTime) = 0;

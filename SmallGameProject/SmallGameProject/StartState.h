@@ -6,7 +6,10 @@ class StartState :
 {
 public:
 	StartState();
+	StartState(GameStateHandler* GSH);
 	virtual ~StartState();
+
+	void Initialize();
 	
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);

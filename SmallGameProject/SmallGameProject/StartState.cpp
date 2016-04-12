@@ -6,9 +6,18 @@ StartState::StartState()
 {
 }
 
+StartState::StartState(GameStateHandler * GSH)
+{
+	this->m_GSH = GSH;
+}
 
 StartState::~StartState()
 {
+}
+
+void StartState::Initialize()
+{
+
 }
 
 int StartState::HandleInput(InputHandler * input)
