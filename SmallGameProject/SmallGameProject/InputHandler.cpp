@@ -4,6 +4,11 @@ InputHandler::InputHandler()
 {
 	this->DIKeyboard = nullptr;
 	this->DIMouse = nullptr;
+	this->mouseX = 0;
+	this->mouseY = 0;
+	this->screenWidth = 0;
+	this->screenWidth = 0;
+	this->lastKeyPressed = -1;
 }
 
 InputHandler::~InputHandler()
@@ -110,7 +115,7 @@ void InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, i
 	return;
 }
 
-void InputHandler::ShutDown()
+void InputHandler::Shutdown()
 {
 	if (this->DIKeyboard){
 		this->DIKeyboard->Unacquire();
@@ -128,4 +133,115 @@ void InputHandler::ShutDown()
 		this->directInput->Release();
 		this->directInput = nullptr;
 	}
+}
+
+void InputHandler::Update()
+{
+	//Check if we can read the devices. 
+	//If we cant, the old data will be used
+	this->ReadKeyboard();
+	this->ReadMouse();
+
+	this->ProcessInput();
+
+}
+
+void InputHandler::ReadKeyboard()
+{
+	HRESULT hr;
+
+	//Read the keyboard device
+	hr = this->DIMouse->GetDeviceState(
+		sizeof(this->KeyboarState),
+		&this->KeyboarState );
+
+	if (FAILED(hr)) {
+
+		//If the keyboard lost focus or was not acquired, try to get control back
+		if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) {
+			this->DIMouse->Acquire();
+		}
+
+	}
+
+	return;
+}
+
+void InputHandler::ReadMouse()
+{
+	HRESULT hr;
+
+	//Read the mouse device
+	hr = this->DIMouse->GetDeviceState(
+		sizeof(DIMOUSESTATE),
+		&this->DIMouseState);
+
+	if (FAILED(hr)) {
+
+		//If the mouse lost focus or was not acquired, try to get control back
+		if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) {
+			this->DIMouse->Acquire();
+		}
+
+	}
+
+	return;
+}
+
+void InputHandler::ProcessInput()
+{
+	//Update the mouse position (not physicly)
+	this->mouseX += this->DIMouseState.lX;
+	this->mouseY += this->DIMouseState.lY;
+
+	if (this->mouseX < 0) {
+		this->mouseX = 0;
+	}
+	
+	if (this->mouseX > this->screenWidth) {
+		this->mouseX = this->screenWidth;
+	}
+	
+	if (this->mouseY < 0) {
+		this->mouseY = 0;
+	}
+	
+	if (this->mouseY > this->screenHeight) {
+		this->mouseY = this->screenHeight;
+	}
+}
+
+DirectX::XMVECTOR InputHandler::GetMouseDeltaPos()
+{
+	return DirectX::XMVectorSet(this->DIMouseState.lX, this->DIMouseState.lY, 0, 0);	//z,y is not used so set to 0
+}
+
+void InputHandler::KeyDown(unsigned int key)
+{
+	this->KeyboarState[key] = true;
+
+	return;
+}
+
+void InputHandler::KeyUp(unsigned int key)
+{
+	this->KeyboarState[key] = false;
+	this->lastKeyPressed = key;
+
+	return;
+}
+
+bool InputHandler::isKeyDown(unsigned int key)
+{
+	return this->KeyboarState[key];
+}
+
+bool InputHandler::isKeyReleased(unsigned int key)
+{
+	if (this->lastKeyPressed == key) {
+		this->lastKeyPressed = -1;
+		return true;
+	}
+
+	return false;
 }
