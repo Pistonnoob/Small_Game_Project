@@ -76,7 +76,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 
 
 	//Fill the vertex input layout description 
-	polygonLayout[0].SemanticName = "POSITION";
+	polygonLayout[0].SemanticName = "SV_POSITION";
 	polygonLayout[0].SemanticIndex = 0;
 	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	polygonLayout[0].InputSlot = 0;
