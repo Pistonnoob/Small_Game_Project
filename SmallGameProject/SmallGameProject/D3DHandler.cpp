@@ -220,6 +220,34 @@ void D3DHandler::CreateRenderTargetViewDS() throw(...)
 
 void D3DHandler::CreateDepthBufferAndView() throw(...)
 {
+	HRESULT resultHandler;
+
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+	depthStencilDesc.Width = this->clientWidth;
+	depthStencilDesc.Height = this->clientHeight;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	//if msaa is enabled
+	if (this->msaa4xEnabled == true)
+	{
+		depthStencilDesc.SampleDesc.Count = 4;
+		depthStencilDesc.SampleDesc.Quality = this->m4xMsaaQuality - 1;
+	}
+
+	else
+	{
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+	}
+
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+
+	
 
 }
 
