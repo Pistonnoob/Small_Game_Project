@@ -57,9 +57,6 @@
     <ClCompile Include="System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameStateHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -68,18 +65,6 @@
     </ClCompile>
     <ClCompile Include="D3DHandler.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StartState.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuState.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="HubState.cpp">
-      <Filter>Source Files\GameStates</Filter>
-    </ClCompile>
-    <ClCompile Include="StageState.cpp">
-      <Filter>Source Files\GameStates</Filter>
     </ClCompile>
     <ClCompile Include="MoveRightCommand.cpp">
       <Filter>Source Files\Commands</Filter>
@@ -123,9 +108,6 @@
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Command.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -159,12 +141,18 @@
     <ClCompile Include="GameData.cpp">
       <Filter>Source Files\Observers</Filter>
     </ClCompile>
+    <ClCompile Include="GameStateHandler.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="StartState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphicHandler.h">
@@ -175,18 +163,6 @@
     </ClInclude>
     <ClInclude Include="D3DHandler.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StartState.h">
-      <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuState.h">
-      <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="HubState.h">
-      <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="StageState.h">
-      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="MoveRightCommand.h">
       <Filter>Header Files\Commands</Filter>
@@ -230,9 +206,6 @@
     <ClInclude Include="Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -265,6 +238,14 @@
     </ClInclude>
     <ClInclude Include="GameData.h">
       <Filter>Header Files\Observers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateHandler.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="StartState.h">
     </ClInclude>
   </ItemGroup>
 </Project>
