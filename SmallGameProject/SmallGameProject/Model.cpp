@@ -133,3 +133,14 @@ void Model::Shutdown()
 		this->indexBuffer = nullptr;
 	}
 }
+
+void Model::GetDeferredShaderParameters(DeferredShaderParameters* params)
+{
+	params->diffColor = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	params->ambientColor = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	params->specColor = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	params->worldMatrix = this->worldMatrix;
+
+	params->diffTexture = NULL;
+}

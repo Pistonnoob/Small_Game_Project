@@ -31,7 +31,7 @@ private:
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters params); 
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters* params); 
 
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
@@ -42,7 +42,7 @@ public:
 	bool Initialize(ID3D11Device* device, HWND* hwnd);
 	void Shutdown();
 
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters params);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* params);
 };
 
 #endif

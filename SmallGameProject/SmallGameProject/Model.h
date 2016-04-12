@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Texture.h"
+#include "ShaderStructLibrary.h"
 
 class Model {
 
@@ -43,6 +44,8 @@ public:
 
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
 	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
+
+	void GetDeferredShaderParameters(DeferredShaderParameters* params);
 };
 
 #endif

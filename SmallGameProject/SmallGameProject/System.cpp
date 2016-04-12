@@ -5,6 +5,8 @@ System::System()
 	this->gameSH = nullptr;
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
+
+	this->testModel = nullptr;
 }
 
 System::~System()
@@ -33,8 +35,12 @@ bool System::Initialize()
 	//Create the GameStateHandler.
 
 	//Initialize the GameStateHandler
+	this->testModel = new Model;
 
-
+	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "");
+	if (!result) {
+		return false;
+	}
 
 	return true;
 }
@@ -210,7 +216,10 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
-
+	/*DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
+	
+	this->testModel->Render(this->graphicH->GetDeviceContext());
+	this->graphicH->DeferredRender(this->graphicH->GetDeviceContext(), 3, 0, deferredShaderParams);*/
 
 	return true;
 }

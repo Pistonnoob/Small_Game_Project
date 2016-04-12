@@ -22,9 +22,12 @@ public:
 	virtual ~GraphicHandler();
 
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight);
-	void DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters shaderParams);
-	void LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters shaderParams);
+	void DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters* shaderParams);
+	void LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* shaderParams);
 	void Shutdown();
+
+	ID3D11Device* GetDevice();
+	ID3D11DeviceContext* GetDeviceContext();
 };
 
 #endif

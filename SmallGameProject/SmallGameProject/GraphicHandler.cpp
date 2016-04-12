@@ -58,7 +58,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 	return true;
 }
 
-void GraphicHandler::DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters shaderParams)
+void GraphicHandler::DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters* shaderParams)
 {
 	this->deferredShaderH->SetDeferredRenderTargets(deviceContext);
 	this->deferredShaderH->ClearRenderTargets(deviceContext);
@@ -67,7 +67,7 @@ void GraphicHandler::DeferredRender(ID3D11DeviceContext* deviceContext, int inde
 	return;
 }
 
-void GraphicHandler::LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters shaderParams)
+void GraphicHandler::LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* shaderParams)
 {
 	this->lightShaderH->Render(deviceContext, indexCount, shaderParams);
 
@@ -96,4 +96,14 @@ void GraphicHandler::Shutdown()
 	}
 
 	return;
+}
+
+ID3D11Device* GraphicHandler::GetDevice()
+{
+	return this->engine->GetDevice();
+}
+
+ID3D11DeviceContext* GraphicHandler::GetDeviceContext()
+{
+	return this->engine->GetDeviceContext();
 }
