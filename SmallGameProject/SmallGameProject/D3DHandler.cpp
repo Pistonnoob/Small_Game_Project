@@ -4,6 +4,7 @@
 
 D3DHandler::D3DHandler()
 {
+	this->startUpValues();
 
 	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
 	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
@@ -12,6 +13,8 @@ D3DHandler::D3DHandler()
 
 D3DHandler::D3DHandler(HWND & window)
 {
+	this->startUpValues();
+
 	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
 	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
 	this->activeWindow = &window;
@@ -196,3 +199,14 @@ bool D3DHandler::createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...)
 	return result;
 }
 
+void D3DHandler::startUpValues()
+{
+	this->gDevice			= nullptr;
+	this->gDeviceContext	= nullptr;
+	this->activeWindow		= nullptr;
+	this->gSwapChain		= nullptr;
+
+	this->mDepthStencilBuffer	= nullptr;
+	this->mDepthStencilRTV		= nullptr;
+	this->mDepthStencilView		= nullptr;
+}
