@@ -28,7 +28,6 @@ int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	if (result)
 	{
 		//Proceed to initialize thyself
-		this->spriteBatch.reset(new DirectX::SpriteBatch(deviceContext));
 
 	}
 

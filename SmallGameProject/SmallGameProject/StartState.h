@@ -1,8 +1,6 @@
 #ifndef STARTSTATE_H
 #define STARTSTATE_H
 #include "GameState.h"
-#include <memory>
-#include <SpriteBatch.h>
 class StartState :
 	public GameState
 {
@@ -22,7 +20,6 @@ public:
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
 
 private:
-	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 };
 
 #endif
