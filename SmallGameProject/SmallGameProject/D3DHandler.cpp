@@ -25,6 +25,7 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 {
 	std::string errorMessage;
 	bool result = true;
+	HRESULT resultHelper;
 
 	this->activeWindow = window;
 	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
@@ -47,9 +48,22 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 		this->CreateSwapChain(&scDesc);
 		this->CreateRenderTargetViewDS();
 	}
+
 	catch (char* errorMessage)
 	{
 		std::cout << errorMessage << std::endl;
+		result = false;
+	}
+
+	//if all is well, bind the view to output merger stage
+	if (result == true)
+	{
+		this->gDeviceContext->OMSetRenderTargets
+			(
+				1,
+				&this->mDepthStencilRTV,
+				this->mDepthStencilView
+			);
 	}
 
 	return result;
