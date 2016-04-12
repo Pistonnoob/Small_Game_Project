@@ -5,6 +5,7 @@
 #pragma comment (lib, "d3dcompiler.lib")
 
 #include <D3D11.h>
+#include <DirectXMath.h>
 #include <windows.h>
 #include <string>
 
@@ -19,6 +20,9 @@ public:
 
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;
+
+	void ClearDepthAndRTVViews();
+
 	void Shutdown();
 protected:
 	void CreateDeviceAndContext() throw(...);
