@@ -147,9 +147,6 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
-    <ClCompile Include="StartState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -243,9 +240,6 @@
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="GameStateHandler.h">
-      <Filter>Header Files\GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="StartState.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>

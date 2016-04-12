@@ -5,11 +5,6 @@ GameState::GameState()
 	m_GSH = NULL;
 }
 
-GameState::GameState(GameStateHandler * GSH)
-{
-	m_GSH = GSH;
-}
-
 GameState::~GameState()
 {
 }
@@ -17,4 +12,9 @@ GameState::~GameState()
 void GameState::Shutdown()
 {
 	this->m_GSH = NULL;
+}
+
+void GameState::Initialize(GameStateHandler* GSH)
+{
+	this->m_GSH = GSH;
 }

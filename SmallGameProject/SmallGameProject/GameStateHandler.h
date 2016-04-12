@@ -6,7 +6,7 @@
 #include <vector>
 #include <Windows.h>
 
-#include "GameState.h"
+#include "StartState.h"
 class GameStateHandler {
 
 private:
