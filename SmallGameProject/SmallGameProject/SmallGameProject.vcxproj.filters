@@ -49,6 +49,15 @@
     <Filter Include="Source Files\Observers">
       <UniqueIdentifier>{9fade6f4-e101-4cf2-860a-8fc279e262c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ShaderHandlers">
+      <UniqueIdentifier>{1223b572-5aa8-499a-b577-35e7b0b33acb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ShaderHandlers">
+      <UniqueIdentifier>{7087a551-488c-4171-8ba8-d232e0b24600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a4d7dbfb-d6c6-4325-93c4-e4bb32e42cad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -159,6 +168,12 @@
     <ClCompile Include="GameData.cpp">
       <Filter>Source Files\Observers</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -266,5 +281,28 @@
     <ClInclude Include="GameData.h">
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DeferredVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredGeometryShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
