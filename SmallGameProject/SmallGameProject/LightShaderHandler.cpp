@@ -183,7 +183,7 @@ void LightShaderHandler::Shutdown()
 }
 
 
-bool LightShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters params)
+bool LightShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* params)
 {
 	bool result = false;
 
@@ -232,7 +232,7 @@ void LightShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND
 	return;
 }
 
-bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters params)
+bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters* params)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -240,11 +240,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	params.worldMatrix = XMMatrixTranspose(params.worldMatrix);
-	params.viewMatrix = XMMatrixTranspose(params.viewMatrix);
-	params.projectionMatrix = XMMatrixTranspose(params.projectionMatrix);
-	params.lightViewMatrix = XMMatrixTranspose(params.lightViewMatrix);
-	params.lightProjectionMatrix = XMMatrixTranspose(params.lightProjectionMatrix);
+	params->worldMatrix = XMMatrixTranspose(params->worldMatrix);
+	params->viewMatrix = XMMatrixTranspose(params->viewMatrix);
+	params->projectionMatrix = XMMatrixTranspose(params->projectionMatrix);
+	params->lightViewMatrix = XMMatrixTranspose(params->lightViewMatrix);
+	params->lightProjectionMatrix = XMMatrixTranspose(params->lightProjectionMatrix);
 
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -256,14 +256,14 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	dataPtr = (LightConstantBuffer*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
-	dataPtr->world = params.worldMatrix;
-	dataPtr->view = params.viewMatrix;
-	dataPtr->projection = params.projectionMatrix;
-	dataPtr->view = params.lightViewMatrix;
-	dataPtr->projection = params.lightProjectionMatrix;
+	dataPtr->world = params->worldMatrix;
+	dataPtr->view = params->viewMatrix;
+	dataPtr->projection = params->projectionMatrix;
+	dataPtr->view = params->lightViewMatrix;
+	dataPtr->projection = params->lightProjectionMatrix;
 
-	dataPtr->lightPos = params.lightPos;
-	dataPtr->camPos = params.camPos;
+	dataPtr->lightPos = params->lightPos;
+	dataPtr->camPos = params->camPos;
 
 	//Unmap the constant buffer to give the GPU access agin
 	deviceContext->Unmap(this->matrixBuffer, 0);
@@ -275,9 +275,9 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
-	if (params.deferredTextures) {
+	if (params->deferredTextures) {
 		//Set shader texture resource for pixel shader
-		deviceContext->PSSetShaderResources(0, 5, params.deferredTextures);
+		deviceContext->PSSetShaderResources(0, 5, params->deferredTextures);
 	}
 
 	return true;

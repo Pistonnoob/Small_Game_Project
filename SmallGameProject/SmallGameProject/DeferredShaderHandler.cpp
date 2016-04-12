@@ -324,7 +324,7 @@ void DeferredShaderHandler::Shutdown()
 }
 
 
-bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters params)
+bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters* params)
 {
 	bool result = false;
 
@@ -373,7 +373,7 @@ void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, H
 	return;
 }
 
-bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DeferredShaderParameters params)
+bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DeferredShaderParameters* params)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -381,9 +381,9 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	params.worldMatrix = XMMatrixTranspose(params.worldMatrix);
-	params.viewMatrix = XMMatrixTranspose(params.viewMatrix);
-	params.projectionMatrix = XMMatrixTranspose(params.projectionMatrix);
+	params->worldMatrix = XMMatrixTranspose(params->worldMatrix);
+	params->viewMatrix = XMMatrixTranspose(params->viewMatrix);
+	params->projectionMatrix = XMMatrixTranspose(params->projectionMatrix);
 
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -395,17 +395,17 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	dataPtr = (CBPerObj*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
-	dataPtr->world = params.worldMatrix;
-	dataPtr->view = params.viewMatrix;
-	dataPtr->projection = params.projectionMatrix;
+	dataPtr->world = params->worldMatrix;
+	dataPtr->view = params->viewMatrix;
+	dataPtr->projection = params->projectionMatrix;
 
-	dataPtr->diffColor = params.diffColor;
-	dataPtr->ambientColor = params.ambientColor;
-	dataPtr->specColor = params.specColor;
+	dataPtr->diffColor = params->diffColor;
+	dataPtr->ambientColor = params->ambientColor;
+	dataPtr->specColor = params->specColor;
 
-	dataPtr->camPos = params.camPos;
+	dataPtr->camPos = params->camPos;
 
-	if (!params.diffTexture) {
+	if (!params->diffTexture) {
 		dataPtr->hasTexture = false;
 	}
 	else {
@@ -422,9 +422,9 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 	//deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
-	if (params.diffTexture) {
+	if (params->diffTexture) {
 		//Set shader texture resource for pixel shader
-		deviceContext->PSSetShaderResources(0, 1, &params.diffTexture);
+		deviceContext->PSSetShaderResources(0, 1, &params->diffTexture);
 	}
 	return true;
 }

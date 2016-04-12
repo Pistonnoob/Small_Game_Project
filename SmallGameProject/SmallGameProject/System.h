@@ -5,6 +5,7 @@
 #include "GameStateHandler.h"
 #include "GraphicHandler.h"
 #include "InputHandler.h"
+#include "Model.h"
 
 const bool FULL_SCREEN = false;
 
@@ -23,6 +24,7 @@ private:
 	void ShutdownWindow();
 	bool Update(float dTime);
 
+	Model* testModel;
 public:
 	System();
 	~System();

@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Texture.h"
+#include "ShaderStructLibrary.h"
 
 class Model {
 
@@ -41,8 +42,10 @@ public:
 	void Shutdown();
 	void Render(ID3D11DeviceContext* deviceContext);
 
-	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
+	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
+
+	void GetDeferredShaderParameters(DeferredShaderParameters* params);
 };
 
 #endif
