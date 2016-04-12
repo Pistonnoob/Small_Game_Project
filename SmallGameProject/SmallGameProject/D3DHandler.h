@@ -8,26 +8,31 @@
 #include <windows.h>
 #include <string>
 
-using namespace std;
-
-
 class D3DHandler 
 {
 public:
 	D3DHandler();
+	D3DHandler(HWND &window);
 	virtual ~D3DHandler();
+
+	void setWindowToEngine(HWND &setWindow) throw(...);
+	bool initialize() throw(...);
 
 protected:
 	bool InitDirect3D();
 	void createDeviceAndContext() throw(...);
 	// checks the quality level support for 4x MSAA
 	void check4xMsaaQualitySupp() throw(...);
-	void describeSwapChain() throw(...);
+	
+	//swapChain
+	DXGI_SWAP_CHAIN_DESC describeSwapChain() throw(...);
+	bool createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...);
 
 	void CalculateFrameStats();
 protected:
 	ID3D11Device* gDevice;
 	ID3D11DeviceContext* gDeviceContext;
+	HWND* activeWindow;
 	IDXGISwapChain* gSwapChain;
 
 	//data to depthStencil

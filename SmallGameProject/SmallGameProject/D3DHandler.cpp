@@ -7,21 +7,56 @@ D3DHandler::D3DHandler()
 
 	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
 	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
+	this->activeWindow = nullptr;
+}
 
-	try
-	{
-		createDeviceAndContext();
-		check4xMsaaQualitySupp();
-	}
-	catch (char* errorMessage)
-	{
-		cout << errorMessage << endl;
-	}
-
+D3DHandler::D3DHandler(HWND & window)
+{
+	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
+	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
+	this->activeWindow = &window;
 }
 
 D3DHandler::~D3DHandler()
 {
+}
+
+void D3DHandler::setWindowToEngine(HWND &setWindow) throw(...)
+{
+	this->activeWindow = &setWindow;
+	if (this->activeWindow == nullptr)
+	{
+		throw("error in setWindowToEngine");
+	}
+}
+
+bool D3DHandler::initialize() throw(...)
+{
+	std::string errorMessage;
+	bool result = true;
+
+	if (this->activeWindow == nullptr)
+	{
+		errorMessage = "Can not initialize the D3DHandler, no active window is set";
+		result = false;
+	}
+
+	try
+	{
+		this->createDeviceAndContext();
+		this->check4xMsaaQualitySupp();
+		
+		DXGI_SWAP_CHAIN_DESC scDesc;
+		scDesc = this->describeSwapChain();
+
+		this->createSwapChain(&scDesc);
+	}
+	catch (char* errorMessage)
+	{
+		std::cout << errorMessage << std::endl;
+	}
+
+	return result;
 }
 
 void D3DHandler::createDeviceAndContext() throw(...)
@@ -29,7 +64,7 @@ void D3DHandler::createDeviceAndContext() throw(...)
 	HRESULT resultHelper;
 	bool result = true;
 	D3D_FEATURE_LEVEL featureLevel;
-	string errorMessage;
+	std::string errorMessage;
 
 
 	resultHelper = D3D11CreateDevice(
@@ -63,7 +98,7 @@ void D3DHandler::createDeviceAndContext() throw(...)
 
 void D3DHandler::check4xMsaaQualitySupp() throw(...)
 {
-	string errorMessage = "Check4XMSAA quality support function error";
+	std::string errorMessage = "Check4XMSAA quality support function error";
 	UINT sampleCount = 4;
 	HRESULT resultHelper;
 
@@ -81,7 +116,7 @@ void D3DHandler::check4xMsaaQualitySupp() throw(...)
 	assert(m4xMsaaQuality > 0);
 }
 
-void D3DHandler::describeSwapChain() throw(...)
+DXGI_SWAP_CHAIN_DESC D3DHandler::describeSwapChain() throw(...)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	swapChainDesc.BufferDesc.Width = this->clientWidth;
@@ -107,10 +142,57 @@ void D3DHandler::describeSwapChain() throw(...)
 	
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 1;
-	swapChainDesc.OutputWindow;  //window goes here
+	swapChainDesc.OutputWindow = *this->activeWindow;
 	swapChainDesc.Windowed = true;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
+
+	return swapChainDesc;
+}
+
+bool D3DHandler::createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...)
+{
+	HRESULT resultHelper;
+	bool result = true;
+	std::string errorMessage = "";
+
+	IDXGIDevice* dxgiDevice = nullptr;
+	resultHelper = this->gDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
 	
+	if (FAILED(resultHelper))
+	{
+		errorMessage = "DxGiDevice error";
+		result = false;
+	}
+
+	IDXGIAdapter* dxgiAdapter = nullptr;
+	resultHelper = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter);
+
+	if (FAILED(resultHelper))
+	{
+		errorMessage = "DxGiDevice error";
+		result = false;
+	}
+
+	//get the IDXGIFactory interface
+	IDXGIFactory* dxgiFactory = nullptr;
+	resultHelper = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+
+	if (FAILED(resultHelper))
+	{
+		errorMessage = "DxGiDevice error";
+		result = false;
+	}
+
+	//create the swapchain
+	resultHelper = dxgiFactory->CreateSwapChain(this->gDevice, desc, &this->gSwapChain);
+
+	if (FAILED(resultHelper))
+	{
+		errorMessage = "error creating the swapchain";
+		result = false;
+	}
+
+	return result;
 }
 
