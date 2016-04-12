@@ -1,5 +1,5 @@
-#ifndef _GAMESTATE_H_
-#define _GAMESTATE_H_
+#ifndef _STARTSTATE_H_
+#define _STARTSTATE_H_
 #include "GameState.h"
 
 class StartState :
