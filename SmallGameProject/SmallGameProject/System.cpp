@@ -16,7 +16,7 @@ bool System::Initialize()
 {
 	int screenWidth = 0;
 	int screenHeight = 0;
-	bool result;
+	bool result = false;
 
 	//Initilize the window api
 	InitWindow(screenWidth, screenHeight);
