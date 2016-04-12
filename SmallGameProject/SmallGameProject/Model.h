@@ -1,12 +1,48 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <d3d11.h>
+#include <directxmath.h>
+#include <vector>
+
+#include "Texture.h"
+
 class Model {
 
+public:
+	struct Vertex {
+		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT2 texture;
+		DirectX::XMFLOAT3 normal;
+
+		Vertex()
+		{
+			position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			texture = DirectX::XMFLOAT2(0.0f, 0.0f);
+			normal = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		}
+	};
+
 private:
+	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;
+	int vertexCount;
+	int indexCount;
+	std::vector<int> subsetIndices;
+	std::vector<std::string> materialNames;
+	Texture* texture;
+	DirectX::XMMATRIX worldMatrix;
 
 public:
+	Model();
+	~Model();
 
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename);
+	void Shutdown();
+	void Render(ID3D11DeviceContext* deviceContext);
+
+	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
+	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
 };
 
 #endif

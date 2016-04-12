@@ -60,14 +60,16 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 
 void GraphicHandler::DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters shaderParams)
 {
-
+	this->deferredShaderH->SetDeferredRenderTargets(deviceContext);
+	this->deferredShaderH->ClearRenderTargets(deviceContext);
+	this->deferredShaderH->Render(deviceContext, indexCount, indexStart, shaderParams);
 
 	return;
 }
 
 void GraphicHandler::LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters shaderParams)
 {
-
+	this->lightShaderH->Render(deviceContext, indexCount, shaderParams);
 
 	return;
 }
