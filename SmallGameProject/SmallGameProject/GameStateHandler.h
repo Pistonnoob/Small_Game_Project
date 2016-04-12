@@ -1,5 +1,5 @@
-#ifndef _GAMESTATEHANDLER_H_
-#define _GAMESTATEHANDLER_H_
+#ifndef GAMESTATEHANDLER_H
+#define GAMESTATEHANDLER_H
 #include "InputHandler.h"
 #include "GraphicHandler.h"
 #include <d3d11.h>
@@ -7,7 +7,6 @@
 #include <Windows.h>
 
 #include "GameState.h"
-class GameState;
 class GameStateHandler {
 
 private:

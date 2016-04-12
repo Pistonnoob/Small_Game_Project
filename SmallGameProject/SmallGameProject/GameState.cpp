@@ -13,3 +13,8 @@ GameState::GameState(GameStateHandler * GSH)
 GameState::~GameState()
 {
 }
+
+void GameState::Shutdown()
+{
+	this->m_GSH = NULL;
+}
