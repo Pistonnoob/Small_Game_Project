@@ -278,7 +278,7 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 
 	if (deferredTextures) {
 		//Set shader texture resource for pixel shader
-		deviceContext->PSSetShaderResources(0, 4, deferredTextures);
+		deviceContext->PSSetShaderResources(0, 5, deferredTextures);
 	}
 
 	return true;
