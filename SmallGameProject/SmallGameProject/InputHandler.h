@@ -16,6 +16,7 @@ private:
 	IDirectInputDevice8* DIMouse;
 	DIMOUSESTATE DIMouseState;
 	bool KeyboarState[256];
+	bool OldKeyboardState[256];
 
 	int mouseX;
 	int mouseY;

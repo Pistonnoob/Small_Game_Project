@@ -136,6 +136,10 @@ void InputHandler::Shutdown()
 
 void InputHandler::Update()
 {
+	//Copy the old data
+	for (int i = 0; i < 256; i++) {
+		this->OldKeyboardState[i] = this->KeyboarState[i];
+	}
 	//Check if we can read the devices. 
 	//If we cant, the old data will be used
 	this->ReadKeyboard();
@@ -237,8 +241,7 @@ bool InputHandler::isKeyDown(unsigned int key)
 
 bool InputHandler::isKeyReleased(unsigned int key)
 {
-	if (this->lastKeyPressed == key) {
-		this->lastKeyPressed = -1;
+	if ( this->OldKeyboardState[key] && !this->KeyboarState[key] ) {
 		return true;
 	}
 
