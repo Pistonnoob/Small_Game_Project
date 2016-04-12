@@ -33,9 +33,9 @@ struct PSOutput
 	float4 worldPos : SV_Target4;
 };
 
-PixelOutput main(PixelInput input) : SV_TARGET
+PSOutput main(PSInput input) : SV_TARGET
 {
-	PixelOutput output;
+	PSOutput output;
 
 	if (hasTexture) {
 		output.color = shaderTexture.Sample(shaderSampler, input.tex).rgba;
