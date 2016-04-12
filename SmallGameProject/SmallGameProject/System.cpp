@@ -212,7 +212,7 @@ bool System::Update(float dTime)
 {
 	this->inputH->Update();
 
-	if (this->inputH->isKeyDown(VK_ESCAPE)) {
+	if (this->inputH->isKeyPressed(VK_ESCAPE)) {
 		return false;
 	}
 

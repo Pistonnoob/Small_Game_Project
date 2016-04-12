@@ -49,6 +49,9 @@
     <Filter Include="Source Files\Observers">
       <UniqueIdentifier>{9fade6f4-e101-4cf2-860a-8fc279e262c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{966149b8-4a7c-476f-823e-078782e5c833}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -265,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="GameData.h">
       <Filter>Header Files\Observers</Filter>
+    </ClInclude>
+    <ClInclude Include="EventLib.h">
+      <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

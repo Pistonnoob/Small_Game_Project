@@ -194,6 +194,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntitySubject.h" />
+    <ClInclude Include="EventLib.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateHandler.h" />
