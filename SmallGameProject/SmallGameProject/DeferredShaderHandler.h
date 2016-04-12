@@ -7,7 +7,7 @@
 #include <directxmath.h>
 #include <fstream>
 
-const int BUFFER_COUNT = 4;
+const int BUFFER_COUNT = 5;
 
 class DeferredShaderHandler {
 private:
