@@ -22,9 +22,9 @@ bool System::Initialize()
 	InitWindow(screenWidth, screenHeight);
 
 	//Create the inputHandler
-
+	this->inputH = new InputHandler;
 	//Initialize the InputHandler
-
+	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 	//Create the graphicHandler.
 
 	//Initialize the graphicHandler
@@ -90,6 +90,7 @@ void System::Shutdown()
 {
 	//Release the graphicsHandler
 	//Release the inputHandler
+	this->inputH->Shutdown();
 	//Release the GameStateHandler
 	//Shutdown the window
 	ShutdownWindow();
@@ -209,7 +210,9 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
-
+	if (this->inputH->isKeyDown(VK_ESCAPE)) {
+		return false;
+	}
 
 	return true;
 }
@@ -222,14 +225,14 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	case WM_KEYDOWN:
 	{
 		//if key is pressed send it to the input object to be recorded
-		
+		this->inputH->KeyDown((unsigned int) wparam);
 		return 0;
 	}
 	//Check if a key is released on the keyboard
 	case WM_KEYUP:
 	{
 		//If a key is released then send it to the input object
-		
+		this->inputH->KeyUp((unsigned int) wparam);
 		return 0;
 	}
 
