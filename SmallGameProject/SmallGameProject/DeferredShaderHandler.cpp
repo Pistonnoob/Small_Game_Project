@@ -20,7 +20,7 @@ DeferredShaderHandler::~DeferredShaderHandler()
 {
 }
 
-bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int screenWidth, int screenHeight)
+bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int screenWidth, int screenHeight)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
@@ -49,7 +49,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -61,7 +61,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 			OutputShaderErrorMessage(errorMessage, hwnd, gsFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(Geo)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(Geo)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -73,7 +73,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -82,21 +82,21 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create the vertex shader from buffer
 	hresult = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->vertexShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
 		return false;
 	}
 
 	//Create the geometry shader from buffer
 	hresult = device->CreateGeometryShader(geoShaderBuffer->GetBufferPointer(), geoShaderBuffer->GetBufferSize(), NULL, &this->geoShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateGeometryShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateGeometryShader", L"Error", MB_OK);
 		return false;
 	}
 
 	//Create the pixel shader from buffer
 	hresult = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->pixelShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
 		return false;
 	}
 
@@ -133,7 +133,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create the vertex input layout.
 	hresult = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
 		return false;
 	}
 
@@ -157,7 +157,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	hresult = device->CreateBuffer(&matrixBufferDesc, NULL, &this->matrixBuffer);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateBuffer", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateBuffer", L"Error", MB_OK);
 		return false;
 	}
 
@@ -180,7 +180,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
 	if (FAILED(hresult))
 	{
-		MessageBox(hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
 		return false;
 	}
 
@@ -207,7 +207,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	for (int i = 0; i < BUFFER_COUNT; i++) {
 		hresult = device->CreateTexture2D(&renderTextureDesc, NULL, &this->deferredRenderTargetTextures[i]);
 		if (FAILED(hresult)) {
-			MessageBox(hwnd, L"device->CreateTexture2D", L"Error", MB_OK);
+			MessageBox(*hwnd, L"device->CreateTexture2D", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -221,7 +221,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	for (int i = 0; i<BUFFER_COUNT; i++) {
 		hresult = device->CreateRenderTargetView(this->deferredRenderTargetTextures[i], &renderTargetViewDesc, &this->deferredRenderTargetViews[i]);
 		if (FAILED(hresult)) {
-			MessageBox(hwnd, L"device->CreateRenderTargetView", L"Error", MB_OK);
+			MessageBox(*hwnd, L"device->CreateRenderTargetView", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -236,7 +236,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	for (int i = 0; i < BUFFER_COUNT; i++) {
 		hresult = device->CreateShaderResourceView(this->deferredRenderTargetTextures[i], &shaderResourceViewDesc, &this->deferredShaderResources[i]);
 		if (FAILED(hresult)) {
-			MessageBox(hwnd, L"device->CreateShaderResourceView", L"Error", MB_OK);
+			MessageBox(*hwnd, L"device->CreateShaderResourceView", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -263,7 +263,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create depth texture
 	hresult = device->CreateTexture2D(&depthBufferDesc, NULL, &this->depthStencilBuffer);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"this->device->CreateTexture2D", L"Error", MB_OK);
+		MessageBox(*hwnd, L"this->device->CreateTexture2D", L"Error", MB_OK);
 		return false;
 	}
 
@@ -278,7 +278,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND hwnd, int scre
 	//Create the depth stencil view
 	hresult = device->CreateDepthStencilView(this->depthStencilBuffer, &depthStencilViewDesc, &this->depthStencilView);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"this->device->CreateDepthStencilView", L"Error", MB_OK);
+		MessageBox(*hwnd, L"this->device->CreateDepthStencilView", L"Error", MB_OK);
 		return false;
 	}
 
@@ -339,7 +339,7 @@ bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int index
 	return true;
 }
 
-void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -368,7 +368,7 @@ void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, H
 	errorMessage = nullptr;
 
 	//Notify the user to check error log
-	MessageBox(hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
+	MessageBox(*hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
 
 	return;
 }

@@ -9,7 +9,7 @@ GraphicHandler::~GraphicHandler()
 {
 }
 
-bool GraphicHandler::initialize(HWND hwnd, int screenWidth, int screenHeight)
+bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 {
 	std::string errorMessage;
 	bool result;

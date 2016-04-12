@@ -13,7 +13,7 @@ LightShaderHandler::~LightShaderHandler()
 {
 }
 
-bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
+bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
@@ -41,7 +41,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(VS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -53,7 +53,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
 		}
 		else {
-			MessageBox(hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
+			MessageBox(*hwnd, L"D3DCompileFromFile(PS)", L"Error", MB_OK);
 		}
 		return false;
 	}
@@ -62,14 +62,14 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	//Create the vertex shader from buffer
 	hresult = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->vertexShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateVertexShader", L"Error", MB_OK);
 		return false;
 	}
 
 	//Create the pixel shader from buffer
 	hresult = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &this->pixelShader);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreatePixelShader", L"Error", MB_OK);
 		return false;
 	}
 
@@ -98,7 +98,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	//Create the vertex input layout.
 	hresult = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateInputLayout", L"Error", MB_OK);
 		return false;
 	}
 
@@ -120,7 +120,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	hresult = device->CreateBuffer(&matrixBufferDesc, NULL, &this->matrixBuffer);
 	if (FAILED(hresult)) {
-		MessageBox(hwnd, L"device->CreateBuffer", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateBuffer", L"Error", MB_OK);
 		return false;
 	}
 
@@ -143,7 +143,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND hwnd)
 	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
 	if (FAILED(hresult))
 	{
-		MessageBox(hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
 		return false;
 	}
 
@@ -198,7 +198,7 @@ bool LightShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCou
 	return true;
 }
 
-void LightShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void LightShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -227,7 +227,7 @@ void LightShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND
 	errorMessage = nullptr;
 
 	//Notify the user to check error log
-	MessageBox(hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
+	MessageBox(*hwnd, L"Error compiling shader, check shader_error.txt for message.", shaderFilename, MB_OK);
 
 	return;
 }

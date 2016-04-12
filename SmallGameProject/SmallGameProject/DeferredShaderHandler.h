@@ -42,7 +42,7 @@ private:
 	ID3D11Texture2D* depthStencilBuffer;
 	ID3D11DepthStencilView* depthStencilView;
 
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
+	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, DeferredShaderParameters params);
 
@@ -52,7 +52,7 @@ public:
 	DeferredShaderHandler();
 	~DeferredShaderHandler();
 
-	bool Initialize(ID3D11Device* device, HWND hwnd, int screenWidth, int screenHeight);
+	bool Initialize(ID3D11Device* device, HWND* hwnd, int screenWidth, int screenHeight);
 	void Shutdown();
 
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters params);
