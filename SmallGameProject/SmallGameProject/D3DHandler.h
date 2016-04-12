@@ -28,6 +28,10 @@ protected:
 	DXGI_SWAP_CHAIN_DESC describeSwapChain() throw(...);
 	bool createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...);
 
+	//depth stencil
+	void createRenderTargetViewDS() throw(...);
+	void createDepthBufferAndView() throw(...);
+
 	//setAllVariablestToNullPtr
 	void startUpValues();
 	void CalculateFrameStats();

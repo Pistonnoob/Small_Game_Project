@@ -54,6 +54,7 @@ bool D3DHandler::initialize() throw(...)
 		scDesc = this->describeSwapChain();
 
 		this->createSwapChain(&scDesc);
+		this->createRenderTargetViewDS();
 	}
 	catch (char* errorMessage)
 	{
@@ -198,6 +199,28 @@ bool D3DHandler::createSwapChain(DXGI_SWAP_CHAIN_DESC* desc) throw(...)
 	}
 
 	return result;
+}
+
+void D3DHandler::createRenderTargetViewDS() throw(...)
+{
+	HRESULT resultHandler;
+	ID3D11Texture2D* backBuffer;
+	this->gSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
+
+	resultHandler = this->gDevice->CreateRenderTargetView(backBuffer, 0, &this->mDepthStencilRTV);
+
+	if (FAILED(resultHandler))
+	{
+		throw("Failed to create the render target view for the depth buffer");
+	}
+
+	//realease the com object
+	backBuffer->Release();
+}
+
+void D3DHandler::createDepthBufferAndView() throw(...)
+{
+
 }
 
 void D3DHandler::startUpValues()
