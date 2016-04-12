@@ -81,6 +81,25 @@ ID3D11DeviceContext * D3DHandler::GetDeviceContext() const
 	return this->gDeviceContext;
 }
 
+void D3DHandler::ClearDepthAndRTVViews()
+{
+	float black[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+	this->gDeviceContext->ClearRenderTargetView
+		(
+			this->mDepthStencilRTV,
+			black
+		);
+
+	this->gDeviceContext->ClearDepthStencilView
+		(
+			this->mDepthStencilView,
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+			1.0f,
+			0
+		);
+}
+
 void D3DHandler::CreateDeviceAndContext() throw(...)
 {
 	HRESULT resultHelper;
