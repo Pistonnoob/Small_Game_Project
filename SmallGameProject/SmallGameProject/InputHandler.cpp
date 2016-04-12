@@ -131,7 +131,6 @@ void InputHandler::Shutdown()
 
 	if (this->directInput) {
 		this->directInput->Release();
-		this->directInput = nullptr;
 	}
 }
 
