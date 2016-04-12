@@ -25,6 +25,7 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 {
 	std::string errorMessage;
 	bool result = true;
+	HRESULT resultHelper;
 
 	this->activeWindow = window;
 	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
@@ -47,9 +48,24 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 		this->CreateSwapChain(&scDesc);
 		this->CreateRenderTargetViewDS();
 	}
+
 	catch (char* errorMessage)
 	{
 		std::cout << errorMessage << std::endl;
+		result = false;
+	}
+
+	//if all is well, bind the view to output merger stage
+	if (result == true)
+	{
+		this->gDeviceContext->OMSetRenderTargets
+			(
+				1,
+				&this->mDepthStencilRTV,
+				this->mDepthStencilView
+			);
+
+		this->SetInitialViewPort();
 	}
 
 	return result;
@@ -270,6 +286,18 @@ void D3DHandler::CreateDepthBufferAndView() throw(...)
 	{
 		throw("Create DepthStencilView");
 	}
+}
+
+void D3DHandler::SetInitialViewPort()
+{
+	this->gameViewport.TopLeftX = 0.0f;
+	this->gameViewport.TopLeftY = 0.0f;
+	this->gameViewport.Width = static_cast<float>(this->clientWidth);
+	this->gameViewport.Height = static_cast<float>(this->clientHeight);
+	this->gameViewport.MinDepth = 0.0f;
+	this->gameViewport.MaxDepth = 1.0f;
+
+	this->gDeviceContext->RSSetViewports(1, &this->gameViewport);
 }
 
 void D3DHandler::StartUpValues()
