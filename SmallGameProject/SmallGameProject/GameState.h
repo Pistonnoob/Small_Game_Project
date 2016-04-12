@@ -3,6 +3,7 @@
 #include "InputHandler.h"
 #include <Windows.h>
 #include "GraphicHandler.h"
+#include <d3d11.h>
 class GameStateHandler;
 class GameState {
 
@@ -11,8 +12,10 @@ protected:
 public:
 
 	GameState();	//This will initialize the GSH pointer to NULL
-	GameState(GameStateHandler* GSH);
 	virtual ~GameState();
+
+	void InitializeBase(GameStateHandler* handler);
+	virtual int Initialize() = 0;
 
 	virtual void Shutdown();
 
