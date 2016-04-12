@@ -33,6 +33,9 @@ protected:
 	void CreateRenderTargetViewDS() throw(...);
 	void CreateDepthBufferAndView() throw(...);
 
+	//set initial viewPort
+	void SetInitialViewPort();
+
 	//setAllVariablestToNullPtr
 	void StartUpValues();
 	void CalculateFrameStats();

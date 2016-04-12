@@ -64,6 +64,8 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 				&this->mDepthStencilRTV,
 				this->mDepthStencilView
 			);
+
+		this->SetInitialViewPort();
 	}
 
 	return result;
@@ -284,6 +286,18 @@ void D3DHandler::CreateDepthBufferAndView() throw(...)
 	{
 		throw("Create DepthStencilView");
 	}
+}
+
+void D3DHandler::SetInitialViewPort()
+{
+	this->gameViewport.TopLeftX = 0.0f;
+	this->gameViewport.TopLeftY = 0.0f;
+	this->gameViewport.Width = static_cast<float>(this->clientWidth);
+	this->gameViewport.Height = static_cast<float>(this->clientHeight);
+	this->gameViewport.MinDepth = 0.0f;
+	this->gameViewport.MaxDepth = 1.0f;
+
+	this->gDeviceContext->RSSetViewports(1, &this->gameViewport);
 }
 
 void D3DHandler::StartUpValues()
