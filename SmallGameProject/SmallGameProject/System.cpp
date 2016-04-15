@@ -221,22 +221,13 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
-	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
-	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT4 camPosFloat;
-	DirectX::XMStoreFloat4(&camPosFloat, camPos);
-
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
-	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
-	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
-	deferredShaderParams->viewMatrix = viewMatrix;
-	deferredShaderParams->camPos = camPosFloat;
+	/*DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
 
 	this->graphicH->ClearRTVs();
 
 	this->graphicH->SetDeferredRTVs();
-	
+
+	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
 	this->testModel->Render(this->graphicH->GetDeviceContext());
 	this->graphicH->DeferredRender(3, 0, deferredShaderParams);
 
@@ -244,7 +235,7 @@ bool System::Update(float dTime)
 
 	this->graphicH->LightRender();
 
-	delete deferredShaderParams;
+	delete deferredShaderParams;*/
 
 	return true;
 }
