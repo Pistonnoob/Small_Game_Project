@@ -30,7 +30,7 @@ bool System::Initialize()
 	//Initialize the graphicHandler
 
 	//Create the GameStateHandler.
-
+	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
 
 
