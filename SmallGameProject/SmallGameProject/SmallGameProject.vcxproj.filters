@@ -153,6 +153,9 @@
     <ClCompile Include="StartState.cpp">
       <Filter>Source Files\GameStates</Filter>
     </ClCompile>
+    <ClCompile Include="SphereBoundingVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -244,7 +247,7 @@
     </ClInclude>
     <ClInclude Include="EventLib.h">
       <Filter>Libraries</Filter>
-   </ClInclude>
+    </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
@@ -253,6 +256,12 @@
     </ClInclude>
     <ClInclude Include="StartState.h">
       <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityLib.h">
+      <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereBoundingVolume.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

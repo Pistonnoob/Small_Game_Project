@@ -6,9 +6,12 @@
 
 class Subject {
 
-private:
+protected:
 	std::set<Observer*> observers;
-	virtual void notify(const Entity& entity, Events::ENTITY evnt) = 0;
+
+private:
+
+	virtual void notify(const Entity* entity, Events::ENTITY evnt) = 0;
 
 public:
 	Subject();

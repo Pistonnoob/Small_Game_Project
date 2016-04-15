@@ -11,7 +11,7 @@ EntitySubject::~EntitySubject()
 
 }
 
-void EntitySubject::notify(const Entity& entity, Events::ENTITY evnt)
+void EntitySubject::notify(const Entity* entity, Events::ENTITY evnt)
 {
 	//Send the event to all the observers
 	std::set<Observer*>::iterator it;										//Create the iterator

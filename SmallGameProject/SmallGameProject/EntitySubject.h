@@ -7,7 +7,7 @@ class EntitySubject : public Subject{
 
 	private:
 		std::set<Observer*> observers;
-		void notify(const Entity& entity, Events::ENTITY evnt);
+		void notify(const Entity* entity, Events::ENTITY evnt);
 
 	public:
 		EntitySubject();

@@ -2,7 +2,6 @@
 #define GAMEDATA_H
 
 #include "Observer.h"
-#include "Enemy.h"
 
 class GameData : public Observer {
 
@@ -24,9 +23,9 @@ private:
 
 public:
 	
-	~GameData();
+	virtual ~GameData();
 	static GameData* getInstance();
-	virtual void onNotify(const Entity& entity, Events::ENTITY evnt);
+	void onNotify(const Entity* entity, Events::ENTITY evnt);
 
 };
 
