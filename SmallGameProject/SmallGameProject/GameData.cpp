@@ -1,7 +1,7 @@
 #include "GameData.h"
 GameData::GameData()
 {
-
+	this->enemiesKilled = 0;
 }
 
 GameData::~GameData()
@@ -24,5 +24,9 @@ GameData* GameData::getInstance()
 
 void GameData::onNotify(const Entity& entity, Events::ENTITY evnt)
 {
+	//Need to finish Entity class
+	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
+	//	this->enemiesKilled++;
+	//}
 
 }

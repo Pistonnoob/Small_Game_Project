@@ -2,6 +2,7 @@
 #define GAMEDATA_H
 
 #include "Observer.h"
+#include "Enemy.h"
 
 class GameData : public Observer {
 
@@ -12,8 +13,7 @@ private:
 	GameData();					//Only GameData will create itself
 
 	//Data
-
-
+	static int enemiesKilled;
 
 public:
 	
