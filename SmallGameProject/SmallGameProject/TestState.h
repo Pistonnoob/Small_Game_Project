@@ -1,15 +1,11 @@
-#ifndef STARTSTATE_H
-#define STARTSTATE_H
+#pragma once
 #include "GameState.h"
-class StartState :
+class TestState :
 	public GameState
 {
-private:
-
 public:
-	StartState();
-	StartState(GameStateHandler* GSH);
-	virtual ~StartState();
+	TestState();
+	~TestState();
 
 	void Initialize();
 
@@ -19,7 +15,5 @@ public:
 	virtual int Update(float deltaTime);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
 
-private:
 };
 
-#endif
