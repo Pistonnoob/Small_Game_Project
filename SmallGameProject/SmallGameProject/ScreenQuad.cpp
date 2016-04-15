@@ -66,7 +66,7 @@ bool ScreenQuad::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	//Set the description of the static vertex buffer
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT3) * sizeVertices;
+	vertexBufferDesc.ByteWidth = sizeof(VertexSimple) * sizeVertices;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;

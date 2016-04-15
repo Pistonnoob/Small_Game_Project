@@ -12,7 +12,7 @@ cbuffer LightConstantBuffer
 
 struct VSInput
 {
-	float4 position : SV_POSITION;
+	float4 position : POSITION;
 	float2 tex : TEXCOORD0;
 };
 

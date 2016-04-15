@@ -43,7 +43,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	WCHAR* psFilename = L"../SmallGameProject/DeferredPixelShader.hlsl";
 
 	//Compile the vertex shader code
-	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
@@ -55,7 +55,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	}
 
 	//Compile the geometry shader code
-	hresult = D3DCompileFromFile(gsFilename, NULL, NULL, "main", "gs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geoShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(gsFilename, NULL, NULL, "main", "gs_5_0", D3DCOMPILE_DEBUG, 0, &geoShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, gsFilename);
@@ -67,7 +67,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	}
 
 	//Compile the pixel shader code
-	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3DCOMPILE_DEBUG, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
@@ -103,7 +103,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	
 
 	//Fill the vertex input layout description 
-	polygonLayout[0].SemanticName = "SV_POSITION";
+	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
 	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	polygonLayout[0].InputSlot = 0;
@@ -420,7 +420,7 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 
 	//Set the constant buffer in vertex and pixel shader with updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
-	//deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
+	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
 	if (params->diffTexture) {
 		//Set shader texture resource for pixel shader
@@ -459,7 +459,7 @@ void DeferredShaderHandler::ClearRenderTargets(ID3D11DeviceContext* deviceContex
 	color[0] = 0.0f;
 	color[1] = 0.0f;
 	color[2] = 0.0f;
-	color[3] = 0.0f;
+	color[3] = 1.0f;
 
 	//Clear the render target textures
 	for (int i = 0; i < BUFFER_COUNT; i++) {

@@ -243,6 +243,7 @@ bool System::Update(float dTime)
 
 	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
 	this->testModel->Render(this->graphicH->GetDeviceContext());
+
 	this->graphicH->DeferredRender(3, 0, deferredShaderParams);
 
 	delete deferredShaderParams;

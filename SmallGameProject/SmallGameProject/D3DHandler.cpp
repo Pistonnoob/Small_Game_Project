@@ -49,6 +49,7 @@ bool D3DHandler::Initialize(HWND* window, int clientWidth, int clientHeight) thr
 
 		this->CreateSwapChain(&scDesc);
 		this->CreateRenderTargetViewDS();
+		this->CreateRasterizerState();
 		this->CreateDepthBufferAndView();
 		this->CreateStencilStates();
 	}
@@ -87,7 +88,7 @@ ID3D11DeviceContext * D3DHandler::GetDeviceContext() const
 
 void D3DHandler::ClearDepthAndRTVViews()
 {
-	float black[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+	float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	this->gDeviceContext->ClearRenderTargetView
 		(
@@ -385,6 +386,30 @@ void D3DHandler::SetInitialViewPort()
 	this->gameViewport.MaxDepth = 1.0f;
 
 	this->gDeviceContext->RSSetViewports(1, &this->gameViewport);
+}
+
+void D3DHandler::CreateRasterizerState()
+{
+	D3D11_RASTERIZER_DESC rasterDesc;
+
+	ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+	//Setup the resterizer state for more rendering control
+	rasterDesc.AntialiasedLineEnable = false;
+	rasterDesc.CullMode = D3D11_CULL_NONE;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.FrontCounterClockwise = false;
+	rasterDesc.MultisampleEnable = false;
+	rasterDesc.ScissorEnable = false;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+	//Create the resterizer state from description
+	this->gDevice->CreateRasterizerState(&rasterDesc, &this->rasterState);
+
+	//Set the rasterizer state
+	this->gDeviceContext->RSSetState(this->rasterState);
 }
 
 void D3DHandler::StartUpValues()

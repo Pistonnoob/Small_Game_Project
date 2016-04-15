@@ -48,6 +48,8 @@ protected:
 	//set initial viewPort
 	void SetInitialViewPort();
 
+	void CreateRasterizerState();
+
 	//setAllVariablestToNullPtr
 	void StartUpValues();
 	void CalculateFrameStats();
@@ -71,6 +73,8 @@ protected:
 
 	D3D_DRIVER_TYPE clientDriverType;
 	D3D_FEATURE_LEVEL featureSupport;
+
+	ID3D11RasterizerState* rasterState;
 	
 	int clientWidth;
 	int clientHeight;

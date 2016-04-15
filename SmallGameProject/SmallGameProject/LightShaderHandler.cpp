@@ -18,7 +18,6 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
-	ID3D10Blob* geoShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
@@ -29,13 +28,12 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	errorMessage = nullptr;
 	vertexShaderBuffer = nullptr;
 	pixelShaderBuffer = nullptr;
-	geoShaderBuffer = nullptr;
 
 	WCHAR* vsFilename = L"../SmallGameProject/LightVertexShader.hlsl";
 	WCHAR* psFilename = L"../SmallGameProject/LightPixelShader.hlsl";
 
 	//Compile the vertex shader code
-	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
@@ -47,7 +45,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	}
 
 	//Compile the pixel shader code
-	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3DCOMPILE_DEBUG, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
@@ -76,7 +74,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 
 
 	//Fill the vertex input layout description 
-	polygonLayout[0].SemanticName = "SV_POSITION";
+	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
 	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	polygonLayout[0].InputSlot = 0;
@@ -126,9 +124,9 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 
 	//Fill the texture sampler state description
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 	samplerDesc.MipLODBias = 0.0f;
 	samplerDesc.MaxAnisotropy = 1;
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;

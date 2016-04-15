@@ -65,8 +65,15 @@ float4 main(PSInput input) : SV_TARGET
 	//Calculate the specular part
 	float4 specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
+	lightIntensity = dot(normal, outVec);
+	if (lightIntensity < 0) {
+		lightIntensity = 0;
+	}
+
 	//Combine everything for the output color
 	outputColor = saturate(((diffColor.rgba + specular.rgba) * lightIntensity * 0.8f) + ((ambientColor.rgba) * 0.2f));
 
-	return outputColor;
+	//return float4(input.tex.x, input.tex.y, 0.0f, 1.0f);
+	//return float4(input.position.x, input.position.y, 0.0f, 1.0f);
+	return diffColor;
 }

@@ -88,7 +88,7 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());
-	this->lightShaderH->Render(this->engine->GetDeviceContext(), 3, shaderParams);
+	this->lightShaderH->Render(this->engine->GetDeviceContext(), 6, shaderParams);
 
 	return;
 }
