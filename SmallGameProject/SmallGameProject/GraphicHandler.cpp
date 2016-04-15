@@ -21,7 +21,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 	}
 	try
 	{
-		this->engine->Initialize(hwnd);
+		this->engine->Initialize(hwnd, screenWidth, screenHeight);
 	}
 
 	catch (char* e)
@@ -71,16 +71,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 
 void GraphicHandler::DeferredRender(int indexCount, int indexStart, DeferredShaderParameters* shaderParams)
 {
-	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
-	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT4 camPosFloat;
-	DirectX::XMStoreFloat4(&camPosFloat, camPos);
-
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
-	
-	shaderParams->viewMatrix = viewMatrix;
-	shaderParams->camPos = camPosFloat;
 	shaderParams->projectionMatrix = this->perspectiveMatrix;
 
 	this->deferredShaderH->Render(this->engine->GetDeviceContext(), indexCount, indexStart, shaderParams);
@@ -100,7 +90,6 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 	this->screenQuad->Render(this->engine->GetDeviceContext());
 	this->lightShaderH->Render(this->engine->GetDeviceContext(), 3, shaderParams);
 
-	delete shaderParams;
 	return;
 }
 
@@ -147,11 +136,16 @@ void GraphicHandler::ClearRTVs()
 void GraphicHandler::SetDeferredRTVs()
 {
 	this->deferredShaderH->SetDeferredRenderTargets(this->engine->GetDeviceContext());
-	//this->engine->SetDepth(true);
+	this->engine->SetDepth(true);
 }
 
 void GraphicHandler::SetLightRTV()
 {
-	/*this->engine->SetBackbufferRTV();
-	this->engine->SetDepth(false);*/
+	this->engine->SetRenderTargetView();
+	this->engine->SetDepth(false);
+}
+
+void GraphicHandler::PresentScene()
+{
+	this->engine->PresentScene();
 }

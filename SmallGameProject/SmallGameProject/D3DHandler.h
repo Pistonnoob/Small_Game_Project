@@ -16,7 +16,7 @@ public:
 	virtual ~D3DHandler();
 
 	void SetWindowToEngine(HWND &setWindow) throw(...);
-	bool Initialize(HWND* window) throw(...);
+	bool Initialize(HWND* window, int clientWidth, int clientHeight) throw(...);
 
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;
@@ -25,6 +25,8 @@ public:
 
 	void SetDepth(const bool &desired);
 	void SetRenderTargetView();
+
+	void PresentScene();
 
 	void Shutdown();
 protected:

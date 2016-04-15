@@ -231,7 +231,7 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
-	/*DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
+	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
 	DirectX::XMMATRIX viewMatrix;
 	this->graphicH->ClearRTVs();
 
@@ -256,7 +256,9 @@ bool System::Update(float dTime)
 
 	this->graphicH->LightRender(lightShaderParams);
 
-	delete deferredShaderParams;*/
+	delete lightShaderParams;
+
+	this->graphicH->PresentScene();
 
 	return true;
 }

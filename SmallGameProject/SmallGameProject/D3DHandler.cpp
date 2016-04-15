@@ -21,13 +21,15 @@ void D3DHandler::SetWindowToEngine(HWND &setWindow) throw(...)
 	}
 }
 
-bool D3DHandler::Initialize(HWND* window) throw(...)
+bool D3DHandler::Initialize(HWND* window, int clientWidth, int clientHeight) throw(...)
 {
 	std::string errorMessage;
 	bool result = true;
 	HRESULT resultHelper;
 
 	this->activeWindow = window;
+	this->clientWidth = clientWidth;
+	this->clientHeight = clientHeight;
 	this->clientDriverType = D3D_DRIVER_TYPE_HARDWARE;
 	this->featureSupport = D3D_FEATURE_LEVEL_11_0;
 
@@ -47,6 +49,7 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 
 		this->CreateSwapChain(&scDesc);
 		this->CreateRenderTargetViewDS();
+		this->CreateDepthBufferAndView();
 		this->CreateStencilStates();
 	}
 
@@ -116,6 +119,11 @@ void D3DHandler::SetDepth(const bool &desired)
 void D3DHandler::SetRenderTargetView()
 {
 	this->gDeviceContext->OMSetRenderTargets(1, &this->backBufferRTV, this->mDepthStencilView);
+}
+
+void D3DHandler::PresentScene()
+{
+	this->gSwapChain->Present(0, 0);
 }
 
 void D3DHandler::CreateDeviceAndContext() throw(...)
