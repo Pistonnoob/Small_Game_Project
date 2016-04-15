@@ -88,23 +88,13 @@ void GraphicHandler::DeferredRender(int indexCount, int indexStart, DeferredShad
 	return;
 }
 
-void GraphicHandler::LightRender()
+void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 {
-	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
-	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT4 camPosFloat;
-	DirectX::XMStoreFloat4(&camPosFloat, camPos);
-
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
-	LightShaderParameters* shaderParams = new LightShaderParameters;
+	
 	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
-	shaderParams->viewMatrix = viewMatrix;
 	shaderParams->projectionMatrix = this->orthographicMatrix;
 	shaderParams->lightViewMatrix = DirectX::XMMatrixIdentity();
 	shaderParams->lightProjectionMatrix = DirectX::XMMatrixIdentity();
-	shaderParams->camPos = camPosFloat;
-	shaderParams->lightPos = camPosFloat;
 	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());

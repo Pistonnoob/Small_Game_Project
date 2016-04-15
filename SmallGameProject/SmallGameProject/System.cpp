@@ -5,7 +5,7 @@ System::System()
 	this->gameSH = nullptr;
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
-
+	this->cameraH = nullptr;
 	this->testModel = nullptr;
 }
 
@@ -35,6 +35,16 @@ bool System::Initialize()
 	//Create the GameStateHandler.
 
 	//Initialize the GameStateHandler
+
+	//Create the CameraHandler
+	this->cameraH = new CameraHandler;
+
+	//Initialize the CameraHandler
+	result = this->cameraH->Initialize();
+	if (!result) {
+		return false;
+	}
+
 	this->testModel = new Model;
 
 	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "");
@@ -222,18 +232,29 @@ void System::ShutdownWindow()
 bool System::Update(float dTime) 
 {
 	/*DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
-
+	DirectX::XMMATRIX viewMatrix;
 	this->graphicH->ClearRTVs();
 
 	this->graphicH->SetDeferredRTVs();
+
+	this->cameraH->GetViewMatrix(viewMatrix);
+	deferredShaderParams->viewMatrix = viewMatrix;
+	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
 
 	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
 	this->testModel->Render(this->graphicH->GetDeviceContext());
 	this->graphicH->DeferredRender(3, 0, deferredShaderParams);
 
+	delete deferredShaderParams;
+	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+
 	this->graphicH->SetLightRTV();
 
-	this->graphicH->LightRender();
+	lightShaderParams->camPos = this->cameraH->GetCameraPos();
+	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
+	lightShaderParams->viewMatrix = viewMatrix;
+
+	this->graphicH->LightRender(lightShaderParams);
 
 	delete deferredShaderParams;*/
 

@@ -28,7 +28,7 @@ public:
 
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight);
 	void DeferredRender(int indexCount, int indexStart, DeferredShaderParameters* shaderParams);
-	void LightRender();
+	void LightRender(LightShaderParameters* shaderParams);
 	void Shutdown();
 
 	void ClearRTVs();
