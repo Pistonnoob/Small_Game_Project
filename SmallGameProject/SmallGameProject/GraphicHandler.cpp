@@ -14,6 +14,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 	std::string errorMessage;
 	bool result;
 
+	//Create the Direct3D handler
 	this->engine = new D3DHandler;
 	if (!this->engine) {
 		return false;
@@ -54,23 +55,52 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 	if (!result) {
 		return false;
 	}
+
+	//Setup projection matrix
+	//fieldOfView = 3.141592654f / 4.0f;
+	float fieldOfView = (float)DirectX::XM_PI / 4.0f;
+	float screenAspect = (float)screenWidth / (float)screenHeight;
+
+	this->perspectiveMatrix = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
+
+	//Create an orthographic projection matrix for 2D rendering
+	this->orthographicMatrix = DirectX::XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 	
 	return true;
 }
 
-void GraphicHandler::DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters* shaderParams)
+void GraphicHandler::DeferredRender(int indexCount, int indexStart, DeferredShaderParameters* shaderParams)
 {
-	this->deferredShaderH->SetDeferredRenderTargets(deviceContext);
-	this->deferredShaderH->ClearRenderTargets(deviceContext);
-	this->deferredShaderH->Render(deviceContext, indexCount, indexStart, shaderParams);
+	shaderParams->projectionMatrix = this->perspectiveMatrix;
+
+	this->deferredShaderH->Render(this->engine->GetDeviceContext(), indexCount, indexStart, shaderParams);
 
 	return;
 }
 
-void GraphicHandler::LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* shaderParams)
+void GraphicHandler::LightRender()
 {
-	this->lightShaderH->Render(deviceContext, indexCount, shaderParams);
+	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
+	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT4 camPosFloat;
+	DirectX::XMStoreFloat4(&camPosFloat, camPos);
 
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
+	LightShaderParameters* shaderParams = new LightShaderParameters;
+	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
+	shaderParams->viewMatrix = viewMatrix;
+	shaderParams->projectionMatrix = this->orthographicMatrix;
+	shaderParams->lightViewMatrix = DirectX::XMMatrixIdentity();
+	shaderParams->lightProjectionMatrix = DirectX::XMMatrixIdentity();
+	shaderParams->camPos = camPosFloat;
+	shaderParams->lightPos = camPosFloat;
+	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
+
+	this->screenQuad->Render(this->engine->GetDeviceContext());
+	this->lightShaderH->Render(this->engine->GetDeviceContext(), 3, shaderParams);
+
+	delete shaderParams;
 	return;
 }
 
@@ -106,4 +136,22 @@ ID3D11Device* GraphicHandler::GetDevice()
 ID3D11DeviceContext* GraphicHandler::GetDeviceContext()
 {
 	return this->engine->GetDeviceContext();
+}
+
+void GraphicHandler::ClearRTVs()
+{
+	this->deferredShaderH->ClearRenderTargets(this->engine->GetDeviceContext());
+	this->engine->ClearDepthAndRTVViews();
+}
+
+void GraphicHandler::SetDeferredRTVs()
+{
+	this->deferredShaderH->SetDeferredRenderTargets(this->engine->GetDeviceContext());
+	this->engine->SetDepth(true);
+}
+
+void GraphicHandler::SetLightRTV()
+{
+	this->engine->SetBackbufferRTV();
+	this->engine->SetDepth(false);
 }

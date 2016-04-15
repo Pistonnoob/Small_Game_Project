@@ -96,6 +96,11 @@ void System::Run()
 void System::Shutdown()
 {
 	//Release the graphicsHandler
+	if (this->graphicH) {
+		this->graphicH->Shutdown();
+		delete this->graphicH;
+		this->graphicH = nullptr;
+	}
 	//Release the inputHandler
 	//Release the GameStateHandler
 	//Shutdown the window
@@ -216,10 +221,30 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
-	/*DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
+	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
+	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT4 camPosFloat;
+	DirectX::XMStoreFloat4(&camPosFloat, camPos);
+
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
+	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
+	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
+	deferredShaderParams->viewMatrix = viewMatrix;
+	deferredShaderParams->camPos = camPosFloat;
+
+	this->graphicH->ClearRTVs();
+
+	this->graphicH->SetDeferredRTVs();
 	
 	this->testModel->Render(this->graphicH->GetDeviceContext());
-	this->graphicH->DeferredRender(this->graphicH->GetDeviceContext(), 3, 0, deferredShaderParams);*/
+	this->graphicH->DeferredRender(3, 0, deferredShaderParams);
+
+	this->graphicH->SetLightRTV();
+
+	this->graphicH->LightRender();
+
+	delete deferredShaderParams;
 
 	return true;
 }

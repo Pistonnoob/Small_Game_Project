@@ -6,6 +6,9 @@
 #include "LightShaderHandler.h"
 #include "ScreenQuad.h"
 
+const float SCREEN_DEPTH = 1000.0f;
+const float SCREEN_NEAR = 0.1f;
+
 class GraphicHandler 
 {
 protected:
@@ -17,14 +20,20 @@ protected:
 	int screenWidth;
 	int screenHeight;
 
+	DirectX::XMMATRIX perspectiveMatrix;
+	DirectX::XMMATRIX orthographicMatrix;
 public:
 	GraphicHandler();
 	virtual ~GraphicHandler();
 
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight);
-	void DeferredRender(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters* shaderParams);
-	void LightRender(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* shaderParams);
+	void DeferredRender(int indexCount, int indexStart, DeferredShaderParameters* shaderParams);
+	void LightRender();
 	void Shutdown();
+
+	void ClearRTVs();
+	void SetDeferredRTVs();
+	void SetLightRTV();
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
