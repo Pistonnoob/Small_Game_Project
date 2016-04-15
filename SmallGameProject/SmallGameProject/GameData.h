@@ -13,6 +13,13 @@ private:
 	GameData();					//Only GameData will create itself
 
 	//Data
+	//Character
+	static int playerHighScore;
+	static int playerHealth;
+	static int playerMovmentSpeed;
+	static int playerDamage;
+
+	//Achivement Related
 	static int enemiesKilled;
 
 public:
