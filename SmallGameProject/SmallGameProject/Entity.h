@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "BoundingVolume.h"
+#include "SphereBoundingVolume.h"
 #include "EntitySubject.h"
 #include "Model.h"
 
@@ -16,7 +16,8 @@ private:
 	EntitySubject entitySubject;
 
 public:
-	Entity(Model* model);
+	Entity(Model* model);	//Entitys without BoundingVolume
+	Entity(Model* model, bool isSphere);	//Entitus with BoundingVolume, true = sphere, false = OOBB
 	~Entity();
 };
 

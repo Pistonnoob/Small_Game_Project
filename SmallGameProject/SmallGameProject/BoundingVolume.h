@@ -12,7 +12,7 @@ public:
 	BoundingVolume();
 	virtual ~BoundingVolume();
 
-	virtual void generateBounds(Model model) = 0;
+	virtual void generateBounds(Model* model) = 0;
 	virtual bool intersect(BoundingVolume* otherBoundingVolume) = 0;
 };
 
