@@ -13,7 +13,7 @@ public:
 
 	void Initialize();
 
-	virtual int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
+	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);

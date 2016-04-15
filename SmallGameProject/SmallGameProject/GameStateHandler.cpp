@@ -22,7 +22,8 @@ void GameStateHandler::Shutdown()
 
 bool GameStateHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	return false;
+	StartState* startState = new StartState();
+	startState->Initialize(device, deviceContext, this);
 }
 
 int GameStateHandler::HandleInput(InputHandler * input)
