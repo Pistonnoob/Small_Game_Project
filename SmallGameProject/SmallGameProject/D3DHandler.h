@@ -23,6 +23,9 @@ public:
 
 	void ClearDepthAndRTVViews();
 
+	void SetDepth(const bool &desired);
+	void SetRenderTargetView();
+
 	void Shutdown();
 protected:
 	void CreateDeviceAndContext() throw(...);
@@ -36,6 +39,9 @@ protected:
 	//depth stencil
 	void CreateRenderTargetViewDS() throw(...);
 	void CreateDepthBufferAndView() throw(...);
+
+	//setting the 2 stencil states
+	void CreateStencilStates() throw(...);
 
 	//set initial viewPort
 	void SetInitialViewPort();
@@ -52,8 +58,12 @@ protected:
 
 	//data to depthStencil
 	ID3D11Texture2D* mDepthStencilBuffer;
-	ID3D11RenderTargetView* mDepthStencilRTV;
+	ID3D11RenderTargetView* backBufferRTV;
 	ID3D11DepthStencilView* mDepthStencilView;
+
+	//RenderStates
+	ID3D11DepthStencilState* disableDepth;
+	ID3D11DepthStencilState* enableDepth;
 
 	D3D11_VIEWPORT gameViewport;
 

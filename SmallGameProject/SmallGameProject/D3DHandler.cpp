@@ -47,6 +47,7 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 
 		this->CreateSwapChain(&scDesc);
 		this->CreateRenderTargetViewDS();
+		this->CreateStencilStates();
 	}
 
 	catch (char* errorMessage)
@@ -61,7 +62,7 @@ bool D3DHandler::Initialize(HWND* window) throw(...)
 		this->gDeviceContext->OMSetRenderTargets
 			(
 				1,
-				&this->mDepthStencilRTV,
+				&this->backBufferRTV,
 				this->mDepthStencilView
 			);
 
@@ -87,7 +88,7 @@ void D3DHandler::ClearDepthAndRTVViews()
 
 	this->gDeviceContext->ClearRenderTargetView
 		(
-			this->mDepthStencilRTV,
+			this->backBufferRTV,
 			black
 		);
 
@@ -98,6 +99,23 @@ void D3DHandler::ClearDepthAndRTVViews()
 			1.0f,
 			0
 		);
+}
+
+void D3DHandler::SetDepth(const bool &desired)
+{
+	if (desired == true)
+	{
+		this->gDeviceContext->OMSetDepthStencilState(this->enableDepth, 1);
+	}
+	else
+	{
+		this->gDeviceContext->OMSetDepthStencilState(this->disableDepth, 1);
+	}
+}
+
+void D3DHandler::SetRenderTargetView()
+{
+	this->gDeviceContext->OMSetRenderTargets(1, &this->backBufferRTV, this->mDepthStencilView);
 }
 
 void D3DHandler::CreateDeviceAndContext() throw(...)
@@ -243,7 +261,7 @@ void D3DHandler::CreateRenderTargetViewDS() throw(...)
 	ID3D11Texture2D* backBuffer;
 	this->gSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
 
-	resultHandler = this->gDevice->CreateRenderTargetView(backBuffer, 0, &this->mDepthStencilRTV);
+	resultHandler = this->gDevice->CreateRenderTargetView(backBuffer, 0, &this->backBufferRTV);
 
 	if (FAILED(resultHandler))
 	{
@@ -307,6 +325,48 @@ void D3DHandler::CreateDepthBufferAndView() throw(...)
 	}
 }
 
+void D3DHandler::CreateStencilStates() throw(...)
+{
+	HRESULT resultHelper;
+
+	D3D11_DEPTH_STENCIL_DESC enableDepth;
+	enableDepth.DepthEnable = true;
+	enableDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // enables writes to the depth buffer
+	enableDepth.DepthFunc = D3D11_COMPARISON_LESS; //usual depth test is preformed
+
+	//FrontFace indicates how the stencil buffer works for front facing triangles
+	//Direct3D, Luna page 376
+	enableDepth.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	enableDepth.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	enableDepth.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	enableDepth.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	//BackFace indicates how the stencil buffer works for back facing triangles
+	//Direct3D, Luna page 376
+	enableDepth.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	enableDepth.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	enableDepth.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	enableDepth.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	resultHelper = this->gDevice->CreateDepthStencilState(&enableDepth, &this->enableDepth);
+	if (FAILED(resultHelper))
+	{
+		throw("failed to create the 'enable Depth' stencil state");
+	}
+
+	//same as above but disable depth
+	D3D11_DEPTH_STENCIL_DESC disableDepth;
+	disableDepth = enableDepth;
+	disableDepth.DepthEnable = false;
+
+	resultHelper = this->gDevice->CreateDepthStencilState(&disableDepth, &this->disableDepth);
+
+	if (FAILED(resultHelper))
+	{
+		throw("failed to create the 'disable Depth' stencil state");
+	}
+}
+
 void D3DHandler::SetInitialViewPort()
 {
 	this->gameViewport.TopLeftX = 0.0f;
@@ -327,13 +387,24 @@ void D3DHandler::StartUpValues()
 	this->gSwapChain		= nullptr;
 
 	this->mDepthStencilBuffer	= nullptr;
-	this->mDepthStencilRTV		= nullptr;
+	this->backBufferRTV = nullptr;
 	this->mDepthStencilView		= nullptr;
+
+	this->disableDepth = nullptr;
+	this->enableDepth = nullptr;
 }
 
 void D3DHandler::Shutdown()
 {
-	this->gSwapChain->Release();
-	this->gDeviceContext->Release();
 	this->gDevice->Release();
+	this->gDeviceContext->Release();
+	this->gSwapChain->Release();
+
+	this->mDepthStencilBuffer->Release();
+	this->backBufferRTV->Release();
+	this->mDepthStencilView->Release();
+
+	this->disableDepth->Release();
+	this->disableDepth->Release();
+	
 }
