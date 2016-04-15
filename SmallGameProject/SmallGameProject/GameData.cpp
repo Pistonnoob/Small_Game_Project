@@ -1,6 +1,11 @@
 #include "GameData.h"
 GameData::GameData()
 {
+	this->playerHighScore = 0;
+	this->playerHealth = 0;
+	this->playerMovmentSpeed = 0;
+	this->playerDamage = 0;
+
 	this->enemiesKilled = 0;
 }
 

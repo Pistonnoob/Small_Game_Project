@@ -14,13 +14,13 @@ private:
 
 	//Data
 	//Character
-	static int playerHighScore;
-	static int playerHealth;
-	static int playerMovmentSpeed;
-	static int playerDamage;
+	int playerHighScore;
+	int playerHealth;
+	int playerMovmentSpeed;
+	int playerDamage;
 
 	//Achivement Related
-	static int enemiesKilled;
+	int enemiesKilled;
 
 public:
 	
