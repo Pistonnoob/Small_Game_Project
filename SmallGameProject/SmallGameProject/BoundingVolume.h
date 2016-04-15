@@ -6,6 +6,8 @@ class BoundingVolume {
 private:
 
 public:
+	BoundingVolume();
+	~BoundingVolume();
 
 };
 
