@@ -27,6 +27,7 @@ private:
 	bool Update(float dTime);
 
 	Model* testModel;
+	Model* testModelGround;
 	float testRot;
 public:
 	System();

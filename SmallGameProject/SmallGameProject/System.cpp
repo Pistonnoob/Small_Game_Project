@@ -52,6 +52,13 @@ bool System::Initialize()
 		return false;
 	}
 
+	this->testModelGround = new Model;
+
+	result = this->testModelGround->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ground");
+	if (!result) {
+		return false;
+	}
+
 	this->testRot = 0;
 
 	return true;
@@ -116,6 +123,17 @@ void System::Shutdown()
 	//Release the inputHandler
 	//Release the GameStateHandler
 	//Shutdown the window
+
+	if (this->testModel) {
+		this->testModel->Shutdown();
+		delete this->testModel;
+		this->testModel = nullptr;
+	}
+	if (this->testModelGround) {
+		this->testModelGround->Shutdown();
+		delete this->testModelGround;
+		this->testModelGround = nullptr;
+	}
 	ShutdownWindow();
 }
 
@@ -244,6 +262,9 @@ bool System::Update(float dTime)
 	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
 	this->testModel->SetWorldMatrix(worldMatrix);
 
+	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -10.0f, 0.0f);
+	this->testModelGround->SetWorldMatrix(worldMatrix);
+
 	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
 	DirectX::XMMATRIX viewMatrix;
 	this->graphicH->ClearRTVs();
@@ -258,6 +279,11 @@ bool System::Update(float dTime)
 	this->testModel->Render(this->graphicH->GetDeviceContext());
 
 	this->graphicH->DeferredRender(this->testModel->GetVertexCount(), 0, deferredShaderParams);
+
+	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams);
+	this->testModelGround->Render(this->graphicH->GetDeviceContext());
+
+	this->graphicH->DeferredRender(this->testModelGround->GetVertexCount(), 0, deferredShaderParams);
 
 	delete deferredShaderParams;
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
