@@ -364,11 +364,9 @@ void D3DHandler::CreateStencilStates() throw(...)
 	}
 
 	//same as above but disable depth
-	D3D11_DEPTH_STENCIL_DESC disableDepth;
-	disableDepth = enableDepth;
-	disableDepth.DepthEnable = false;
+	enableDepth.DepthEnable = false;
 
-	resultHelper = this->gDevice->CreateDepthStencilState(&disableDepth, &this->disableDepth);
+	resultHelper = this->gDevice->CreateDepthStencilState(&enableDepth, &this->disableDepth);
 
 	if (FAILED(resultHelper))
 	{
@@ -429,15 +427,45 @@ void D3DHandler::StartUpValues()
 
 void D3DHandler::Shutdown()
 {
-	this->gDevice->Release();
-	this->gDeviceContext->Release();
-	this->gSwapChain->Release();
+	if (this->enableDepth) {
+		this->enableDepth->Release();
+		this->enableDepth = nullptr;
+	}
+	if (this->disableDepth) {
+		this->disableDepth->Release();
+		this->disableDepth = nullptr;
+	}
 
-	this->mDepthStencilBuffer->Release();
-	this->backBufferRTV->Release();
-	this->mDepthStencilView->Release();
+	if (this->mDepthStencilBuffer) {
+		this->mDepthStencilBuffer->Release();
+		this->mDepthStencilBuffer = nullptr;
+	}
+	if (this->mDepthStencilView) {
+		this->mDepthStencilView->Release();
+		this->mDepthStencilView = nullptr;
+	}
 
-	this->disableDepth->Release();
-	this->disableDepth->Release();
-	
+	if (this->rasterState) {
+		this->rasterState->Release();
+		this->rasterState = nullptr;
+	}
+
+	if (this->backBufferRTV) {
+		this->backBufferRTV->Release();
+		this->backBufferRTV = nullptr;
+	}
+
+	if (this->gSwapChain) {
+		this->gSwapChain->Release();
+		this->gSwapChain = nullptr;
+	}
+
+	if (this->gDeviceContext) {
+		this->gDeviceContext->Release();
+		this->gDeviceContext = nullptr;
+	}
+	if (this->gDevice) {
+		this->gDevice->Release();
+		this->gDevice = nullptr;
+	}
 }

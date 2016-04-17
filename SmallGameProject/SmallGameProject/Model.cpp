@@ -138,14 +138,13 @@ void Model::Render(ID3D11DeviceContext* deviceContext)
 
 void Model::Shutdown()
 {
-	if (this->vertexBuffer) {
-		this->vertexBuffer->Release();
-		this->vertexBuffer = nullptr;
-	}
-
 	if (this->indexBuffer) {
 		this->indexBuffer->Release();
 		this->indexBuffer = nullptr;
+	}
+	if (this->vertexBuffer) {
+		this->vertexBuffer->Release();
+		this->vertexBuffer = nullptr;
 	}
 }
 

@@ -33,7 +33,7 @@ bool System::Initialize()
 	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight);
 
 	//Create the GameStateHandler.
-	this->gameSH = new GameStateHandler();
+	//this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
 
 	//Create the CameraHandler
@@ -114,16 +114,7 @@ void System::Run()
 
 void System::Shutdown()
 {
-	//Release the graphicsHandler
-	if (this->graphicH) {
-		this->graphicH->Shutdown();
-		delete this->graphicH;
-		this->graphicH = nullptr;
-	}
-	//Release the inputHandler
-	//Release the GameStateHandler
-	//Shutdown the window
-
+	//Release the models
 	if (this->testModel) {
 		this->testModel->Shutdown();
 		delete this->testModel;
@@ -134,6 +125,28 @@ void System::Shutdown()
 		delete this->testModelGround;
 		this->testModelGround = nullptr;
 	}
+	//Release the graphicsHandler
+	if (this->graphicH) {
+		this->graphicH->Shutdown();
+		delete this->graphicH;
+		this->graphicH = nullptr;
+	}
+	//Release the inputHandler
+	if (this->inputH) {
+		this->inputH->Shutdown();
+		delete this->inputH;
+		this->inputH = nullptr;
+	}
+	//Release the cameraHandler
+	if (this->cameraH) {
+		delete this->cameraH;
+		this->cameraH = nullptr;
+	}
+	//Release the GameStateHandler
+
+	
+
+	//Shutdown the window
 	ShutdownWindow();
 }
 

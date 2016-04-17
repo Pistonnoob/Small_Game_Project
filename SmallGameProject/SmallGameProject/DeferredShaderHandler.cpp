@@ -302,6 +302,33 @@ void DeferredShaderHandler::Shutdown()
 		this->layout->Release();
 		this->layout = nullptr;
 	}
+
+	//Release the deferred render targets
+	for (int i = 0; i < BUFFER_COUNT; i++) {
+		if (this->deferredRenderTargetTextures[i]) {
+			this->deferredRenderTargetTextures[i]->Release();
+			this->deferredRenderTargetTextures[i] = nullptr;
+		}
+		if (this->deferredRenderTargetViews[i]) {
+			this->deferredRenderTargetViews[i]->Release();
+			this->deferredRenderTargetViews[i] = nullptr;
+		}
+		if (this->deferredShaderResources[i]) {
+			this->deferredShaderResources[i]->Release();
+			this->deferredShaderResources[i] = nullptr;
+		}
+	}
+
+	//Release the depth stuff
+	if (this->depthStencilBuffer) {
+		this->depthStencilBuffer->Release();
+		this->depthStencilBuffer = nullptr;
+	}
+	if (this->depthStencilView) {
+		this->depthStencilView->Release();
+		this->depthStencilView = nullptr;
+	}
+
 	//Release pixel shader
 	if (this->pixelShader) {
 		this->pixelShader->Release();
