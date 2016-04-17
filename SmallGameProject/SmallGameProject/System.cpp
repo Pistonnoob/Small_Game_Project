@@ -24,9 +24,9 @@ bool System::Initialize()
 	InitWindow(screenWidth, screenHeight);
 
 	//Create the inputHandler
-
+	this->inputH = new InputHandler();
 	//Initialize the InputHandler
-
+	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 	//Create the graphicHandler.
 	this->graphicH = new GraphicHandler();
 	//Initialize the graphicHandler
@@ -233,6 +233,11 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	this->inputH->Update();
+
+	if (this->inputH->isKeyPressed(VK_ESCAPE)) {
+		return false;
+	}
 
 	this->testRot += dTime / 200000;
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
@@ -280,13 +285,15 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	case WM_KEYDOWN:
 	{
 		//if key is pressed send it to the input object to be recorded
-		
+		this->inputH->KeyDown((unsigned int)wparam);
+
 		return 0;
 	}
 	//Check if a key is released on the keyboard
 	case WM_KEYUP:
 	{
 		//If a key is released then send it to the input object
+		this->inputH->KeyUp((unsigned int)wparam);
 		
 		return 0;
 	}
