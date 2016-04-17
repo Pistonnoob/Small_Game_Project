@@ -2,7 +2,7 @@
 #define SPHEREBOUNDINGVOLUME_H
 
 #include "BoundingVolume.h"
-
+#include "Model.h"
 class SphereBoundingVolume : public BoundingVolume {
 
 private:
