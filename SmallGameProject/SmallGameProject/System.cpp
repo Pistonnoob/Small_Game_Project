@@ -52,6 +52,8 @@ bool System::Initialize()
 		return false;
 	}
 
+	this->testRot = 0;
+
 	return true;
 }
 
@@ -231,6 +233,10 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	this->testRot += dTime / 80000;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixRotationY(this->testRot);
+	this->testModel->SetWorldMatrix(worldMatrix);
+
 	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
 	DirectX::XMMATRIX viewMatrix;
 	this->graphicH->ClearRTVs();

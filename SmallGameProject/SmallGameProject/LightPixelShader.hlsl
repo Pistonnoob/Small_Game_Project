@@ -31,23 +31,24 @@ float4 main(PSInput input) : SV_TARGET
 	float4 normal;
 	float4 worldPos;
 	float4 outputColor;
+	float2 textCoords = float2(input.position.x / 800, input.position.y / 600);
 
 	float lightIntensity = 0.0f;
 
 	//Sample the diffuse texture from deferred render
-	diffColor = diffTexture.Sample(pointSampler, input.tex);
+	diffColor = diffTexture.Sample(pointSampler, textCoords);
 
 	//Sample the ambient texture from deferred render
-	ambientColor = ambientTexture.Sample(pointSampler, input.tex);
+	ambientColor = ambientTexture.Sample(pointSampler, textCoords);
 
 	//Sample the specual texture from deferred render
-	specColor = specularTexture.Sample(pointSampler, input.tex);
+	specColor = specularTexture.Sample(pointSampler, textCoords);
 
 	//Sample the normal texture from deferred render
-	normal = normalTexture.Sample(pointSampler, input.tex);
+	normal = normalTexture.Sample(pointSampler, textCoords);
 	
 	//Sample the texture with positions in world space from deferred render
-	worldPos = worldPosTexture.Sample(pointSampler, input.tex);
+	worldPos = worldPosTexture.Sample(pointSampler, textCoords);
 
 	//Create the normalized vector from position to light source
 	float3 outVec = normalize(lightPos.xyz - (worldPos).xyz);
@@ -74,6 +75,6 @@ float4 main(PSInput input) : SV_TARGET
 	outputColor = saturate(((diffColor.rgba + specular.rgba) * lightIntensity * 0.8f) + ((ambientColor.rgba) * 0.2f));
 
 	//return float4(input.tex.x, input.tex.y, 0.0f, 1.0f);
-	//return float4(input.position.x, input.position.y, 0.0f, 1.0f);
-	return diffColor;
+	//return float4(input.position.x / 800, input.position.y / 600, 0.0f, 1.0f);
+	return outputColor;
 }

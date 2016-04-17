@@ -44,15 +44,15 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 	//Order is important, otherwise the triangle will be facing the opposite direction
 	vertices[0].position = DirectX::XMFLOAT3(-1.0, -1.0f, 0.0f); //Bottom left
 	vertices[0].texture = DirectX::XMFLOAT2(0.0f, 1.0f);
-	vertices[0].normal = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+	vertices[0].normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[1].position = DirectX::XMFLOAT3(0.0, 1.0f, 0.0f); //Top Middle
 	vertices[1].texture = DirectX::XMFLOAT2(0.5f, 0.0f);
-	vertices[1].normal = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+	vertices[1].normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[2].position = DirectX::XMFLOAT3(1.0, -1.0f, 0.0f); //Bottom right
 	vertices[2].texture = DirectX::XMFLOAT2(1.0f, 1.0f);
-	vertices[2].normal = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+	vertices[2].normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	//Load the index array with data
 	indices[0] = 0;	//Bottom left
@@ -149,4 +149,14 @@ void Model::GetDeferredShaderParameters(DeferredShaderParameters* params)
 	params->worldMatrix = this->worldMatrix;
 
 	params->diffTexture = NULL;
+}
+
+void Model::SetWorldMatrix(DirectX::XMMATRIX worldMatrix)
+{
+	this->worldMatrix = worldMatrix;
+}
+
+void Model::GetWorldMatrix(DirectX::XMMATRIX& worldMatrix)
+{
+	worldMatrix = this->worldMatrix;
 }
