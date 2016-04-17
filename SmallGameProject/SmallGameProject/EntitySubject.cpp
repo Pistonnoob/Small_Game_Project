@@ -8,7 +8,12 @@ EntitySubject::EntitySubject()
 
 EntitySubject::~EntitySubject()
 {
-
+	std::set<Observer*>::iterator it;
+	for (it = this->observers.begin(); it != this->observers.end(); it++) {	//Iterate
+		//delete all observers
+		Observer* e = *it;
+		delete e;
+	}
 }
 
 void EntitySubject::notify(const Entity* entity, Events::ENTITY evnt)

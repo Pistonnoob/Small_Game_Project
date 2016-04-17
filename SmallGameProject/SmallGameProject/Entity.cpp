@@ -28,4 +28,5 @@ Entity::Entity(Model* model, bool isSphere)
 Entity::~Entity()
 {
 	delete this->entityModel;
+	delete this->entityBV;
 }
