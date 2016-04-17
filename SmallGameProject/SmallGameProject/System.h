@@ -5,6 +5,8 @@
 #include "GameStateHandler.h"
 #include "GraphicHandler.h"
 #include "InputHandler.h"
+#include "Model.h"
+#include "CameraHandler.h"
 
 const bool FULL_SCREEN = false;
 
@@ -18,11 +20,14 @@ private:
 	GameStateHandler* gameSH;
 	GraphicHandler* graphicH;
 	InputHandler* inputH;
+	CameraHandler* cameraH;
 
 	void InitWindow(int& screenWidth, int& screenHeight);
 	void ShutdownWindow();
 	bool Update(float dTime);
 
+	Model* testModel;
+	float testRot;
 public:
 	System();
 	~System();

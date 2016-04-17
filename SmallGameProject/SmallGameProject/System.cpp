@@ -5,6 +5,8 @@ System::System()
 	this->gameSH = nullptr;
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
+	this->cameraH = nullptr;
+	this->testModel = nullptr;
 }
 
 System::~System()
@@ -26,14 +28,31 @@ bool System::Initialize()
 	//Initialize the InputHandler
 
 	//Create the graphicHandler.
-
+	this->graphicH = new GraphicHandler();
 	//Initialize the graphicHandler
+	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight);
 
 	//Create the GameStateHandler.
 	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
 
+	//Create the CameraHandler
+	this->cameraH = new CameraHandler;
 
+	//Initialize the CameraHandler
+	result = this->cameraH->Initialize();
+	if (!result) {
+		return false;
+	}
+
+	this->testModel = new Model;
+
+	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ogreFullG");
+	if (!result) {
+		return false;
+	}
+
+	this->testRot = 0;
 
 	return true;
 }
@@ -89,6 +108,11 @@ void System::Run()
 void System::Shutdown()
 {
 	//Release the graphicsHandler
+	if (this->graphicH) {
+		this->graphicH->Shutdown();
+		delete this->graphicH;
+		this->graphicH = nullptr;
+	}
 	//Release the inputHandler
 	//Release the GameStateHandler
 	//Shutdown the window
@@ -209,7 +233,39 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	this->testRot += dTime / 100000;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixRotationY(this->testRot);
+	this->testModel->SetWorldMatrix(worldMatrix);
 
+	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
+	DirectX::XMMATRIX viewMatrix;
+	this->graphicH->ClearRTVs();
+
+	this->graphicH->SetDeferredRTVs();
+
+	this->cameraH->GetViewMatrix(viewMatrix);
+	deferredShaderParams->viewMatrix = viewMatrix;
+	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
+
+	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
+	this->testModel->Render(this->graphicH->GetDeviceContext());
+
+	this->graphicH->DeferredRender(this->testModel->GetVertexCount(), 0, deferredShaderParams);
+
+	delete deferredShaderParams;
+	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+
+	this->graphicH->SetLightRTV();
+
+	lightShaderParams->camPos = this->cameraH->GetCameraPos();
+	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
+	lightShaderParams->viewMatrix = viewMatrix;
+
+	this->graphicH->LightRender(lightShaderParams);
+
+	delete lightShaderParams;
+
+	this->graphicH->PresentScene();
 
 	return true;
 }
