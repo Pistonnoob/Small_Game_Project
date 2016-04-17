@@ -233,8 +233,9 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
-	this->testRot += dTime / 100000;
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixRotationY(this->testRot);
+	this->testRot += dTime / 200000;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
+	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
 	this->testModel->SetWorldMatrix(worldMatrix);
 
 	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
