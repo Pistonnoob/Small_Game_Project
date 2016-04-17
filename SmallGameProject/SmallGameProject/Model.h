@@ -4,6 +4,8 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include <vector>
+#include <sstream>
+#include <fstream>
 
 #include "Texture.h"
 #include "ShaderStructLibrary.h"
@@ -33,6 +35,7 @@ private:
 	std::vector<std::string> materialNames;
 	Texture* texture;
 	DirectX::XMMATRIX worldMatrix;
+	std::vector<DirectX::XMFLOAT3> vertPositions;
 
 public:
 	Model();
@@ -45,7 +48,11 @@ public:
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
 	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
 
+	int GetVertexCount();
+
 	void GetDeferredShaderParameters(DeferredShaderParameters* params);
+
+	bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, unsigned long*& outputIndices, std::string& materialLib);
 };
 
 #endif

@@ -12,10 +12,8 @@ Model::~Model()
 
 bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename)
 {
-	Vertex* vertices;
+	std::vector<Vertex>* vertices;
 	unsigned long* indices = nullptr;
-	int sizeVertices = 0;
-	int sizeIndices = 0;
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	D3D11_BUFFER_DESC indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData;
@@ -23,41 +21,52 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 	HRESULT hresult;
 	bool result;
 
-	//Set the number of vertices in the vertex array
-	this->vertexCount = 3;
-	//Set the numer of indices in the index array
-	this->indexCount = 3;
-
 	//Create the vertex array
-	vertices = new Vertex[this->vertexCount];
+	vertices = new std::vector<Vertex>;
 	if (!vertices) {
 		return false;
 	}
 
-	//Create the index array
-	indices = new unsigned long[this->indexCount];
-	if (!indices) {
-		return false;
+	if (objFilename == "") {
+		//Set the number of vertices in the vertex array
+		this->vertexCount = 3;
+		//Set the numer of indices in the index array
+		this->indexCount = 3;
+
+		Vertex tempVertex;
+
+		//Create the index array
+		indices = new unsigned long[this->indexCount];
+		if (!indices) {
+			return false;
+		}
+
+		//Load the vertex array with data
+		//Order is important, otherwise the triangle will be facing the opposite direction
+		tempVertex.position = DirectX::XMFLOAT3(-1.0, -1.0f, 0.0f); //Bottom left
+		tempVertex.texture = DirectX::XMFLOAT2(0.0f, 1.0f);
+		tempVertex.normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+		vertices->push_back(tempVertex);
+
+		tempVertex.position = DirectX::XMFLOAT3(0.0, 1.0f, 0.0f); //Top Middle
+		tempVertex.texture = DirectX::XMFLOAT2(0.5f, 0.0f);
+		tempVertex.normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+		vertices->push_back(tempVertex);
+
+		tempVertex.position = DirectX::XMFLOAT3(1.0, -1.0f, 0.0f); //Bottom right
+		tempVertex.texture = DirectX::XMFLOAT2(1.0f, 1.0f);
+		tempVertex.normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+		vertices->push_back(tempVertex);
+
+		//Load the index array with data
+		indices[0] = 0;	//Bottom left
+		indices[1] = 1;	//Top Middle
+		indices[2] = 2;	//Bottom right
 	}
-
-	//Load the vertex array with data
-	//Order is important, otherwise the triangle will be facing the opposite direction
-	vertices[0].position = DirectX::XMFLOAT3(-1.0, -1.0f, 0.0f); //Bottom left
-	vertices[0].texture = DirectX::XMFLOAT2(0.0f, 1.0f);
-	vertices[0].normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	vertices[1].position = DirectX::XMFLOAT3(0.0, 1.0f, 0.0f); //Top Middle
-	vertices[1].texture = DirectX::XMFLOAT2(0.5f, 0.0f);
-	vertices[1].normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	vertices[2].position = DirectX::XMFLOAT3(1.0, -1.0f, 0.0f); //Bottom right
-	vertices[2].texture = DirectX::XMFLOAT2(1.0f, 1.0f);
-	vertices[2].normal = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	//Load the index array with data
-	indices[0] = 0;	//Bottom left
-	indices[1] = 1;	//Top Middle
-	indices[2] = 2;	//Bottom right
+	else {
+		std::string materialLib;
+		this->LoadObj(objFilename.c_str(), vertices, indices, materialLib);
+	}
 
 	//Set the description of the static vertex buffer
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
@@ -70,7 +79,7 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 
 	//Give the subresource structure a pointer to the vertex data
 	ZeroMemory(&vertexData, sizeof(vertexData));
-	vertexData.pSysMem = vertices;
+	vertexData.pSysMem = &((*vertices)[0]);
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -100,7 +109,7 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 		return false;
 	}
 
-	delete[] vertices;
+	delete vertices;
 	delete[] indices;
 
 	this->worldMatrix = DirectX::XMMatrixIdentity();
@@ -159,4 +168,223 @@ void Model::SetWorldMatrix(DirectX::XMMATRIX worldMatrix)
 void Model::GetWorldMatrix(DirectX::XMMATRIX& worldMatrix)
 {
 	worldMatrix = this->worldMatrix;
+}
+
+int Model::GetVertexCount()
+{
+	return this->vertexCount;
+}
+
+bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, unsigned long*& outputIndices, std::string& materialLib)
+{
+	DirectX::XMFLOAT3 tempVertex;
+	DirectX::XMFLOAT2 tempUV;
+	DirectX::XMFLOAT3 tempNormal;
+	unsigned int vertexIndex[3];
+	unsigned int uvIndex[3];
+	unsigned int normalIndex[3];
+	std::vector<DirectX::XMFLOAT3> tempVertices;
+	std::vector<DirectX::XMFLOAT2> tempUvs;
+	std::vector<DirectX::XMFLOAT3> tempNormals;
+	std::vector<unsigned int> vertexIndices;
+	std::vector<unsigned int> uvIndices;
+	std::vector<unsigned int> normalIndices;
+	std::string line;
+	std::string junks;
+	std::string tempLine;
+	double point[3];
+	char junk;
+	std::stringstream ss;
+	std::fstream file;
+	bool newGroup = false;
+	int tempSubset = 0;
+	std::string path = "..\\SmallGameProject\\Resources\\OBJ\\";
+	path.append(filename);
+	path.append(".ace");
+	file.open(path, std::ios::in);
+	if (file.is_open()) { //Model has been loaded before and therefor has binary files to read
+		std::getline(file, line);
+		ss.str(line);
+		ss >> this->vertexCount >> this->indexCount; //Read the sizes
+
+		std::getline(file, line);
+		ss.clear();
+		ss.str(line);
+		ss >> materialLib; //Read the .mtl filename
+
+		while (std::getline(file, line)) { //Read all the subset indices and corresponding materials
+			ss.clear();
+			ss.str(line);
+			ss >> tempSubset >> tempLine;
+			subsetIndices.push_back(tempSubset);
+			materialNames.push_back(tempLine);
+		}
+		ss.clear();
+		file.close();
+		path = "..\\SmallGameProject\\Resources\\OBJ\\";
+		path.append(filename);
+		path.append("V.bin");
+		file.open(path, std::ios::binary | std::ios::in);
+		if (!file.is_open()) {
+			return false;
+		}
+		Vertex* tempVerticesArray = new Vertex[this->vertexCount];
+
+		file.read((char*)tempVerticesArray, sizeof(Vertex) * this->vertexCount); //Read the binary file containing the vertex data and save for output
+		file.close();
+
+		outputVertices->insert(outputVertices->end(), &tempVerticesArray[0], &tempVerticesArray[this->vertexCount]);
+		this->vertPositions.insert(this->vertPositions.end(), &tempVerticesArray[0].position, &tempVerticesArray[this->vertexCount].position);
+
+		delete[] tempVerticesArray;
+
+		path = "..\\SmallGameProject\\Resources\\OBJ\\";
+		path.append(filename);
+		path.append("I.bin");
+		file.open(path, std::ios::binary | std::ios::in);
+		if (!file.is_open()) {
+			return false;
+		}
+
+		outputIndices = new unsigned long[this->indexCount];
+		file.read((char*)outputIndices, sizeof(unsigned long) * this->indexCount);//Read the binary file containing the index data and save for output
+		file.close();
+	}
+	else { //If it's the first time models is being loaded read and parse the obj file
+		path = "..\\SmallGameProject\\Resources\\OBJ\\";
+		path.append(filename);
+		path.append(".obj");
+		file.open(path, std::ios::in);
+		if (!file.is_open()) {
+			return false;
+		}
+
+		while (std::getline(file, line)) {
+			if (line.size() > 0) {
+				if (line.at(0) == 'v') {
+					if (line.at(1) == ' ') { //Save vertex position coordinates
+						ss.clear();
+						ss.str(line);
+						ss >> junk >> tempVertex.x >> tempVertex.y >> tempVertex.z;
+
+						tempVertices.push_back(tempVertex);
+					}
+					else if (line.at(1) == 't') { //Save vertex texture coordiantes
+						ss.clear();
+						ss.str(line);
+						ss >> junks >> tempUV.x >> tempUV.y;
+						tempUV.y = 1.0f - tempUV.y;
+						tempUvs.push_back(tempUV);
+					}
+					else if (line.at(1) == 'n') { //Save the vertex normals
+						ss.clear();
+						ss.str(line);
+						ss >> junks >> tempNormal.x >> tempNormal.y >> tempNormal.z;
+						tempNormals.push_back(tempNormal);
+					}
+				}
+				else if (line.at(0) == 'g') { //Create a new subset
+					this->subsetIndices.push_back(vertexIndices.size());
+					newGroup = true;
+				}
+				else if (line.substr(0, 6) == "usemtl") { //Subset uses this material
+					ss.clear();
+					ss.str(line);
+					ss >> junks >> tempLine;
+					this->materialNames.push_back(tempLine);
+					if (!newGroup) {
+						this->subsetIndices.push_back(vertexIndices.size());
+					}
+					else {
+						newGroup = false;
+					}
+				}
+				else if (line.at(0) == 'f') { //Save the vertices order from faces
+					if (newGroup) {
+						this->materialNames.push_back(this->materialNames.back());
+						newGroup = false;
+					}
+					ss.clear();
+					ss.str(line);
+					ss >> junk >> vertexIndex[0] >> junk >> uvIndex[0] >> junk >> normalIndex[0]
+						>> vertexIndex[1] >> junk >> uvIndex[1] >> junk >> normalIndex[1]
+						>> vertexIndex[2] >> junk >> uvIndex[2] >> junk >> normalIndex[2];
+
+					vertexIndices.push_back(vertexIndex[0]);
+					vertexIndices.push_back(vertexIndex[1]);
+					vertexIndices.push_back(vertexIndex[2]);
+					uvIndices.push_back(uvIndex[0]);
+					uvIndices.push_back(uvIndex[1]);
+					uvIndices.push_back(uvIndex[2]);
+					normalIndices.push_back(normalIndex[0]);
+					normalIndices.push_back(normalIndex[1]);
+					normalIndices.push_back(normalIndex[2]);
+				}
+				else if (line.substr(0, 6) == "mtllib") { //Save the .mtl filename
+					ss.clear();
+					ss.str(line);
+					ss >> junks >> materialLib;
+				}
+			}
+		}
+		file.close();
+
+		if (vertexIndices.size() == 0 || tempVertices.size() == 0) { //Makr sure the obj wasn't empty
+			return false;
+		}
+
+		this->vertexCount = vertexIndices.size();
+		this->indexCount = vertexIndices.size();
+		outputIndices = new unsigned long[this->indexCount];
+		this->vertPositions = tempVertices;
+
+		for (int i = 0; i < this->vertexCount; i++) { //Create the output vertex array
+			Vertex tempVertex;
+			tempVertex.position = tempVertices.at(vertexIndices.at(i) - 1);
+			tempVertex.texture = tempUvs.at(uvIndices.at(i) - 1);
+			tempVertex.normal = tempNormals.at(normalIndices.at(i) - 1);
+			outputVertices->push_back(tempVertex);
+
+			outputIndices[i] = i;
+		}
+
+		path = "..\\SmallGameProject\\Resources\\OBJ\\";
+		path.append(filename);
+		path.append(".ace"); //Make the "All Computations Executed" file
+		file.open(path, std::ios::out);
+		if (!file.is_open()) {
+			return false;
+		}
+		file << this->vertexCount << " " << this->indexCount << "\n"; //Save the sizes, needed for loading the binary files
+		file << materialLib << "\n";
+
+		for (int i = 0; i < subsetIndices.size(); i++) {
+			file << subsetIndices.at(i) << " " << materialNames.at(i) << "\n"; //Save all subsets with each material
+		}
+		file.close();
+
+		//Save the vericies as binary
+		path = "..\\SmallGameProject\\Resources\\OBJ\\";
+		path.append(filename);
+		path.append("V.bin");
+		file.open(path, std::ios::out | std::ios::binary);
+		if (!file.is_open()) {
+			return false;
+		}
+		file.write((char*)&((*outputVertices)[0]), sizeof(Vertex) * outputVertices->size());
+		file.close();
+
+		//save the indices as binary
+		path = "..\\SmallGameProject\\Resources\\OBJ\\";
+		path.append(filename);
+		path.append("I.bin");
+		file.open(path, std::ios::out | std::ios::binary);
+		if (!file.is_open()) {
+			return false;
+		}
+		file.write((char*)outputIndices, sizeof(unsigned long) * this->indexCount);
+		file.close();
+	}
+
+	return true;
 }

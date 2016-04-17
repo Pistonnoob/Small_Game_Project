@@ -47,7 +47,7 @@ bool System::Initialize()
 
 	this->testModel = new Model;
 
-	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "");
+	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ogreFullG");
 	if (!result) {
 		return false;
 	}
@@ -233,7 +233,7 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
-	this->testRot += dTime / 80000;
+	this->testRot += dTime / 100000;
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixRotationY(this->testRot);
 	this->testModel->SetWorldMatrix(worldMatrix);
 
@@ -250,7 +250,7 @@ bool System::Update(float dTime)
 	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
 	this->testModel->Render(this->graphicH->GetDeviceContext());
 
-	this->graphicH->DeferredRender(3, 0, deferredShaderParams);
+	this->graphicH->DeferredRender(this->testModel->GetVertexCount(), 0, deferredShaderParams);
 
 	delete deferredShaderParams;
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
