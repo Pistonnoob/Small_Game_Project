@@ -497,6 +497,11 @@ void DeferredShaderHandler::ClearRenderTargets(ID3D11DeviceContext* deviceContex
 	deviceContext->ClearDepthStencilView(this->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+int DeferredShaderHandler::GetBufferCount()
+{
+	return BUFFER_COUNT;
+}
+
 ID3D11ShaderResourceView** DeferredShaderHandler::GetShaderResourceViews()
 {
 	return this->deferredShaderResources;

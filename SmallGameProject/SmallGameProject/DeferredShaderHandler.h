@@ -60,6 +60,8 @@ public:
 	void SetDeferredRenderTargets(ID3D11DeviceContext* deviceContext);
 	void ClearRenderTargets(ID3D11DeviceContext* deviceContext);
 
+	int GetBufferCount();
+
 	ID3D11ShaderResourceView** GetShaderResourceViews();
 };
 

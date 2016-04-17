@@ -13,7 +13,7 @@ LightShaderHandler::~LightShaderHandler()
 {
 }
 
-bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
+bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfResources)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
@@ -145,11 +145,28 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 		return false;
 	}
 
+	this->nrOfShaderResources = nrOfResources;
+
+	this->nullResource = new ID3D11ShaderResourceView*[this->nrOfShaderResources];
+	for (int i = 0; i < this->nrOfShaderResources; i++) {
+		nullResource[i] = nullptr;
+	}
+
 	return true;
 }
 
 void LightShaderHandler::Shutdown()
 {
+	if (this->nullResource) {
+		for (int i = 0; i < this->nrOfShaderResources; i++) {
+			if (this->nullResource[i]) {
+				this->nullResource[i]->Release();
+				this->nullResource[i] = nullptr;
+			}
+		}
+		delete[] this->nullResource;
+	}
+	
 	//Release sampler state
 	if (this->samplerState) {
 		this->samplerState->Release();
@@ -178,6 +195,11 @@ void LightShaderHandler::Shutdown()
 	}
 
 	return;
+}
+
+void LightShaderHandler::ResetPSShaderResources(ID3D11DeviceContext * deviceContext)
+{	
+	deviceContext->PSSetShaderResources(0, this->nrOfShaderResources, this->nullResource);
 }
 
 

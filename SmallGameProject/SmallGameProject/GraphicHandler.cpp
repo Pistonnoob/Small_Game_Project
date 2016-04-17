@@ -42,7 +42,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 	if (!this->lightShaderH) {
 		return false;
 	}
-	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd);
+	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount());
 	if (!result) {
 		return false;
 	}
@@ -89,6 +89,8 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());
 	this->lightShaderH->Render(this->engine->GetDeviceContext(), 6, shaderParams);
+
+	this->lightShaderH->ResetPSShaderResources(this->engine->GetDeviceContext());
 
 	return;
 }

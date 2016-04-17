@@ -28,6 +28,8 @@ private:
 	ID3D11InputLayout* layout;
 	ID3D11Buffer* matrixBuffer;
 	ID3D11SamplerState* samplerState;
+	ID3D11ShaderResourceView** nullResource;
+	int nrOfShaderResources;
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 
@@ -39,8 +41,9 @@ public:
 	LightShaderHandler();
 	~LightShaderHandler();
 
-	bool Initialize(ID3D11Device* device, HWND* hwnd);
+	bool Initialize(ID3D11Device* device, HWND* hwnd, int nrOfResources);
 	void Shutdown();
+	void ResetPSShaderResources(ID3D11DeviceContext* deviceContext);
 
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* params);
 };
