@@ -1,8 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <d3d11.h>
-#include <directxmath.h>
 #include <vector>
 #include <sstream>
 #include <fstream>
