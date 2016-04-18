@@ -50,7 +50,10 @@ public:
 private:
 	void startUp();
 	void setViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight);
+
 	void create2DTexture(ID3D11Device * gDevice, int screenWidth, int screenHeight) throw(...);
+	void createDepthStencilView(ID3D11Device * gDevice) throw(...);
+	void createShaderResourceView(ID3D11Device * gDevice) throw(...);
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters* params);

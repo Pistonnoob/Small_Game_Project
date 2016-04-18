@@ -16,10 +16,13 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 	{
 		this->setViewPort(gDevice, screenWidth, screenHeight);
 		this->create2DTexture(gDevice, screenWidth, screenHeight);
+		this->createDepthStencilView(gDevice);
+		//this->createShaderResourceView(gDevice);
 	}
-	catch (LPCTSTR e)
+	catch (char* e)
 	{
-		MessageBox(*hwnd, e, L"Error", MB_OK);
+		//hover at e to see error
+		system("pause");
 	}
 
 	return true;
@@ -101,12 +104,34 @@ void ShadowShaderHandler::create2DTexture(ID3D11Device * gDevice, int screenWidt
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
 
-
-	ID3D11Texture2D* depthMap = nullptr;
-	resultHelper = gDevice->CreateTexture2D(&texDesc, 0, &depthMap);
+	resultHelper = gDevice->CreateTexture2D(&texDesc, 0, &this->depthMap);
 
 	if (FAILED(resultHelper))
 	{
 		throw("failed to create depthMap 2Dtexture, in ShadowShaderHandler.cpp");
 	}
+}
+
+void ShadowShaderHandler::createDepthStencilView(ID3D11Device * gDevice) throw(...)
+{
+	HRESULT resultHelper;
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
+
+	dsvDesc.Flags = 0;
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+	resultHelper = gDevice->CreateDepthStencilView(this->depthMap, &dsvDesc, &this->mDepthMapDSV);
+	
+	if (FAILED(resultHelper))
+	{
+		throw("Failed creating the DepthStencilView");
+	}
+}
+
+void ShadowShaderHandler::createShaderResourceView(ID3D11Device * gDevice) throw(...)
+{
 }
