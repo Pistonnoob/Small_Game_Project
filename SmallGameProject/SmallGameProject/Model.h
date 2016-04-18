@@ -36,6 +36,7 @@ private:
 	Texture* texture;
 	DirectX::XMMATRIX worldMatrix;
 	std::vector<DirectX::XMFLOAT3> vertPositions;
+	DirectX::XMFLOAT3 color;
 
 public:
 	Model();
@@ -47,6 +48,8 @@ public:
 
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
 	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
+
+	void SetColor(DirectX::XMFLOAT3 newColor);
 
 	int GetVertexCount();
 

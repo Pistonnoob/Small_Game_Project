@@ -51,6 +51,7 @@ bool System::Initialize()
 	if (!result) {
 		return false;
 	}
+	this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 	this->testModelGround = new Model;
 
@@ -58,6 +59,7 @@ bool System::Initialize()
 	if (!result) {
 		return false;
 	}
+	this->testModelGround->SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 	this->testRot = 0;
 
@@ -293,9 +295,14 @@ bool System::Update(float dTime)
 
 	this->graphicH->DeferredRender(this->testModel->GetVertexCount(), 0, deferredShaderParams);
 
+	delete deferredShaderParams;
+	deferredShaderParams = new DeferredShaderParameters;
+
+	deferredShaderParams->viewMatrix = viewMatrix;
+	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
+
 	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams);
 	this->testModelGround->Render(this->graphicH->GetDeviceContext());
-
 	this->graphicH->DeferredRender(this->testModelGround->GetVertexCount(), 0, deferredShaderParams);
 
 	delete deferredShaderParams;

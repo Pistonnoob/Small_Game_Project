@@ -150,9 +150,9 @@ void Model::Shutdown()
 
 void Model::GetDeferredShaderParameters(DeferredShaderParameters* params)
 {
-	params->diffColor = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
-	params->ambientColor = DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f);
-	params->specColor = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	params->diffColor = DirectX::XMFLOAT4(this->color.x, this->color.y, this->color.z, 1.0f);
+	params->ambientColor = DirectX::XMFLOAT4(this->color.x, this->color.y, this->color.z, 1.0f);
+	params->specColor = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	params->worldMatrix = this->worldMatrix;
 
@@ -167,6 +167,11 @@ void Model::SetWorldMatrix(DirectX::XMMATRIX worldMatrix)
 void Model::GetWorldMatrix(DirectX::XMMATRIX& worldMatrix)
 {
 	worldMatrix = this->worldMatrix;
+}
+
+void Model::SetColor(DirectX::XMFLOAT3 newColor)
+{
+	this->color = newColor;
 }
 
 int Model::GetVertexCount()
