@@ -1,6 +1,7 @@
 #ifndef GRAPHICHANDLER_H
 #define GRAPHICHANDLER_H
 
+#include <D3D11.h>
 #include "D3DHandler.h"
 #include "DeferredShaderHandler.h"
 #include "LightShaderHandler.h"
