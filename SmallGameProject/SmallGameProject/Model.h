@@ -53,7 +53,7 @@ public:
 	int GetVertexCount();
 
 	int GetNrOfSubsets();
-	void GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex);
+	void GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex, int& indexCount, int& indexStart);
 
 	bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, unsigned long*& outputIndices, std::string& materialLib);
 };

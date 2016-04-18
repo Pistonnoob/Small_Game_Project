@@ -9,7 +9,13 @@ Texture::~Texture()
 
 bool Texture::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string& materialLib)
 {
-
+	if (!this->LoadMTL(device, deviceContext, materialLib)) {
+		return false;
+	}
+	for (int i = 0; i < this->textureViews.size(); i++) {
+		//Generate mipmaps for this texture
+		deviceContext->GenerateMips(this->textureViews.at(i));
+	}
 
 	return true;
 }
@@ -397,4 +403,13 @@ Texture::Material Texture::GetMaterial(int materialIndex)
 	defaultMaterial.normMapIndex = -1;
 
 	return defaultMaterial;
+}
+
+ID3D11ShaderResourceView * Texture::GetTexture(int textureIndex)
+{
+	if (textureIndex < 0 || textureIndex >= this->textureViews.size()) {
+		return NULL;
+	}
+	
+	return this->textureViews.at(textureIndex);
 }

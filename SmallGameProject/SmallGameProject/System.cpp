@@ -272,12 +272,12 @@ bool System::Update(float dTime)
 		return false;
 	}
 
-	this->testRot += dTime / 200000;
+	this->testRot += dTime / 400000;
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
 	this->testModel->SetWorldMatrix(worldMatrix);
 
-	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -10.0f, 0.0f);
+	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 	this->testModelGround->SetWorldMatrix(worldMatrix);
 
 	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
@@ -290,10 +290,19 @@ bool System::Update(float dTime)
 	deferredShaderParams->viewMatrix = viewMatrix;
 	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
 
-	this->testModel->GetDeferredShaderParameters(deferredShaderParams, 0);
+	int indexCount;
+	int indexStart;
 	this->testModel->Render(this->graphicH->GetDeviceContext());
+	int nrOfSubsets = this->testModel->GetNrOfSubsets();
+	for (int i = 0; i < nrOfSubsets; i++) {
+		this->testModel->GetDeferredShaderParameters(deferredShaderParams, i, indexCount, indexStart);
 
-	this->graphicH->DeferredRender(this->testModel->GetVertexCount(), 0, deferredShaderParams);
+		this->graphicH->DeferredRender(indexCount, indexStart, deferredShaderParams);
+		delete deferredShaderParams;
+		deferredShaderParams = new DeferredShaderParameters;
+		deferredShaderParams->viewMatrix = viewMatrix;
+		deferredShaderParams->camPos = this->cameraH->GetCameraPos();
+	}
 
 	delete deferredShaderParams;
 	deferredShaderParams = new DeferredShaderParameters;
@@ -301,9 +310,9 @@ bool System::Update(float dTime)
 	deferredShaderParams->viewMatrix = viewMatrix;
 	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
 
-	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams, 0);
+	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams, 0, indexCount, indexStart);
 	this->testModelGround->Render(this->graphicH->GetDeviceContext());
-	this->graphicH->DeferredRender(this->testModelGround->GetVertexCount(), 0, deferredShaderParams);
+	this->graphicH->DeferredRender(indexCount, indexStart, deferredShaderParams);
 
 	delete deferredShaderParams;
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;

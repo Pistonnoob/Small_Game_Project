@@ -67,7 +67,10 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 		std::string materialLib;
 		this->LoadObj(objFilename.c_str(), vertices, indices, materialLib);
 		this->texture = new Texture;
-		this->texture->Initialize(device, deviceContext, materialLib);
+		if (!this->texture->Initialize(device, deviceContext, materialLib)) {
+			return false;
+		}
+
 		for (int i = 0; i < this->materialNames.size(); i++) {
 			this->materialIndices.push_back(this->texture->GetMaterialIndexFromName(this->materialNames.at(i)));
 		}
@@ -163,15 +166,30 @@ int Model::GetNrOfSubsets()
 	return this->subsetIndices.size();
 }
 
-void Model::GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex)
+void Model::GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex, int& indexCount, int& indexStart)
 {
-	params->diffColor = DirectX::XMFLOAT4(this->color.x, this->color.y, this->color.z, 1.0f);
-	params->ambientColor = DirectX::XMFLOAT4(this->color.x, this->color.y, this->color.z, 1.0f);
-	params->specColor = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	indexStart = this->subsetIndices.at(subsetIndex);
+	if (subsetIndex + 1 < this->subsetIndices.size()) {
+		indexCount = this->subsetIndices.at(subsetIndex + 1) - indexStart;
+	}
+	else {
+		indexCount = this->indexCount - indexStart;
+	}
+	Texture::Material tempMat = this->texture->GetMaterial(this->materialIndices.at(subsetIndex));
+
+	params->diffColor = tempMat.diffColor;
+	params->ambientColor = tempMat.ambientColor;
+	params->specColor = tempMat.specColor;
 
 	params->worldMatrix = this->worldMatrix;
 
-	params->diffTexture = NULL;
+	if (tempMat.hasTexture) {
+		params->diffTexture = this->texture->GetTexture(tempMat.textureIndex);
+	}
+	else {
+		params->diffTexture = NULL;
+	}
+	
 }
 
 void Model::SetWorldMatrix(DirectX::XMMATRIX worldMatrix)
