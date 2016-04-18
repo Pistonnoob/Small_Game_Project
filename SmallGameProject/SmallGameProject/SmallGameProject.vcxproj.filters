@@ -299,6 +299,9 @@
     <ClInclude Include="SphereBoundingVolume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gameStruct.h">
+	  <Filter>Header Files</Filter>
+	</ClInclude>
     <ClInclude Include="TestState.h">
       <Filter>Header Files</Filter>
     </ClInclude>

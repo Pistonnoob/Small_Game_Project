@@ -33,9 +33,9 @@ void InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, i
 		DIRECTINPUT_VERSION,		//	dwVersion
 		IID_IDirectInput8,			//	RefiID, Unique identifier of the desired interface
 		(void**)&this->directInput,	//	The pointer who will recive the object
-		NULL );						//	LPUNKNOWN punkOuter
+		NULL);						//	LPUNKNOWN punkOuter
 
-	//Check if the object has been created
+									//Check if the object has been created
 	if (FAILED(hr)) {
 		MessageBox(hwnd, L"DirectInput8Create", L"Error", MB_OK);
 	}
@@ -46,7 +46,7 @@ void InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, i
 		&this->DIKeyboard,					// Pointer who will recive the object
 		NULL);								//	LPUNKNOWN punkOuter
 
-	//Check if the keyboard object has been created
+											//Check if the keyboard object has been created
 	if (SUCCEEDED(hr)) {
 
 		//Set the options for the keyboard
@@ -55,7 +55,7 @@ void InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, i
 		if (FAILED(hr)) {
 			MessageBox(hwnd, L"SetDataFormat_Keyboard", L"Error", MB_OK);
 		}
-		
+
 		hr = this->DIKeyboard->SetCooperativeLevel(
 			hwnd,
 			DISCL_NONEXCLUSIVE | DISCL_NOWINKEY | DISCL_FOREGROUND
@@ -117,7 +117,7 @@ void InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, i
 
 void InputHandler::Shutdown()
 {
-	if (this->DIKeyboard){
+	if (this->DIKeyboard) {
 		this->DIKeyboard->Unacquire();
 		this->DIKeyboard->Release();
 		this->DIKeyboard = nullptr;
@@ -131,12 +131,15 @@ void InputHandler::Shutdown()
 
 	if (this->directInput) {
 		this->directInput->Release();
-		this->directInput = nullptr;
 	}
 }
 
 void InputHandler::Update()
 {
+	//Copy the old data
+	for (int i = 0; i < 256; i++) {
+		this->OldKeyboardState[i] = this->KeyboarState[i];
+	}
 	//Check if we can read the devices. 
 	//If we cant, the old data will be used
 	this->ReadKeyboard();
@@ -153,7 +156,7 @@ void InputHandler::ReadKeyboard()
 	//Read the keyboard device
 	hr = this->DIMouse->GetDeviceState(
 		sizeof(this->KeyboarState),
-		&this->KeyboarState );
+		&this->KeyboarState);
 
 	if (FAILED(hr)) {
 
@@ -197,15 +200,15 @@ void InputHandler::ProcessInput()
 	if (this->mouseX < 0) {
 		this->mouseX = 0;
 	}
-	
+
 	if (this->mouseX > this->screenWidth) {
 		this->mouseX = this->screenWidth;
 	}
-	
+
 	if (this->mouseY < 0) {
 		this->mouseY = 0;
 	}
-	
+
 	if (this->mouseY > this->screenHeight) {
 		this->mouseY = this->screenHeight;
 	}
@@ -231,15 +234,27 @@ void InputHandler::KeyUp(unsigned int key)
 	return;
 }
 
+bool InputHandler::isKeyPressed(unsigned int key)
+{
+	if (this->KeyboarState[key]) {
+		return true;
+	}
+
+	return false;
+}
+
 bool InputHandler::isKeyDown(unsigned int key)
 {
-	return this->KeyboarState[key];
+	if (!this->OldKeyboardState[key] && this->KeyboarState[key]) {
+		return true;
+	}
+
+	return false;
 }
 
 bool InputHandler::isKeyReleased(unsigned int key)
 {
-	if (this->lastKeyPressed == key) {
-		this->lastKeyPressed = -1;
+	if (this->OldKeyboardState[key] && !this->KeyboarState[key]) {
 		return true;
 	}
 

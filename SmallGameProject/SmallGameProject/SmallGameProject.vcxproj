@@ -205,6 +205,7 @@
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateHandler.h" />
+    <ClInclude Include="gameStruct.h" />
     <ClInclude Include="GraphicHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LightShaderHandler.h" />

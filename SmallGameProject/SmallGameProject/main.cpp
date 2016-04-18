@@ -4,6 +4,7 @@
 #include "System.h"
 #include <stdio.h>
 #include <crtdbg.h>
+#include "DXGIDebug.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -30,6 +31,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	sH->Shutdown();
 	delete sH;
 	sH = nullptr;
-
 	return 0;
 }
