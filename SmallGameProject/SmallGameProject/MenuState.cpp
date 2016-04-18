@@ -13,20 +13,31 @@ MenuState::~MenuState()
 
 int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
 {
-	return 0;
+	int result = 0;
+	//Initialize the base class GameState
+	result = this->InitializeBase(GSH);
+	if (result)
+	{
+		//Proceed to initialize thyself
+
+	}
+	return result;
 }
 
 int MenuState::HandleInput(InputHandler * input)
 {
-	return 0;
+	int result = 0;
+	return result;
 }
 
 int MenuState::Update(float deltaTime)
 {
-	return 0;
+	int result = 0;
+	return result;
 }
 
 int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
-	return 0;
+	int result = 0;
+	return result;
 }
