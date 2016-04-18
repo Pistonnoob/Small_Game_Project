@@ -16,7 +16,10 @@ namespace Algorithm {
 	//A curve traced by a point attached to a circle of radius r rolling around the inside of a fixed circle of radius R, where the point is at a distance d from the center of the interior circle.
 	void GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d);
 
-	void GetSawtooth(int& x, int& y, int t);
+	void GetSawtoothWave(int& x, int& y, int t, int period, int min, int max);
+	void GetTriangleWave(int & x, int & y, int t, int period, int min, int max);
+	void GetSquareWave(int & x, int & y, int t, int period, int max, int min);
+	void GetSineWave(int& x, int& y, int t, int period, int max, int min);
 }
 
 

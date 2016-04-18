@@ -47,8 +47,27 @@ void Algorithm::GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d)
 }
 
 
-void Algorithm::GetSawtooth(int& x, int& y, int t)
+void Algorithm::GetSawtoothWave(int& x, int& y, int t, int period, int min, int max)
 {
 	x = t;
-	y = (2 * t) % 2 - 1;
+	y = (t % period) * max + min;
+}
+
+void Algorithm::GetTriangleWave(int & x, int & y, int t, int period, int min, int max)
+{
+	x = t;
+	y = abs((x % period) - max) + min;
+}
+
+void Algorithm::GetSquareWave(int& x, int& y, int t, int period, int max, int min)
+{
+	x = t;
+	y = (x % period) < max ? max : min;
+}
+
+//Note that the "period" variable have a different inplication in this case
+void Algorithm::GetSineWave(int & x, int & y, int t, int period, int max, int min)
+{
+	x = t;
+	y = (max - min) * sin((float)x / period) + min;
 }
