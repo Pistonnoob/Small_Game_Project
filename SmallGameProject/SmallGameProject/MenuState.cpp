@@ -4,6 +4,7 @@
 
 MenuState::MenuState()
 {
+	int selected = 0;
 }
 
 
@@ -19,7 +20,7 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 	if (result)
 	{
 		//Proceed to initialize thyself
-
+		this->selected = 0;
 	}
 	return result;
 }
