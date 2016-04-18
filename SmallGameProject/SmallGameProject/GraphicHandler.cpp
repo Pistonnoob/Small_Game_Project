@@ -127,6 +127,12 @@ void GraphicHandler::Shutdown()
 		this->lightShaderH = nullptr;
 	}
 
+	if (this->shadowShaderH) {
+		this->shadowShaderH->Shutdown();
+		delete this->shadowShaderH;
+		this->shadowShaderH = nullptr;
+	}
+
 	//Delete the D3DHandler object
 	if (this->engine) {
 		this->engine->Shutdown();

@@ -17,7 +17,7 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 		this->setViewPort(gDevice, screenWidth, screenHeight);
 		this->create2DTexture(gDevice, screenWidth, screenHeight);
 		this->createDepthStencilView(gDevice);
-		//this->createShaderResourceView(gDevice);
+		this->createShaderResourceView(gDevice);
 	}
 	catch (char* e)
 	{
@@ -30,14 +30,25 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 
 void ShadowShaderHandler::Shutdown()
 {
-	delete this->viewPort;
-
 	if (this->depthMap != nullptr)
 	{
 		this->depthMap->Release();
 		this->depthMap = nullptr;
 	}
-	
+
+	if (this->mDepthMapDSV != nullptr)
+	{
+		this->mDepthMapDSV->Release();
+		this->mDepthMapDSV = nullptr;
+	}
+
+	if (this->mDepthMapSRV != nullptr)
+	{
+		this->mDepthMapSRV->Release();
+		this->mDepthMapSRV = nullptr;
+	}
+
+	//delete this->viewPort; Cannot free the memory here
 }
 
 void ShadowShaderHandler::ResetPSShaderResources(ID3D11DeviceContext * deviceContext)
@@ -65,6 +76,7 @@ void ShadowShaderHandler::startUp()
 void ShadowShaderHandler::setViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight)
 {
 	this->viewPort = new D3D11_VIEWPORT;
+	
 	float width = 0.0f;
 	float height = 0.0f;
 
@@ -134,4 +146,20 @@ void ShadowShaderHandler::createDepthStencilView(ID3D11Device * gDevice) throw(.
 
 void ShadowShaderHandler::createShaderResourceView(ID3D11Device * gDevice) throw(...)
 {
+	HRESULT resultHelper;
+	
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(srvDesc));
+
+	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+
+	resultHelper = gDevice->CreateShaderResourceView(depthMap, &srvDesc, &mDepthMapSRV);
+
+	if (FAILED(resultHelper))
+	{
+		throw("Failed creating the shaderResourceView");
+	}
 }
