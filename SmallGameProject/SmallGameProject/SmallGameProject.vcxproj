@@ -178,6 +178,7 @@
     <ClCompile Include="ProjectileHandler.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
     <ClCompile Include="ScreenQuad.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="ShadowShaderHandler.cpp" />
     <ClCompile Include="SphereBoundingVolume.cpp" />
     <ClCompile Include="StartState.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="RangedEnemy.h" />
     <ClInclude Include="ScreenQuad.h" />
     <ClInclude Include="ShaderStructLibrary.h" />
+<<<<<<< HEAD
     <ClInclude Include="ShadowShaderHandler.h" />
     <ClInclude Include="SphereBoundingVolume.h" />
     <ClInclude Include="StartState.h" />
