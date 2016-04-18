@@ -8,6 +8,8 @@ class RangedEnemy : public Enemy {
 private:
 
 public:
+    RangedEnemy();
+    virtual~RangedEnemy();
 
 };
 

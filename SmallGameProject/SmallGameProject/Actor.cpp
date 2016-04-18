@@ -1,5 +1,14 @@
 #include "Actor.h"
 
+Actor::Actor() : Entity(nullptr)
+{
+
+}
+
+Actor::~Actor()
+{
+}
+
 void Actor::moveRight()
 {
     this->posX += 0.0021f;

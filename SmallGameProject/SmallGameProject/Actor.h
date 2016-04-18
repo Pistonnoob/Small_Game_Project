@@ -8,8 +8,8 @@ class Actor : public Entity {
 private:
 
 public:
-
-
+    Actor();
+    virtual~Actor();
     void moveRight();
     void moveLeft();
     void moveUp();

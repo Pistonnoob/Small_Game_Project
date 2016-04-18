@@ -8,7 +8,7 @@
 #include "BomberEnemy.h"
 #include "MeleeEnemy.h"
 #include "RangedEnemy.h"
-#include "Actor.h"
+#include "Enemy.h"
 #include <vector>
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -22,20 +22,20 @@ private:
     int nrOfActions;
     DirectX::XMFLOAT3 playerPos;
 
-    void moveToPlayer(Actor& actor, DirectX::XMFLOAT3 playerPos);
-    void moveAwayFromPlayer(Actor& actor, DirectX::XMFLOAT3 playerPos);
+    void moveToPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos);
+    void moveAwayFromPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos);
     float distanceBetween(DirectX::XMFLOAT3 positon1, DirectX::XMFLOAT3 positon2);
 public:
     Ai();
     ~Ai();
     
-    void updateActors(std::vector<Actor>& actors, DirectX::XMFLOAT3 playerPos);
-    void updateActor(Actor& actor, DirectX::XMFLOAT3 playerPos);
-    void updateBomber(BomberEnemy& actor, DirectX::XMFLOAT3 playerPos);
-    void updateRange(RangedEnemy& actor, DirectX::XMFLOAT3 playerPos);
-    void updateMelee(MeleeEnemy& actor, DirectX::XMFLOAT3 playerPos);
-    void updateBoss(Actor& actor, DirectX::XMFLOAT3 playerPos);
-    void separateActors(std::vector<Actor>& actors);
+    void updateActors(std::vector<Enemy>& actors, DirectX::XMFLOAT3 playerPos);
+    void updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos);
+    void updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos);
+    void updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos);
+    void updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos);
+    void updateBoss(Enemy* actor, DirectX::XMFLOAT3 playerPos);
+    void separateActors(std::vector<Enemy>& actors);
 
     int getNrOfActions() const;
     void setNrOfActions(int nrOfActions);

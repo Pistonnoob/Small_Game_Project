@@ -8,6 +8,8 @@ class Enemy : public Actor {
 private:
 
 public:
+    Enemy();
+    virtual~Enemy();
 
 };
 

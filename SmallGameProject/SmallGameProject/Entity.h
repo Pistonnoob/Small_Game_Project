@@ -18,7 +18,7 @@ private:
 public:
 	Entity(Model* model);	//Entitys without BoundingVolume
 	Entity(Model* model, bool isSphere);	//Entitus with BoundingVolume, true = sphere, false = OOBB
-	~Entity();
+	virtual~Entity();
 
 
 };

@@ -8,6 +8,8 @@ class MeleeEnemy : public Enemy {
 private:
 
 public:
+    MeleeEnemy();
+    virtual~MeleeEnemy();
 
 };
 
