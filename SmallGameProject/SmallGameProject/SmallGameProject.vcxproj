@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Ai.cpp" />
+    <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="BomberEnemy.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="LightShaderHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeleeEnemy.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MoveDownCommand.cpp" />
     <ClCompile Include="MoveLeftCommand.cpp" />
@@ -189,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Ai.h" />
+    <ClInclude Include="Algorithm.h" />
     <ClInclude Include="AudioHandler.h" />
     <ClInclude Include="BomberEnemy.h" />
     <ClInclude Include="BoundingVolume.h" />
@@ -207,6 +210,7 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LightShaderHandler.h" />
     <ClInclude Include="MeleeEnemy.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MoveDownCommand.h" />
     <ClInclude Include="MoveLeftCommand.h" />
