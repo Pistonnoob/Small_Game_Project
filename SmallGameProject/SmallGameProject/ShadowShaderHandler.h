@@ -28,6 +28,8 @@ private:
 	ID3D11Buffer* matrixBuffer;
 	ID3D11SamplerState* samplerState;
 	ID3D11ShaderResourceView** nullResource;
+	D3D11_VIEWPORT* viewPort;
+
 	static int const nrOfShaderResources = 1;
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);

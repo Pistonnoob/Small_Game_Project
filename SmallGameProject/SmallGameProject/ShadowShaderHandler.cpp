@@ -35,4 +35,5 @@ void ShadowShaderHandler::startUp()
 	this->matrixBuffer	= nullptr;
 	this->samplerState	= nullptr;
 	this->nullResource	= nullptr;
+	this->viewPort		= nullptr;
 }
