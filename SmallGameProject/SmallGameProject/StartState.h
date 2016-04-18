@@ -5,7 +5,7 @@ class StartState :
 	public GameState
 {
 private:
-
+	int selected = 0;
 public:
 	StartState();
 	StartState(GameStateHandler* GSH);

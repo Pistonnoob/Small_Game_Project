@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Ai.cpp" />
+    <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="BomberEnemy.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
@@ -183,6 +184,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Ai.h" />
+    <ClInclude Include="Algorithm.h" />
     <ClInclude Include="AudioHandler.h" />
     <ClInclude Include="BomberEnemy.h" />
     <ClInclude Include="BoundingVolume.h" />

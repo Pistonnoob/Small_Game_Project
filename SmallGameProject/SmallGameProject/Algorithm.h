@@ -3,6 +3,8 @@
 #include <cmath>
 #include <DirectXMath.h>
 
+namespace Algorithm;
+
 int GetParabola(int x);
 //Stores the result in x and y
 void GetParabola(int& x, int& y, int t);
