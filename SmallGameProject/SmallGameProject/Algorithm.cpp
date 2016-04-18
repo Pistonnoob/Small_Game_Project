@@ -1,37 +1,37 @@
 #include "Algorithm.h"
 
 
-int GetParabola(int x)
+int Algorithm::GetParabola(int x)
 {
 	return pow(x, 2);
 }
 
-void GetParabola(int& x, int& y, int t)
+void Algorithm::GetParabola(int& x, int& y, int t)
 {
 	x = t;
 	y = pow(t, 2);
 }
 
-void GetCircle(int& x, int&y, int t)	
+void Algorithm::GetCircle(int& x, int&y, int t)
 {
 	x = cos(t);
 	y = sin(t);
 }
 
 
-void GetEllipse(int& x, int& y, int t, int a, int b)
+void Algorithm::GetEllipse(int& x, int& y, int t, int a, int b)
 {
 	x = a * cos(t);
 	y = b * sin(t);
 }
 
-void GetLissajousCurve(int& x, int& y, int t, int a, int b, int xLobes, int yLobes)
+void Algorithm::GetLissajousCurve(int& x, int& y, int t, int a, int b, int xLobes, int yLobes)
 {
 	x = a * cos(xLobes * t);
 	y = b * sin(yLobes * t);
 }
 
-void GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d)
+void Algorithm::GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d)
 {
 	int tX = 0, tY = 0;
 	int distanceFromOrigo = bigR - r;
@@ -44,6 +44,11 @@ void GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d)
 	//Calculate the local x and y
 	x = distanceFromOrigo * cos(angle) + d * cos((distanceFromOrigo / r) * angle);
 	y = distanceFromOrigo * sin(angle) - d * sin((distanceFromOrigo / r) * angle);
+}
 
 
+void Algorithm::GetSawtooth(int& x, int& y, int t)
+{
+	x = t;
+	y = (2 * t) % 2 - 1;
 }
