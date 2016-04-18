@@ -34,7 +34,16 @@ void GetLissajousCurve(int& x, int& y, int t, int a, int b, int xLobes, int yLob
 void GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d)
 {
 	int tX = 0, tY = 0;
-	GetCircle(tX, tY, t);
 	int distanceFromOrigo = bigR - r;
+	GetCircle(tX, tY, distanceFromOrigo);
+	//Apply the distance
+	tX *= distanceFromOrigo;
+	tY *= distanceFromOrigo;
+	//Angle between origin and innerCircleOrigin.
+	float angle = atan2(tX, tY);
+	//Calculate the local x and y
+	x = distanceFromOrigo * cos(angle) + d * cos((distanceFromOrigo / r) * angle);
+	y = distanceFromOrigo * sin(angle) - d * sin((distanceFromOrigo / r) * angle);
+
 
 }
