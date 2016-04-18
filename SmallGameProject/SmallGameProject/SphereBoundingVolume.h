@@ -2,14 +2,15 @@
 #define SPHEREBOUNDINGVOLUME_H
 
 #include "BoundingVolume.h"
+#include "BoxBoundingVolume.h"
 #include "Model.h"
 class SphereBoundingVolume : public BoundingVolume {
 
 private:
-	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 center;
 	int radius;
 
-	void generateMinMax(DirectX::XMFLOAT3& minVert, DirectX::XMFLOAT3& maxVert, Model* model);
+	void generateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model);
 
 public:
 	SphereBoundingVolume();

@@ -3,7 +3,7 @@
 SphereBoundingVolume::SphereBoundingVolume()
 : BoundingVolume()
 {
-	this->pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+	this->center = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 	this->radius = 0;
 }
 
@@ -64,23 +64,36 @@ void SphereBoundingVolume::generateBounds(Model* model)
 
 	DirectX::XMFLOAT3 midleVert = DirectX::XMFLOAT3(minVert.x + distanceToMid.x, minVert.y + distanceToMid.y, minVert.z + distanceToMid.z);	//Calculate the midle Vertex
 
-	this->pos = DirectX::XMFLOAT3(midleVert);	//Set the bounding spheres midle to the center of the modle
+	this->center = DirectX::XMFLOAT3(midleVert);	//Set the bounding spheres midle to the center of the modle
 	this->radius = sqrt(pow((distanceToMid.x), 2) + pow((distanceToMid.y), 2) + pow((distanceToMid.z), 2));	//Set the radius of the sphere to the distance from the midle to the minimum vertex
 }
 
 bool SphereBoundingVolume::intersect(BoundingVolume* otherBoundingVolume)
 {
+	bool result = false;
+	BoxBoundingBox* box;
 	SphereBoundingVolume* sphere = dynamic_cast<SphereBoundingVolume*>(otherBoundingVolume);
-	
-	if (otherBoundingVolume != nullptr) {	//If the volume is a sphere
+	if (sphere != nullptr) {	//If the volume is a sphere
 
 		//The distance betwen the two centers
-		int distance = sqrt(pow((this->pos.x - sphere->pos.x), 2) + pow((this->pos.y - sphere->pos.y), 2) + pow((this->pos.z - sphere->pos.z), 2));
+		int distance = sqrt(pow((this->center.x - sphere->center.x), 2) + pow((this->center.y - sphere->center.y), 2) + pow((this->center.z - sphere->center.z), 2));
 		
 		if (this->radius + sphere->radius <= distance) {
-			return true;
+			result = true;
 		}
 	}
+	else {						//If the volume is a box
+		box = dynamic_cast<BoxBoundingBox*>(otherBoundingVolume);
+	}
 
-	return false;
+	if (sphere) {
+		delete sphere;
+
+	}
+
+	if (box) {
+		delete box;
+	}
+	
+	return result;
 }
