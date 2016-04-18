@@ -4,6 +4,8 @@
 class MenuState :
 	public GameState
 {
+private:
+	int selected;
 public:
 	MenuState();
 	~MenuState();
