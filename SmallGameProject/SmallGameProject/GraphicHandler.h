@@ -5,6 +5,7 @@
 #include "D3DHandler.h"
 #include "DeferredShaderHandler.h"
 #include "LightShaderHandler.h"
+#include "ShadowShaderHandler.h"
 #include "ScreenQuad.h"
 
 const float SCREEN_DEPTH = 1000.0f;
@@ -16,6 +17,7 @@ protected:
 	D3DHandler* engine;
 	DeferredShaderHandler* deferredShaderH;
 	LightShaderHandler* lightShaderH;
+	ShadowShaderHandler* shadowShaderH;
 	ScreenQuad* screenQuad;
 
 	int screenWidth;

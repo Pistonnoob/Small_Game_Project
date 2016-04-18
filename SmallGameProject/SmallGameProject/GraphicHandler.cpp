@@ -47,6 +47,15 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 		return false;
 	}
 
+	//here is were I put in the shadowShader
+	this->shadowShaderH = new ShadowShaderHandler;
+	if (this->shadowShaderH == false)
+	{
+		return false;
+	}
+	this->shadowShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount(), screenWidth, screenHeight);
+
+
 	this->screenQuad = new ScreenQuad;
 	if (!this->screenQuad) {
 		return false;
