@@ -37,3 +37,7 @@ void ShadowShaderHandler::startUp()
 	this->nullResource	= nullptr;
 	this->viewPort		= nullptr;
 }
+
+void ShadowShaderHandler::setViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight)
+{
+}

@@ -51,6 +51,7 @@ public:
 
 private:
 	void startUp();
+	void setViewPort(ID3D11Device* gDevice,int clientWidth, int clientHeight);
 };
 
 
