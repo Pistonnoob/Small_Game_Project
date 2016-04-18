@@ -9,6 +9,14 @@ private:
 
 public:
 
+
+    void moveRight();
+    void moveLeft();
+    void moveUp();
+    void moveDown();
+    void move(DirectX::XMFLOAT3 moveVec);
+    DirectX::XMFLOAT3 getPosition();
+
 };
 
 #endif
