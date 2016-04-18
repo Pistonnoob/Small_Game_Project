@@ -5,6 +5,8 @@ System::System()
 	this->gameSH = nullptr;
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
+	this->cameraH = nullptr;
+	this->testModel = nullptr;
 }
 
 System::~System()
@@ -22,18 +24,44 @@ bool System::Initialize()
 	InitWindow(screenWidth, screenHeight);
 
 	//Create the inputHandler
-
+	this->inputH = new InputHandler();
 	//Initialize the InputHandler
-
+	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 	//Create the graphicHandler.
-
+	this->graphicH = new GraphicHandler();
 	//Initialize the graphicHandler
+	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight);
 
 	//Create the GameStateHandler.
-	this->gameSH = new GameStateHandler();
+	//this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
 
+	//Create the CameraHandler
+	this->cameraH = new CameraHandler;
 
+	//Initialize the CameraHandler
+	result = this->cameraH->Initialize();
+	if (!result) {
+		return false;
+	}
+
+	this->testModel = new Model;
+
+	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ogreFullG");
+	if (!result) {
+		return false;
+	}
+	this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+
+	this->testModelGround = new Model;
+
+	result = this->testModelGround->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ground");
+	if (!result) {
+		return false;
+	}
+	this->testModelGround->SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+
+	this->testRot = 0;
 
 	return true;
 }
@@ -88,9 +116,38 @@ void System::Run()
 
 void System::Shutdown()
 {
+	//Release the models
+	if (this->testModel) {
+		this->testModel->Shutdown();
+		delete this->testModel;
+		this->testModel = nullptr;
+	}
+	if (this->testModelGround) {
+		this->testModelGround->Shutdown();
+		delete this->testModelGround;
+		this->testModelGround = nullptr;
+	}
 	//Release the graphicsHandler
+	if (this->graphicH) {
+		this->graphicH->Shutdown();
+		delete this->graphicH;
+		this->graphicH = nullptr;
+	}
 	//Release the inputHandler
+	if (this->inputH) {
+		this->inputH->Shutdown();
+		delete this->inputH;
+		this->inputH = nullptr;
+	}
+	//Release the cameraHandler
+	if (this->cameraH) {
+		delete this->cameraH;
+		this->cameraH = nullptr;
+	}
 	//Release the GameStateHandler
+
+	
+
 	//Shutdown the window
 	ShutdownWindow();
 }
@@ -209,7 +266,59 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	this->inputH->Update();
 
+	if (this->inputH->isKeyPressed(VK_ESCAPE)) {
+		return false;
+	}
+
+	this->testRot += dTime / 200000;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
+	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
+	this->testModel->SetWorldMatrix(worldMatrix);
+
+	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -10.0f, 0.0f);
+	this->testModelGround->SetWorldMatrix(worldMatrix);
+
+	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
+	DirectX::XMMATRIX viewMatrix;
+	this->graphicH->ClearRTVs();
+
+	this->graphicH->SetDeferredRTVs();
+
+	this->cameraH->GetViewMatrix(viewMatrix);
+	deferredShaderParams->viewMatrix = viewMatrix;
+	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
+
+	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
+	this->testModel->Render(this->graphicH->GetDeviceContext());
+
+	this->graphicH->DeferredRender(this->testModel->GetVertexCount(), 0, deferredShaderParams);
+
+	delete deferredShaderParams;
+	deferredShaderParams = new DeferredShaderParameters;
+
+	deferredShaderParams->viewMatrix = viewMatrix;
+	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
+
+	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams);
+	this->testModelGround->Render(this->graphicH->GetDeviceContext());
+	this->graphicH->DeferredRender(this->testModelGround->GetVertexCount(), 0, deferredShaderParams);
+
+	delete deferredShaderParams;
+	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+
+	this->graphicH->SetLightRTV();
+
+	lightShaderParams->camPos = this->cameraH->GetCameraPos();
+	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
+	lightShaderParams->viewMatrix = viewMatrix;
+
+	this->graphicH->LightRender(lightShaderParams);
+
+	delete lightShaderParams;
+
+	this->graphicH->PresentScene();
 
 	return true;
 }
@@ -222,13 +331,15 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	case WM_KEYDOWN:
 	{
 		//if key is pressed send it to the input object to be recorded
-		
+		this->inputH->KeyDown((unsigned int)wparam);
+
 		return 0;
 	}
 	//Check if a key is released on the keyboard
 	case WM_KEYUP:
 	{
 		//If a key is released then send it to the input object
+		this->inputH->KeyUp((unsigned int)wparam);
 		
 		return 0;
 	}
@@ -267,3 +378,4 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT unmessage, WPARAM wparam, LPARAM
 
 	}
 }
+
