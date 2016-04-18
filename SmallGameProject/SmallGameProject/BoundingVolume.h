@@ -7,6 +7,8 @@
 class BoundingVolume {
 
 private:
+	virtual void generateMinMax(DirectX::XMFLOAT3& minVert, DirectX::XMFLOAT3& maxVert, Model* model) = 0;
+
 
 public:
 	BoundingVolume();

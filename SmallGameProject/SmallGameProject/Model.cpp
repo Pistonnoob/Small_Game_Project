@@ -387,3 +387,8 @@ bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, u
 
 	return true;
 }
+
+const std::vector<DirectX::XMFLOAT3>* Model::getVertexPositions()
+{
+	return &this->vertPositions;
+}
