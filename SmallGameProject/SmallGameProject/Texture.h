@@ -16,7 +16,6 @@ public:
 		DirectX::XMFLOAT4 diffColor;
 		DirectX::XMFLOAT4 ambientColor;
 		DirectX::XMFLOAT4 specColor;
-		float specPower;
 		bool hasTexture;
 		int textureIndex;
 		bool hasNormMap;
@@ -46,6 +45,9 @@ public:
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string& mtlFilename);
 	void Shutdown();
+
+	int GetMaterialIndexFromName(std::string& materialName);
+	Material GetMaterial(int materialIndex);
 };
 
 #endif

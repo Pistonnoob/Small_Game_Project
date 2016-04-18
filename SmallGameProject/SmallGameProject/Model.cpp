@@ -66,6 +66,11 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 	else {
 		std::string materialLib;
 		this->LoadObj(objFilename.c_str(), vertices, indices, materialLib);
+		this->texture = new Texture;
+		this->texture->Initialize(device, deviceContext, materialLib);
+		for (int i = 0; i < this->materialNames.size(); i++) {
+			this->materialIndices.push_back(this->texture->GetMaterialIndexFromName(this->materialNames.at(i)));
+		}
 	}
 
 	//Set the description of the static vertex buffer
@@ -146,9 +151,19 @@ void Model::Shutdown()
 		this->vertexBuffer->Release();
 		this->vertexBuffer = nullptr;
 	}
+	if (this->texture) {
+		this->texture->Shutdown();
+		delete this->texture;
+		this->texture = nullptr;
+	}
 }
 
-void Model::GetDeferredShaderParameters(DeferredShaderParameters* params)
+int Model::GetNrOfSubsets()
+{
+	return this->subsetIndices.size();
+}
+
+void Model::GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex)
 {
 	params->diffColor = DirectX::XMFLOAT4(this->color.x, this->color.y, this->color.z, 1.0f);
 	params->ambientColor = DirectX::XMFLOAT4(this->color.x, this->color.y, this->color.z, 1.0f);

@@ -116,9 +116,9 @@ bool Texture::LoadMTL(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 	HRESULT hresult;
 	unsigned int rowPitch;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	std::string path = "../Ze3DProject/Textures/";
+	std::string path = "..\\SmallGameProject\\Resources\\Textures\\";
 	std::string finalPath;
-	std::string mtlPath = "../Ze3DProject/OBJ/";
+	std::string mtlPath = "..\\SmallGameProject\\Resources\\OBJ\\";
 	std::string finalMtlPath = mtlPath + materialLib;
 	bool result;
 
@@ -170,7 +170,7 @@ bool Texture::LoadMTL(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 					ss.str(line);
 					ss >> junk >> specPwr;
 
-					this->materials.at(nrOfMaterials - 1).specPower = specPwr;
+					this->materials.at(nrOfMaterials - 1).specColor.w = specPwr;
 				}
 			}
 			else if (line.substr(0, 6) == "map_Kd") { //Path to texture file
@@ -214,6 +214,8 @@ bool Texture::LoadMTL(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 							srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 							srvDesc.Texture2D.MostDetailedMip = 0;
 							srvDesc.Texture2D.MipLevels = -1;
+
+							firstTextureLoad = false;
 						}
 						//Set the teexture specific description values
 						textureDesc.Height = height;
@@ -296,6 +298,8 @@ bool Texture::LoadMTL(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 							srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 							srvDesc.Texture2D.MostDetailedMip = 0;
 							srvDesc.Texture2D.MipLevels = -1;
+
+							firstTextureLoad = false;
 						}
 						//Set the teexture specific description values
 						textureDesc.Height = height;
@@ -365,4 +369,32 @@ void Texture::Shutdown()
 	}
 
 	return;
+}
+
+int Texture::GetMaterialIndexFromName(std::string & materialName)
+{
+	for (int i = 0; i < this->materials.size(); i++) {
+		if (this->materials.at(i).name == materialName) { //Look for the material by name
+			return i;
+		}
+	}
+	return -1;
+}
+
+Texture::Material Texture::GetMaterial(int materialIndex)
+{
+	if (materialIndex >= 0 && materialIndex < this->materials.size()) {
+		return this->materials.at(materialIndex);
+	}
+	Material defaultMaterial; //If no material found, return a default one
+	defaultMaterial.name = "Not found";
+	defaultMaterial.diffColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	defaultMaterial.ambientColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	defaultMaterial.specColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	defaultMaterial.hasTexture = false;
+	defaultMaterial.textureIndex = -1;
+	defaultMaterial.hasNormMap = false;
+	defaultMaterial.normMapIndex = -1;
+
+	return defaultMaterial;
 }

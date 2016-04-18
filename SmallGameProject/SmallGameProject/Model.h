@@ -31,6 +31,7 @@ private:
 	int indexCount;
 	std::vector<int> subsetIndices;
 	std::vector<std::string> materialNames;
+	std::vector<int> materialIndices;
 	Texture* texture;
 	DirectX::XMMATRIX worldMatrix;
 	std::vector<DirectX::XMFLOAT3> vertPositions;
@@ -51,7 +52,8 @@ public:
 
 	int GetVertexCount();
 
-	void GetDeferredShaderParameters(DeferredShaderParameters* params);
+	int GetNrOfSubsets();
+	void GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex);
 
 	bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, unsigned long*& outputIndices, std::string& materialLib);
 };

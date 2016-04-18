@@ -290,7 +290,7 @@ bool System::Update(float dTime)
 	deferredShaderParams->viewMatrix = viewMatrix;
 	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
 
-	this->testModel->GetDeferredShaderParameters(deferredShaderParams);
+	this->testModel->GetDeferredShaderParameters(deferredShaderParams, 0);
 	this->testModel->Render(this->graphicH->GetDeviceContext());
 
 	this->graphicH->DeferredRender(this->testModel->GetVertexCount(), 0, deferredShaderParams);
@@ -301,7 +301,7 @@ bool System::Update(float dTime)
 	deferredShaderParams->viewMatrix = viewMatrix;
 	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
 
-	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams);
+	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams, 0);
 	this->testModelGround->Render(this->graphicH->GetDeviceContext());
 	this->graphicH->DeferredRender(this->testModelGround->GetVertexCount(), 0, deferredShaderParams);
 
