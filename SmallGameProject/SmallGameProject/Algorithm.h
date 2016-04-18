@@ -11,6 +11,8 @@ void GetCircle(int& x, int&y, int t);
 //
 void GetEllipse(int& x, int& y, int t, int a, int b);
 //xLobes and yLobes describe the number of lobes of the figure
-void GetLissajousCurve(int& x, int& y, int a, int b, int xLobes, int yLobes);
+void GetLissajousCurve(int& x, int& y, int t, int a, int b, int xLobes, int yLobes);
+//A curve traced by a point attached to a circle of radius r rolling around the inside of a fixed circle of radius R, where the point is at a distance d from the center of the interior circle.
+void GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d);
 
 #endif

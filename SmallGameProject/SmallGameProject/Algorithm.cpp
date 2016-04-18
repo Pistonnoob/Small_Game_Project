@@ -22,10 +22,19 @@ void GetCircle(int& x, int&y, int t)
 void GetEllipse(int& x, int& y, int t, int a, int b)
 {
 	x = a * cos(t);
-	y = b * cos(y);
+	y = b * sin(t);
 }
 
-void GetLissajousCurve(int& x, int& y)
+void GetLissajousCurve(int& x, int& y, int t, int a, int b, int xLobes, int yLobes)
 {
+	x = a * cos(xLobes * t);
+	y = b * sin(yLobes * t);
+}
+
+void GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d)
+{
+	int tX = 0, tY = 0;
+	GetCircle(tX, tY, t);
+	int distanceFromOrigo = bigR - r;
 
 }
