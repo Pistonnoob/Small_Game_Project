@@ -33,7 +33,7 @@ bool System::Initialize()
 	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight);
 
 	//Create the GameStateHandler.
-	//this->gameSH = new GameStateHandler();
+	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
 
 	//Create the CameraHandler
@@ -145,7 +145,12 @@ void System::Shutdown()
 		this->cameraH = nullptr;
 	}
 	//Release the GameStateHandler
-
+	if (this->gameSH)
+	{
+		this->gameSH->Shutdown();
+		delete this->gameSH;
+		this->gameSH = nullptr;
+	}
 	
 
 	//Shutdown the window
