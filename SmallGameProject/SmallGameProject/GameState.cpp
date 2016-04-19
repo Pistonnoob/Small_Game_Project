@@ -20,3 +20,8 @@ int GameState::InitializeBase(GameStateHandler * GSH)
 	this->m_GSH = GSH;
 	return result;
 }
+
+bool GameState::GetManualClearing()
+{
+	return false;
+}

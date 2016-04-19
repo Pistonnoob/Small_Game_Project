@@ -9,6 +9,7 @@ class GameState {
 
 protected:
 	GameStateHandler* m_GSH;
+	bool manualClearing;
 public:
 
 	GameState();	//This will initialize the GSH pointer to NULL
@@ -19,6 +20,9 @@ public:
 	int InitializeBase(GameStateHandler* GSH);
 	virtual int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH) = 0;
 	
+	bool GetManualClearing();
+	void SetManualClearing(bool myCase);
+
 	virtual int HandleInput(InputHandler* input) = 0;
 	virtual int Update(float deltaTime) = 0;
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd) = 0;
