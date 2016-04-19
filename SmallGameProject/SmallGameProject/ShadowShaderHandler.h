@@ -54,18 +54,19 @@ public:
 
 
 private:
-	void startUp();
-	void setViewPort(ID3D11Device* gDevice, int clientWidth, int clientHeight);
+	void StartUp();
+	void SetViewPort(ID3D11Device* gDevice, int clientWidth, int clientHeight);
 
-	void create2DTexture(ID3D11Device* gDevice, int screenWidth, int screenHeight) throw(...);
-	void createDepthStencilView(ID3D11Device* gDevice) throw(...);
-	void createShaderResourceView(ID3D11Device* gDevice) throw(...);
+	void Create2DTexture(ID3D11Device* gDevice, int screenWidth, int screenHeight) throw(...);
+	void CreateDepthStencilView(ID3D11Device* gDevice) throw(...);
+	void CreateShaderResourceView(ID3D11Device* gDevice) throw(...);
 
 	/*
 	vertex shader help functions
 	*/
-	void LoadVertexShaderFromFile(std::string vsFilename) throw(...);
-	void createVertexLayout(ID3D11Device* gDevice) throw(...);
+	void LoadVertexShaderFromFile() throw(...);
+	void CreateVertexLayout(ID3D11Device* gDevice) throw(...);
+	void ReleaseVertexBuffer();
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters* params);

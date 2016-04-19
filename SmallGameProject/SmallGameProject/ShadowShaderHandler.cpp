@@ -20,7 +20,12 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 		this->createDepthStencilView(gDevice);
 		this->createShaderResourceView(gDevice);
 
-		//this->LoadVertexShaderFromFile("shadowVertex");
+		this->LoadVertexShaderFromFile();
+		this->createVertexLayout(gDevice);
+
+		//vertexBuffer no longer needed
+		this->releaseVertexBuffer();
+
 	}
 	catch (char* e)
 	{
@@ -77,7 +82,7 @@ void ShadowShaderHandler::clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext)
 	gDeviceContext->ClearDepthStencilView(this->mDepthMapDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void ShadowShaderHandler::startUp()
+void ShadowShaderHandler::StartUp()
 {
 	this->vertexShader			= nullptr;
 	this->vertexShaderBuffer	= nullptr;
@@ -91,7 +96,7 @@ void ShadowShaderHandler::startUp()
 	this->depthMap				= nullptr;
 }
 
-void ShadowShaderHandler::setViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight)
+void ShadowShaderHandler::SetViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight)
 {
 	this->viewPort = new D3D11_VIEWPORT;
 	
@@ -109,7 +114,7 @@ void ShadowShaderHandler::setViewPort(ID3D11Device * gDevice, int clientWidth, i
 	this->viewPort->MaxDepth	= 1.0f;
 }
 
-void ShadowShaderHandler::create2DTexture(ID3D11Device * gDevice, int screenWidth, int screenHeight) throw(...)
+void ShadowShaderHandler::Create2DTexture(ID3D11Device * gDevice, int screenWidth, int screenHeight) throw(...)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
 	ZeroMemory(&texDesc, sizeof(texDesc));
@@ -142,7 +147,7 @@ void ShadowShaderHandler::create2DTexture(ID3D11Device * gDevice, int screenWidt
 	}
 }
 
-void ShadowShaderHandler::createDepthStencilView(ID3D11Device * gDevice) throw(...)
+void ShadowShaderHandler::CreateDepthStencilView(ID3D11Device * gDevice) throw(...)
 {
 	HRESULT resultHelper;
 
@@ -162,7 +167,7 @@ void ShadowShaderHandler::createDepthStencilView(ID3D11Device * gDevice) throw(.
 	}
 }
 
-void ShadowShaderHandler::createShaderResourceView(ID3D11Device * gDevice) throw(...)
+void ShadowShaderHandler::CreateShaderResourceView(ID3D11Device * gDevice) throw(...)
 {
 	HRESULT resultHelper;
 	
@@ -182,21 +187,22 @@ void ShadowShaderHandler::createShaderResourceView(ID3D11Device * gDevice) throw
 	}
 }
 
-void ShadowShaderHandler::LoadVertexShaderFromFile(std::string vsFilename) throw(...)
+void ShadowShaderHandler::LoadVertexShaderFromFile() throw(...)
 {
 	HRESULT resultHelper;
 	
-	LPCWSTR vsFileN = this->stringToLPCSTR(vsFilename);
+	std::string errorMsg;
+	WCHAR* vsFilename = L"../SmallGameProject/ShadowMapVertexShader.hlsl";
 	ID3D10Blob* errorMessage;
 
 
-	resultHelper = D3DCompileFromFile(vsFileN, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &this->vertexShaderBuffer, &errorMessage);
+	resultHelper = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &this->vertexShaderBuffer, &errorMessage);
 	
 	if (FAILED(resultHelper))
 	{
 		if (errorMessage) 
 		{
-			throw(errorMessage);
+			throw("read errorMessage");
 		}
 		else 
 		{
@@ -205,7 +211,7 @@ void ShadowShaderHandler::LoadVertexShaderFromFile(std::string vsFilename) throw
 	}
 }
 
-void ShadowShaderHandler::createVertexLayout(ID3D11Device * gDevice) throw(...)
+void ShadowShaderHandler::CreateVertexLayout(ID3D11Device * gDevice) throw(...)
 {
 	HRESULT resultHelper;
 	int numElements = 0;
@@ -224,7 +230,16 @@ void ShadowShaderHandler::createVertexLayout(ID3D11Device * gDevice) throw(...)
 	numElements = sizeof(shadowVertexLayout) / sizeof(shadowVertexLayout[0]);
 
 	//Create the vertex input layout.
-	//resultHelper = gDevice->CreateInputLayout(shadowVertexLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
+	resultHelper = gDevice->CreateInputLayout(shadowVertexLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
+}
+
+void ShadowShaderHandler::ReleaseVertexBuffer()
+{
+	if (this->vertexShaderBuffer != nullptr)
+	{
+		vertexShaderBuffer->Release();
+		vertexShaderBuffer = nullptr;
+	}
 }
 
 LPCWSTR ShadowShaderHandler::stringToLPCSTR(std::string toConvert) const
