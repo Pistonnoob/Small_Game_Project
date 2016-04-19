@@ -25,6 +25,7 @@ bool GameStateHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* dev
 	int result = 1;
 	StartState* startState = new StartState();
 	startState->Initialize(device, deviceContext, this);
+	this->m_gameStates.push_back(startState);
 	return result;
 }
 
