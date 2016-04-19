@@ -28,6 +28,10 @@ bool System::Initialize()
 	//Initialize the InputHandler
 	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 
+	//Create the GameStateHandler.
+	this->gameSH = new GameStateHandler();
+	//Initialize the GameStateHandler
+
 	//Create the CameraHandler
 	this->cameraH = new CameraHandler;
 
@@ -48,9 +52,7 @@ bool System::Initialize()
 	//Create the GameStateHandler.
 	//this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
-
 	
-
 	this->testModel = new Model;
 
 	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ogreFullG");
@@ -151,7 +153,12 @@ void System::Shutdown()
 		this->cameraH = nullptr;
 	}
 	//Release the GameStateHandler
-
+	if (this->gameSH)
+	{
+		this->gameSH->Shutdown();
+		delete this->gameSH;
+		this->gameSH = nullptr;
+	}
 	
 
 	//Shutdown the window
