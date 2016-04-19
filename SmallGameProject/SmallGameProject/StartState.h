@@ -5,13 +5,11 @@ class StartState :
 	public GameState
 {
 private:
-
+	bool startGame = false;
 public:
 	StartState();
 	StartState(GameStateHandler* GSH);
 	virtual ~StartState();
-
-	void Initialize();
 
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 

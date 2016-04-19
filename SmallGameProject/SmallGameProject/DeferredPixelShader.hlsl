@@ -39,12 +39,12 @@ PSOutput main(PSInput input) : SV_TARGET
 
 	if (hasTexture) {
 		output.color = shaderTexture.Sample(shaderSampler, input.tex).rgba;
+		output.ambient = output.color;
 	}
 	else {
 		output.color = difColor;
+		output.ambient = ambientColor;
 	}
-
-	output.ambient = ambientColor;
 	output.specular = specColor;
 
 	output.normal = float4(input.normal, 1.0f);

@@ -4,6 +4,7 @@
 
 StartState::StartState()
 {
+	this->startGame = false;
 }
 
 StartState::StartState(GameStateHandler * GSH)
@@ -12,10 +13,6 @@ StartState::StartState(GameStateHandler * GSH)
 }
 
 StartState::~StartState()
-{
-}
-
-void StartState::Initialize()
 {
 }
 

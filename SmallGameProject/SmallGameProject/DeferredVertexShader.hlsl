@@ -16,7 +16,7 @@ cbuffer CBPerObj
 
 struct VSInput
 {
-	float4 position : POSITION;
+	float3 position : POSITION;
 	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
 };
@@ -35,11 +35,11 @@ GSInput main(VSInput input)
 	GSInput output;
 
 	//Add homogencoordinates for proper matrix multiplication
-	input.position.w = 1.0f;
+	output.position = float4(input.position, 1.0f);
 
 	//Multiply the position with world-, view- and projectionmatrix
 	//Save the world-pos of the vertex
-	output.position = output.worldPos = mul(input.position, worldMatrix);
+	output.position = output.worldPos = mul(output.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
 
