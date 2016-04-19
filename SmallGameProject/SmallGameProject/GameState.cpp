@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include "GameStateHandler.h"
 
 GameState::GameState()
 {
@@ -34,9 +35,4 @@ bool GameState::GetManualClearing()
 void GameState::SetManualClearing(bool myCase)
 {
 	this->manualClearing = myCase;
-}
-
-GameState * GameState::GetPush()
-{
-	return nullptr;
 }

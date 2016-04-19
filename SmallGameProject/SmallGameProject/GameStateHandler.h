@@ -23,10 +23,6 @@ public:
 	int Update(float deltaTime);
 	int Render(GraphicHandler* gHandler, HWND hwnd);
 
-
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetDeviceContext();
-
 	void PushState(GameState* gameState);
 	GameState* PopState();
 };

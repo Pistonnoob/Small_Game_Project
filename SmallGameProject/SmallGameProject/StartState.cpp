@@ -1,5 +1,5 @@
 #include "StartState.h"
-
+#include "GameStateHandler.h"
 
 
 StartState::StartState()
@@ -51,7 +51,10 @@ GameState * StartState::GetPush()
 int StartState::HandleInput(InputHandler * input)
 {
 	int result = 0;
-	
+	if (input->isKeyPressed(VK_SPACE))
+	{
+		this->startGame = true;
+	}
 	return result;
 }
 
@@ -64,11 +67,8 @@ int StartState::Update(float deltaTime)
 		//Create the menu and push it
 		MenuState* menu = new MenuState();
 		menu->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
-		this->nextState = menu;
-	}
-	else
-	{
-		this->nextState = nullptr;
+		menu->SetManualClearing(false);
+		this->m_GSH->PushState(menu);
 	}
 	return result;
 }

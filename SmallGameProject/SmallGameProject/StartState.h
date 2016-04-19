@@ -9,7 +9,6 @@ class StartState :
 private:
 	bool startGame = false;
 	Model startModel;
-	MenuState* nextState;
 public:
 	StartState();
 	StartState(GameStateHandler* GSH);

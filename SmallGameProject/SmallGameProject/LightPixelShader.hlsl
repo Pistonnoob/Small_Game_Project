@@ -20,7 +20,7 @@ cbuffer LightConstantBuffer
 struct PSInput
 {
 	float4 position : SV_POSITION;
-	float2 tex : TEXCOORD0;
+	float2 tex : TEXCOORD;
 };
 
 float4 main(PSInput input) : SV_TARGET

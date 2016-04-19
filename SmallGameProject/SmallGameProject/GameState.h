@@ -4,7 +4,6 @@
 #include <Windows.h>
 #include "GraphicHandler.h"
 #include <d3d11.h>
-#include <vector>
 class GameStateHandler;
 class GameState {
 
@@ -26,8 +25,6 @@ public:
 	
 	bool GetManualClearing();
 	void SetManualClearing(bool myCase);
-
-	virtual GameState* GetPush();
 
 	virtual int HandleInput(InputHandler* input) = 0;
 	virtual int Update(float deltaTime) = 0;
