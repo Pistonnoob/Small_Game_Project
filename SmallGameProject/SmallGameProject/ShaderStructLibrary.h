@@ -30,4 +30,10 @@ struct LightShaderParameters {
 	DirectX::XMFLOAT4 camPos;
 };
 
+struct ShadowShaderParameters {
+	DirectX::XMMATRIX worldMatrix;
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX projectionMatrix;
+};
+
 #endif

@@ -85,9 +85,10 @@ void ShadowShaderHandler::BindAndSetNullRenderTargets(ID3D11DeviceContext * gDev
 	this->clearShadowMapRDW(gDeviceContext);
 }
 
-bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, LightShaderParameters * params)
+bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, ShadowShaderParameters * params)
 {
 	this->BindAndSetNullRenderTargets(deviceContext);
+	this->SetShaderParameters(deviceContext, params);
 	return false;
 }
 
@@ -263,7 +264,7 @@ void ShadowShaderHandler::CreateConstantBuffer(ID3D11Device * gDevice) throw(...
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	//Fill the description of the dynamic matrix constant buffer that is in the vertex shader
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(LightConstantBuffer);
+	matrixBufferDesc.ByteWidth = sizeof(ShadowConstantBuffer);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	matrixBufferDesc.MiscFlags = 0;
@@ -275,6 +276,43 @@ void ShadowShaderHandler::CreateConstantBuffer(ID3D11Device * gDevice) throw(...
 	{
 		throw("Failed creating the buffer");
 	}
+}
+
+bool ShadowShaderHandler::SetShaderParameters(ID3D11DeviceContext * deviceContext, ShadowShaderParameters * params) throw(...)
+{
+	HRESULT resultHelper;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	ShadowConstantBuffer* dataPtr;
+	unsigned int bufferNumber;
+
+	//Transpose each matrix to prepare for shaders (requirement in directx 11)
+	params->worldMatrix = XMMatrixTranspose(params->worldMatrix);
+	params->viewMatrix = XMMatrixTranspose(params->viewMatrix);
+	params->projectionMatrix = XMMatrixTranspose(params->projectionMatrix);
+
+	//Map the constant buffer so we can write to it (denies GPU access)
+	resultHelper = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(resultHelper)) 
+	{
+		throw("failed to map constant buffer");
+	}
+
+	//Get pointer to the data
+	dataPtr = (ShadowConstantBuffer*)mappedResource.pData;
+
+	//Copy the matrices to the constant buffer
+	dataPtr->world = params->worldMatrix;
+	dataPtr->view = params->viewMatrix;
+	dataPtr->projection = params->projectionMatrix;
+
+	//Unmap the constant buffer to give the GPU access agin
+	deviceContext->Unmap(this->matrixBuffer, 0);
+
+	//Set constant buffer position in vertex shader
+	bufferNumber = 0;
+
+	//Set the constant buffer in vertex and pixel shader with updated values
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 }
 
 LPCWSTR ShadowShaderHandler::stringToLPCSTR(std::string toConvert) const

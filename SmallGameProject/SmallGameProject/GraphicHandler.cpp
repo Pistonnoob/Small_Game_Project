@@ -54,8 +54,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight)
 		return false;
 	}
 	this->shadowShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount(), screenWidth, screenHeight);
-	
-	this->shadowShaderH->Render(this->engine->GetDeviceContext(),1,nullptr);
 
 	this->screenQuad = new ScreenQuad;
 	if (!this->screenQuad) {
@@ -104,6 +102,7 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 
 	return;
 }
+
 
 void GraphicHandler::Shutdown()
 {
