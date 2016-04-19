@@ -7,7 +7,7 @@ StartState::StartState()
 	this->startGame = false;
 	this->manualClearing = false;
 	this->startModel = Model();
-	this->nextState = nullptr;
+	this->camera = CameraHandler();
 }
 
 StartState::StartState(GameStateHandler * GSH)
@@ -31,21 +31,20 @@ int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	int result = 0;
 	this->startModel = Model();
 	this->manualClearing = false;
-	this->nextState = nullptr;
 	//Initialize the base class GameState
 	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
 	{
 		//Proceed to initialize thyself
-		result = this->startModel.Initialize(device, deviceContext, "StartGame");
+		bool modelResult = this->startModel.Initialize(device, deviceContext, "StartGame");
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 40.0f);
+		worldMatrix *= DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
+		worldMatrix = DirectX::XMMatrixRotationX(DirectX::XM_PI / 2) * worldMatrix;
+		modelResult = this->camera.Initialize();
+		this->startModel.SetWorldMatrix(worldMatrix);
 	}
 
 	return result;
-}
-
-GameState * StartState::GetPush()
-{
-	return this->nextState;
 }
 
 int StartState::HandleInput(InputHandler * input)
@@ -77,7 +76,7 @@ int StartState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
 
-	this->startModel.Render(gHandler->GetDeviceContext());
-
+	gHandler->DeferredRender(&this->startModel, &this->camera);
+	
 	return result;
 }

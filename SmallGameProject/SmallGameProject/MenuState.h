@@ -2,6 +2,7 @@
 #define MENUSTATE_H
 #include "GameState.h"
 #include "Model.h"
+static const int OPTION_COUNT = 3;
 class MenuState :
 	public GameState
 {
@@ -9,6 +10,7 @@ private:
 	int selected;
 	Model m_model;
 	Texture myTextures;
+
 public:
 	MenuState();
 	~MenuState();

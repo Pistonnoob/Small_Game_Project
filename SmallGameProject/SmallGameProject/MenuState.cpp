@@ -34,7 +34,17 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 
 int MenuState::HandleInput(InputHandler * input)
 {
-	int result = 0;
+	int result = 1;
+	int oldSelected = this->selected;
+	if (input->isKeyPressed(VK_DOWN))
+	{
+		this->selected--;
+	}
+	if (input->isKeyPressed(VK_UP))
+	{
+		this->selected++;
+	}
+	this->selected = this->selected % OPTION_COUNT;
 	return result;
 }
 
