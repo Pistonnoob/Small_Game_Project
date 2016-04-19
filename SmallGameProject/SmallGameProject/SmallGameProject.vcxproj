@@ -166,6 +166,7 @@
     <ClCompile Include="LightShaderHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeleeEnemy.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MoveDownCommand.cpp" />
     <ClCompile Include="MoveLeftCommand.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LightShaderHandler.h" />
     <ClInclude Include="MeleeEnemy.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MoveDownCommand.h" />
     <ClInclude Include="MoveLeftCommand.h" />

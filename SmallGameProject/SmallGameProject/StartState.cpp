@@ -51,6 +51,11 @@ int StartState::HandleInput(InputHandler * input)
 int StartState::Update(float deltaTime)
 {
 	int result = 0;
+	if (this->startGame)
+	{
+		//Create the menu and push it
+		MenuState* menu = new MenuState();
+	}
 	return result;
 }
 
@@ -59,7 +64,6 @@ int StartState::Render(GraphicHandler * gHandler, HWND hwnd)
 	int result = 0;
 
 	this->startModel.Render(gHandler->GetDeviceContext());
-
 
 	return result;
 }
