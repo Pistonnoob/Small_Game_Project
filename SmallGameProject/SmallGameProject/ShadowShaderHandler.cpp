@@ -20,7 +20,7 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 		this->createDepthStencilView(gDevice);
 		this->createShaderResourceView(gDevice);
 
-
+		//this->LoadVertexShaderFromFile("shadowVertex");
 	}
 	catch (char* e)
 	{
@@ -79,15 +79,16 @@ void ShadowShaderHandler::clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext)
 
 void ShadowShaderHandler::startUp()
 {
-	this->vertexShader	= nullptr;
-	this->layout		= nullptr;
-	this->matrixBuffer	= nullptr;
-	this->samplerState	= nullptr;
-	this->nullResource	= nullptr;
-	this->viewPort		= nullptr;
-	this->mDepthMapSRV	= nullptr;
-	this->mDepthMapDSV	= nullptr;
-	this->depthMap		= nullptr;
+	this->vertexShader			= nullptr;
+	this->vertexShaderBuffer	= nullptr;
+	this->layout				= nullptr;
+	this->matrixBuffer			= nullptr;
+	this->samplerState			= nullptr;
+	this->nullResource			= nullptr;
+	this->viewPort				= nullptr;
+	this->mDepthMapSRV			= nullptr;
+	this->mDepthMapDSV			= nullptr;
+	this->depthMap				= nullptr;
 }
 
 void ShadowShaderHandler::setViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight)
@@ -179,4 +180,57 @@ void ShadowShaderHandler::createShaderResourceView(ID3D11Device * gDevice) throw
 	{
 		throw("Failed creating the shaderResourceView");
 	}
+}
+
+void ShadowShaderHandler::LoadVertexShaderFromFile(std::string vsFilename) throw(...)
+{
+	HRESULT resultHelper;
+	
+	LPCWSTR vsFileN = this->stringToLPCSTR(vsFilename);
+	ID3D10Blob* errorMessage;
+
+
+	resultHelper = D3DCompileFromFile(vsFileN, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &this->vertexShaderBuffer, &errorMessage);
+	
+	if (FAILED(resultHelper))
+	{
+		if (errorMessage) 
+		{
+			throw(errorMessage);
+		}
+		else 
+		{
+			throw("compile from file error");
+		}
+	}
+}
+
+void ShadowShaderHandler::createVertexLayout(ID3D11Device * gDevice) throw(...)
+{
+	HRESULT resultHelper;
+	int numElements = 0;
+
+	D3D11_INPUT_ELEMENT_DESC shadowVertexLayout[1];
+
+	shadowVertexLayout[0].SemanticName = "POSITIONL";
+	shadowVertexLayout[0].SemanticIndex = 0;
+	shadowVertexLayout[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	shadowVertexLayout[0].InputSlot = 0;
+	shadowVertexLayout[0].AlignedByteOffset = 0;
+	shadowVertexLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	shadowVertexLayout[0].InstanceDataStepRate = 0;
+
+	//Get the number of elements in the layout
+	numElements = sizeof(shadowVertexLayout) / sizeof(shadowVertexLayout[0]);
+
+	//Create the vertex input layout.
+	//resultHelper = gDevice->CreateInputLayout(shadowVertexLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
+}
+
+LPCWSTR ShadowShaderHandler::stringToLPCSTR(std::string toConvert) const
+{
+	std::wstring stemp = std::wstring(toConvert.begin(), toConvert.end());
+	LPCWSTR sw = stemp.c_str();
+
+	return sw;
 }

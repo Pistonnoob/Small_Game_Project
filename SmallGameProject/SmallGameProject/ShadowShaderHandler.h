@@ -6,6 +6,7 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <fstream>
+#include <string>
 
 #include "ShaderStructLibrary.h"
 
@@ -35,6 +36,8 @@ private:
 	ID3D11DepthStencilView* mDepthMapDSV;
 	ID3D11Texture2D* depthMap;
 
+	ID3D10Blob* vertexShaderBuffer;
+
 	static int const nrOfShaderResources = 1;
 public:
 	ShadowShaderHandler();
@@ -61,11 +64,14 @@ private:
 	/*
 	vertex shader help functions
 	*/
+	void LoadVertexShaderFromFile(std::string vsFilename) throw(...);
 	void createVertexLayout(ID3D11Device* gDevice) throw(...);
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters* params);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
+
+	LPCWSTR stringToLPCSTR(std::string toConvert) const;
 };
 
 
