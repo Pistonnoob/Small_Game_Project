@@ -5,6 +5,7 @@
 StartState::StartState()
 {
 	this->startGame = false;
+	this->startModel = Model();
 }
 
 StartState::StartState(GameStateHandler * GSH)
@@ -16,16 +17,23 @@ StartState::~StartState()
 {
 }
 
+void StartState::Shutdown()
+{
+	GameState::Shutdown();
+	
+	this->startModel.Shutdown();
+}
+
 int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH)
 {
 	int result = 0;
-	
+	this->startModel = Model();
 	//Initialize the base class GameState
 	result = this->InitializeBase(GSH);
 	if (result)
 	{
 		//Proceed to initialize thyself
-
+		this->startModel.Initialize(device, deviceContext, "");
 	}
 
 	return result;
