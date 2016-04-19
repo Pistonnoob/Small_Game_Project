@@ -27,14 +27,6 @@ bool System::Initialize()
 	this->inputH = new InputHandler();
 	//Initialize the InputHandler
 	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
-	//Create the graphicHandler.
-	this->graphicH = new GraphicHandler();
-	//Initialize the graphicHandler
-	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight);
-
-	//Create the GameStateHandler.
-	//this->gameSH = new GameStateHandler();
-	//Initialize the GameStateHandler
 
 	//Create the CameraHandler
 	this->cameraH = new CameraHandler;
@@ -44,6 +36,20 @@ bool System::Initialize()
 	if (!result) {
 		return false;
 	}
+
+	DirectX::XMMATRIX viewMatrix;
+	this->cameraH->GetViewMatrix(viewMatrix);
+	//Create the graphicHandler.
+	this->graphicH = new GraphicHandler();
+	//Initialize the graphicHandler
+	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight, viewMatrix);
+
+	this->graphicH->CreateTextHolder(32);
+	//Create the GameStateHandler.
+	//this->gameSH = new GameStateHandler();
+	//Initialize the GameStateHandler
+
+	
 
 	this->testModel = new Model;
 
@@ -272,6 +278,9 @@ bool System::Update(float dTime)
 		return false;
 	}
 
+	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
+	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+
 	this->testRot += dTime / 400000;
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
@@ -326,6 +335,8 @@ bool System::Update(float dTime)
 	this->graphicH->LightRender(lightShaderParams);
 
 	delete lightShaderParams;
+
+	this->graphicH->TextRender();
 
 	this->graphicH->PresentScene();
 
