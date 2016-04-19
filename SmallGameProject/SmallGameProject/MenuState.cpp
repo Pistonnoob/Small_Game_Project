@@ -12,6 +12,10 @@ MenuState::~MenuState()
 {
 }
 
+void MenuState::Shutdown()
+{
+}
+
 int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
 {
 	int result = 0;

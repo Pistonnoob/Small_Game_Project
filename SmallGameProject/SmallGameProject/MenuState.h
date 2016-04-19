@@ -1,14 +1,18 @@
 #ifndef MENUSTATE_H
 #define MENUSTATE_H
 #include "GameState.h"
+#include "Model.h"
 class MenuState :
 	public GameState
 {
 private:
 	int selected;
+	Model m_model;
 public:
 	MenuState();
 	~MenuState();
+
+	void Shutdown();
 
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 
