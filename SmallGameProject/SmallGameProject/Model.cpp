@@ -207,6 +207,11 @@ void Model::SetColor(DirectX::XMFLOAT3 newColor)
 	this->color = newColor;
 }
 
+void Model::SetTextureView(ID3D11ShaderResourceView * textureView, int textureIndex)
+{
+	this->texture->SetTextureView(textureView, textureIndex);
+}
+
 int Model::GetVertexCount()
 {
 	return this->vertexCount;

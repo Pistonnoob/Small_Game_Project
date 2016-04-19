@@ -413,3 +413,8 @@ ID3D11ShaderResourceView * Texture::GetTexture(int textureIndex)
 	
 	return this->textureViews.at(textureIndex);
 }
+
+void Texture::SetTextureView(ID3D11ShaderResourceView * textureView, int textureIndex)
+{
+	this->textureViews.at(textureIndex) = textureView;
+}
