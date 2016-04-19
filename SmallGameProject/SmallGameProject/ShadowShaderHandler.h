@@ -43,7 +43,7 @@ public:
 
 	void BindAndSetNullRenderTargets(ID3D11DeviceContext* gDeviceContext);
 
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, ShadowShaderParameters* params);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, ShadowShaderParameters* params);
 	void clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext);
 
 
@@ -61,12 +61,13 @@ private:
 	void LoadVertexShaderFromFile() throw(...);
 	void CreateVertexLayout(ID3D11Device* gDevice) throw(...);
 	void ReleaseVertexBuffer();
-
+	
+	void CreateVertexShader(ID3D11Device* gDevice) throw(...);
 	void CreateConstantBuffer(ID3D11Device* gDevice) throw(...);
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, ShadowShaderParameters* params) throw(...);
-	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
+	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart);
 
 	LPCWSTR stringToLPCSTR(std::string toConvert) const;
 };

@@ -22,6 +22,7 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 
 		this->LoadVertexShaderFromFile();
 		this->CreateVertexLayout(gDevice);
+		this->CreateVertexShader(gDevice);
 
 		//vertexBuffer no longer needed
 		this->ReleaseVertexBuffer();
@@ -85,11 +86,29 @@ void ShadowShaderHandler::BindAndSetNullRenderTargets(ID3D11DeviceContext * gDev
 	this->clearShadowMapRDW(gDeviceContext);
 }
 
-bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, ShadowShaderParameters * params)
+bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, int indexStart, ShadowShaderParameters * params)
 {
+	bool result = false;
+	
 	this->BindAndSetNullRenderTargets(deviceContext);
-	this->SetShaderParameters(deviceContext, params);
-	return false;
+
+	//Set shader parameters used for rendering
+	try
+	{
+		this->SetShaderParameters(deviceContext, params);
+		result = true;
+	}
+	catch (char* e)
+	{
+		system("pause");
+	}
+	
+	if (result == false) {
+		return false;
+	}
+
+	this->RenderShader(deviceContext, indexCount, 0);
+	return true;
 }
 
 void ShadowShaderHandler::clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext)
@@ -257,6 +276,18 @@ void ShadowShaderHandler::ReleaseVertexBuffer()
 	}
 }
 
+void ShadowShaderHandler::CreateVertexShader(ID3D11Device * gDevice) throw(...)
+{
+	HRESULT resultHelper;
+
+	resultHelper = gDevice->CreateVertexShader(this->vertexShaderBuffer->GetBufferPointer(), this->vertexShaderBuffer->GetBufferSize(), NULL, &this->vertexShader);
+
+	if (FAILED(resultHelper))
+	{
+		throw("Failed to create the vertex shader");
+	}
+}
+
 void ShadowShaderHandler::CreateConstantBuffer(ID3D11Device * gDevice) throw(...)
 {
 	HRESULT resultHelper;
@@ -313,6 +344,20 @@ bool ShadowShaderHandler::SetShaderParameters(ID3D11DeviceContext * deviceContex
 
 	//Set the constant buffer in vertex and pixel shader with updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
+}
+
+void ShadowShaderHandler::RenderShader(ID3D11DeviceContext * deviceContext, int indexCount, int indexStart)
+{
+	//set input layout to the pipeline
+	deviceContext->IASetInputLayout(this->layout);
+
+	//set shaders
+	deviceContext->VSSetShader(this->vertexShader, nullptr, 0);
+	deviceContext->GSSetShader(nullptr, nullptr, 0);
+	deviceContext->PSSetShader(nullptr, nullptr, 0);
+
+	//draw map
+	deviceContext->DrawIndexed(indexCount, indexStart, 0);
 }
 
 LPCWSTR ShadowShaderHandler::stringToLPCSTR(std::string toConvert) const

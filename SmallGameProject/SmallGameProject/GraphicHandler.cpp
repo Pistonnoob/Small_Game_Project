@@ -101,6 +101,7 @@ void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 	int indexCount;
 	int indexStart;
 	model->Render(this->engine->GetDeviceContext());
+
 	int nrOfSubsets = model->GetNrOfSubsets();
 	for (int i = 0; i < nrOfSubsets; i++) {
 		model->GetDeferredShaderParameters(params, i, indexCount, indexStart);
@@ -135,6 +136,24 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 	this->lightShaderH->ResetPSShaderResources(this->engine->GetDeviceContext());
 
 	return;
+}
+
+void GraphicHandler::ShadowRender(ShadowShaderParameters * shadowShaderParams, Model* model, CameraHandler* camera)
+{
+	shadowShaderParams->worldMatrix = DirectX::XMMatrixIdentity();
+	
+	DirectX::XMMATRIX viewMatrix;
+	camera->GetViewMatrix(viewMatrix);
+	
+	shadowShaderParams->viewMatrix = viewMatrix;
+	shadowShaderParams->projectionMatrix = this->perspectiveMatrix;
+
+	model->Render(this->engine->GetDeviceContext());
+
+
+	int nrOfSubsets = model->GetNrOfSubsets();
+
+	this->shadowShaderH->Render(this->GetDeviceContext(), 6, 0,shadowShaderParams);
 }
 
 void GraphicHandler::TextRender()

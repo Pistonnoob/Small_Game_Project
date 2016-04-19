@@ -34,8 +34,10 @@ public:
 	virtual ~GraphicHandler();
 
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight, DirectX::XMMATRIX baseViewMatrix);
+	
 	void DeferredRender(Model* model, CameraHandler* camera);
 	void LightRender(LightShaderParameters* shaderParams);
+	void ShadowRender(ShadowShaderParameters* shadowShaderParams, Model* model, CameraHandler* camera);
 	
 	void TextRender();
 	void Shutdown();

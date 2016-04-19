@@ -309,24 +309,28 @@ bool System::Update(float dTime)
 	this->graphicH->DeferredRender(this->testModel, this->cameraH);
 	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
 
+
+	DirectX::XMMATRIX viewMatrix;
+	this->cameraH->GetViewMatrix(viewMatrix);
 	
-	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+	//shadowMap
 	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
+
+	this->graphicH->ShadowRender(shadowShaderParams, this->testModel, this->cameraH);
+
+	delete shadowShaderParams;
+	
+	//lightning
+
+	LightShaderParameters* lightShaderParams = new LightShaderParameters;
 
 	this->graphicH->SetLightRTV();
 
 	lightShaderParams->camPos = this->cameraH->GetCameraPos();
 	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
-	DirectX::XMMATRIX viewMatrix;
-
-	this->cameraH->GetViewMatrix(viewMatrix);
 	lightShaderParams->viewMatrix = viewMatrix;
 
 	this->graphicH->LightRender(lightShaderParams);
-
-	shadowShaderParams->viewMatrix = viewMatrix;
-	shadowShaderParams->lightPos = this->cameraH->GetCameraPos();
-
 
 	delete lightShaderParams;
 
