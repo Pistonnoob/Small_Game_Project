@@ -1,6 +1,6 @@
 #include "BoxBoundingVolume.h"
-
-BoxBoundingBox::BoxBoundingBox()
+#include "SphereBoundingVolume.h"
+BoxBoundingVolume::BoxBoundingVolume()
 {
 	this->center = DirectX::XMFLOAT3(0,0,0);
 	this->axisX = DirectX::XMVectorSet(0, 0, 0, 0);
@@ -14,14 +14,17 @@ BoxBoundingBox::BoxBoundingBox()
 	this->halfLengthX = 0;
 	this->halfLengthY = 0;
 	this->halfLengthZ = 0;
-
+	
+	for (int i = 0; i < 3; i++) {
+		this->allLength[i] = 0;
+	}
 }
 
-BoxBoundingBox::~BoxBoundingBox()
+BoxBoundingVolume::~BoxBoundingVolume()
 {
 }
 
-void BoxBoundingBox::generateMinMax(DirectX::XMFLOAT3 & minVertex, DirectX::XMFLOAT3 & maxVertex, Model * model)
+void BoxBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3 & minVertex, DirectX::XMFLOAT3 & maxVertex, Model * model)
 {
 	DirectX::XMVECTOR vertVec;
 	DirectX::XMFLOAT3 vertFloat;
@@ -62,12 +65,12 @@ void BoxBoundingBox::generateMinMax(DirectX::XMFLOAT3 & minVertex, DirectX::XMFL
 	maxVertex = maxVert;
 }
 
-void BoxBoundingBox::generateBounds(Model * model)
+void BoxBoundingVolume::GenerateBounds(Model * model)
 {
 	DirectX::XMFLOAT3 minVert;
 	DirectX::XMFLOAT3 maxVert;
 
-	this->generateMinMax(minVert, maxVert, model);
+	this->GenerateMinMax(minVert, maxVert, model);
 	
 	//Calculate the midle
 	DirectX::XMFLOAT3 distanceToMid = DirectX::XMFLOAT3((maxVert.x - minVert.x) / 2, (maxVert.y - minVert.y) / 2, (maxVert.z - minVert.z) / 2);	//Calculate offset to add to the min vertex to find the midle vertex
@@ -76,9 +79,9 @@ void BoxBoundingBox::generateBounds(Model * model)
 	this->center = DirectX::XMFLOAT3(midleVert);	//Set the bounding spheres midle to the center of the modle
 	
 	//Half the length of the box
-	this->halfLengthX = distanceToMid.x;
-	this->halfLengthY = distanceToMid.y;
-	this->halfLengthZ = distanceToMid.z;
+	this->allLength[0] = this->halfLengthX = distanceToMid.x;
+	this->allLength[1] = this->halfLengthY = distanceToMid.y;
+	this->allLength[2] = this->halfLengthZ = distanceToMid.z;
 
 	//Calculate the axises
 	this->axisX = DirectX::XMVectorSet(maxVert.x - minVert.x, 0, 0, 0);
@@ -100,34 +103,95 @@ void BoxBoundingBox::generateBounds(Model * model)
 
 }
 
-bool BoxBoundingBox::intersect(BoundingVolume * otherBoundingVolume)
+bool BoxBoundingVolume::Intersect(BoundingVolume * otherBoundingVolume)
 {
 	bool result = false;
-	BoxBoundingBox* box;
+	BoxBoundingVolume* box;
 
 	SphereBoundingVolume* sphere = dynamic_cast<SphereBoundingVolume*>(otherBoundingVolume);
 	if (sphere != nullptr) {	//If the volume is a sphere
 		
-
-
+		result = this->SphereIntersectionTest(sphere);
 	}
 	else{						//If the volume is a Box
 		
-		box = dynamic_cast<BoxBoundingBox*>(otherBoundingVolume);
+		box = dynamic_cast<BoxBoundingVolume*>(otherBoundingVolume);
 
-
-
-	}
-
-
-	if (sphere) {
-		delete sphere;
-
-	}
-
-	if (box) {
-		delete box;
+		result = this->BoxIntersectionTest(box);
 	}
 
 	return result;
+}
+
+bool BoxBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* otherBox)
+{
+
+	return false;
+}
+
+bool BoxBoundingVolume::SphereIntersectionTest(SphereBoundingVolume* sphere)
+{
+	bool result = false;
+
+	DirectX::XMFLOAT3 sphereCenter = sphere->getCenter();
+	float sR = sphere->getRadius();
+	//bc = this center,
+	//bu = x axsis,
+	//be = length,
+	//q = result
+
+	DirectX::XMFLOAT3 closestPoint;
+
+	//The vector from the center of the box to the center of the sphere
+	DirectX::XMVECTOR v = DirectX::XMVectorSet(this->center.x - sphereCenter.x, this->center.y - sphereCenter.y, this->center.z - sphereCenter.z, 0);
+
+	// Start result at center of box; make steps from there
+	closestPoint = this->center;
+	// For each OBB axis...
+	for (int i = 0; i < 3; i++)
+	{
+		// ...project v onto that axis to get the distance
+		// along the axis of d from the box center
+		float dist = DirectX::XMVectorGetX(DirectX::XMVector3Dot(v, this->allAxises[i]));
+		// If distance farther than the box extents, clamp to the box
+		float axisLength = DirectX::XMVectorGetX(DirectX::XMVector3Length(this->allAxises[i]));
+
+		if (dist > this->allLength[i] * axisLength) {
+			dist = axisLength;
+		}
+
+		if (dist < -axisLength) {
+			dist = -axisLength;
+		}
+		DirectX::XMFLOAT3 axisF;
+		DirectX::XMStoreFloat3(&axisF, this->allAxises[i]);
+		// Step that distance along the axis to get world coordinate
+		closestPoint.x += dist * axisF.x;
+		closestPoint.y += dist * axisF.y;
+		closestPoint.z += dist * axisF.z;
+	}
+
+	//closest Point is know the closest point to the sphere center
+	float distance = sqrt( pow((closestPoint.x - sphereCenter.x), 2) + pow((closestPoint.y - sphereCenter.y), 2) + pow((closestPoint.z - sphereCenter.z), 2));
+
+	if (pow(distance,2) <= pow(sR,2)) {
+		result = true;
+	}
+
+	return result;
+}
+
+DirectX::XMVECTOR* BoxBoundingVolume::getAxises()
+{
+	return this->allAxises;
+}
+
+float* BoxBoundingVolume::getLengths()
+{
+	return this->allLength;
+}
+
+const DirectX::XMFLOAT3 BoxBoundingVolume::getCenter()
+{
+	return this->center;
 }

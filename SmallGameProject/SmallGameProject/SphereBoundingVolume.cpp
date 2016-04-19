@@ -12,7 +12,7 @@ SphereBoundingVolume::~SphereBoundingVolume()
 
 }
 
-void SphereBoundingVolume::generateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model)
+void SphereBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model)
 {
 	DirectX::XMVECTOR vertVec;
 	DirectX::XMFLOAT3 vertFloat;
@@ -53,12 +53,12 @@ void SphereBoundingVolume::generateMinMax(DirectX::XMFLOAT3& minVertex, DirectX:
 	maxVertex = maxVert;
 }
 
-void SphereBoundingVolume::generateBounds(Model* model)
+void SphereBoundingVolume::GenerateBounds(Model* model)
 {
 	DirectX::XMFLOAT3 minVert;
 	DirectX::XMFLOAT3 maxVert;
 
-	this->generateMinMax(minVert, maxVert, model);	// Generate the min max based on the model
+	this->GenerateMinMax(minVert, maxVert, model);	// Generate the min max based on the model
 
 	DirectX::XMFLOAT3 distanceToMid = DirectX::XMFLOAT3(abs(maxVert.x - minVert.x) / 2, abs(maxVert.y - minVert.y) / 2, abs(maxVert.z - minVert.z) / 2);	//Calculate offset to add to the min vertex to find the midle vertex
 
@@ -68,32 +68,93 @@ void SphereBoundingVolume::generateBounds(Model* model)
 	this->radius = sqrt(pow((distanceToMid.x), 2) + pow((distanceToMid.y), 2) + pow((distanceToMid.z), 2));	//Set the radius of the sphere to the distance from the midle to the minimum vertex
 }
 
-bool SphereBoundingVolume::intersect(BoundingVolume* otherBoundingVolume)
+bool SphereBoundingVolume::Intersect(BoundingVolume* otherBoundingVolume)
 {
 	bool result = false;
-	BoxBoundingBox* box;
+	BoxBoundingVolume* box;
 	SphereBoundingVolume* sphere = dynamic_cast<SphereBoundingVolume*>(otherBoundingVolume);
 	if (sphere != nullptr) {	//If the volume is a sphere
 
-		//The distance betwen the two centers
-		int distance = sqrt(pow((this->center.x - sphere->center.x), 2) + pow((this->center.y - sphere->center.y), 2) + pow((this->center.z - sphere->center.z), 2));
+
 		
-		if (this->radius + sphere->radius <= distance) {
-			result = true;
-		}
 	}
 	else {						//If the volume is a box
-		box = dynamic_cast<BoxBoundingBox*>(otherBoundingVolume);
-	}
+		box = dynamic_cast<BoxBoundingVolume*>(otherBoundingVolume);
 
-	if (sphere) {
-		delete sphere;
-
-	}
-
-	if (box) {
-		delete box;
+		result = this->BoxIntersectionTest(box);
 	}
 	
+	return result;
+}
+
+int SphereBoundingVolume::getRadius()
+{
+	return this->radius;
+}
+
+DirectX::XMFLOAT3 SphereBoundingVolume::getCenter()
+{
+	return this->center;
+}
+
+bool SphereBoundingVolume::SphereIntesectionTest(SphereBoundingVolume* otherSphere)
+{
+	bool result = false;
+	//The distance betwen the two centers
+	int distance = sqrt(pow((this->center.x - otherSphere->center.x), 2) + pow((this->center.y - otherSphere->center.y), 2) + pow((this->center.z - otherSphere->center.z), 2));
+
+	if (this->radius + otherSphere->radius <= distance) {
+		result = true;
+	}
+
+	return result;
+}
+
+bool SphereBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* box)
+{
+	bool result = false;
+
+	DirectX::XMFLOAT3 boxCenter = box->getCenter();
+	float* allLengths = box->getLengths();
+	DirectX::XMVECTOR* allAxises = box->getAxises();
+
+	DirectX::XMFLOAT3 closestPoint;
+
+	//The vector from the center of the box to the center of the sphere
+	DirectX::XMVECTOR v = DirectX::XMVectorSet(boxCenter.x - this->center.x, boxCenter.y - this->center.y, boxCenter.z - this->center.z, 0);
+
+	// Start result at center of box; make steps from there
+	closestPoint = boxCenter;
+	// For each OBB axis...
+	for (int i = 0; i < 3; i++)
+	{
+		// ...project v onto that axis to get the distance
+		// along the axis of d from the box center
+		float dist = DirectX::XMVectorGetX(DirectX::XMVector3Dot(v, allAxises[i]));
+		// If distance farther than the box extents, clamp to the box
+		float axisLength = DirectX::XMVectorGetX(DirectX::XMVector3Length(allAxises[i]));
+
+		if (dist > allLengths[i] * axisLength) {
+			dist = axisLength;
+		}
+
+		if (dist < -axisLength) {
+			dist = -axisLength;
+		}
+		DirectX::XMFLOAT3 axisF;
+		DirectX::XMStoreFloat3(&axisF, allAxises[i]);
+		// Step that distance along the axis to get world coordinate
+		closestPoint.x += dist * axisF.x;
+		closestPoint.y += dist * axisF.y;
+		closestPoint.z += dist * axisF.z;
+	}
+
+	//closest Point is know the closest point to the sphere center
+	float distance = sqrt(pow((closestPoint.x - this->center.x), 2) + pow((closestPoint.y - this->center.y), 2) + pow((closestPoint.z - this->center.z), 2));
+
+	if (pow(distance, 2) <= pow(this->radius, 2)) {
+		result = true;
+	}
+
 	return result;
 }

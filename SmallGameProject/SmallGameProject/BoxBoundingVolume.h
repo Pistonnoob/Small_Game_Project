@@ -2,9 +2,10 @@
 #define BOXBOUNDINGVOLUME_H
 
 #include "BoundingVolume.h"
-#include "SphereBoundingVolume.h"
-#include "Model.h"
-class BoxBoundingBox : public BoundingVolume {
+
+class SphereBoundingVolume;
+
+class BoxBoundingVolume : public BoundingVolume {
 
 private:
 	DirectX::XMFLOAT3 center;
@@ -20,14 +21,19 @@ private:
 	float halfLengthX;
 	float halfLengthY;
 	float halfLengthZ;
+	float allLength[3];
 
-	void generateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model);
-
+	void GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model);
+	bool BoxIntersectionTest(BoxBoundingVolume* otherBox);
+	bool SphereIntersectionTest(SphereBoundingVolume* sphere);
 public:
-	BoxBoundingBox();
-	virtual ~BoxBoundingBox();
-	void generateBounds(Model* model);
-	bool intersect(BoundingVolume* otherBoundingVolume);
+	BoxBoundingVolume();
+	virtual ~BoxBoundingVolume();
+	void GenerateBounds(Model* model);
+	bool Intersect(BoundingVolume* otherBoundingVolume);
+	DirectX::XMVECTOR* getAxises();
+	float* getLengths();
+	const DirectX::XMFLOAT3 getCenter();
 
 };
 

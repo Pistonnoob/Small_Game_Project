@@ -12,7 +12,7 @@ Entity::Entity(Model* model, bool isSphere)
 
 	if (isSphere) {	//For spheres
 		this->entityBV = new SphereBoundingVolume();
-		this->entityBV->generateBounds(model);
+		this->entityBV->GenerateBounds(model);
 	
 	}
 	else {			//For OOBBs
