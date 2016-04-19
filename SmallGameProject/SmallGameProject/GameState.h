@@ -11,8 +11,8 @@ class GameState {
 protected:
 	GameStateHandler* m_GSH;
 	bool manualClearing;
-	static ID3D11Device* m_device;
-	static ID3D11DeviceContext* m_deviceContext;
+	ID3D11Device* m_device;
+	ID3D11DeviceContext* m_deviceContext;
 public:
 
 	GameState();	//This will initialize the GSH pointer to NULL
