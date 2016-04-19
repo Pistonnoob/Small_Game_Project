@@ -1,6 +1,6 @@
 #ifndef STARTSTATE_H
 #define STARTSTATE_H
-#include "GameState.h"
+#include "MenuState.h"
 #include "Model.h"
 
 class StartState :

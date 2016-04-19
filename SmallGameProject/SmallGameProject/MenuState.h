@@ -8,6 +8,7 @@ class MenuState :
 private:
 	int selected;
 	Model m_model;
+	Texture myTextures;
 public:
 	MenuState();
 	~MenuState();
