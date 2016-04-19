@@ -31,7 +31,7 @@ int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	this->startModel = Model();
 	this->manualClearing = false;
 	//Initialize the base class GameState
-	result = this->InitializeBase(GSH);
+	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
 	{
 		//Proceed to initialize thyself

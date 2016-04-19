@@ -23,7 +23,7 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 	this->selected = 0;
 	this->m_model = Model();
 	//Initialize the base class GameState
-	result = this->InitializeBase(GSH);
+	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
 	{
 		//Proceed to initialize thyself

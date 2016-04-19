@@ -21,6 +21,8 @@ int GameState::InitializeBase(GameStateHandler * GSH, ID3D11Device* device, ID3D
 {
 	int result = 1;
 	this->m_GSH = GSH;
+	this->m_device = device;
+	this->m_deviceContext = deviceContext;
 	return result;
 }
 
