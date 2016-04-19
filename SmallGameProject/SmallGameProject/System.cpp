@@ -35,6 +35,7 @@ bool System::Initialize()
 	//Create the GameStateHandler.
 	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
+	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
 
 	//Create the CameraHandler
 	this->cameraH = new CameraHandler;
