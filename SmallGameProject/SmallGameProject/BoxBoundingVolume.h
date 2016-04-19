@@ -23,9 +23,12 @@ private:
 	float halfLengthZ;
 	float allLength[3];
 
+	DirectX::XMVECTOR vertices[8];
+
 	void GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model);
 	bool BoxIntersectionTest(BoxBoundingVolume* otherBox);
 	bool SphereIntersectionTest(SphereBoundingVolume* sphere);
+	
 public:
 	BoxBoundingVolume();
 	virtual ~BoxBoundingVolume();
@@ -34,7 +37,8 @@ public:
 	DirectX::XMVECTOR* getAxises();
 	float* getLengths();
 	const DirectX::XMFLOAT3 getCenter();
-
+	DirectX::XMVECTOR Project(DirectX::XMVECTOR axis);
+	bool Overlap(DirectX::XMVECTOR* axsises);
 };
 
 

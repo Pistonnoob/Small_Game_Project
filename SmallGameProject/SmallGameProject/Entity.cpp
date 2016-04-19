@@ -17,8 +17,8 @@ Entity::Entity(Model* model, bool isSphere)
 	}
 	else {			//For OOBBs
 		
-		/*this->entityBV = new OOBBBoundingVolume();
-		this->entityBV->generateBounds(model);*/
+		this->entityBV = new BoxBoundingVolume();
+		this->entityBV->GenerateBounds(model);
 	}
 
 	this->entitySubject = EntitySubject();

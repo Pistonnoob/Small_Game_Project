@@ -18,6 +18,11 @@ BoxBoundingVolume::BoxBoundingVolume()
 	for (int i = 0; i < 3; i++) {
 		this->allLength[i] = 0;
 	}
+
+	for (int i = 0; i < 8; i++) {
+		this->vertices[i] = DirectX::XMFLOAT3(0,0,0);
+	}
+
 }
 
 BoxBoundingVolume::~BoxBoundingVolume()
@@ -67,11 +72,27 @@ void BoxBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3 & minVertex, DirectX::X
 
 void BoxBoundingVolume::GenerateBounds(Model * model)
 {
+	DirectX::XMVECTOR minV;
+	DirectX::XMVECTOR maxV;
 	DirectX::XMFLOAT3 minVert;
 	DirectX::XMFLOAT3 maxVert;
-
+	DirectX::XMMATRIX world;
+	model->GetWorldMatrix(world);
+	
 	this->GenerateMinMax(minVert, maxVert, model);
 	
+	//Move the values into vectors
+	minV = DirectX::XMLoadFloat3(&minVert);
+	maxV = DirectX::XMLoadFloat3(&maxVert);
+	
+	//Move the vertices to world space
+	minV = DirectX::XMVector2TransformCoord(minV, world);
+	maxV = DirectX::XMVector2TransformCoord(maxV, world);
+
+	//Move back to a float3 for easier use
+	DirectX::XMStoreFloat3(&minVert, minV);
+	DirectX::XMStoreFloat3(&maxVert, maxV);
+
 	//Calculate the midle
 	DirectX::XMFLOAT3 distanceToMid = DirectX::XMFLOAT3((maxVert.x - minVert.x) / 2, (maxVert.y - minVert.y) / 2, (maxVert.z - minVert.z) / 2);	//Calculate offset to add to the min vertex to find the midle vertex
 	DirectX::XMFLOAT3 midleVert = DirectX::XMFLOAT3(minVert.x + distanceToMid.x, minVert.y + distanceToMid.y, minVert.z + distanceToMid.z);	//Calculate the midle Vertex
@@ -101,6 +122,15 @@ void BoxBoundingVolume::GenerateBounds(Model * model)
 	this->allAxises[4] = DirectX::XMVectorSet(0, DirectX::XMVectorGetY(this->axisY) * -1, 0, 0);
 	this->allAxises[5] = DirectX::XMVectorSet(0, 0, DirectX::XMVectorGetZ(this->axisZ) * -1, 0);
 
+	//Calculate all the vertices
+	this->vertices[0] = DirectX::XMLoadFloat3(&minVert);
+	this->vertices[1] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x,minVert.y, minVert.z));
+	this->vertices[2] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, minVert.y, maxVert.z));
+	this->vertices[3] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, minVert.y, minVert.z));
+	this->vertices[4] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, maxVert.y, minVert.z));
+	this->vertices[5] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, maxVert.y, minVert.z));
+	this->vertices[6] = DirectX::XMLoadFloat3(&maxVert);
+	this->vertices[7] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, maxVert.y, maxVert.z));
 }
 
 bool BoxBoundingVolume::Intersect(BoundingVolume * otherBoundingVolume)
@@ -125,6 +155,14 @@ bool BoxBoundingVolume::Intersect(BoundingVolume * otherBoundingVolume)
 
 bool BoxBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* otherBox)
 {
+	DirectX::XMVECTOR* otherBoxAxsises = otherBox->getAxises();
+
+	for (int i = 0; i < 6; i++) {
+		DirectX::XMVECTOR axis = this->allAxises[i];
+		DirectX::XMVECTOR p1 = this->Project(axis);
+
+	}
+
 
 	return false;
 }
@@ -151,7 +189,7 @@ bool BoxBoundingVolume::SphereIntersectionTest(SphereBoundingVolume* sphere)
 	for (int i = 0; i < 3; i++)
 	{
 		// ...project v onto that axis to get the distance
-		// along the axis of d from the box center
+		// along the axis of v from the box center
 		float dist = DirectX::XMVectorGetX(DirectX::XMVector3Dot(v, this->allAxises[i]));
 		// If distance farther than the box extents, clamp to the box
 		float axisLength = DirectX::XMVectorGetX(DirectX::XMVector3Length(this->allAxises[i]));
@@ -194,4 +232,22 @@ float* BoxBoundingVolume::getLengths()
 const DirectX::XMFLOAT3 BoxBoundingVolume::getCenter()
 {
 	return this->center;
+}
+
+DirectX::XMVECTOR BoxBoundingVolume::Project(DirectX::XMVECTOR axis)
+{
+	float min = DirectX::XMVectorGetX(DirectX::XMVector3Dot(axis, this->vertices[0]));
+	float max = min;
+	for (int i = 1; i < 8; i++) {
+		// NOTE: the axis must be normalized to get accurate projections
+		double p = DirectX::XMVectorGetX(DirectX::XMVector3Dot(axis, this->vertices[i]));
+		if (p < min) {
+			min = p;
+		}
+		else if (p > max) {
+			max = p;
+		}
+	}
+	Projection proj = new Projection(min, max);
+	return proj;
 }

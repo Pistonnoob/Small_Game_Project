@@ -55,10 +55,27 @@ void SphereBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX:
 
 void SphereBoundingVolume::GenerateBounds(Model* model)
 {
+	DirectX::XMVECTOR minV;
+	DirectX::XMVECTOR maxV;
 	DirectX::XMFLOAT3 minVert;
 	DirectX::XMFLOAT3 maxVert;
+	DirectX::XMMATRIX world;
+	model->GetWorldMatrix(world);
 
 	this->GenerateMinMax(minVert, maxVert, model);	// Generate the min max based on the model
+
+	//Move the values into vectors
+	minV = DirectX::XMLoadFloat3(&minVert);
+	maxV = DirectX::XMLoadFloat3(&maxVert);
+
+	//Move the vertices to world space
+	minV = DirectX::XMVector2TransformCoord(minV, world);
+	maxV = DirectX::XMVector2TransformCoord(maxV, world);
+
+	//Move back to a float3 for easier use
+	DirectX::XMStoreFloat3(&minVert, minV);
+	DirectX::XMStoreFloat3(&maxVert, maxV);
+
 
 	DirectX::XMFLOAT3 distanceToMid = DirectX::XMFLOAT3(abs(maxVert.x - minVert.x) / 2, abs(maxVert.y - minVert.y) / 2, abs(maxVert.z - minVert.z) / 2);	//Calculate offset to add to the min vertex to find the midle vertex
 
@@ -129,7 +146,7 @@ bool SphereBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* box)
 	for (int i = 0; i < 3; i++)
 	{
 		// ...project v onto that axis to get the distance
-		// along the axis of d from the box center
+		// along the axis of v from the box center
 		float dist = DirectX::XMVectorGetX(DirectX::XMVector3Dot(v, allAxises[i]));
 		// If distance farther than the box extents, clamp to the box
 		float axisLength = DirectX::XMVectorGetX(DirectX::XMVector3Length(allAxises[i]));
