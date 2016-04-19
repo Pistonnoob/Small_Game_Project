@@ -56,11 +56,8 @@ int StartState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
 
-	//this->spriteBatch->Begin();
+	this->startModel.Render(gHandler->GetDeviceContext());
 
-	////Draw sprites
-
-	//this->spriteBatch->End();
 
 	return result;
 }
