@@ -11,6 +11,8 @@ class GameStateHandler {
 
 private:
 	std::vector<GameState*> m_gameStates;
+	ID3D11Device* m_device;
+	ID3D11DeviceContext* m_deviceContext;
 public:
 	GameStateHandler();
 	~GameStateHandler();

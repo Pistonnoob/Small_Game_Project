@@ -3,6 +3,8 @@
 GameStateHandler::GameStateHandler()
 {
 	m_gameStates.reserve(5);
+	this->m_device = nullptr;
+	this->m_deviceContext = nullptr;
 }
 
 GameStateHandler::~GameStateHandler()
@@ -25,6 +27,8 @@ bool GameStateHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* dev
 {
 	int result = 1;
 	StartState* startState = new StartState();
+	this->m_device = device;
+	this->m_deviceContext = deviceContext;
 	startState->Initialize(device, deviceContext, this);
 	this->m_gameStates.push_back(startState);
 	return result;
