@@ -16,9 +16,12 @@ void GameStateHandler::Shutdown()
 	while (m_gameStates.size())
 	{
 		GameState* state = m_gameStates.back();
-		state->Shutdown();
-		delete state;
-		state = NULL;
+		if (!state->GetManualClearing())
+		{
+			state->Shutdown();
+			delete state;
+			state = NULL;
+		}
 		m_gameStates.pop_back();
 	}
 }
