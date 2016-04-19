@@ -311,16 +311,22 @@ bool System::Update(float dTime)
 
 	
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
 
 	this->graphicH->SetLightRTV();
 
 	lightShaderParams->camPos = this->cameraH->GetCameraPos();
 	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
 	DirectX::XMMATRIX viewMatrix;
+
 	this->cameraH->GetViewMatrix(viewMatrix);
 	lightShaderParams->viewMatrix = viewMatrix;
 
 	this->graphicH->LightRender(lightShaderParams);
+
+	shadowShaderParams->viewMatrix = viewMatrix;
+	shadowShaderParams->lightPos = this->cameraH->GetCameraPos();
+
 
 	delete lightShaderParams;
 

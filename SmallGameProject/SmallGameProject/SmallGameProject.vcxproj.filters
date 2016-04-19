@@ -354,6 +354,7 @@
     </FxCompile>
     <FxCompile Include="ShadowMapVertexShader.hlsl">
       <Filter>Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="FontVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
