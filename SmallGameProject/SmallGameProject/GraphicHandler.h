@@ -6,6 +6,8 @@
 #include "LightShaderHandler.h"
 #include "ScreenQuad.h"
 #include "TextHandler.h"
+#include "Model.h"
+#include "CameraHandler.h"
 
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
@@ -29,7 +31,7 @@ public:
 	virtual ~GraphicHandler();
 
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight, DirectX::XMMATRIX baseViewMatrix);
-	void DeferredRender(int indexCount, int indexStart, DeferredShaderParameters* shaderParams);
+	void DeferredRender(Model* model, CameraHandler* camera);
 	void LightRender(LightShaderParameters* shaderParams);
 	void TextRender();
 	void Shutdown();

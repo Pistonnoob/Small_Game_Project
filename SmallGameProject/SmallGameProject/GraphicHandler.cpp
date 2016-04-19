@@ -78,11 +78,36 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	return true;
 }
 
-void GraphicHandler::DeferredRender(int indexCount, int indexStart, DeferredShaderParameters* shaderParams)
+void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 {
-	shaderParams->projectionMatrix = this->perspectiveMatrix;
+	DeferredShaderParameters* params = new DeferredShaderParameters;
 
-	this->deferredShaderH->Render(this->engine->GetDeviceContext(), indexCount, indexStart, shaderParams);
+	params->camPos = camera->GetCameraPos();
+
+	DirectX::XMMATRIX viewMatrix;
+	camera->GetViewMatrix(viewMatrix);
+	params->viewMatrix = viewMatrix;
+
+	params->projectionMatrix = this->perspectiveMatrix;
+
+	int indexCount;
+	int indexStart;
+	model->Render(this->engine->GetDeviceContext());
+	int nrOfSubsets = model->GetNrOfSubsets();
+	for (int i = 0; i < nrOfSubsets; i++) {
+		model->GetDeferredShaderParameters(params, i, indexCount, indexStart);
+
+		this->deferredShaderH->Render(this->engine->GetDeviceContext(), indexCount, indexStart, params);
+		delete params;
+		params = new DeferredShaderParameters;
+		params->camPos = camera->GetCameraPos();
+
+		params->viewMatrix = viewMatrix;
+
+		params->projectionMatrix = this->perspectiveMatrix;
+	}
+
+	delete params;
 
 	return;
 }

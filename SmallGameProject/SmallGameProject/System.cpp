@@ -55,7 +55,7 @@ bool System::Initialize()
 	
 	this->testModel = new Model;
 
-	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ogreFullG");
+	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "carSLS3");
 	if (!result) {
 		return false;
 	}
@@ -285,58 +285,39 @@ bool System::Update(float dTime)
 		return false;
 	}
 
+	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
 	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 
-	this->testRot += dTime / 400000;
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
+	//Update models world matrices
+	this->testRot += dTime / 1000000;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -2.0f, 0.0f);
 	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
+	worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f) * worldMatrix;
 	this->testModel->SetWorldMatrix(worldMatrix);
 
 	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 	this->testModelGround->SetWorldMatrix(worldMatrix);
 
-	DeferredShaderParameters* deferredShaderParams = new DeferredShaderParameters;
-	DirectX::XMMATRIX viewMatrix;
+	//Clear the render target views
 	this->graphicH->ClearRTVs();
 
+	//Set deferred render targets
 	this->graphicH->SetDeferredRTVs();
 
-	this->cameraH->GetViewMatrix(viewMatrix);
-	deferredShaderParams->viewMatrix = viewMatrix;
-	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
+	//Render models
+	this->graphicH->DeferredRender(this->testModel, this->cameraH);
+	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
 
-	int indexCount;
-	int indexStart;
-	this->testModel->Render(this->graphicH->GetDeviceContext());
-	int nrOfSubsets = this->testModel->GetNrOfSubsets();
-	for (int i = 0; i < nrOfSubsets; i++) {
-		this->testModel->GetDeferredShaderParameters(deferredShaderParams, i, indexCount, indexStart);
-
-		this->graphicH->DeferredRender(indexCount, indexStart, deferredShaderParams);
-		delete deferredShaderParams;
-		deferredShaderParams = new DeferredShaderParameters;
-		deferredShaderParams->viewMatrix = viewMatrix;
-		deferredShaderParams->camPos = this->cameraH->GetCameraPos();
-	}
-
-	delete deferredShaderParams;
-	deferredShaderParams = new DeferredShaderParameters;
-
-	deferredShaderParams->viewMatrix = viewMatrix;
-	deferredShaderParams->camPos = this->cameraH->GetCameraPos();
-
-	this->testModelGround->GetDeferredShaderParameters(deferredShaderParams, 0, indexCount, indexStart);
-	this->testModelGround->Render(this->graphicH->GetDeviceContext());
-	this->graphicH->DeferredRender(indexCount, indexStart, deferredShaderParams);
-
-	delete deferredShaderParams;
+	
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
 
 	this->graphicH->SetLightRTV();
 
 	lightShaderParams->camPos = this->cameraH->GetCameraPos();
 	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
+	DirectX::XMMATRIX viewMatrix;
+	this->cameraH->GetViewMatrix(viewMatrix);
 	lightShaderParams->viewMatrix = viewMatrix;
 
 	this->graphicH->LightRender(lightShaderParams);
