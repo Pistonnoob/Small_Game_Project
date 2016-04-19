@@ -16,15 +16,17 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 	{
 		this->setViewPort(gDevice, screenWidth, screenHeight);
 		this->create2DTexture(gDevice, screenWidth, screenHeight);
+
 		this->createDepthStencilView(gDevice);
 		this->createShaderResourceView(gDevice);
+
+
 	}
 	catch (char* e)
 	{
 		//hover at e to see error
 		system("pause");
 	}
-
 	return true;
 }
 
@@ -51,13 +53,28 @@ void ShadowShaderHandler::Shutdown()
 	//delete this->viewPort; Cannot free the memory here
 }
 
-void ShadowShaderHandler::ResetPSShaderResources(ID3D11DeviceContext * deviceContext)
+void ShadowShaderHandler::BindAndSetNullRenderTargets(ID3D11DeviceContext * gDeviceContext)
 {
+	gDeviceContext->RSSetViewports(1, this->viewPort);
+	/*
+	Set null render target because we are only going to draw to depth buffer. 
+	Setting a null render target will disable color writes
+	*/
+	ID3D11RenderTargetView* nullTarget[1] = { nullptr };
+
+	gDeviceContext->OMSetRenderTargets(1, nullTarget, this->mDepthMapDSV);
+	this->clearShadowMapRDW(gDeviceContext);
 }
 
 bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, LightShaderParameters * params)
 {
+	this->BindAndSetNullRenderTargets(deviceContext);
 	return false;
+}
+
+void ShadowShaderHandler::clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext)
+{
+	gDeviceContext->ClearDepthStencilView(this->mDepthMapDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void ShadowShaderHandler::startUp()

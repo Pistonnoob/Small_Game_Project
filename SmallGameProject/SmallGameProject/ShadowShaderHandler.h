@@ -42,18 +42,26 @@ public:
 
 	bool Initialize(ID3D11Device* gDevice, HWND* hwnd, int nrOfResources, int screenWidth, int screenHeight) throw(...);
 	void Shutdown();
-	void ResetPSShaderResources(ID3D11DeviceContext* deviceContext);
+
+	void ResetPSShaderResources(ID3D11DeviceContext* gDeviceContext);
+	void BindAndSetNullRenderTargets(ID3D11DeviceContext* gDeviceContext);
 
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* params);
+	void clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext);
 
 
 private:
 	void startUp();
-	void setViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight);
+	void setViewPort(ID3D11Device* gDevice, int clientWidth, int clientHeight);
 
-	void create2DTexture(ID3D11Device * gDevice, int screenWidth, int screenHeight) throw(...);
-	void createDepthStencilView(ID3D11Device * gDevice) throw(...);
-	void createShaderResourceView(ID3D11Device * gDevice) throw(...);
+	void create2DTexture(ID3D11Device* gDevice, int screenWidth, int screenHeight) throw(...);
+	void createDepthStencilView(ID3D11Device* gDevice) throw(...);
+	void createShaderResourceView(ID3D11Device* gDevice) throw(...);
+
+	/*
+	vertex shader help functions
+	*/
+	void createVertexLayout(ID3D11Device* gDevice) throw(...);
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters* params);
