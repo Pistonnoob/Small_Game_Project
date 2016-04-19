@@ -1,8 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <d3d11.h>
-#include <directxmath.h>
 #include <vector>
 #include <sstream>
 #include <fstream>
@@ -33,6 +31,7 @@ private:
 	int indexCount;
 	std::vector<int> subsetIndices;
 	std::vector<std::string> materialNames;
+	std::vector<int> materialIndices;
 	Texture* texture;
 	DirectX::XMMATRIX worldMatrix;
 	std::vector<DirectX::XMFLOAT3> vertPositions;
@@ -47,13 +46,13 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);
 
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
-	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
-
 	void SetColor(DirectX::XMFLOAT3 newColor);
+	void SetTextureView(ID3D11ShaderResourceView * textureView, int textureIndex);
 
 	int GetVertexCount();
-
-	void GetDeferredShaderParameters(DeferredShaderParameters* params);
+	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
+	int GetNrOfSubsets();
+	void GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex, int& indexCount, int& indexStart);
 
 	bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, unsigned long*& outputIndices, std::string& materialLib);
 };
