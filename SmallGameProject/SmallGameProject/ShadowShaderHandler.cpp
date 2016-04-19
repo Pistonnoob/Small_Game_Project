@@ -2,7 +2,7 @@
 
 ShadowShaderHandler::ShadowShaderHandler()
 {
-	this->startUp();
+	this->StartUp();
 }
 
 ShadowShaderHandler::~ShadowShaderHandler()
@@ -14,18 +14,19 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 {
 	try
 	{
-		this->setViewPort(gDevice, screenWidth, screenHeight);
-		this->create2DTexture(gDevice, screenWidth, screenHeight);
+		this->SetViewPort(gDevice, screenWidth, screenHeight);
+		this->Create2DTexture(gDevice, screenWidth, screenHeight);
 
-		this->createDepthStencilView(gDevice);
-		this->createShaderResourceView(gDevice);
+		this->CreateDepthStencilView(gDevice);
+		this->CreateShaderResourceView(gDevice);
 
 		this->LoadVertexShaderFromFile();
-		this->createVertexLayout(gDevice);
+		this->CreateVertexLayout(gDevice);
 
 		//vertexBuffer no longer needed
-		this->releaseVertexBuffer();
+		this->ReleaseVertexBuffer();
 
+		this->CreateConstantBuffer(gDevice);
 	}
 	catch (char* e)
 	{
@@ -54,6 +55,19 @@ void ShadowShaderHandler::Shutdown()
 		this->mDepthMapSRV->Release();
 		this->mDepthMapSRV = nullptr;
 	}
+
+	if (this->matrixBuffer != nullptr)
+	{
+		this->matrixBuffer->Release();
+		this->matrixBuffer = nullptr;
+	}
+
+	if (this->vertexShader != nullptr)
+	{
+		this->vertexShader->Release();
+		this->vertexShader = nullptr;
+	}
+
 
 	//delete this->viewPort; Cannot free the memory here
 }
@@ -239,6 +253,27 @@ void ShadowShaderHandler::ReleaseVertexBuffer()
 	{
 		vertexShaderBuffer->Release();
 		vertexShaderBuffer = nullptr;
+	}
+}
+
+void ShadowShaderHandler::CreateConstantBuffer(ID3D11Device * gDevice) throw(...)
+{
+	HRESULT resultHelper;
+
+	D3D11_BUFFER_DESC matrixBufferDesc;
+	//Fill the description of the dynamic matrix constant buffer that is in the vertex shader
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDesc.ByteWidth = sizeof(LightConstantBuffer);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDesc.MiscFlags = 0;
+	matrixBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	resultHelper = gDevice->CreateBuffer(&matrixBufferDesc, NULL, &this->matrixBuffer);
+	if (FAILED(resultHelper)) 
+	{
+		throw("Failed creating the buffer");
 	}
 }
 

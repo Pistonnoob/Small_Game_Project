@@ -46,7 +46,6 @@ public:
 	bool Initialize(ID3D11Device* gDevice, HWND* hwnd, int nrOfResources, int screenWidth, int screenHeight) throw(...);
 	void Shutdown();
 
-	void ResetPSShaderResources(ID3D11DeviceContext* gDeviceContext);
 	void BindAndSetNullRenderTargets(ID3D11DeviceContext* gDeviceContext);
 
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, LightShaderParameters* params);
@@ -67,6 +66,8 @@ private:
 	void LoadVertexShaderFromFile() throw(...);
 	void CreateVertexLayout(ID3D11Device* gDevice) throw(...);
 	void ReleaseVertexBuffer();
+
+	void CreateConstantBuffer(ID3D11Device* gDevice) throw(...);
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, LightShaderParameters* params);
