@@ -151,6 +151,7 @@
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="BomberEnemy.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
+    <ClCompile Include="BoxBoundingVolume.cpp" />
     <ClCompile Include="CameraHandler.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="D3DHandler.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="AudioHandler.h" />
     <ClInclude Include="BomberEnemy.h" />
     <ClInclude Include="BoundingVolume.h" />
+    <ClInclude Include="BoxBoundingVolume.h" />
     <ClInclude Include="CameraHandler.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="D3DHandler.h" />
