@@ -181,6 +181,12 @@ void FontShaderHandler::Shutdown()
 		this->vertexShader = nullptr;
 	}
 
+	//Release tranparencystate
+	if (this->transparencyBlendState) {
+		this->transparencyBlendState->Release();
+		this->transparencyBlendState = nullptr;
+	}
+
 	return;
 }
 
