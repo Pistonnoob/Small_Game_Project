@@ -9,6 +9,7 @@ class StartState :
 private:
 	bool startGame = false;
 	Model startModel;
+	MenuState* nextState;
 public:
 	StartState();
 	StartState(GameStateHandler* GSH);
@@ -17,6 +18,8 @@ public:
 	void Shutdown();
 
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
+
+	virtual GameState* GetPush();
 
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);

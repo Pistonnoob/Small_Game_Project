@@ -7,6 +7,7 @@ StartState::StartState()
 	this->startGame = false;
 	this->manualClearing = false;
 	this->startModel = Model();
+	this->nextState = nullptr;
 }
 
 StartState::StartState(GameStateHandler * GSH)
@@ -30,6 +31,7 @@ int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	int result = 0;
 	this->startModel = Model();
 	this->manualClearing = false;
+	this->nextState = nullptr;
 	//Initialize the base class GameState
 	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
@@ -39,6 +41,11 @@ int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	return result;
+}
+
+GameState * StartState::GetPush()
+{
+	return this->nextState;
 }
 
 int StartState::HandleInput(InputHandler * input)
@@ -53,8 +60,15 @@ int StartState::Update(float deltaTime)
 	int result = 0;
 	if (this->startGame)
 	{
+		this->startGame = false;
 		//Create the menu and push it
 		MenuState* menu = new MenuState();
+		menu->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
+		this->nextState = menu;
+	}
+	else
+	{
+		this->nextState = nullptr;
 	}
 	return result;
 }
