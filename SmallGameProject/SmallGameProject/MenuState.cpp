@@ -27,7 +27,10 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 	if (result)
 	{
 		//Proceed to initialize thyself
-		result = m_model.Initialize(device, deviceContext, "Menu");
+		bool modelResult = m_model.Initialize(device, deviceContext, "Menu");
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
+		modelResult = this->camera.Initialize();
+		this->m_model.SetWorldMatrix(worldMatrix);
 	}
 	return result;
 }
@@ -44,7 +47,11 @@ int MenuState::HandleInput(InputHandler * input)
 	{
 		this->selected++;
 	}
+	if (this->selected < 0)
+		this->selected = OPTION_COUNT;
 	this->selected = this->selected % OPTION_COUNT;
+
+
 	return result;
 }
 
@@ -57,5 +64,6 @@ int MenuState::Update(float deltaTime)
 int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
+	gHandler->DeferredRender(&this->m_model, &this->camera);
 	return result;
 }
