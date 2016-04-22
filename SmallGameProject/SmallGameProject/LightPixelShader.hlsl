@@ -76,5 +76,6 @@ float4 main(PSInput input) : SV_TARGET
 
 	//return float4(input.tex.x, input.tex.y, 0.0f, 1.0f);
 	//return float4(input.position.x / 800, input.position.y / 600, 0.0f, 1.0f);
+    //return worldPos;
 	return outputColor;
 }

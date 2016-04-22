@@ -7,6 +7,7 @@ class CameraHandler {
 private:
 	DirectX::XMMATRIX viewMatrix;
 	DirectX::XMVECTOR cameraPos;
+    DirectX::XMFLOAT4 cameraPos2;
 
 public:
 	CameraHandler();
@@ -15,6 +16,8 @@ public:
 	bool Initialize();
 	void GetViewMatrix(DirectX::XMMATRIX& viewMatrix);
 	DirectX::XMFLOAT4 GetCameraPos();
+
+    void updateCamera();
 };
 
 #endif

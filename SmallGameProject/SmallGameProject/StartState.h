@@ -1,15 +1,21 @@
 #ifndef STARTSTATE_H
 #define STARTSTATE_H
-#include "GameState.h"
+#include "MenuState.h"
+#include "Model.h"
+
 class StartState :
 	public GameState
 {
 private:
 	bool startGame = false;
+	Model startModel;
+	CameraHandler camera;
 public:
 	StartState();
 	StartState(GameStateHandler* GSH);
 	virtual ~StartState();
+
+	void Shutdown();
 
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 

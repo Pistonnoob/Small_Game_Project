@@ -7,6 +7,9 @@ System::System()
 	this->inputH = nullptr;
 	this->cameraH = nullptr;
 	this->testModel = nullptr;
+
+    this->entity = nullptr;
+    this->AI = nullptr;
 }
 
 System::~System()
@@ -28,10 +31,7 @@ bool System::Initialize()
 	//Initialize the InputHandler
 	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 
-	//Create the GameStateHandler.
-	this->gameSH = new GameStateHandler();
-	//Initialize the GameStateHandler
-
+	
 	//Create the CameraHandler
 	this->cameraH = new CameraHandler;
 
@@ -49,9 +49,12 @@ bool System::Initialize()
 	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight, viewMatrix);
 
 	this->graphicH->CreateTextHolder(32);
+
 	//Create the GameStateHandler.
-	//this->gameSH = new GameStateHandler();
+	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
+	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
+
 	
 	this->testModel = new Model;
 
@@ -60,6 +63,26 @@ bool System::Initialize()
 		return false;
 	}
 	this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+
+    //creates the AI that will update the enemies
+    this->AI = new Ai();
+
+    //creates the enemies must call setModel function to give enemies models
+    this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
+    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+
+    this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
+    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+
+    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
+    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+
+    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
+    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+
+    this->enemies.push_back(new MeleeEnemy(0.0f,0.0f));
+    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+    //
 
 	this->testModelGround = new Model;
 
@@ -285,9 +308,9 @@ bool System::Update(float dTime)
 		return false;
 	}
 
-	if (this->inputH->isKeyReleased(DIK_SPACE)) {
-		return false;
-	}
+	this->gameSH->HandleInput(this->inputH);
+	
+	this->gameSH->Update(dTime);
 
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
@@ -295,11 +318,15 @@ bool System::Update(float dTime)
 
 	//Update models world matrices
 	this->testRot += dTime / 1000000;
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -2.0f, 0.0f);
-	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
-	worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f) * worldMatrix;
-	this->testModel->SetWorldMatrix(worldMatrix);
+    this->testRot = 3.14;
 
+    DirectX::XMFLOAT3 cameraPos = DirectX::XMFLOAT3(this->cameraH->GetCameraPos().x, this->cameraH->GetCameraPos().y, this->cameraH->GetCameraPos().z);
+    //sends the enemies vector to the AI for updating cameraPos is the temporary pos that the enemies will go to
+    this->AI->updateActors(this->enemies, cameraPos);
+
+
+
+    DirectX::XMMATRIX worldMatrix;
 	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 	this->testModelGround->SetWorldMatrix(worldMatrix);
 
@@ -309,9 +336,25 @@ bool System::Update(float dTime)
 	//Set deferred render targets
 	this->graphicH->SetDeferredRTVs();
 
+    //temporary camera update function
+    this->cameraH->updateCamera();
 	//Render models
-	this->graphicH->DeferredRender(this->testModel, this->cameraH);
+    //renders all the actors in the enemies vector
+    for (int i = 0; i < this->enemies.size(); i++)
+    {
+        XMFLOAT3 pos = this->enemies.at(i)->getPosition();
+        DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+        this->testModel->SetWorldMatrix(worldMatrix);
+
+        this->graphicH->DeferredRender(this->enemies.at(i)->getModel(), this->cameraH);
+    }
+	//this->graphicH->DeferredRender(this->testModel, this->cameraH);
 	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
+
+	
+	//Render models
+	this->gameSH->Render(this->graphicH, hwnd);
+
 
 	
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
@@ -320,7 +363,7 @@ bool System::Update(float dTime)
 
 	lightShaderParams->camPos = this->cameraH->GetCameraPos();
 	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
-	DirectX::XMMATRIX viewMatrix;
+    DirectX::XMMATRIX viewMatrix;
 	this->cameraH->GetViewMatrix(viewMatrix);
 	lightShaderParams->viewMatrix = viewMatrix;
 
