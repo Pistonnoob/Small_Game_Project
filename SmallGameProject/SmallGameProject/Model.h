@@ -47,7 +47,7 @@ public:
 
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
 	void SetColor(DirectX::XMFLOAT3 newColor);
-	void SetTextureView(ID3D11ShaderResourceView * textureView, int textureIndex);
+	ID3D11ShaderResourceView* SwapTextureView(ID3D11ShaderResourceView * textureView, int textureIndex);
 
 	int GetVertexCount();
 	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
