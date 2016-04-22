@@ -192,6 +192,9 @@
     <ClCompile Include="FontShaderHandler.cpp">
       <Filter>Source Files\ShaderHandlers</Filter>
     </ClCompile>
+    <ClCompile Include="BoxBoundingVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -328,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="FontShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxBoundingVolume.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
