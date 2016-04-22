@@ -1,6 +1,7 @@
 #include "Enemy.h"
 
 Enemy::Enemy()
+: Actor()
 {
 }
 
