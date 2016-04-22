@@ -64,7 +64,7 @@ int StartState::Update(float deltaTime)
 	{
 		this->startGame = false;
 		//Create the menu and push it
-		MenuState* menu = new MenuState();
+ 		MenuState* menu = new MenuState();
 		menu->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
 		menu->SetManualClearing(false);
 		this->m_GSH->PushState(menu);
