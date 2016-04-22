@@ -24,6 +24,25 @@ Entity::Entity(Model* model, bool isSphere)
 	this->entitySubject = EntitySubject();
 }
 
+void Entity::setModel(Model * model)
+{
+    this->entityModel = model;
+}
+
+Model * Entity::getModel()
+{
+    return this->entityModel;
+}
+
+DirectX::XMFLOAT3 Entity::getPosition()
+{
+    DirectX::XMFLOAT3 pos;
+    pos.x = this->posX;
+    pos.y = 0;
+    pos.z = this->posZ;
+    return pos;
+}
+
 
 Entity::~Entity()
 {
