@@ -10,6 +10,7 @@ private:
 	int selected;
 	Model m_model;
 	Texture myTextures;
+
 	CameraHandler camera;
 
 public:

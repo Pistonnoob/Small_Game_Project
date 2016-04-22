@@ -15,6 +15,9 @@ MenuState::~MenuState()
 
 void MenuState::Shutdown()
 {
+	GameState::Shutdown();
+
+	this->m_model.Shutdown();
 }
 
 int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
@@ -29,6 +32,7 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		//Proceed to initialize thyself
 		bool modelResult = m_model.Initialize(device, deviceContext, "Menu");
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
+		worldMatrix *= DirectX::XMMatrixTranslation(0, -4, 0);
 		modelResult = this->camera.Initialize();
 		this->m_model.SetWorldMatrix(worldMatrix);
 	}
