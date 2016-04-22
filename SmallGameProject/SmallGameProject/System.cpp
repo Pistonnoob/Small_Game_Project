@@ -31,10 +31,7 @@ bool System::Initialize()
 	//Initialize the InputHandler
 	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 
-	//Create the GameStateHandler.
-	this->gameSH = new GameStateHandler();
-	//Initialize the GameStateHandler
-
+	
 	//Create the CameraHandler
 	this->cameraH = new CameraHandler;
 
@@ -52,9 +49,12 @@ bool System::Initialize()
 	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight, viewMatrix);
 
 	this->graphicH->CreateTextHolder(32);
+
 	//Create the GameStateHandler.
-	//this->gameSH = new GameStateHandler();
+	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
+	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
+
 	
 	this->testModel = new Model;
 
@@ -308,6 +308,10 @@ bool System::Update(float dTime)
 		return false;
 	}
 
+	this->gameSH->HandleInput(this->inputH);
+	
+	this->gameSH->Update(dTime);
+
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
 	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
@@ -319,6 +323,7 @@ bool System::Update(float dTime)
     DirectX::XMFLOAT3 cameraPos = DirectX::XMFLOAT3(this->cameraH->GetCameraPos().x, this->cameraH->GetCameraPos().y, this->cameraH->GetCameraPos().z);
     //sends the enemies vector to the AI for updating cameraPos is the temporary pos that the enemies will go to
     this->AI->updateActors(this->enemies, cameraPos);
+
 
 
     DirectX::XMMATRIX worldMatrix;
@@ -345,6 +350,11 @@ bool System::Update(float dTime)
     }
 	//this->graphicH->DeferredRender(this->testModel, this->cameraH);
 	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
+
+	
+	//Render models
+	this->gameSH->Render(this->graphicH, hwnd);
+
 
 	
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;

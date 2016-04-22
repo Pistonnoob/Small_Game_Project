@@ -413,3 +413,16 @@ ID3D11ShaderResourceView * Texture::GetTexture(int textureIndex)
 	
 	return this->textureViews.at(textureIndex);
 }
+
+ID3D11ShaderResourceView* Texture::SwapTextureView(ID3D11ShaderResourceView * textureView, int textureIndex)
+{
+	if (textureIndex < 0 || textureIndex >= this->textureViews.size()) {
+		return NULL;
+	}
+
+	ID3D11ShaderResourceView* result = this->textureViews.at(textureIndex);
+
+	this->textureViews.at(textureIndex) = textureView;
+
+	return result;
+}

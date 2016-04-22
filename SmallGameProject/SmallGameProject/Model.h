@@ -46,12 +46,11 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);
 
 	void SetWorldMatrix(DirectX::XMMATRIX worldMatrix);
-	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
-
 	void SetColor(DirectX::XMFLOAT3 newColor);
+	ID3D11ShaderResourceView* SwapTextureView(ID3D11ShaderResourceView * textureView, int textureIndex);
 
 	int GetVertexCount();
-
+	void GetWorldMatrix(DirectX::XMMATRIX& worldMatrix);
 	int GetNrOfSubsets();
 	void GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex, int& indexCount, int& indexStart);
 
