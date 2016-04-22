@@ -308,6 +308,12 @@
     <ClInclude Include="SphereBoundingVolume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TestState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
     <ClInclude Include="gameStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>

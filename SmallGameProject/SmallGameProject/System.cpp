@@ -28,10 +28,7 @@ bool System::Initialize()
 	//Initialize the InputHandler
 	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 
-	//Create the GameStateHandler.
-	this->gameSH = new GameStateHandler();
-	//Initialize the GameStateHandler
-
+	
 	//Create the CameraHandler
 	this->cameraH = new CameraHandler;
 
@@ -49,9 +46,12 @@ bool System::Initialize()
 	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight, viewMatrix);
 
 	this->graphicH->CreateTextHolder(32);
+
 	//Create the GameStateHandler.
-	//this->gameSH = new GameStateHandler();
+	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
+	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
+
 	
 	this->testModel = new Model;
 
@@ -285,29 +285,34 @@ bool System::Update(float dTime)
 		return false;
 	}
 
+	this->gameSH->HandleInput(this->inputH);
+	
+	this->gameSH->Update(dTime);
+
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
 	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 
 	//Update models world matrices
 	this->testRot += dTime / 1000000;
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -2.0f, 0.0f);
+	/*DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -2.0f, 0.0f);
 	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
 	worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f) * worldMatrix;
 	this->testModel->SetWorldMatrix(worldMatrix);
 
 	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-	this->testModelGround->SetWorldMatrix(worldMatrix);
+	this->testModelGround->SetWorldMatrix(worldMatrix);*/
 
 	//Clear the render target views
 	this->graphicH->ClearRTVs();
 
 	//Set deferred render targets
 	this->graphicH->SetDeferredRTVs();
-
+	
 	//Render models
-	this->graphicH->DeferredRender(this->testModel, this->cameraH);
-	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
+	this->gameSH->Render(this->graphicH, hwnd);
+	/*this->graphicH->DeferredRender(this->testModel, this->cameraH);
+	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);*/
 
 	
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
