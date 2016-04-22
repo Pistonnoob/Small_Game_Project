@@ -24,7 +24,7 @@ void EntitySubject::notify(const Entity* entity, Events::ENTITY evnt)
 	for (it = this->observers.begin(); it != this->observers.end(); it++) {	//Iterate
 
 		Observer* e = *it;													//Create a pointer and set it to the object the iterator is pointing to
-		e->onNotify(entity, evnt);											//Notify
+		e->OnNotify(entity, evnt);											//Notify
 	}
 }
 

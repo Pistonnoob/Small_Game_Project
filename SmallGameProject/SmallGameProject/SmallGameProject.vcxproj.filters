@@ -141,9 +141,6 @@
     <ClCompile Include="ProjectileHandler.cpp">
       <Filter>Source Files\Observers</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleHandler.cpp">
-      <Filter>Source Files\Observers</Filter>
-    </ClCompile>
     <ClCompile Include="AudioHandler.cpp">
       <Filter>Source Files\Observers</Filter>
     </ClCompile>
@@ -267,9 +264,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProjectileHandler.h">
-      <Filter>Header Files\Observers</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleHandler.h">
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
     <ClInclude Include="AudioHandler.h">
