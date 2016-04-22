@@ -3,7 +3,7 @@
 CameraHandler::CameraHandler()
 {
 	this->viewMatrix = DirectX::XMMatrixIdentity();
-	this->cameraPos = DirectX::XMVectorSet(0.0f, 0.0f, -20.0f, 0.0f);
+	this->cameraPos = DirectX::XMVectorSet(0.0f, 20.0f, -20.0f, 0.0f);
 }
 CameraHandler::~CameraHandler()
 {
@@ -13,7 +13,7 @@ CameraHandler::~CameraHandler()
 bool CameraHandler::Initialize()
 {
 	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
-	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -20.0f, 1.0f);
+	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 20.0f, -20.0f, 1.0f);
 	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 	
 	this->viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
