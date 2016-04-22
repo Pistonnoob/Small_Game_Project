@@ -71,7 +71,7 @@ int MenuState::HandleInput(InputHandler * input)
 		ID3D11ShaderResourceView* oscarHasFallen = this->m_model.SwapTextureView(this->myTextures.GetTexture(this->selected), this->selected);
 		this->myTextures.SwapTextureView(oscarHasFallen, this->selected);
 		ID3D11ShaderResourceView* axelHasFallen = this->m_model.SwapTextureView(this->myTextures.GetTexture(oldSelected), oldSelected);
-		this->myTextures.SwapTextureView(oscarHasFallen, oldSelected);
+		this->myTextures.SwapTextureView(axelHasFallen, oldSelected);
 	}
 	else if (this->first)
 	{
