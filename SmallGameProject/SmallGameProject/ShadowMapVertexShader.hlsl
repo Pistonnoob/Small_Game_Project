@@ -5,11 +5,13 @@ cbuffer shadowConstant : register(b0)
 	matrix projectionMatrix;
 }
 
-float4 main( float4 pos : POSITIONL ) : SV_POSITION
+float4 main( float3 pos : POSITIONL ) : SV_POSITION
 {
-	matrix worldViewProj = mul(worldMatrix, viewMatrix);
-	worldViewProj = mul(worldViewProj, projectionMatrix);
+	float4 outputPos = float4(pos, 1.0f);
 	
-	
-	return mul(pos, worldViewProj);
+	outputPos = mul(outputPos, worldMatrix);
+	outputPos = mul(outputPos, viewMatrix);
+	outputPos = mul(outputPos, projectionMatrix);
+
+	return outputPos;
 }

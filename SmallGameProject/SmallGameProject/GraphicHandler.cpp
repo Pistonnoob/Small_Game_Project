@@ -138,23 +138,43 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 	return;
 }
 
-void GraphicHandler::ShadowRender(ShadowShaderParameters * shadowShaderParams, Model* model, CameraHandler* camera)
+void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 {
+	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
 	shadowShaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	
 	DirectX::XMMATRIX viewMatrix;
 	camera->GetViewMatrix(viewMatrix);
 	
+	DirectX::XMMATRIX worldMatrix;
+	model->GetWorldMatrix(worldMatrix);
+
 	shadowShaderParams->viewMatrix = viewMatrix;
+	shadowShaderParams->worldMatrix = worldMatrix;
 	shadowShaderParams->projectionMatrix = this->perspectiveMatrix;
 
 	model->Render(this->engine->GetDeviceContext());
 
+	int indexCount = 0;
+	int indexStart = 0;
 
 	int nrOfSubsets = model->GetNrOfSubsets();
+	for (int i = 0; i < nrOfSubsets; i++) {
+		model->GetDeferredShaderParameters(nullptr, i, indexCount, indexStart);
 
-	this->shadowShaderH->Render(this->GetDeviceContext(), 6, 0,shadowShaderParams);
+		this->shadowShaderH->Render(this->engine->GetDeviceContext(), indexCount, indexStart, shadowShaderParams);
+		delete shadowShaderParams;
+
+		shadowShaderParams = new ShadowShaderParameters;
+		
+		shadowShaderParams->viewMatrix = viewMatrix;
+		shadowShaderParams->worldMatrix = worldMatrix;
+		shadowShaderParams->projectionMatrix = this->perspectiveMatrix;
+
+	}
+	delete shadowShaderParams;
 }
+
 
 void GraphicHandler::TextRender()
 {

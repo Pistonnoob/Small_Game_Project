@@ -314,11 +314,7 @@ bool System::Update(float dTime)
 	this->cameraH->GetViewMatrix(viewMatrix);
 	
 	//shadowMap
-	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
-
-	this->graphicH->ShadowRender(shadowShaderParams, this->testModel, this->cameraH);
-
-	delete shadowShaderParams;
+	this->graphicH->ShadowRender(this->testModel, this->cameraH);
 	
 	//lightning
 

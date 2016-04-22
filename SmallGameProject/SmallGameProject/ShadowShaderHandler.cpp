@@ -89,8 +89,6 @@ void ShadowShaderHandler::BindAndSetNullRenderTargets(ID3D11DeviceContext * gDev
 bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, int indexStart, ShadowShaderParameters * params)
 {
 	bool result = false;
-	
-	this->BindAndSetNullRenderTargets(deviceContext);
 
 	//Set shader parameters used for rendering
 	try
@@ -107,7 +105,7 @@ bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexC
 		return false;
 	}
 
-	this->RenderShader(deviceContext, indexCount, 0);
+	this->RenderShader(deviceContext, indexCount, indexStart);
 	return true;
 }
 
@@ -254,7 +252,7 @@ void ShadowShaderHandler::CreateVertexLayout(ID3D11Device * gDevice) throw(...)
 
 	shadowVertexLayout[0].SemanticName = "POSITIONL";
 	shadowVertexLayout[0].SemanticIndex = 0;
-	shadowVertexLayout[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	shadowVertexLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	shadowVertexLayout[0].InputSlot = 0;
 	shadowVertexLayout[0].AlignedByteOffset = 0;
 	shadowVertexLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;

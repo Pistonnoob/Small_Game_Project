@@ -37,7 +37,7 @@ public:
 	
 	void DeferredRender(Model* model, CameraHandler* camera);
 	void LightRender(LightShaderParameters* shaderParams);
-	void ShadowRender(ShadowShaderParameters* shadowShaderParams, Model* model, CameraHandler* camera);
+	void ShadowRender(Model* model, CameraHandler* camera);
 	
 	void TextRender();
 	void Shutdown();
