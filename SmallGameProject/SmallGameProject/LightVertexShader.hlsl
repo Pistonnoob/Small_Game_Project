@@ -13,13 +13,13 @@ cbuffer LightConstantBuffer
 struct VSInput
 {
 	float4 position : POSITION;
-	float2 tex : TEXCOORD0;
+	float2 tex : TEXCOORD;
 };
 
 struct PSInput
 {
 	float4 position : SV_POSITION;
-	float2 tex : TEXCOORD0;
+	float2 tex : TEXCOORD;
 };
 
 PSInput main(VSInput input)

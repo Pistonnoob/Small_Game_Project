@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Ai.cpp" />
+    <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="BomberEnemy.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
@@ -158,6 +159,8 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntitySubject.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontShaderHandler.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateHandler.cpp" />
@@ -166,6 +169,7 @@
     <ClCompile Include="LightShaderHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeleeEnemy.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MoveDownCommand.cpp" />
     <ClCompile Include="MoveLeftCommand.cpp" />
@@ -182,12 +186,15 @@
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="TestState.cpp" />
+    <ClCompile Include="TextHandler.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Ai.h" />
+    <ClInclude Include="Algorithm.h" />
     <ClInclude Include="AudioHandler.h" />
     <ClInclude Include="BomberEnemy.h" />
     <ClInclude Include="BoundingVolume.h" />
@@ -198,13 +205,17 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntitySubject.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontShaderHandler.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateHandler.h" />
+    <ClInclude Include="gameStruct.h" />
     <ClInclude Include="GraphicHandler.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LightShaderHandler.h" />
     <ClInclude Include="MeleeEnemy.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MoveDownCommand.h" />
     <ClInclude Include="MoveLeftCommand.h" />
@@ -222,6 +233,8 @@
     <ClInclude Include="StartState.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="TestState.h" />
+    <ClInclude Include="TextHandler.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
@@ -251,6 +264,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="FontPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="FontVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
