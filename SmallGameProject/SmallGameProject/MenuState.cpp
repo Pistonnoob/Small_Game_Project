@@ -55,11 +55,11 @@ int MenuState::HandleInput(InputHandler * input)
 	int result = 1;
 	int oldSelected = this->selected;
 
-	if (input->isKeyPressed(VK_DOWN))
+	if (input->isKeyPressed(DIK_DOWNARROW))
 	{
 		this->selected++;
 	}
-	if (input->isKeyPressed(VK_UP))
+	if (input->isKeyPressed(DIK_UPARROW))
 	{
 		this->selected--;
 	}

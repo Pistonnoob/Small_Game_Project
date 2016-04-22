@@ -50,7 +50,7 @@ int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 int StartState::HandleInput(InputHandler * input)
 {
 	int result = 0;
-	if (input->isKeyPressed(VK_SPACE))
+	if (input->isKeyPressed(DIK_SPACE))
 	{
 		this->startGame = true;
 	}
