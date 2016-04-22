@@ -266,9 +266,6 @@
     <ClInclude Include="Weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Observer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ProjectileHandler.h">
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
@@ -334,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="FontShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Header Files\Observers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

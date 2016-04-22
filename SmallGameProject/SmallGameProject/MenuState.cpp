@@ -19,7 +19,7 @@ MenuState::~MenuState()
 void MenuState::Shutdown()
 {
 	GameState::Shutdown();
-
+	this->myTextures.Shutdown();
 	this->m_model.Shutdown();
 }
 
