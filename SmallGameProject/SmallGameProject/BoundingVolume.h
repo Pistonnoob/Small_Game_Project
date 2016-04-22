@@ -7,13 +7,15 @@
 class BoundingVolume {
 
 private:
+	virtual void GenerateMinMax(DirectX::XMFLOAT3& minVert, DirectX::XMFLOAT3& maxVert, Model* model) = 0;
+
 
 public:
 	BoundingVolume();
 	virtual ~BoundingVolume();
 
-	virtual void generateBounds(Model* model) = 0;
-	virtual bool intersect(BoundingVolume* otherBoundingVolume) = 0;
+	virtual void GenerateBounds(Model* model) = 0;
+	virtual bool Intersect(BoundingVolume* otherBoundingVolume) = 0;
 };
 
 #endif

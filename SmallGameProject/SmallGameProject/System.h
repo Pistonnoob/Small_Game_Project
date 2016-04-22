@@ -8,6 +8,8 @@
 #include "Model.h"
 #include "CameraHandler.h"
 
+#include "Ai.h"
+
 const bool FULL_SCREEN = false;
 
 class System {
@@ -28,6 +30,11 @@ private:
 
 	Model* testModel;
 	Model* testModelGround;
+
+    Ai* AI;
+    Enemy* entity;
+    vector<Enemy*> enemies;
+
 	float testRot;
 public:
 	System();

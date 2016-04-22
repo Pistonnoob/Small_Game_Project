@@ -8,6 +8,7 @@ class MoveDownCommand : public Command {
 private:
 
 public:
+    virtual void execute(Actor& actor);
 
 };
 

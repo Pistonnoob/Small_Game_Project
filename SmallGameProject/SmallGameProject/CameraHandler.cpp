@@ -1,5 +1,8 @@
 #include "CameraHandler.h"
 
+#include <windows.h>
+#include <Windows.h>
+
 CameraHandler::CameraHandler()
 {
 	this->viewMatrix = DirectX::XMMatrixIdentity();
@@ -13,10 +16,11 @@ CameraHandler::~CameraHandler()
 bool CameraHandler::Initialize()
 {
 	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
-	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -20.0f, 1.0f);
+	//DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -20.0f, 1.0f);
+   // DirectX::XMVECTOR camPos = DirectX::XMVectorSet(10, 15, -20, 0.0f);
 	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 	
-	this->viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
+	this->viewMatrix = DirectX::XMMatrixLookAtLH(this->cameraPos, lookAt, camUp);
 	this->baseViewMatrix = this->viewMatrix;
 
 	return true;
