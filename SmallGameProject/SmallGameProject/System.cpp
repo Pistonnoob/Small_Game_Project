@@ -281,7 +281,11 @@ bool System::Update(float dTime)
 {
 	this->inputH->Update();
 
-	if (this->inputH->isKeyPressed(VK_ESCAPE)) {
+	if (this->inputH->isKeyPressed(DIK_ESCAPE)) {
+		return false;
+	}
+
+	if (this->inputH->isKeyReleased(DIK_SPACE)) {
 		return false;
 	}
 
@@ -339,7 +343,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	case WM_KEYDOWN:
 	{
 		//if key is pressed send it to the input object to be recorded
-		this->inputH->KeyDown((unsigned int)wparam);
+		//this->inputH->KeyDown((unsigned int)wparam);
 
 		return 0;
 	}
@@ -347,7 +351,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	case WM_KEYUP:
 	{
 		//If a key is released then send it to the input object
-		this->inputH->KeyUp((unsigned int)wparam);
+		//this->inputH->KeyUp((unsigned int)wparam);
 		
 		return 0;
 	}
