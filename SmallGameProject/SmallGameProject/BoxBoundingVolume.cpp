@@ -20,7 +20,7 @@ BoxBoundingVolume::BoxBoundingVolume()
 	}
 
 	for (int i = 0; i < 8; i++) {
-		this->vertices[i] = DirectX::XMFLOAT3(0,0,0);
+		this->vertices[i] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0,0,0));
 	}
 
 }
@@ -122,15 +122,15 @@ void BoxBoundingVolume::GenerateBounds(Model * model)
 	this->allAxises[4] = DirectX::XMVectorSet(0, DirectX::XMVectorGetY(this->axisY) * -1, 0, 0);
 	this->allAxises[5] = DirectX::XMVectorSet(0, 0, DirectX::XMVectorGetZ(this->axisZ) * -1, 0);
 
-	//Calculate all the vertices
+	//Calculate all the vertices	(y = 0 so since we dont need it)
 	this->vertices[0] = DirectX::XMLoadFloat3(&minVert);
-	this->vertices[1] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x,minVert.y, minVert.z));
-	this->vertices[2] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, minVert.y, maxVert.z));
-	this->vertices[3] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, minVert.y, minVert.z));
-	this->vertices[4] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, maxVert.y, minVert.z));
-	this->vertices[5] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, maxVert.y, minVert.z));
-	this->vertices[6] = DirectX::XMLoadFloat3(&maxVert);
-	this->vertices[7] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, maxVert.y, maxVert.z));
+	this->vertices[1] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, 0, minVert.z));
+	this->vertices[2] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, 0, maxVert.z));
+	this->vertices[3] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, 0, minVert.z));
+	this->vertices[4] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, 0, minVert.z));
+	this->vertices[5] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, 0, minVert.z));
+	this->vertices[6] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, 0, minVert.z));
+	this->vertices[7] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, 0, maxVert.z));
 }
 
 bool BoxBoundingVolume::Intersect(BoundingVolume * otherBoundingVolume)
@@ -158,13 +158,23 @@ bool BoxBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* otherBox)
 	DirectX::XMVECTOR* otherBoxAxsises = otherBox->getAxises();
 
 	for (int i = 0; i < 6; i++) {
-		DirectX::XMVECTOR axis = this->allAxises[i];
-		DirectX::XMVECTOR p1 = this->Project(axis);
+		
+		if ( i != 1 || i != 4) {
+			//Get the 2D axis since we will not check the y-axis
+			DirectX::XMFLOAT3 twoDAxis = DirectX::XMFLOAT3(DirectX::XMVectorGetX(this->allAxises[i]), 0, DirectX::XMVectorGetX(this->allAxises[i]));
+			DirectX::XMVECTOR axis = DirectX::XMLoadFloat3(&twoDAxis);
 
+			DirectX::XMVECTOR p1 = this->Project(axis);
+			DirectX::XMVECTOR p2 = otherBox->Project(axis);
+
+			//if the is no overlap in one of the axises, the boxes does not intersect
+			if (!this->Overlap(axis, p1, p2)) {
+				return false;
+			}
+		}
 	}
 
-
-	return false;
+	return true;
 }
 
 bool BoxBoundingVolume::SphereIntersectionTest(SphereBoundingVolume* sphere)
@@ -236,11 +246,13 @@ const DirectX::XMFLOAT3 BoxBoundingVolume::getCenter()
 
 DirectX::XMVECTOR BoxBoundingVolume::Project(DirectX::XMVECTOR axis)
 {
+	// min is the smalest length to multiply the axis with to get the first point on the axsis for this shape
+	// max  -||-
 	float min = DirectX::XMVectorGetX(DirectX::XMVector3Dot(axis, this->vertices[0]));
 	float max = min;
 	for (int i = 1; i < 8; i++) {
 		// NOTE: the axis must be normalized to get accurate projections
-		double p = DirectX::XMVectorGetX(DirectX::XMVector3Dot(axis, this->vertices[i]));
+		float p = DirectX::XMVectorGetX(DirectX::XMVector3Dot(axis, this->vertices[i]));
 		if (p < min) {
 			min = p;
 		}
@@ -248,6 +260,24 @@ DirectX::XMVECTOR BoxBoundingVolume::Project(DirectX::XMVECTOR axis)
 			max = p;
 		}
 	}
-	Projection proj = new Projection(min, max);
+	DirectX::XMVECTOR proj = DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(min, max));
 	return proj;
+}
+
+bool BoxBoundingVolume::Overlap(DirectX::XMVECTOR axis, DirectX::XMVECTOR Vec1, DirectX::XMVECTOR Vec2)
+{
+	float v1Min = DirectX::XMVectorGetX(Vec1);
+	float v1Max = DirectX::XMVectorGetY(Vec1);
+	float v2Min = DirectX::XMVectorGetX(Vec2);
+	float v2Max = DirectX::XMVectorGetY(Vec2);
+
+	if ( v1Max >= v2Min) {	//if v1 max is longer than v2 min
+
+		if (v1Min <= v2Max) {
+			return true;
+		}
+
+	}
+
+	return false;
 }
