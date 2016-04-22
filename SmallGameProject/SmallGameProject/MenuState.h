@@ -7,6 +7,7 @@ class MenuState :
 	public GameState
 {
 private:
+	bool first;
 	int selected;
 	Model m_model;
 	Texture myTextures;
