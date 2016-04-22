@@ -147,6 +147,7 @@ void System::Run()
 
 void System::Shutdown()
 {
+ 
 	//Release the models
 	if (this->testModel) {
 		this->testModel->Shutdown();
@@ -182,7 +183,18 @@ void System::Shutdown()
 		delete this->gameSH;
 		this->gameSH = nullptr;
 	}
+
+    for (int i = 0; i < this->enemies.size(); i++)
+    {
+        Enemy* enemyTemp = this->enemies.at(i);
+        delete enemyTemp;
+    }
+    this->enemies.clear();
 	
+    if (this->AI != nullptr)
+    {
+        delete this->AI;
+    }
 
 	//Shutdown the window
 	ShutdownWindow();

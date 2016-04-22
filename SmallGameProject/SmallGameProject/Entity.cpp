@@ -46,6 +46,7 @@ DirectX::XMFLOAT3 Entity::getPosition()
 
 Entity::~Entity()
 {
-	delete this->entityModel;
+	//delete this->entityModel;
+    this->entityModel = nullptr;
 	delete this->entityBV;
 }
