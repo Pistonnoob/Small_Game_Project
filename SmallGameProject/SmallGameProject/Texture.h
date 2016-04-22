@@ -49,7 +49,7 @@ public:
 	int GetMaterialIndexFromName(std::string& materialName);
 	Material GetMaterial(int materialIndex);
 	ID3D11ShaderResourceView* GetTexture(int textureIndex);
-	void SetTextureView(ID3D11ShaderResourceView* textureView, int textureIndex);
+	ID3D11ShaderResourceView* SwapTextureView(ID3D11ShaderResourceView* textureView, int textureIndex);
 };
 
 #endif
