@@ -55,6 +55,9 @@ public:
 	void GetDeferredShaderParameters(DeferredShaderParameters* params, int subsetIndex, int& indexCount, int& indexStart);
 
 	bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, unsigned long*& outputIndices, std::string& materialLib);
+
+	const std::vector<DirectX::XMFLOAT3>* getVertexPositions();
+
 };
 
 #endif

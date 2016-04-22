@@ -1,9 +1,10 @@
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H
 
+#define DIRECTINPUT_VERSION 0x0800
+
 #pragma comment (lib, "dinput8.lib")
 #pragma comment (lib, "dxguid.lib")
-
 
 #include <dinput.h>
 #include <DirectXMath.h>
@@ -11,12 +12,12 @@
 class InputHandler {
 
 private:
-	LPDIRECTINPUT8 directInput;
+	IDirectInput8* directInput;
 	IDirectInputDevice8* DIKeyboard;
 	IDirectInputDevice8* DIMouse;
 	DIMOUSESTATE DIMouseState;
-	bool KeyboarState[256];
-	bool OldKeyboardState[256];
+	unsigned char KeyboarState[256];
+	unsigned char OldKeyboardState[256];
 
 	int mouseX;
 	int mouseY;
