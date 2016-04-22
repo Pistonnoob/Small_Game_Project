@@ -8,6 +8,7 @@ class MenuState :
 {
 private:
 	bool first;
+	bool doOption;
 	int selected;
 	Model m_model;
 	Texture myTextures;
@@ -21,6 +22,7 @@ public:
 	void Shutdown();
 
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
+
 
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);

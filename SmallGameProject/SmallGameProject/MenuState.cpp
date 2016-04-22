@@ -5,6 +5,7 @@
 MenuState::MenuState()
 {
 	this->first = true;
+	this->doOption = false;
 	this->selected = 0;
 	this->m_model = Model();
 	this->myTextures = Texture();
@@ -26,6 +27,7 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 {
 	int result = 0;
 	this->first = true;
+	this->doOption = false;
 	this->selected = 0;
 	this->m_model = Model();
 	//Initialize the base class GameState
@@ -86,6 +88,22 @@ int MenuState::HandleInput(InputHandler * input)
 int MenuState::Update(float deltaTime)
 {
 	int result = 0;
+
+	if (doOption)
+	{
+		switch (this->selected)
+		{
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		default:
+			break;
+		}
+	}
+
 	return result;
 }
 
