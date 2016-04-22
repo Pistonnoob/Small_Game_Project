@@ -25,6 +25,7 @@ struct LightShaderParameters {
 	DirectX::XMMATRIX lightProjectionMatrix;
 
 	ID3D11ShaderResourceView** deferredTextures;
+	ID3D11ShaderResourceView* shadowTexture;
 
 	DirectX::XMFLOAT4 lightPos;
 	DirectX::XMFLOAT4 camPos;

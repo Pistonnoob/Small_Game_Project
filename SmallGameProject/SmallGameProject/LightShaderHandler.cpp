@@ -260,11 +260,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	params->worldMatrix = XMMatrixTranspose(params->worldMatrix);
-	params->viewMatrix = XMMatrixTranspose(params->viewMatrix);
-	params->projectionMatrix = XMMatrixTranspose(params->projectionMatrix);
-	params->lightViewMatrix = XMMatrixTranspose(params->lightViewMatrix);
-	params->lightProjectionMatrix = XMMatrixTranspose(params->lightProjectionMatrix);
+	params->worldMatrix = DirectX::XMMatrixTranspose(params->worldMatrix);
+	params->viewMatrix = DirectX::XMMatrixTranspose(params->viewMatrix);
+	params->projectionMatrix = DirectX::XMMatrixTranspose(params->projectionMatrix);
+	params->lightViewMatrix = DirectX::XMMatrixTranspose(params->lightViewMatrix);
+	params->lightProjectionMatrix = DirectX::XMMatrixTranspose(params->lightProjectionMatrix);
 
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -279,8 +279,8 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	dataPtr->world = params->worldMatrix;
 	dataPtr->view = params->viewMatrix;
 	dataPtr->projection = params->projectionMatrix;
-	dataPtr->view = params->lightViewMatrix;
-	dataPtr->projection = params->lightProjectionMatrix;
+	dataPtr->lightView = params->lightViewMatrix;
+	dataPtr->lightProjection = params->lightProjectionMatrix;
 
 	dataPtr->lightPos = params->lightPos;
 	dataPtr->camPos = params->camPos;
@@ -298,6 +298,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	if (params->deferredTextures) {
 		//Set shader texture resource for pixel shader
 		deviceContext->PSSetShaderResources(0, 5, params->deferredTextures);
+	}
+
+	if (params->shadowTexture)
+	{
+		deviceContext->PSSetShaderResources(5,1, &params->shadowTexture);
 	}
 
 	return true;

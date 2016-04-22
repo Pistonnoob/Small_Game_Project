@@ -24,11 +24,16 @@ protected:
 	ScreenQuad* screenQuad;
 	TextHandler* textH;
 
+	
 	int screenWidth;
 	int screenHeight;
 
 	DirectX::XMMATRIX perspectiveMatrix;
 	DirectX::XMMATRIX orthographicMatrix;
+
+	DirectX::XMMATRIX lightPerspective;
+	DirectX::XMMATRIX lightView;
+
 public:
 	GraphicHandler();
 	virtual ~GraphicHandler();
@@ -45,6 +50,7 @@ public:
 	void ClearRTVs();
 	void SetDeferredRTVs();
 	void SetLightRTV();
+	void SetShadowRTV();
 
 	void PresentScene();
 

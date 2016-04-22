@@ -14,7 +14,6 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 {
 	try
 	{
-		this->SetViewPort(gDevice, screenWidth, screenHeight);
 		this->Create2DTexture(gDevice, screenWidth, screenHeight);
 
 		this->CreateDepthStencilView(gDevice);
@@ -73,8 +72,9 @@ void ShadowShaderHandler::Shutdown()
 	//delete this->viewPort; Cannot free the memory here
 }
 
-void ShadowShaderHandler::BindAndSetNullRenderTargets(ID3D11DeviceContext * gDeviceContext)
+void ShadowShaderHandler::SetRenderTarget(ID3D11DeviceContext * gDeviceContext)
 {
+
 	gDeviceContext->RSSetViewports(1, this->viewPort);
 	/*
 	Set null render target because we are only going to draw to depth buffer. 
@@ -82,8 +82,8 @@ void ShadowShaderHandler::BindAndSetNullRenderTargets(ID3D11DeviceContext * gDev
 	*/
 	ID3D11RenderTargetView* nullTarget[1] = { nullptr };
 
-	gDeviceContext->OMSetRenderTargets(1, nullTarget, this->mDepthMapDSV);
-	this->clearShadowMapRDW(gDeviceContext);
+	gDeviceContext->OMSetRenderTargets(0, NULL, this->mDepthMapDSV);
+	
 }
 
 bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, int indexStart, ShadowShaderParameters * params)
@@ -109,9 +109,14 @@ bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexC
 	return true;
 }
 
-void ShadowShaderHandler::clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext)
+void ShadowShaderHandler::ClearShadowMap(ID3D11DeviceContext * gDeviceContext)
 {
 	gDeviceContext->ClearDepthStencilView(this->mDepthMapDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+ID3D11ShaderResourceView* ShadowShaderHandler::getShadowMapSRW() const
+{
+	return this->mDepthMapSRV;
 }
 
 void ShadowShaderHandler::StartUp()
@@ -128,15 +133,12 @@ void ShadowShaderHandler::StartUp()
 	this->depthMap				= nullptr;
 }
 
-void ShadowShaderHandler::SetViewPort(ID3D11Device * gDevice, int clientWidth, int clientHeight)
+void ShadowShaderHandler::SetViewPort(ID3D11Device * gDevice)
 {
 	this->viewPort = new D3D11_VIEWPORT;
 	
-	float width = 0.0f;
-	float height = 0.0f;
-
-	width = static_cast<float>(clientWidth);
-	height = static_cast<float>(clientHeight);
+	float width = 1024.0f;
+	float height = 1024.0f;
 
 	this->viewPort->TopLeftX	= 0.0f;
 	this->viewPort->TopLeftY	= 0.0f;
@@ -156,11 +158,11 @@ void ShadowShaderHandler::Create2DTexture(ID3D11Device * gDevice, int screenWidt
 	UINT width = static_cast<UINT>(screenWidth);
 	UINT height = static_cast<UINT>(screenHeight);
 
-	texDesc.Width = width;
-	texDesc.Height = height;
+	texDesc.Width = 1024.0f;
+	texDesc.Height = 1024.0f;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+	texDesc.Format = DXGI_FORMAT_R32_TYPELESS;
 
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
@@ -187,7 +189,7 @@ void ShadowShaderHandler::CreateDepthStencilView(ID3D11Device * gDevice) throw(.
 	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
 
 	dsvDesc.Flags = 0;
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
 
@@ -206,7 +208,7 @@ void ShadowShaderHandler::CreateShaderResourceView(ID3D11Device * gDevice) throw
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	ZeroMemory(&srvDesc, sizeof(srvDesc));
 
-	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 	srvDesc.Texture2D.MostDetailedMip = 0;

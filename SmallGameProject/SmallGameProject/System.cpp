@@ -314,6 +314,7 @@ bool System::Update(float dTime)
 	this->cameraH->GetViewMatrix(viewMatrix);
 	
 	//shadowMap
+	this->graphicH->SetShadowRTV();
 	this->graphicH->ShadowRender(this->testModel, this->cameraH);
 	
 	//lightning

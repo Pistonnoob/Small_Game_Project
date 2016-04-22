@@ -83,6 +83,18 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	//Create an orthographic projection matrix for 2D rendering
 	this->orthographicMatrix = DirectX::XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 	
+	
+
+	//creating the light matrises
+	fieldOfView = (float)DirectX::XM_PI / 2.0f;
+
+	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
+	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(10.0f, 10.0f, 0.0f, 1.0f);
+	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+
+	this->lightView= DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
+	this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
+	
 	return true;
 }
 
@@ -126,9 +138,17 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 	
 	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	shaderParams->projectionMatrix = this->orthographicMatrix;
-	shaderParams->lightViewMatrix = DirectX::XMMatrixIdentity();
-	shaderParams->lightProjectionMatrix = DirectX::XMMatrixIdentity();
+
+	/*
+	lights View Matrix need sto be sent to as a buffer to the renderLight renderpass
+	*/
+	//hard coded atm
+
+	shaderParams->lightViewMatrix = this->lightView;
+	shaderParams->lightProjectionMatrix = this->lightPerspective;
+
 	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
+	shaderParams->shadowTexture = this->shadowShaderH->getShadowMapSRW();
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());
 	this->lightShaderH->Render(this->engine->GetDeviceContext(), 6, shaderParams);
@@ -143,15 +163,13 @@ void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
 	shadowShaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	
-	DirectX::XMMATRIX viewMatrix;
-	camera->GetViewMatrix(viewMatrix);
 	
 	DirectX::XMMATRIX worldMatrix;
 	model->GetWorldMatrix(worldMatrix);
 
-	shadowShaderParams->viewMatrix = viewMatrix;
+	shadowShaderParams->viewMatrix = this->lightView;
 	shadowShaderParams->worldMatrix = worldMatrix;
-	shadowShaderParams->projectionMatrix = this->perspectiveMatrix;
+	shadowShaderParams->projectionMatrix = this->lightPerspective;
 
 	model->Render(this->engine->GetDeviceContext());
 
@@ -167,9 +185,9 @@ void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 
 		shadowShaderParams = new ShadowShaderParameters;
 		
-		shadowShaderParams->viewMatrix = viewMatrix;
+		shadowShaderParams->viewMatrix = this->lightView;
 		shadowShaderParams->worldMatrix = worldMatrix;
-		shadowShaderParams->projectionMatrix = this->perspectiveMatrix;
+		shadowShaderParams->projectionMatrix = this->lightPerspective;
 
 	}
 	delete shadowShaderParams;
@@ -251,10 +269,12 @@ void GraphicHandler::ClearRTVs()
 {
 	this->deferredShaderH->ClearRenderTargets(this->engine->GetDeviceContext());
 	this->engine->ClearDepthAndRTVViews();
+	this->shadowShaderH->ClearShadowMap(this->engine->GetDeviceContext());
 }
 
 void GraphicHandler::SetDeferredRTVs()
 {
+	this->engine->SetViewport();
 	this->engine->GetDeviceContext()->OMSetBlendState(0, 0, 0xffffffff);
 	this->deferredShaderH->SetDeferredRenderTargets(this->engine->GetDeviceContext());
 	this->engine->SetDepth(true);
@@ -262,8 +282,15 @@ void GraphicHandler::SetDeferredRTVs()
 
 void GraphicHandler::SetLightRTV()
 {
+	this->engine->SetViewport();
 	this->engine->SetRenderTargetView();
 	this->engine->SetDepth(false);
+}
+
+void GraphicHandler::SetShadowRTV()
+{
+	this->shadowShaderH->SetViewPort(this->engine->GetDevice());
+	this->shadowShaderH->SetRenderTarget(this->engine->GetDeviceContext());
 }
 
 void GraphicHandler::PresentScene()

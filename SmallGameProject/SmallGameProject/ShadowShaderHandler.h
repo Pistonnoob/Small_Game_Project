@@ -41,15 +41,19 @@ public:
 	bool Initialize(ID3D11Device* gDevice, HWND* hwnd, int nrOfResources, int screenWidth, int screenHeight) throw(...);
 	void Shutdown();
 
-	void BindAndSetNullRenderTargets(ID3D11DeviceContext* gDeviceContext);
+	void SetRenderTarget(ID3D11DeviceContext* gDeviceContext);
 
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, ShadowShaderParameters* params);
-	void clearShadowMapRDW(ID3D11DeviceContext* gDeviceContext);
+	void ClearShadowMap(ID3D11DeviceContext* gDeviceContext);
+
+	//getters / setters
+	ID3D11ShaderResourceView* getShadowMapSRW() const;
+	void SetViewPort(ID3D11Device* gDevice);
 
 
 private:
 	void StartUp();
-	void SetViewPort(ID3D11Device* gDevice, int clientWidth, int clientHeight);
+	
 
 	void Create2DTexture(ID3D11Device* gDevice, int screenWidth, int screenHeight) throw(...);
 	void CreateDepthStencilView(ID3D11Device* gDevice) throw(...);

@@ -19,7 +19,8 @@ struct VSInput
 struct PSInput
 {
 	float4 position : SV_POSITION;
-	float2 tex : TEXCOORD;
+	float2 tex : TEXCOORD0;
+	float4 posLightH : TEXCOORD1;
 };
 
 PSInput main(VSInput input)
@@ -38,5 +39,7 @@ PSInput main(VSInput input)
 	//Store the uv for output
 	output.tex = input.tex;
 
+	//output will be in clip space of the light projection plane
+	output.posLightH = output.position;
 	return output;
 }
