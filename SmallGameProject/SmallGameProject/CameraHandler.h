@@ -11,6 +11,10 @@ private:
 	DirectX::XMVECTOR lookAt;
 	DirectX::XMVECTOR cameraUp;
 
+	float roll;
+	float pitch;
+	float yaw;
+
 public:
 	CameraHandler();
 	~CameraHandler();
@@ -27,6 +31,15 @@ public:
 
 	DirectX::XMFLOAT3 GetCameraUp();
 	void SetCameraUp(DirectX::XMFLOAT3 newCamUp);
+
+	float GetRoll();
+	void SetRoll(float newRoll, bool add = false);
+
+	float GetPitch();
+	void SetPitch(float newPitch, bool add = false);
+
+	float GetYaw();
+	void SetYaw(float newYaw, bool add = false);
 
 	void UpdateCamera();
 };

@@ -9,6 +9,10 @@ CameraHandler::CameraHandler()
 	this->cameraPos = DirectX::XMVectorSet(0.0f, 0.0f, -20.0f, 1.0f);
 	this->lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	this->cameraUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+
+	this->roll = 0.0f;
+	this->pitch = 0.0f;
+	this->yaw = 0.0f;
 }
 CameraHandler::~CameraHandler()
 {
@@ -22,6 +26,13 @@ bool CameraHandler::Initialize()
 	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 	
 	this->baseViewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
+
+	DirectX::XMMATRIX camRotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(this->pitch, this->yaw, this->roll);
+
+	camPos = DirectX::XMVector3TransformCoord(this->cameraPos, camRotationMatrix);
+	lookAt = DirectX::XMVector3TransformCoord(this->lookAt, camRotationMatrix);
+	camUp = DirectX::XMVector3TransformCoord(this->cameraUp, camRotationMatrix);
+
 	this->viewMatrix = DirectX::XMMatrixLookAtLH(this->cameraPos, this->lookAt, this->cameraUp);
 
 	return true;
@@ -78,7 +89,58 @@ void CameraHandler::SetCameraUp(DirectX::XMFLOAT3 newCamUp)
 	this->cameraUp = DirectX::XMLoadFloat3(&newCamUp);
 }
 
+float CameraHandler::GetRoll()
+{
+	return this->roll;
+}
+
+void CameraHandler::SetRoll(float newRoll, bool add)
+{
+	if (!add) {
+		this->roll = newRoll;
+	}
+	else {
+		this->roll += newRoll;
+	}
+}
+
+float CameraHandler::GetPitch()
+{
+	return this->pitch;
+}
+
+void CameraHandler::SetPitch(float newPitch, bool add)
+{
+	if (!add) {
+		this->pitch = newPitch;
+	}
+	else {
+		this->pitch += newPitch;
+	}
+}
+
+float CameraHandler::GetYaw()
+{
+	return this->yaw;
+}
+
+void CameraHandler::SetYaw(float newYaw, bool add)
+{
+	if (!add) {
+		this->yaw = newYaw;
+	}
+	else {
+		this->yaw += newYaw;
+	}
+}
+
 void CameraHandler::UpdateCamera()
 {
+	DirectX::XMMATRIX camRotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(this->pitch, this->yaw, this->roll);
+
+	DirectX::XMVECTOR camPos = DirectX::XMVector3TransformCoord(this->cameraPos, camRotationMatrix);
+	DirectX::XMVECTOR lookAt = DirectX::XMVector3TransformCoord(this->lookAt, camRotationMatrix);
+	DirectX::XMVECTOR camUp = DirectX::XMVector3TransformCoord(this->cameraUp, camRotationMatrix);
+
 	this->viewMatrix = DirectX::XMMatrixLookAtLH(this->cameraPos, this->lookAt, this->cameraUp);
 }
