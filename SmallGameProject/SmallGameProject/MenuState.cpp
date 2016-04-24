@@ -88,6 +88,13 @@ int MenuState::HandleInput(InputHandler * input)
 		this->myTextures.SwapTextureView(oscarHasFallen, this->selected);
 	}
 
+	if (input->isKeyPressed(DIK_ESCAPE))
+	{
+		//Ask Loki to cheat and lie to the system that we have used the option END_GAME
+		this->doOption = true;
+		this->selected = MenuOption::END_GAME;
+	}
+
 	return result;
 }
 

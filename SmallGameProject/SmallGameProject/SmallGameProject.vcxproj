@@ -224,6 +224,7 @@
     <ClInclude Include="MoveLeftCommand.h" />
     <ClInclude Include="MoveRightCommand.h" />
     <ClInclude Include="MoveUpCommand.h" />
+    <ClInclude Include="MyMathLib.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="ParticleHandler.h" />
     <ClInclude Include="Player.h" />
