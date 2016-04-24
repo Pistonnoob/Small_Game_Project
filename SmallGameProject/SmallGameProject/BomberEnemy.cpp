@@ -17,7 +17,7 @@ bool BomberEnemy::Initialize(Model* model, bool isSphere)
 
 void BomberEnemy::Shutdown()
 {
-	Enemy::Shutdown();
+	Entity::Shutdown(true);
 }
 
 

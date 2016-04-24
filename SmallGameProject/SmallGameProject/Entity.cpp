@@ -51,9 +51,9 @@ bool Entity::Initialize(Model * model, bool isSphere)
 	return true;
 }
 
-void Entity::Shutdown()
+void Entity::Shutdown(bool isEnemy)
 {
-	if (this->entityModel) {
+	if (this->entityModel && !isEnemy) {
 		this->entityModel->Shutdown();
 		delete this->entityModel;
 		this->entityModel = nullptr;
@@ -66,7 +66,7 @@ void Entity::Shutdown()
 
 }
 
-Model * Entity::getModel()
+Model* Entity::getModel()
 {
     return this->entityModel;
 }

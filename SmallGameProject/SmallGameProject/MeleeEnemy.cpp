@@ -17,5 +17,5 @@ bool MeleeEnemy::Initialize(Model * model, bool isSphere)
 
 void MeleeEnemy::Shutdown()
 {
-	Enemy::Shutdown();
+	Entity::Shutdown(true);
 }

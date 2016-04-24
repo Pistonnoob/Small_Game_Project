@@ -71,17 +71,6 @@ bool System::Initialize()
     this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
     this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
 
-    this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
-	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
-
-    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
-
-    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
-
-    this->enemies.push_back(new MeleeEnemy(0.0f,0.0f));
-	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
     //
 
 	this->testModelGround = new Model;
@@ -148,12 +137,6 @@ void System::Run()
 void System::Shutdown()
 {
  
-	//Release the models
-	if (this->testModel) {
-		this->testModel->Shutdown();
-		delete this->testModel;
-		this->testModel = nullptr;
-	}
 	if (this->testModelGround) {
 		this->testModelGround->Shutdown();
 		delete this->testModelGround;
@@ -187,10 +170,18 @@ void System::Shutdown()
     for (int i = 0; i < this->enemies.size(); i++)
     {
         Enemy* enemyTemp = this->enemies.at(i);
+		enemyTemp->Shutdown();
         delete enemyTemp;
     }
     this->enemies.clear();
 	
+	//Release the models
+	if (this->testModel) {
+		this->testModel->Shutdown();
+		delete this->testModel;
+		this->testModel = nullptr;
+	}
+
     if (this->AI != nullptr)
     {
         delete this->AI;

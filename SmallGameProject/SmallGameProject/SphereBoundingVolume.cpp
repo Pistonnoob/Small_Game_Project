@@ -51,6 +51,8 @@ void SphereBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX:
 
 	minVertex = minVert;
 	maxVertex = maxVert;
+
+	vertPos = nullptr;
 }
 
 void SphereBoundingVolume::GenerateBounds(Model* model)
@@ -92,9 +94,8 @@ bool SphereBoundingVolume::Intersect(BoundingVolume* otherBoundingVolume)
 	BoxBoundingVolume* box;
 	SphereBoundingVolume* sphere = dynamic_cast<SphereBoundingVolume*>(otherBoundingVolume);
 	if (sphere != nullptr) {	//If the volume is a sphere
-
-
 		
+		result = this->SphereIntesectionTest(sphere);		
 	}
 	else {						//If the volume is a box
 		box = dynamic_cast<BoxBoundingVolume*>(otherBoundingVolume);
@@ -102,6 +103,9 @@ bool SphereBoundingVolume::Intersect(BoundingVolume* otherBoundingVolume)
 		result = this->BoxIntersectionTest(box);
 	}
 	
+	sphere = nullptr;
+	box = nullptr;
+
 	return result;
 }
 
@@ -173,6 +177,9 @@ bool SphereBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* box)
 	if (pow(distance, 2) <= pow(this->radius, 2)) {
 		result = true;
 	}
+
+	allLengths = nullptr;
+	allAxises = nullptr;
 
 	return result;
 }

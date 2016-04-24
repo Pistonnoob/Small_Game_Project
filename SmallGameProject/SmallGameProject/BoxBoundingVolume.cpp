@@ -68,6 +68,8 @@ void BoxBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3 & minVertex, DirectX::X
 
 	minVertex = minVert;
 	maxVertex = maxVert;
+
+	vertPos = nullptr;
 }
 
 void BoxBoundingVolume::GenerateBounds(Model * model)
@@ -151,6 +153,9 @@ bool BoxBoundingVolume::Intersect(BoundingVolume * otherBoundingVolume)
 		result = this->BoxIntersectionTest(box);
 	}
 
+	sphere = nullptr;
+	box = nullptr;
+
 	return result;
 }
 
@@ -174,6 +179,8 @@ bool BoxBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* otherBox)
 			}
 		}
 	}
+
+	otherBoxAxsises = nullptr;
 
 	return true;
 }

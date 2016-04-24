@@ -25,7 +25,7 @@ public:
 					bool isSphere);
 	// Secoundary initialize for instancing
 	bool Initialize(Model* model, bool isSphere);	
-	void Shutdown();
+	void Shutdown(bool isEnemy = false);
 
     Model* getModel();
     DirectX::XMFLOAT3 getPosition();

@@ -17,5 +17,5 @@ bool RangedEnemy::Initialize(Model * model, bool isSphere)
 
 void RangedEnemy::Shutdown()
 {
-	Enemy::Shutdown();
+	Entity::Shutdown(true);
 }
