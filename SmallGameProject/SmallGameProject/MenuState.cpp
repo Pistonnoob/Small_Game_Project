@@ -41,7 +41,7 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		bool victory = m_model.Initialize(device, deviceContext, "Menu");
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
 		worldMatrix *= DirectX::XMMatrixTranslation(0, -4, 0);
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0, 0, -19));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -19.0f));
 		victory = this->myCamera.Initialize();
 		this->m_model.SetWorldMatrix(worldMatrix);
 

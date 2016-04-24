@@ -52,7 +52,8 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 5.0f, -20.0f));
-		this->myCamera.SetPitch(-70.0f * Math::DEGREES_TO_RADIANS);
+		//Pitch doesn't work
+		this->myCamera.SetPitch(-90.0f * Math::DEGREES_TO_RADIANS);
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
 			result = 1;
