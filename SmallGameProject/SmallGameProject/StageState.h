@@ -1,13 +1,22 @@
 #ifndef STAGESTATE_H
 #define STAGESTATE_H
 #include "GameState.h"
+#include "Ai.h"
+
 class StageState :
 	public GameState
 {
 private:	//Variables
-	Model m_model;
-
 	CameraHandler myCamera;
+	
+	Model m_car;
+	Model m_ground;
+
+	Ai m_AI;
+	vector<Enemy*> enemies;
+
+	bool exitStage;
+
 public:
 	StageState();
 	virtual ~StageState();

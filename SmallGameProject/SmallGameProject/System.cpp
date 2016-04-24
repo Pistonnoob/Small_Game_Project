@@ -6,10 +6,6 @@ System::System()
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
 	this->cameraH = nullptr;
-	this->testModel = nullptr;
-
-    this->entity = nullptr;
-    this->AI = nullptr;
 }
 
 System::~System()
@@ -56,41 +52,6 @@ bool System::Initialize()
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
 
 	
-	this->testModel = new Model;
-
-	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "carSLS3");
-	if (!result) {
-		return false;
-	}
-	this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-
-    //creates the AI that will update the enemies
-    this->AI = new Ai();
-
-    //creates the enemies must call setModel function to give enemies models
-    this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new MeleeEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-    //
-
-	this->testModelGround = new Model;
-
-	result = this->testModelGround->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ground");
-	if (!result) {
-		return false;
-	}
-	this->testModelGround->SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 	this->testRot = 0;
 
@@ -147,18 +108,6 @@ void System::Run()
 
 void System::Shutdown()
 {
- 
-	//Release the models
-	if (this->testModel) {
-		this->testModel->Shutdown();
-		delete this->testModel;
-		this->testModel = nullptr;
-	}
-	if (this->testModelGround) {
-		this->testModelGround->Shutdown();
-		delete this->testModelGround;
-		this->testModelGround = nullptr;
-	}
 	//Release the graphicsHandler
 	if (this->graphicH) {
 		this->graphicH->Shutdown();
@@ -183,18 +132,6 @@ void System::Shutdown()
 		delete this->gameSH;
 		this->gameSH = nullptr;
 	}
-
-    for (int i = 0; i < this->enemies.size(); i++)
-    {
-        Enemy* enemyTemp = this->enemies.at(i);
-        delete enemyTemp;
-    }
-    this->enemies.clear();
-	
-    if (this->AI != nullptr)
-    {
-        delete this->AI;
-    }
 
 	//Shutdown the window
 	ShutdownWindow();
@@ -314,15 +251,18 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	bool result = true;
 	this->inputH->Update();
 
-	if (this->inputH->isKeyPressed(DIK_ESCAPE)) {
+	/*if (this->inputH->isKeyPressed(DIK_ESCAPE)) {
 		return false;
-	}
+	}*/
 
 	this->gameSH->HandleInput(this->inputH);
-	
-	this->gameSH->Update(dTime);
+
+	int runGame = this->gameSH->Update(dTime);
+	if (runGame < 1)
+		result = false;
 
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
@@ -333,34 +273,13 @@ bool System::Update(float dTime)
     this->testRot = 3.14;
 
     DirectX::XMFLOAT3 cameraPos = DirectX::XMFLOAT3(this->cameraH->GetCameraPos().x, this->cameraH->GetCameraPos().y, this->cameraH->GetCameraPos().z);
-    //sends the enemies vector to the AI for updating cameraPos is the temporary pos that the enemies will go to
-    this->AI->updateActors(this->enemies, cameraPos);
-
-
-
-    DirectX::XMMATRIX worldMatrix;
-	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-	this->testModelGround->SetWorldMatrix(worldMatrix);
+    
 
 	//Clear the render target views
 	this->graphicH->ClearRTVs();
 
 	//Set deferred render targets
 	this->graphicH->SetDeferredRTVs();
-
-	//Render models
-    //renders all the actors in the enemies vector
-    for (int i = 0; i < this->enemies.size(); i++)
-    {
-        XMFLOAT3 pos = this->enemies.at(i)->getPosition();
-        DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-        this->testModel->SetWorldMatrix(worldMatrix);
-
-        this->graphicH->DeferredRender(this->enemies.at(i)->getModel(), this->cameraH);
-    }
-	//this->graphicH->DeferredRender(this->testModel, this->cameraH);
-	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
-
 	
 	//Render models
 	this->gameSH->Render(this->graphicH, hwnd);
@@ -387,7 +306,7 @@ bool System::Update(float dTime)
 
 	this->graphicH->PresentScene();
 
-	return true;
+	return result;
 }
 
 LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)

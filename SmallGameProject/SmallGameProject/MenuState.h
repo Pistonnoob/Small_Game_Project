@@ -2,6 +2,14 @@
 #define MENUSTATE_H
 #include "GameState.h"
 #include "Model.h"
+#include "StageState.h"
+
+enum MenuOption {
+	START_GAME,
+	OPTIONS,
+	END_GAME
+};
+
 static const int OPTION_COUNT = 3;
 class MenuState :
 	public GameState
