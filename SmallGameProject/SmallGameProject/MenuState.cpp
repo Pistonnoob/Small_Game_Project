@@ -93,7 +93,7 @@ int MenuState::HandleInput(InputHandler * input)
 
 int MenuState::Update(float deltaTime)
 {
-	int result = 0;
+	int result = 1;
 
 	if (doOption)
 	{

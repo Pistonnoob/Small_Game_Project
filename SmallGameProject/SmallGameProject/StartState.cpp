@@ -59,7 +59,7 @@ int StartState::HandleInput(InputHandler * input)
 
 int StartState::Update(float deltaTime)
 {
-	int result = 0;
+	int result = 1;
 	if (this->startGame)
 	{
 		this->startGame = false;
