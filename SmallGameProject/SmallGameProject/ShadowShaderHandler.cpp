@@ -80,9 +80,9 @@ void ShadowShaderHandler::SetRenderTarget(ID3D11DeviceContext * gDeviceContext)
 	Set null render target because we are only going to draw to depth buffer. 
 	Setting a null render target will disable color writes
 	*/
-	ID3D11RenderTargetView* nullTarget[1] = { nullptr };
+	//ID3D11RenderTargetView* nullTarget[1] = { nullptr };
 
-	gDeviceContext->OMSetRenderTargets(0, NULL, this->mDepthMapDSV);
+	gDeviceContext->OMSetRenderTargets(0, nullptr, this->mDepthMapDSV);
 	
 }
 

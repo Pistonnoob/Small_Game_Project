@@ -6,6 +6,7 @@ Texture2D worldPosTexture: register(t4);
 Texture2D shadowMapTexture: register(t5);
 
 SamplerState pointSampler : register(s0);
+SamplerState shadowSampler : register(s1);
 
 cbuffer LightConstantBuffer
 {
@@ -23,15 +24,14 @@ struct PSInput
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
-	float4 posLightH : TEXCOORD1;
 };
 
 float4 main(PSInput input) : SV_TARGET
 {
-	float depthValue;
 	float4 diffColor;
 	float4 ambientColor;
 	float4 specColor;
+
 	float4 normal;
 	float4 worldPos;
 	float4 outputColor;
@@ -40,11 +40,14 @@ float4 main(PSInput input) : SV_TARGET
 	float4 positionLight;
 	float lightDepthValue;
 	float lightIntensity = 0.0f;
+	float shadowCoeff = 1;
+
+	float depthValue = 0;
+
+	//float4 lightPos = (10.0f, 10.0f, 0.0f, 1.0f);
 
 	// Set the bias value for fixing the floating point precision issues.
 	float bias = 0.00005f;
-
-	input.posLightH.xy /= input.posLightH; // now in NDC
 
 	//Sample the diffuse texture from deferred render
 	diffColor = diffTexture.Sample(pointSampler, textCoords);
@@ -60,10 +63,6 @@ float4 main(PSInput input) : SV_TARGET
 	
 	//Sample the texture with positions in world space from deferred render
 	worldPos = worldPosTexture.Sample(pointSampler, textCoords);
-
-	//compute pixel depth for shadowing
-	float depth = input.posLightH.z / input.posLightH.w;
-	float test = shadowMapTexture.Sample(pointSampler, textCoords).r;
 
 	//Move the position to projection space for the light
 	positionLight = mul(worldPos, lightViewMatrix);
@@ -92,35 +91,33 @@ float4 main(PSInput input) : SV_TARGET
 
 	//calculate the projected texture coordinate
 	shadowUV.x = (positionLight.x / positionLight.w) * 0.5f + 0.5f;
-	shadowUV.y = (-positionLight.y / positionLight.w) * 0.5f + 0.5f;
+	shadowUV.y = (positionLight.y / positionLight.w) * -0.5f + 0.5f;
+
 
 	//If point outside shadowMap
 	if (saturate(shadowUV.x) != shadowUV.x || saturate(shadowUV.y) != shadowUV.y)
 	{
 		lightIntensity = saturate(dot(normal.xyz, outVec.xyz));
 	}
-
-	//calculate the depth of the light
-	lightDepthValue = positionLight.z / positionLight.w;
-
-	//sample the shadowmap
-	depthValue = shadowMapTexture.Sample(pointSampler, shadowUV).r;
-
-	// Subtract the bias from the lightDepthValue.
-	lightDepthValue = lightDepthValue - bias;
-
-	if (lightDepthValue < depthValue)
+	else
 	{
-		lightIntensity = saturate(dot(normal.xyz, outVec.xyz));
+		//calculate the depth of the light
+		lightDepthValue = positionLight.z / positionLight.w;
+
+		//sample the shadowmap
+		depthValue = shadowMapTexture.Sample(pointSampler, shadowUV).r;
+
+		// Subtract the bias from the lightDepthValue.
+		lightDepthValue = lightDepthValue - bias;
+		lightIntensity = 0;
+		//shit is in shadow
+		if (lightDepthValue < depthValue)
+		{
+			lightIntensity = saturate(dot(normal.xyz, outVec.xyz));
+		}	
+
 	}
-
-	//Combine everything for the output color
-	outputColor = saturate(((diffColor.rgba + specular.rgba) * lightIntensity * 0.8f) + ((ambientColor.rgba) * 0.2f));
-
-	//return float4(input.tex.x, input.tex.y, 0.0f, 1.0f);
-	//return float4(input.position.x / 800, input.position.y / 600, 0.0f, 1.0f);
-	//return outputColor;
-	//test *= 1000;
+	outputColor = saturate(((diffColor.rgba + specular.rgba) * lightIntensity * 0.8f) + (ambientColor.rgba) * 0.2f);
 
 	return outputColor;
 }

@@ -34,6 +34,8 @@ protected:
 	DirectX::XMMATRIX lightPerspective;
 	DirectX::XMMATRIX lightView;
 
+	DirectX::XMFLOAT4 lightPos;
+
 public:
 	GraphicHandler();
 	virtual ~GraphicHandler();

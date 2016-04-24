@@ -42,7 +42,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	if (!this->lightShaderH) {
 		return false;
 	}
-	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount());
+	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount() + 1);
 	if (!result) {
 		return false;
 	}
@@ -91,6 +91,8 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
 	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(10.0f, 10.0f, 0.0f, 1.0f);
 	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+
+	this->lightPos = DirectX::XMFLOAT4(10.0f, 10.0f, 0.0f, 1.0f);
 
 	this->lightView= DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
 	this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
@@ -146,6 +148,8 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 
 	shaderParams->lightViewMatrix = this->lightView;
 	shaderParams->lightProjectionMatrix = this->lightPerspective;
+	
+	shaderParams->lightPos = this->lightPos;
 
 	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
 	shaderParams->shadowTexture = this->shadowShaderH->getShadowMapSRW();

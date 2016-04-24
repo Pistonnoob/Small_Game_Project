@@ -7,6 +7,7 @@ LightShaderHandler::LightShaderHandler()
 	this->layout = nullptr;
 	this->matrixBuffer = nullptr;
 	this->samplerState = nullptr;
+	this->shadowSamplerState = nullptr;
 }
 
 LightShaderHandler::~LightShaderHandler()
@@ -139,6 +140,28 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 
 	//Create the texture sampler state
 	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
+	if (FAILED(hresult))
+	{
+		MessageBox(*hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
+		return false;
+	}
+
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
+
 	if (FAILED(hresult))
 	{
 		MessageBox(*hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
@@ -319,6 +342,7 @@ void LightShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int in
 	deviceContext->PSSetShader(this->pixelShader, NULL, 0);
 	//Set the sampler state in pixel shader
 	deviceContext->PSSetSamplers(0, 1, &this->samplerState);
+	deviceContext->PSSetSamplers(1, 1, &this->shadowSamplerState);
 
 	//Render the triangle
 	deviceContext->DrawIndexed(indexCount, 0, 0);
