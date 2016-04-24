@@ -251,15 +251,18 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	bool result = true;
 	this->inputH->Update();
 
-	if (this->inputH->isKeyPressed(DIK_ESCAPE)) {
+	/*if (this->inputH->isKeyPressed(DIK_ESCAPE)) {
 		return false;
-	}
+	}*/
 
 	this->gameSH->HandleInput(this->inputH);
-	
-	this->gameSH->Update(dTime);
+
+	int runGame = this->gameSH->Update(dTime);
+	if (runGame < 1)
+		result = false;
 
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
@@ -303,7 +306,7 @@ bool System::Update(float dTime)
 
 	this->graphicH->PresentScene();
 
-	return true;
+	return result;
 }
 
 LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
