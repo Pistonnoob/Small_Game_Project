@@ -13,7 +13,7 @@ private:
 	Model m_model;
 	Texture myTextures;
 
-	CameraHandler camera;
+	CameraHandler myCamera;
 
 public:
 	MenuState();
