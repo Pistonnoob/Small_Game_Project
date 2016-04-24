@@ -8,19 +8,43 @@ StageState::StageState()
 	this->myCamera = CameraHandler();
 
 	this->testModel = nullptr;
-	this->entity = nullptr;
 	this->AI = nullptr;
 }
 
 
 StageState::~StageState()
 {
-	GameState::Shutdown();
-	this->m_model.Shutdown();
 }
 
 void StageState::Shutdown()
 {
+	//Release the models
+	if (this->testModel) {
+		this->testModel->Shutdown();
+		delete this->testModel;
+		this->testModel = nullptr;
+	}
+	if (this->testModelGround) {
+		this->testModelGround->Shutdown();
+		delete this->testModelGround;
+		this->testModelGround = nullptr;
+	}
+
+	//Release the enemies
+	for (int i = 0; i < this->enemies.size(); i++)
+	{
+		Enemy* enemyTemp = this->enemies.at(i);
+		delete enemyTemp;
+	}
+	this->enemies.clear();
+	//Release your AI
+	if (this->AI != nullptr)
+	{
+		delete this->AI;
+	}
+
+	GameState::Shutdown();
+	this->m_model.Shutdown();
 }
 
 int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
@@ -44,11 +68,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//Form thy armies from the clay!
 		this->testModel = new Model;
-
 		result = this->testModel->Initialize(device, this->m_deviceContext, "carSLS3");
 		if (!result) {
 			return false;
 		}
+		//Colour thy armies in the name of the racist overlord Axel!
 		this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 		//Arm thy armies!
@@ -68,6 +92,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
 		
+
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
 		this->testModelGround = new Model;
