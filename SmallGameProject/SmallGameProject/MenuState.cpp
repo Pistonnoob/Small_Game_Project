@@ -1,4 +1,5 @@
 #include "MenuState.h"
+#include "GameStateHandler.h"
 
 
 
@@ -56,7 +57,10 @@ int MenuState::HandleInput(InputHandler * input)
 {
 	int result = 1;
 	int oldSelected = this->selected;
-
+	if (input->isKeyPressed(DIK_SPACE) || input->isKeyPressed(DIK_RETURN))
+	{
+		this->doOption = true;
+	}
 	if (input->isKeyPressed(DIK_DOWNARROW))
 	{
 		this->selected++;
@@ -93,14 +97,25 @@ int MenuState::Update(float deltaTime)
 
 	if (doOption)
 	{
+		this->doOption = false;
 		switch (this->selected)
 		{
 		case MenuOption::START_GAME:
-			break;
+		{
+			//Create a stage state and push it to the stack
+			StageState* newStage = new StageState();
+			newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
+			newStage->SetManualClearing(false);
+			this->m_GSH->PushState(newStage);
+		}
+		break;
 		case MenuOption::OPTIONS:
 			break;
 		case MenuOption::END_GAME:
+		{
+			result = 0;
 			break;
+		}
 		default:
 			break;
 		}
