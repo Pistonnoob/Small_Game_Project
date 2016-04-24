@@ -195,6 +195,9 @@
     <ClCompile Include="BoxBoundingVolume.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -340,6 +343,9 @@
     </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>Header Files\Observers</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
