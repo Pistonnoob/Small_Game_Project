@@ -103,6 +103,10 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		}
 		this->testModelGround->SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
+		DirectX::XMMATRIX worldMatrix;
+		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
+		this->testModelGround->SetWorldMatrix(worldMatrix);
+
 
 	}
 
@@ -119,11 +123,32 @@ int StageState::HandleInput(InputHandler * input)
 int StageState::Update(float deltaTime)
 {
 	int result = 0;
+
+	//sends the enemies vector to the AI for updating cameraPos is the temporary pos that the enemies will go to
+	this->AI->updateActors(this->enemies, DirectX::XMFLOAT3(0, 0, -20));
+
+
+
 	return result;
 }
 
 int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
+
+	//Render models
+	//renders all the actors in the enemies vector
+	for (int i = 0; i < this->enemies.size(); i++)
+	{
+		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		this->testModel->SetWorldMatrix(worldMatrix);
+
+		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
+	}
+	//this->graphicH->DeferredRender(this->testModel, this->cameraH);
+	gHandler->DeferredRender(this->testModelGround, &this->myCamera);
+
+
 	return result;
 }

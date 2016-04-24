@@ -270,34 +270,13 @@ bool System::Update(float dTime)
     this->testRot = 3.14;
 
     DirectX::XMFLOAT3 cameraPos = DirectX::XMFLOAT3(this->cameraH->GetCameraPos().x, this->cameraH->GetCameraPos().y, this->cameraH->GetCameraPos().z);
-    //sends the enemies vector to the AI for updating cameraPos is the temporary pos that the enemies will go to
-    this->AI->updateActors(this->enemies, cameraPos);
-
-
-
-    DirectX::XMMATRIX worldMatrix;
-	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-	this->testModelGround->SetWorldMatrix(worldMatrix);
+    
 
 	//Clear the render target views
 	this->graphicH->ClearRTVs();
 
 	//Set deferred render targets
 	this->graphicH->SetDeferredRTVs();
-
-	//Render models
-    //renders all the actors in the enemies vector
-    for (int i = 0; i < this->enemies.size(); i++)
-    {
-        XMFLOAT3 pos = this->enemies.at(i)->getPosition();
-        DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-        this->testModel->SetWorldMatrix(worldMatrix);
-
-        this->graphicH->DeferredRender(this->enemies.at(i)->getModel(), this->cameraH);
-    }
-	//this->graphicH->DeferredRender(this->testModel, this->cameraH);
-	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
-
 	
 	//Render models
 	this->gameSH->Render(this->graphicH, hwnd);
