@@ -61,8 +61,8 @@ void Entity::Shutdown(bool isEnemy)
 
 	if (this->entityBV) {
 		delete this->entityBV;
-		this->entityBV = nullptr;
 	}
+	this->entityBV = nullptr;
 
 }
 

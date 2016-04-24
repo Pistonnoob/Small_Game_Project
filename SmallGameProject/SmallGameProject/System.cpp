@@ -172,6 +172,7 @@ void System::Shutdown()
         Enemy* enemyTemp = this->enemies.at(i);
 		enemyTemp->Shutdown();
         delete enemyTemp;
+		enemyTemp = nullptr;
     }
     this->enemies.clear();
 	
