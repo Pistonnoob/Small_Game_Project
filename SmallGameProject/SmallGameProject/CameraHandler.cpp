@@ -142,5 +142,5 @@ void CameraHandler::UpdateCamera()
 	DirectX::XMVECTOR lookAt = DirectX::XMVector3TransformCoord(this->lookAt, camRotationMatrix);
 	DirectX::XMVECTOR camUp = DirectX::XMVector3TransformCoord(this->cameraUp, camRotationMatrix);
 
-	this->viewMatrix = DirectX::XMMatrixLookAtLH(this->cameraPos, this->lookAt, this->cameraUp);
+	this->viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
 }
