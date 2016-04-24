@@ -95,11 +95,11 @@ int MenuState::Update(float deltaTime)
 	{
 		switch (this->selected)
 		{
-		case 0:
+		case MenuOption::START_GAME:
 			break;
-		case 1:
+		case MenuOption::OPTIONS:
 			break;
-		case 2:
+		case MenuOption::END_GAME:
 			break;
 		default:
 			break;
