@@ -12,13 +12,13 @@ Entity::Entity(Model* model, bool isSphere)
 
 	if (isSphere) {	//For spheres
 		this->entityBV = new SphereBoundingVolume();
-		this->entityBV->generateBounds(model);
+		this->entityBV->GenerateBounds(model);
 	
 	}
 	else {			//For OOBBs
 		
-		/*this->entityBV = new OOBBBoundingVolume();
-		this->entityBV->generateBounds(model);*/
+		this->entityBV = new BoxBoundingVolume();
+		this->entityBV->GenerateBounds(model);
 	}
 
 	this->entitySubject = EntitySubject();
@@ -46,6 +46,7 @@ DirectX::XMFLOAT3 Entity::getPosition()
 
 Entity::~Entity()
 {
-	delete this->entityModel;
+	//delete this->entityModel;
+    this->entityModel = nullptr;
 	delete this->entityBV;
 }

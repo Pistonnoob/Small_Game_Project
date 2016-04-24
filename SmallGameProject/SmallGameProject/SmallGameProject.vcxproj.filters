@@ -189,6 +189,12 @@
     <ClCompile Include="FontShaderHandler.cpp">
       <Filter>Source Files\ShaderHandlers</Filter>
     </ClCompile>
+    <ClCompile Include="BoxBoundingVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StageState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -326,8 +332,14 @@
     <ClInclude Include="FontShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
+    <ClInclude Include="BoxBoundingVolume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>Header Files\Observers</Filter>
+    </ClInclude>
+    <ClInclude Include="StageState.h">
+      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
