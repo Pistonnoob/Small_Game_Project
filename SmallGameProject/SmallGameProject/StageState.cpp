@@ -6,8 +6,9 @@ StageState::StageState()
 {
 	this->myCamera = CameraHandler();
 
-	this->testModel = nullptr;
-	this->AI = nullptr;
+	this->m_car = Model();
+	this->m_ground = Model();
+	this->m_AI = Ai();
 }
 
 
@@ -18,16 +19,9 @@ StageState::~StageState()
 void StageState::Shutdown()
 {
 	//Release the models
-	if (this->testModel) {
-		this->testModel->Shutdown();
-		delete this->testModel;
-		this->testModel = nullptr;
-	}
-	if (this->testModelGround) {
-		this->testModelGround->Shutdown();
-		delete this->testModelGround;
-		this->testModelGround = nullptr;
-	}
+	this->m_car.Shutdown();
+
+	this->m_ground.Shutdown();
 
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
@@ -36,11 +30,8 @@ void StageState::Shutdown()
 		delete enemyTemp;
 	}
 	this->enemies.clear();
-	//Release your AI
-	if (this->AI != nullptr)
-	{
-		delete this->AI;
-	}
+
+	//Release your m_AI
 
 	GameState::Shutdown();
 }
@@ -54,56 +45,56 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 	if (result)
 	{
 		//Open thy eyes!
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0, 0, -20));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 3.0f, -20.0f));
 		bool cameraResult = this->myCamera.Initialize();
 		if (cameraResult)
 			result = 1;
 
 
 		//Army thy mind with the knowledge that will lead thy armies to battle!
-		this->AI = new Ai();
+		this->m_AI = Ai();
 
 
 		//Form thy armies from the clay!
-		this->testModel = new Model;
-		result = this->testModel->Initialize(device, this->m_deviceContext, "carSLS3");
-		if (!result) {
+		this->m_car = Model();
+		bool modelResult = this->m_car.Initialize(device, this->m_deviceContext, "carSLS3");
+		if (!modelResult) {
 			return false;
 		}
 		//Colour thy armies in the name of the racist overlord Axel!
-		this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 		//Arm thy armies!
 		//creates the enemies must call setModel function to give enemies models
 		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
 
 		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
 
 		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
 
 		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
 
 		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
 		
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
-		this->testModelGround = new Model;
+		this->m_ground = Model();
 
-		result = this->testModelGround->Initialize(device, deviceContext, "ground");
+		result = this->m_ground.Initialize(device, deviceContext, "ground");
 		if (!result) {
 			return false;
 		}
-		this->testModelGround->SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+		this->m_ground.SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 		DirectX::XMMATRIX worldMatrix;
-		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-		this->testModelGround->SetWorldMatrix(worldMatrix);
+		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+		this->m_ground.SetWorldMatrix(worldMatrix);
 
 
 	}
@@ -122,8 +113,8 @@ int StageState::Update(float deltaTime)
 {
 	int result = 0;
 
-	//sends the enemies vector to the AI for updating cameraPos is the temporary pos that the enemies will go to
-	this->AI->updateActors(this->enemies, DirectX::XMFLOAT3(0, 0, -20));
+	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0, 0.0f, -20.0f));
 
 
 
@@ -140,12 +131,12 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	{
 		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->testModel->SetWorldMatrix(worldMatrix);
+		this->m_car.SetWorldMatrix(worldMatrix);
 
 		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	}
-	//this->graphicH->DeferredRender(this->testModel, this->cameraH);
-	gHandler->DeferredRender(this->testModelGround, &this->myCamera);
+	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
+	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
 
 	return result;

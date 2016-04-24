@@ -9,10 +9,10 @@ class StageState :
 private:	//Variables
 	CameraHandler myCamera;
 	
-	Model* testModel;
-	Model* testModelGround;
+	Model m_car;
+	Model m_ground;
 
-	Ai* AI;
+	Ai m_AI;
 	vector<Enemy*> enemies;
 
 public:
