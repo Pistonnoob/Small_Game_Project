@@ -42,6 +42,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->AI = new Ai();
 
 
+		//Form thy armies from the clay!
 		this->testModel = new Model;
 
 		result = this->testModel->Initialize(device, this->m_deviceContext, "carSLS3");
@@ -51,7 +52,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 		//Arm thy armies!
-
 		//creates the enemies must call setModel function to give enemies models
 		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
@@ -67,11 +67,12 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-		//
-
+		
+		//Place the ground beneeth your feet and thank the gods for their
+		//sanctuary from the oblivion below!
 		this->testModelGround = new Model;
 
-		result = this->testModelGround->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ground");
+		result = this->testModelGround->Initialize(device, deviceContext, "ground");
 		if (!result) {
 			return false;
 		}

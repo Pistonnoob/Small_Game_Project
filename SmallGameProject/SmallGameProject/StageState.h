@@ -14,7 +14,6 @@ private:	//Variables
 	Model* testModelGround;
 
 	Ai* AI;
-	Enemy* entity;
 	vector<Enemy*> enemies;
 
 public:
