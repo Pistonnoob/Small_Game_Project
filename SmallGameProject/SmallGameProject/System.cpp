@@ -6,10 +6,6 @@ System::System()
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
 	this->cameraH = nullptr;
-	this->testModel = nullptr;
-
-    this->entity = nullptr;
-    this->AI = nullptr;
 }
 
 System::~System()
@@ -56,41 +52,6 @@ bool System::Initialize()
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
 
 	
-	this->testModel = new Model;
-
-	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "carSLS3");
-	if (!result) {
-		return false;
-	}
-	this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-
-    //creates the AI that will update the enemies
-    this->AI = new Ai();
-
-    //creates the enemies must call setModel function to give enemies models
-    this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-
-    this->enemies.push_back(new MeleeEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
-    //
-
-	this->testModelGround = new Model;
-
-	result = this->testModelGround->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ground");
-	if (!result) {
-		return false;
-	}
-	this->testModelGround->SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 	this->testRot = 0;
 

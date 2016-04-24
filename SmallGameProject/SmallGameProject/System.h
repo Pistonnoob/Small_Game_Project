@@ -8,8 +8,6 @@
 #include "Model.h"
 #include "CameraHandler.h"
 
-#include "Ai.h"
-
 const bool FULL_SCREEN = false;
 
 class System {
@@ -28,12 +26,6 @@ private:
 	void ShutdownWindow();
 	bool Update(float dTime);
 
-	Model* testModel;
-	Model* testModelGround;
-
-    Ai* AI;
-    Enemy* entity;
-    vector<Enemy*> enemies;
 
 	float testRot;
 public:
