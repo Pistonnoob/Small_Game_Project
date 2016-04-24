@@ -196,7 +196,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StageState.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -345,7 +345,7 @@
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
     <ClInclude Include="StageState.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
