@@ -8,6 +8,19 @@ Enemy::Enemy()
 Enemy::~Enemy()
 {
 }
+bool Enemy::Initialize(Model* model, bool isSphere)
+{
+	if (!Entity::Initialize(model, isSphere)) {
+		return false;
+	}
+
+	return true;
+}
+void Enemy::Shutdown()
+{
+	Entity::Shutdown();
+}
+
 void Enemy::moveRight()
 {
     this->posX += 0.05f;

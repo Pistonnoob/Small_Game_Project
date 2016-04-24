@@ -2,6 +2,8 @@
 #define GAMEDATA_H
 
 #include "Observer.h"
+#include <string>
+#include <fstream>
 
 class GameData : public Observer {
 
@@ -26,6 +28,9 @@ public:
 	virtual ~GameData();
 	static GameData* getInstance();
 	void onNotify(const Entity* entity, Events::ENTITY evnt);
+
+	bool SavePlayerData(std::string filename);
+	bool LoadPlayerData(std::string filename);
 
 };
 

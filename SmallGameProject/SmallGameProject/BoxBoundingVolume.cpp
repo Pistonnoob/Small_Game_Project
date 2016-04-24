@@ -131,6 +131,7 @@ void BoxBoundingVolume::GenerateBounds(Model * model)
 	this->vertices[5] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, 0, minVert.z));
 	this->vertices[6] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(maxVert.x, 0, minVert.z));
 	this->vertices[7] = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(minVert.x, 0, maxVert.z));
+
 }
 
 bool BoxBoundingVolume::Intersect(BoundingVolume * otherBoundingVolume)

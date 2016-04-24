@@ -36,3 +36,49 @@ void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
 	//}
 	return;
 }
+
+bool GameData::SavePlayerData(std::string filename)
+{
+	std::ofstream saveFile;
+	std::string path = "..\\SmallGameProject\\Resources\\PlayerSaves\\" + filename + ".txt";
+	saveFile.open(path);
+
+	if (!saveFile.is_open()) {
+		return false;
+	}
+	else {
+		saveFile << this->playerHighScore << "\r\n";
+		saveFile << this->playerHealth << "\r\n";
+		saveFile << this->playerMovmentSpeed << "\r\n";
+		saveFile << this->playerDamage << "\r\n";
+		saveFile << this->enemiesKilled << "\r\n";
+
+		saveFile.close();
+	}
+	
+	return true;
+}
+
+bool GameData::LoadPlayerData(std::string filename)
+{
+	std::ifstream loadFile;
+	std::string path = "..\\SmallGameProject\\Resources\\PlayerSaves\\" + filename + ".txt";
+	loadFile.open(path);
+
+	if (!loadFile.is_open()) {
+		return false;
+	}
+	else {
+
+		loadFile >> this->playerHighScore;
+		loadFile >> this->playerHealth;
+		loadFile >> this->playerMovmentSpeed;
+		loadFile >> this->playerDamage;
+		loadFile >> this->enemiesKilled;
+
+		loadFile.close();
+	}
+
+	return true;
+}
+

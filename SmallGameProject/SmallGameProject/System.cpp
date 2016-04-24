@@ -69,19 +69,19 @@ bool System::Initialize()
 
     //creates the enemies must call setModel function to give enemies models
     this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+    this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
 
     this->enemies.push_back(new BomberEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
 
     this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
 
     this->enemies.push_back(new RangedEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
 
     this->enemies.push_back(new MeleeEnemy(0.0f,0.0f));
-    this->enemies.at(this->enemies.size() - 1)->setModel(this->testModel);
+	this->enemies.at(this->enemies.size() - 1)->Initialize(testModel, true);
     //
 
 	this->testModelGround = new Model;

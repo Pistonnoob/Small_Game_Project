@@ -1,32 +1,69 @@
 #include "Entity.h"
 
-Entity::Entity(Model* model) {
-	this->entityModel = model;
+Entity::Entity() {
+	this->entityModel = new Model();
 	this->entityBV = nullptr;
 	this->entitySubject = EntitySubject();
 }
 
-Entity::Entity(Model* model, bool isSphere)
+Entity::~Entity()
+{
+
+}
+
+bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename, bool isSphere)
+{
+	//If we fail to initialize the model
+	if (!this->entityModel->Initialize(device, deviceContext, objFilename))
+	{
+		return false;
+	}
+	
+	//Generate the Bounding volume
+	if (isSphere) {
+		this->entityBV = new SphereBoundingVolume();
+		this->entityBV->GenerateBounds(this->entityModel);
+	}
+	else {
+		this->entityBV = new BoxBoundingVolume();
+		this->entityBV->GenerateBounds(this->entityModel);
+	}
+
+
+	return true;
+}
+
+bool Entity::Initialize(Model * model, bool isSphere)
 {
 	this->entityModel = model;
 
-	if (isSphere) {	//For spheres
+	//Generate the Bounding volume
+	if (isSphere) {
 		this->entityBV = new SphereBoundingVolume();
-		this->entityBV->GenerateBounds(model);
-	
+		this->entityBV->GenerateBounds(this->entityModel);
 	}
-	else {			//For OOBBs
-		
+	else {
 		this->entityBV = new BoxBoundingVolume();
-		this->entityBV->GenerateBounds(model);
+		this->entityBV->GenerateBounds(this->entityModel);
 	}
 
-	this->entitySubject = EntitySubject();
+
+	return true;
 }
 
-void Entity::setModel(Model * model)
+void Entity::Shutdown()
 {
-    this->entityModel = model;
+	if (this->entityModel) {
+		this->entityModel->Shutdown();
+		delete this->entityModel;
+		this->entityModel = nullptr;
+	}
+
+	if (this->entityBV) {
+		delete this->entityBV;
+		this->entityBV = nullptr;
+	}
+
 }
 
 Model * Entity::getModel()
@@ -44,9 +81,5 @@ DirectX::XMFLOAT3 Entity::getPosition()
 }
 
 
-Entity::~Entity()
-{
-	//delete this->entityModel;
-    this->entityModel = nullptr;
-	delete this->entityBV;
-}
+
+

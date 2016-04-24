@@ -83,6 +83,7 @@ void SphereBoundingVolume::GenerateBounds(Model* model)
 
 	this->center = DirectX::XMFLOAT3(midleVert);	//Set the bounding spheres midle to the center of the modle
 	this->radius = sqrt(pow((distanceToMid.x), 2) + pow((distanceToMid.y), 2) + pow((distanceToMid.z), 2));	//Set the radius of the sphere to the distance from the midle to the minimum vertex
+
 }
 
 bool SphereBoundingVolume::Intersect(BoundingVolume* otherBoundingVolume)

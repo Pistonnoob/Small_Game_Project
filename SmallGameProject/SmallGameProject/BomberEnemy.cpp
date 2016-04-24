@@ -9,3 +9,15 @@ BomberEnemy::BomberEnemy(float posX, float posZ)
 BomberEnemy::~BomberEnemy()
 {
 }
+
+bool BomberEnemy::Initialize(Model* model, bool isSphere)
+{
+	return Entity::Initialize(model, isSphere);
+}
+
+void BomberEnemy::Shutdown()
+{
+	Enemy::Shutdown();
+}
+
+
