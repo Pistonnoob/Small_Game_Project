@@ -9,6 +9,7 @@ MenuState::MenuState()
 	this->selected = 0;
 	this->m_model = Model();
 	this->myTextures = Texture();
+	this->myCamera = CameraHandler();
 }
 
 
@@ -39,7 +40,8 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		bool victory = m_model.Initialize(device, deviceContext, "Menu");
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
 		worldMatrix *= DirectX::XMMatrixTranslation(0, -4, 0);
-		victory = this->camera.Initialize();
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0, 0, -19));
+		victory = this->myCamera.Initialize();
 		this->m_model.SetWorldMatrix(worldMatrix);
 
 		//Now initialize thy shields (texture views of changing nature!)
@@ -110,6 +112,6 @@ int MenuState::Update(float deltaTime)
 int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
-	gHandler->DeferredRender(&this->m_model, &this->camera);
+	gHandler->DeferredRender(&this->m_model, &this->myCamera);
 	return result;
 }
