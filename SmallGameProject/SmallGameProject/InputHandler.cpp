@@ -9,6 +9,11 @@ InputHandler::InputHandler()
 	this->screenWidth = 0;
 	this->screenWidth = 0;
 	this->lastKeyPressed = -1;
+
+	for (int i = 0; i < 256; i++) {
+		this->KeyboarState[i] = this->OldKeyboardState[i] = false;
+	}
+
 }
 
 InputHandler::~InputHandler()
@@ -58,7 +63,7 @@ void InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, i
 
 		hr = this->DIKeyboard->SetCooperativeLevel(
 			hwnd,
-			DISCL_NONEXCLUSIVE | DISCL_NOWINKEY | DISCL_FOREGROUND
+			DISCL_NONEXCLUSIVE | DISCL_FOREGROUND
 			);
 
 		if (FAILED(hr)) {
@@ -136,12 +141,10 @@ void InputHandler::Shutdown()
 
 void InputHandler::Update()
 {
-	//Copy the old data
-	for (int i = 0; i < 256; i++) {
-		this->OldKeyboardState[i] = this->KeyboarState[i];
-	}
+
 	//Check if we can read the devices. 
 	//If we cant, the old data will be used
+	
 	this->ReadKeyboard();
 	this->ReadMouse();
 
@@ -152,17 +155,20 @@ void InputHandler::Update()
 void InputHandler::ReadKeyboard()
 {
 	HRESULT hr;
-
+	//Copy the old data
+	for (int i = 0; i < 256; i++) {
+		this->OldKeyboardState[i] = this->KeyboarState[i];
+	}
 	//Read the keyboard device
-	hr = this->DIMouse->GetDeviceState(
+	hr = this->DIKeyboard->GetDeviceState(
 		sizeof(this->KeyboarState),
-		&this->KeyboarState);
+		(LPVOID)&this->KeyboarState);
 
 	if (FAILED(hr)) {
 
 		//If the keyboard lost focus or was not acquired, try to get control back
 		if (hr == DIERR_INPUTLOST || hr == DIERR_NOTACQUIRED) {
-			this->DIMouse->Acquire();
+			this->DIKeyboard->Acquire();
 		}
 
 	}
@@ -234,7 +240,7 @@ void InputHandler::KeyUp(unsigned int key)
 	return;
 }
 
-bool InputHandler::isKeyPressed(unsigned int key)
+bool InputHandler::isKeyDown(unsigned int key)
 {
 	if (this->KeyboarState[key]) {
 		return true;
@@ -243,7 +249,7 @@ bool InputHandler::isKeyPressed(unsigned int key)
 	return false;
 }
 
-bool InputHandler::isKeyDown(unsigned int key)
+bool InputHandler::isKeyPressed(unsigned int key)
 {
 	if (!this->OldKeyboardState[key] && this->KeyboarState[key]) {
 		return true;
