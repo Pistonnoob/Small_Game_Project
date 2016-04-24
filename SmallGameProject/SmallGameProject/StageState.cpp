@@ -4,7 +4,6 @@
 
 StageState::StageState()
 {
-	this->m_model = Model();
 	this->myCamera = CameraHandler();
 
 	this->testModel = nullptr;
@@ -44,7 +43,6 @@ void StageState::Shutdown()
 	}
 
 	GameState::Shutdown();
-	this->m_model.Shutdown();
 }
 
 int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)

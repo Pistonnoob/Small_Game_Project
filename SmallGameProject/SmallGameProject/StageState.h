@@ -7,7 +7,6 @@ class StageState :
 	public GameState
 {
 private:	//Variables
-	Model m_model;
 	CameraHandler myCamera;
 	
 	Model* testModel;
