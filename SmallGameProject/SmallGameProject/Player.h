@@ -6,6 +6,10 @@
 class Player : public Actor {
 
 private:
+	int playerHealth;
+	int playerMovmentSpeed;
+	int playerDamage;
+	int playerHighScore;
 
 public:
 	Player();
