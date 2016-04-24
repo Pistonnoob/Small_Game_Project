@@ -15,6 +15,8 @@ private:	//Variables
 	Ai m_AI;
 	vector<Enemy*> enemies;
 
+	bool exitStage;
+
 public:
 	StageState();
 	virtual ~StageState();

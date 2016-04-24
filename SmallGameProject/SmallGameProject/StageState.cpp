@@ -1,4 +1,5 @@
 #include "StageState.h"
+#include "GameStateHandler.h"
 
 
 
@@ -9,6 +10,8 @@ StageState::StageState()
 	this->m_car = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
+
+	this->exitStage = false;
 }
 
 
@@ -39,6 +42,7 @@ void StageState::Shutdown()
 int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
 {
 	int result = 0;
+	this->exitStage = false;
 
 	//Arm thy father
 	result = this->InitializeBase(GSH, device, deviceContext);
@@ -105,7 +109,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 int StageState::HandleInput(InputHandler * input)
 {
-	int result = 0;
+	int result = 1;
+
+	if (input->isKeyPressed(DIK_ESCAPE))
+		this->exitStage = true;
+
 	return result;
 }
 
@@ -116,6 +124,18 @@ int StageState::Update(float deltaTime)
 	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0, 0.0f, -20.0f));
 
+	if (this->exitStage)
+	{
+		this->exitStage = false;
+		//Pop ourself
+		GameState* state = this->m_GSH->PopState();
+		//We do not care about the returned state but check if return
+		if (state)
+		{
+			//The state wasn't a nullptr, meaning it didn't have automatic clearing on
+			//Something went somewhat wrong here eh?
+		}
+	}
 
 
 	return result;
