@@ -15,6 +15,6 @@ void ParticleHandler::Shutdown()
 {
 }
 
-void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
+void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY event)
 {
 }

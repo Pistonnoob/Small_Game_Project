@@ -207,6 +207,9 @@
     <ClCompile Include="ParticleHandler.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -357,6 +360,9 @@
       <Filter>Header Files\Libraries</Filter>
     </ClInclude>
     <ClInclude Include="ParticleHandler.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
   </ItemGroup>

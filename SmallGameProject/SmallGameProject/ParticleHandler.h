@@ -13,7 +13,7 @@ public:
 	void Shutdown();
 
 
-	virtual void OnNotify(const Entity* entity, Events::ENTITY evnt);
+	virtual void OnNotify(const Entity* entity, Events::ENTITY event);
 };
 
 #endif

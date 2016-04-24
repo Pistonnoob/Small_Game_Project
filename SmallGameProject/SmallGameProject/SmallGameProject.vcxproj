@@ -177,6 +177,7 @@
     <ClCompile Include="MoveRightCommand.cpp" />
     <ClCompile Include="MoveUpCommand.cpp" />
     <ClCompile Include="Observer.cpp" />
+    <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleHandler.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="MoveUpCommand.h" />
     <ClInclude Include="MyMathLib.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleHandler.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />

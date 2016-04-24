@@ -7,6 +7,8 @@ class ProjectileHandler : public Observer {
 
 private:
 
+
+	virtual void OnNotify(const Entity* entity, Events::ENTITY evnt) = 0;
 public:
 
 };
