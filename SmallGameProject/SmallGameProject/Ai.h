@@ -14,11 +14,11 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
-static int RANGED_MIN_DESIRED_DISTANCE = 100;
-static int RANGED_MAX_DESIRED_DISTANCE = 150;
+static int RANGED_MIN_DESIRED_DISTANCE = 200;
+static int RANGED_MAX_DESIRED_DISTANCE = 250;
 
-static int MELEE_MIN_DESIRED_DISTANCE = 2;
-static int MELEE_MAX_DESIRED_DISTANCE = 5;
+static int MELEE_MIN_DESIRED_DISTANCE = 11;
+static int MELEE_MAX_DESIRED_DISTANCE = 15;
 
 class Ai {
 

@@ -10,6 +10,7 @@ private:
 public:
     Actor();
     virtual~Actor();
+
     virtual void moveRight() = 0;
     virtual void moveLeft() = 0;
     virtual void moveUp() = 0;
