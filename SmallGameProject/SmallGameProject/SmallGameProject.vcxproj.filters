@@ -58,6 +58,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{a4d7dbfb-d6c6-4325-93c4-e4bb32e42cad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Libraries">
+      <UniqueIdentifier>{55a88415-2a2d-495e-b914-81eef98eb3fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,6 +198,12 @@
     <ClCompile Include="FontShaderHandler.cpp">
       <Filter>Source Files\ShaderHandlers</Filter>
     </ClCompile>
+    <ClCompile Include="BoxBoundingVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StageState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -269,9 +278,6 @@
     <ClInclude Include="Weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Observer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ProjectileHandler.h">
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
@@ -302,26 +308,23 @@
     <ClInclude Include="ScreenQuad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderStructLibrary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CameraHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SphereBoundingVolume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gameStruct.h">
+    <ClInclude Include="TestState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestState.h">
+    <ClInclude Include="MenuState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="gameStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShadowShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
-    </ClInclude>
-    <ClInclude Include="Algorithm.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\GameStates</Filter>
@@ -334,6 +337,24 @@
     </ClInclude>
     <ClInclude Include="FontShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxBoundingVolume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Header Files\Observers</Filter>
+    </ClInclude>
+    <ClInclude Include="StageState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMathLib.h">
+      <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Algorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderStructLibrary.h">
+      <Filter>Header Files\Libraries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

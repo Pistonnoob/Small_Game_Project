@@ -26,8 +26,7 @@ private:
 	void ShutdownWindow();
 	bool Update(float dTime);
 
-	Model* testModel;
-	Model* testModelGround;
+
 	float testRot;
 public:
 	System();

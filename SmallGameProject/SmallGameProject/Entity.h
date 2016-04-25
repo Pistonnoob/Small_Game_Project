@@ -7,9 +7,10 @@
 
 class Entity {
 
+protected:
+    float posX;
+    float posZ;
 private:
-	int posX;
-	int posY;
 	
 	Model* entityModel;
 	BoundingVolume* entityBV;
@@ -18,7 +19,10 @@ private:
 public:
 	Entity(Model* model);	//Entitys without BoundingVolume
 	Entity(Model* model, bool isSphere);	//Entitus with BoundingVolume, true = sphere, false = OOBB
-	~Entity();
+    void setModel(Model* model);
+    Model* getModel();
+    DirectX::XMFLOAT3 getPosition();
+	virtual~Entity();
 };
 
 #endif

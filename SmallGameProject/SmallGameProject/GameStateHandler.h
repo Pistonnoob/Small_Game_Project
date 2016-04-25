@@ -4,6 +4,7 @@
 #include "GraphicHandler.h"
 #include <d3d11.h>
 #include <vector>
+#include <stack>
 #include <Windows.h>
 
 #include "StartState.h"
@@ -11,6 +12,7 @@ class GameStateHandler {
 
 private:
 	std::vector<GameState*> m_gameStates;
+	std::stack<GameState*> m_popStates;
 public:
 	GameStateHandler();
 	~GameStateHandler();

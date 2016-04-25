@@ -6,7 +6,6 @@ System::System()
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
 	this->cameraH = nullptr;
-	this->testModel = nullptr;
 }
 
 System::~System()
@@ -28,10 +27,7 @@ bool System::Initialize()
 	//Initialize the InputHandler
 	this->inputH->Initialize(this->hinstance, this->hwnd, screenWidth, screenHeight);
 
-	//Create the GameStateHandler.
-	this->gameSH = new GameStateHandler();
-	//Initialize the GameStateHandler
-
+	
 	//Create the CameraHandler
 	this->cameraH = new CameraHandler;
 
@@ -49,25 +45,13 @@ bool System::Initialize()
 	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight, viewMatrix);
 
 	this->graphicH->CreateTextHolder(32);
+
 	//Create the GameStateHandler.
-	//this->gameSH = new GameStateHandler();
+	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
+	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
+
 	
-	this->testModel = new Model;
-
-	result = this->testModel->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "carSLS3");
-	if (!result) {
-		return false;
-	}
-	this->testModel->SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-
-	this->testModelGround = new Model;
-
-	result = this->testModelGround->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext(), "ground");
-	if (!result) {
-		return false;
-	}
-	this->testModelGround->SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 	this->testRot = 0;
 
@@ -124,17 +108,6 @@ void System::Run()
 
 void System::Shutdown()
 {
-	//Release the models
-	if (this->testModel) {
-		this->testModel->Shutdown();
-		delete this->testModel;
-		this->testModel = nullptr;
-	}
-	if (this->testModelGround) {
-		this->testModelGround->Shutdown();
-		delete this->testModelGround;
-		this->testModelGround = nullptr;
-	}
 	//Release the graphicsHandler
 	if (this->graphicH) {
 		this->graphicH->Shutdown();
@@ -159,7 +132,6 @@ void System::Shutdown()
 		delete this->gameSH;
 		this->gameSH = nullptr;
 	}
-	
 
 	//Shutdown the window
 	ShutdownWindow();
@@ -279,11 +251,18 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	bool result = true;
 	this->inputH->Update();
 
-	if (this->inputH->isKeyPressed(VK_ESCAPE)) {
+	/*if (this->inputH->isKeyPressed(DIK_ESCAPE)) {
 		return false;
-	}
+	}*/
+
+	this->gameSH->HandleInput(this->inputH);
+
+	int runGame = this->gameSH->Update(dTime);
+	if (runGame < 1)
+		result = false;
 
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
@@ -291,23 +270,20 @@ bool System::Update(float dTime)
 
 	//Update models world matrices
 	this->testRot += dTime / 1000000;
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(0.0f, -2.0f, 0.0f);
-	worldMatrix = DirectX::XMMatrixRotationY(this->testRot) * worldMatrix;
-	worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f) * worldMatrix;
-	this->testModel->SetWorldMatrix(worldMatrix);
+    this->testRot = 3.14;
 
-	worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-	this->testModelGround->SetWorldMatrix(worldMatrix);
+    DirectX::XMFLOAT3 cameraPos = DirectX::XMFLOAT3(this->cameraH->GetCameraPos().x, this->cameraH->GetCameraPos().y, this->cameraH->GetCameraPos().z);
+    
 
 	//Clear the render target views
 	this->graphicH->ClearRTVs();
 
 	//Set deferred render targets
 	this->graphicH->SetDeferredRTVs();
-
+	
 	//Render models
-	this->graphicH->DeferredRender(this->testModel, this->cameraH);
-	this->graphicH->DeferredRender(this->testModelGround, this->cameraH);
+	this->gameSH->Render(this->graphicH, hwnd);
+
 
 
 	DirectX::XMMATRIX viewMatrix;
@@ -325,6 +301,10 @@ bool System::Update(float dTime)
 
 	lightShaderParams->camPos = this->cameraH->GetCameraPos();
 	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
+
+	DirectX::XMMATRIX viewMatrix;
+	this->cameraH->GetBaseViewMatrix(viewMatrix);
+
 	lightShaderParams->viewMatrix = viewMatrix;
 
 	this->graphicH->LightRender(lightShaderParams);
@@ -335,7 +315,7 @@ bool System::Update(float dTime)
 
 	this->graphicH->PresentScene();
 
-	return true;
+	return result;
 }
 
 LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
@@ -346,7 +326,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	case WM_KEYDOWN:
 	{
 		//if key is pressed send it to the input object to be recorded
-		this->inputH->KeyDown((unsigned int)wparam);
+		//this->inputH->KeyDown((unsigned int)wparam);
 
 		return 0;
 	}
@@ -354,7 +334,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	case WM_KEYUP:
 	{
 		//If a key is released then send it to the input object
-		this->inputH->KeyUp((unsigned int)wparam);
+		//this->inputH->KeyUp((unsigned int)wparam);
 		
 		return 0;
 	}
