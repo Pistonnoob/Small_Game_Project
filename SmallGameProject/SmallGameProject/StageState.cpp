@@ -11,6 +11,7 @@ StageState::StageState()
 	this->m_car = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
+	this->player = Player();
 
 	this->exitStage = false;
 }
@@ -37,6 +38,8 @@ void StageState::Shutdown()
 	this->enemies.clear();
 
 	//Release your m_AI
+
+	this->player.Shutdown();
 
 	GameState::Shutdown();
 }
@@ -106,6 +109,13 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
 
+		result = this->player.Initialize(device, deviceContext, "ogreFullG", "carSLS3", true);
+		if (!result) {
+			return false;
+		}
+
+		DirectX::XMFLOAT3 a = this->player.GetPosition();
+		int i = 0;
 	}
 
 
@@ -154,15 +164,16 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
+		XMFLOAT3 pos = this->enemies.at(i)->GetPosition();
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
 
-		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
+		gHandler->DeferredRender(this->enemies.at(i)->GetModel(), &this->myCamera);
 	}
 	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
-
+	gHandler->DeferredRender(this->player.GetModel(), &this->myCamera);
+	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
 
 	return result;
 }

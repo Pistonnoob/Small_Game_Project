@@ -14,6 +14,7 @@ Entity::~Entity()
 bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename, bool isSphere)
 {
 	//If we fail to initialize the model
+	this->entityModel = new Model();
 	if (!this->entityModel->Initialize(device, deviceContext, objFilename))
 	{
 		return false;
@@ -66,18 +67,23 @@ void Entity::Shutdown(bool isEnemy)
 
 }
 
-Model* Entity::getModel()
+Model* Entity::GetModel()
 {
     return this->entityModel;
 }
 
-DirectX::XMFLOAT3 Entity::getPosition()
+DirectX::XMFLOAT3 Entity::GetPosition()
 {
     DirectX::XMFLOAT3 pos;
     pos.x = this->posX;
     pos.y = 0;
     pos.z = this->posZ;
     return pos;
+}
+
+const BoundingVolume * Entity::GetBoundingVolume()
+{
+	return this->entityBV;
 }
 
 

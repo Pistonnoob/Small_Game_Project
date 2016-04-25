@@ -21,7 +21,7 @@ public:
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename);
 	void ShutDown();
 
-	const Model* GetModel();
+	Model* GetModel();
 	const int GetNrOFModifiers();
 	const float* GetModifiers();
 

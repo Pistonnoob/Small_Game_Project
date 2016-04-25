@@ -76,22 +76,22 @@ void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos)
 void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos)
 {
 
-    if (distanceBetween(actor->getPosition(), playerPos) > RANGED_MAX_DESIRED_DISTANCE)
+    if (distanceBetween(actor->GetPosition(), playerPos) > RANGED_MAX_DESIRED_DISTANCE)
     {
         moveToPlayer(actor, playerPos);
     }
-    else if (distanceBetween(actor->getPosition(), playerPos) < RANGED_MIN_DESIRED_DISTANCE)
+    else if (distanceBetween(actor->GetPosition(), playerPos) < RANGED_MIN_DESIRED_DISTANCE)
     {
         moveAwayFromPlayer(actor, playerPos);
     }
 }
 void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    if (distanceBetween(actor->getPosition(), playerPos) > MELEE_MAX_DESIRED_DISTANCE)
+    if (distanceBetween(actor->GetPosition(), playerPos) > MELEE_MAX_DESIRED_DISTANCE)
     {
         moveToPlayer(actor, playerPos);
     }
-    else if (distanceBetween(actor->getPosition(), playerPos) < MELEE_MIN_DESIRED_DISTANCE)
+    else if (distanceBetween(actor->GetPosition(), playerPos) < MELEE_MIN_DESIRED_DISTANCE)
     {
         moveAwayFromPlayer(actor, playerPos);
     }
@@ -105,38 +105,38 @@ void Ai::updateBoss(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 void Ai::moveToPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 {
     DirectX::XMFLOAT3 pos = playerPos;
-    if (actor->getPosition().x < playerPos.x )
+    if (actor->GetPosition().x < playerPos.x )
     {
         this->commands.push_back(new MoveRightCommand());
     }
-    else if (actor->getPosition().x > playerPos.x )
+    else if (actor->GetPosition().x > playerPos.x )
     {
         this->commands.push_back(new MoveLeftCommand());
     }
-    if (actor->getPosition().z < playerPos.z )
+    if (actor->GetPosition().z < playerPos.z )
     {
         this->commands.push_back(new MoveUpCommand());
     }
-    else if (actor->getPosition().z > playerPos.z)
+    else if (actor->GetPosition().z > playerPos.z)
     {
         this->commands.push_back(new MoveDownCommand());
     }
 }
 void Ai::moveAwayFromPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    if (actor->getPosition().x < playerPos.x)
+    if (actor->GetPosition().x < playerPos.x)
     {
         this->commands.push_back(new MoveLeftCommand());
     }
-    else if (actor->getPosition().x > playerPos.x )
+    else if (actor->GetPosition().x > playerPos.x )
     {
         this->commands.push_back(new MoveRightCommand());
     }
-    if (actor->getPosition().z < playerPos.z )
+    if (actor->GetPosition().z < playerPos.z )
     {
         this->commands.push_back(new MoveDownCommand());
     }
-    else if (actor->getPosition().z > playerPos.z)
+    else if (actor->GetPosition().z > playerPos.z)
     {
         this->commands.push_back(new MoveUpCommand());
     }
@@ -147,8 +147,8 @@ void Ai::separateActors(std::vector<Enemy*>& actors)
     {
         for (int a = 1; a < actors.size() && a != i; a++)
         {
-            DirectX::XMFLOAT3 pos1 = actors.at(i)->getPosition();
-            DirectX::XMFLOAT3 pos2 = actors.at(a)->getPosition();
+            DirectX::XMFLOAT3 pos1 = actors.at(i)->GetPosition();
+            DirectX::XMFLOAT3 pos2 = actors.at(a)->GetPosition();
 
             float d = distanceBetween(pos1, pos2);
             if (d <= 0.001f)

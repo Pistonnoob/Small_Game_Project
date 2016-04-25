@@ -20,8 +20,10 @@ public:
 	~Player();
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string playerModelFilename,
-		std::string weaponModelFile, bool isSphere);
+		std::string weaponModelFilename, bool isSphere);
 	void Shutdown();
+
+	Weapon* GetWeapon();
 
 	virtual void moveRight();
 	virtual void moveLeft();

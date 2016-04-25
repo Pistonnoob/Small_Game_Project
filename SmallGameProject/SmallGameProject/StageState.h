@@ -2,6 +2,7 @@
 #define STAGESTATE_H
 #include "GameState.h"
 #include "Ai.h"
+#include "Player.h"
 
 class StageState :
 	public GameState
@@ -14,6 +15,7 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
+	Player player;
 
 	bool exitStage;
 
