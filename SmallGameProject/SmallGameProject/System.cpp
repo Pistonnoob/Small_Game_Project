@@ -51,8 +51,6 @@ bool System::Initialize()
 	//Initialize the GameStateHandler
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
 
-	
-
 	this->testRot = 0;
 
 	return true;

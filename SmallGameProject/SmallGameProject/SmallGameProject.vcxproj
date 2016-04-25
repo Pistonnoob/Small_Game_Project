@@ -213,6 +213,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntitySubject.h" />
+    <ClInclude Include="EventLib.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontShaderHandler.h" />
     <ClInclude Include="GameData.h" />

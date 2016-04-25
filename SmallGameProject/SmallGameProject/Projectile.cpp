@@ -1,6 +1,6 @@
 #include "Projectile.h"
 
-Projectile::Projectile() : Entity(nullptr)
+Projectile::Projectile() : Entity()
 {
     this->posX = 0;
     this->posZ = 0;
@@ -17,11 +17,12 @@ void Projectile::Initialize(Model* model, float posX, float posZ, DirectX::XMFLO
     this->posZ = posZ;
     this->moveDir = moveDir;
     this->origin = DirectX::XMFLOAT3(posX, 0, posZ);
-    this->setModel(model);
+    //this->setModel(model);
+    Entity::Initialize(model, false);
 }
 void Projectile::Shutdown()
 {
-
+    Entity::Shutdown(true);
 }
 void Projectile::update()
 {

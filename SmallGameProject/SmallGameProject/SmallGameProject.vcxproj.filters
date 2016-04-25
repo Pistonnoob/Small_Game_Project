@@ -374,6 +374,9 @@
     <ClInclude Include="Abilities.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
+    <ClInclude Include="EventLib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredVertexShader.hlsl">

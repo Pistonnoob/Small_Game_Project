@@ -34,15 +34,21 @@ void StageState::Shutdown()
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
 		Enemy* enemyTemp = this->enemies.at(i);
+		enemyTemp->Shutdown();
 		delete enemyTemp;
 	}
 	this->enemies.clear();
     for (int i = 0; i < this->projectiles.size(); i++)
     {
         Projectile* temp = this->projectiles.at(i);
+        temp->Shutdown();
         delete temp;
     }
     this->projectiles.clear();
+
+    delete this->ability1;
+    delete this->ability2;
+    delete this->ability3;
 
 	//Release your m_AI
 
@@ -91,23 +97,24 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Arm thy armies!
 		//creates the enemies must call setModel function to give enemies models
 		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
 		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
 		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
-
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		 
 		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
 		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->setModel(&this->m_car);
+        this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
         this->ability1 = new ArcFire();
         this->ability2 = new SplitFire();
         this->ability3 = new ReverseFire();
+
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -167,17 +174,35 @@ int StageState::Update(float deltaTime)
     //0x43 = C
     if (GetAsyncKeyState(0x43))
     {
+        for (int i = 0; i < this->projectiles.size(); i++)
+        {
+            Projectile* temp = this->projectiles.at(i);
+            temp->Shutdown();
+            delete temp;
+        }
         this->projectiles.clear();
     }
     //0x31 = 1
     if (GetAsyncKeyState(0x31))
     {
+        for (int i = 0; i < this->projectiles.size(); i++)
+        {
+            Projectile* temp = this->projectiles.at(i);
+            temp->Shutdown();
+            delete temp;
+        }
         this->projectiles.clear();
         this->ability1->activate(this->projectiles, &this->m_ball, DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 1), 3.14 / 3, 15);
     }
     //0x32 = 2
     if (GetAsyncKeyState(0x32))
     {
+        for (int i = 0; i < this->projectiles.size(); i++)
+        {
+            Projectile* temp = this->projectiles.at(i);
+            temp->Shutdown();
+            delete temp;
+        }
         this->projectiles.clear();
         this->ability2->activate(this->projectiles, &this->m_ball, DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 1), 3.14 / 2, 4);
     }
@@ -185,6 +210,12 @@ int StageState::Update(float deltaTime)
     //0x33 = 3
     if (GetAsyncKeyState(0x33))
     {
+        for (int i = 0; i < this->projectiles.size(); i++)
+        {
+            Projectile* temp = this->projectiles.at(i);
+            temp->Shutdown();
+            delete temp;
+        }
         this->projectiles.clear();
         this->ability3->activate(this->projectiles, &this->m_ball, DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 1), 3.14 * 2, 30);
     }
