@@ -40,8 +40,8 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	this->world = DirectX::XMMatrixIdentity();
 
 	this->myTextures = Texture();
-	std::string skinOfMyFallenEnemies = "Particles.mtl";
-	bool victory = this->myTextures.Initialize(device, deviceContext, skinOfMyFallenEnemies);
+	std::string theNightSky = "Particles.mtl";
+	bool victory = this->myTextures.Initialize(device, deviceContext, theNightSky);
 
 	int particleCnt = _countof(this->particles);
 	//sizeof(this->particles) / sizeof(Particle)

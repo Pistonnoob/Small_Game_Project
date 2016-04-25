@@ -7,6 +7,7 @@
 StageState::StageState()
 {
 	this->myCamera = CameraHandler();
+	this->myParticleHandler = ParticleHandler();
 
 	this->m_car = Model();
 	this->m_ground = Model();
@@ -58,8 +59,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (cameraResult)
 			result = 1;
 
+		//Pull down the visor of epic particle effects
+		//A visor is the moving part of a helmet, namely the part that protects the eyes
+		this->myParticleHandler.Initialize(device, deviceContext);
 
-		//Army thy mind with the knowledge that will lead thy armies to battle!
+		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
 

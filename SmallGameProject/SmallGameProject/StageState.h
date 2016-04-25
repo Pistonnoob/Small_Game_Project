@@ -1,6 +1,7 @@
 #ifndef STAGESTATE_H
 #define STAGESTATE_H
 #include "GameState.h"
+#include "ParticleHandler.h"
 #include "Ai.h"
 
 class StageState :
@@ -14,6 +15,7 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
+	ParticleHandler myParticleHandler;
 
 	bool exitStage;
 
