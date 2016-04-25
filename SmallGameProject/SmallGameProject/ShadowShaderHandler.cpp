@@ -74,16 +74,8 @@ void ShadowShaderHandler::Shutdown()
 
 void ShadowShaderHandler::SetRenderTarget(ID3D11DeviceContext * gDeviceContext)
 {
-
 	gDeviceContext->RSSetViewports(1, this->viewPort);
-	/*
-	Set null render target because we are only going to draw to depth buffer. 
-	Setting a null render target will disable color writes
-	*/
-	//ID3D11RenderTargetView* nullTarget[1] = { nullptr };
-
 	gDeviceContext->OMSetRenderTargets(0, nullptr, this->mDepthMapDSV);
-	
 }
 
 bool ShadowShaderHandler::Render(ID3D11DeviceContext * deviceContext, int indexCount, int indexStart, ShadowShaderParameters * params)
