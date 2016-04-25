@@ -2,7 +2,7 @@
 
 Player::Player() : Actor()
 {
-	this->posX = 0;
+	this->posX = 10;
 	this->posZ = 10;
 	this->playerHealth = 100;
 	this->playerMovmentSpeed = 1;
@@ -30,10 +30,6 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	}
 
 	//Set the weapon pos to the Player
-	DirectX::XMMATRIX worldMatrix;
-	worldMatrix = DirectX::XMMatrixTranslation(posX, 0.0f, posZ);
-	this->entityModel->SetWorldMatrix(worldMatrix);
-	this->playerWeapon->GetModel()->SetWorldMatrix(worldMatrix);
 
 	return true;
 }
