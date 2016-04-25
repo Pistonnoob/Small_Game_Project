@@ -68,8 +68,30 @@ void ShadowShaderHandler::Shutdown()
 		this->vertexShader = nullptr;
 	}
 
+	if (this->layout != nullptr)
+	{
+		this->layout->Release();
+		this->layout = nullptr;
+	}
 
-	//delete this->viewPort; Cannot free the memory here
+	if (this->nullResource != nullptr)
+	{
+		this->nullResource[0]->Release();
+		this->nullResource[0] = nullptr;
+		this->nullResource = nullptr;
+	}
+
+	if (this->viewPort != nullptr)
+	{
+		delete this->viewPort;
+		this->viewPort = nullptr;
+	}
+
+	if (this->vertexShaderBuffer != nullptr)
+	{
+		this->vertexShaderBuffer->Release();
+		this->vertexShaderBuffer = nullptr;
+	}
 }
 
 void ShadowShaderHandler::SetRenderTarget(ID3D11DeviceContext * gDeviceContext)
@@ -117,7 +139,6 @@ void ShadowShaderHandler::StartUp()
 	this->vertexShaderBuffer	= nullptr;
 	this->layout				= nullptr;
 	this->matrixBuffer			= nullptr;
-	this->samplerState			= nullptr;
 	this->nullResource			= nullptr;
 	this->viewPort				= nullptr;
 	this->mDepthMapSRV			= nullptr;

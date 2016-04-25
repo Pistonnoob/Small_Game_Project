@@ -6,7 +6,6 @@ Texture2D worldPosTexture: register(t4);
 Texture2D shadowMapTexture: register(t5);
 
 SamplerState pointSampler : register(s0);
-SamplerState shadowSampler : register(s1);
 
 cbuffer LightConstantBuffer
 {

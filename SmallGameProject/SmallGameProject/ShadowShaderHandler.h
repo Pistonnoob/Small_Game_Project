@@ -20,12 +20,11 @@ private:
 	};
 
 	ID3D11VertexShader* vertexShader;
-	ID3D11InputLayout* layout;
-	ID3D11Buffer* matrixBuffer;
-	ID3D11SamplerState* samplerState;
-	ID3D11ShaderResourceView** nullResource;
+	ID3D11InputLayout* layout;	
+	ID3D11Buffer* matrixBuffer;		
+	ID3D11ShaderResourceView** nullResource; 
 	
-	D3D11_VIEWPORT* viewPort;
+	D3D11_VIEWPORT* viewPort; 
 
 	ID3D11ShaderResourceView* mDepthMapSRV;
 	ID3D11DepthStencilView* mDepthMapDSV;

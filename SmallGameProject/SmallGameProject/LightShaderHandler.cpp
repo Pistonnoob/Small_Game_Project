@@ -7,7 +7,6 @@ LightShaderHandler::LightShaderHandler()
 	this->layout = nullptr;
 	this->matrixBuffer = nullptr;
 	this->samplerState = nullptr;
-	this->shadowSamplerState = nullptr;
 }
 
 LightShaderHandler::~LightShaderHandler()
@@ -342,7 +341,6 @@ void LightShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int in
 	deviceContext->PSSetShader(this->pixelShader, NULL, 0);
 	//Set the sampler state in pixel shader
 	deviceContext->PSSetSamplers(0, 1, &this->samplerState);
-	deviceContext->PSSetSamplers(1, 1, &this->shadowSamplerState);
 
 	//Render the triangle
 	deviceContext->DrawIndexed(indexCount, 0, 0);
