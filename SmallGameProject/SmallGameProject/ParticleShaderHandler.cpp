@@ -14,14 +14,14 @@ ParticleShaderHandler::~ParticleShaderHandler()
 {
 }
 
-bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int screenWidth, int screenHeight)
+bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* geoShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -297,8 +297,7 @@ bool ParticleShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	bufferNumber = 0;
 
 	//Set the constant buffer in vertex and pixel shader with updated values
-	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
-	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
+	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
 	if (params->diffTexture) {
 		//Set shader texture resource for pixel shader

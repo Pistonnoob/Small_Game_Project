@@ -4,6 +4,7 @@
 #include "D3DHandler.h"
 #include "DeferredShaderHandler.h"
 #include "LightShaderHandler.h"
+#include "ParticleShaderHandler.h"
 #include "ScreenQuad.h"
 #include "TextHandler.h"
 #include "Model.h"
@@ -18,8 +19,10 @@ protected:
 	D3DHandler* engine;
 	DeferredShaderHandler* deferredShaderH;
 	LightShaderHandler* lightShaderH;
+	ParticleShaderHandler* particleShaderH;
 	ScreenQuad* screenQuad;
 	TextHandler* textH;
+	ID3D11BlendState* transparencyBlendState;
 
 	int screenWidth;
 	int screenHeight;
@@ -33,12 +36,14 @@ public:
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight, DirectX::XMMATRIX baseViewMatrix);
 	void DeferredRender(Model* model, CameraHandler* camera);
 	void LightRender(LightShaderParameters* shaderParams);
+	void ParticleRender(ParticleShaderParameters* shaderParams, CameraHandler* camera);
 	void TextRender();
 	void Shutdown();
 
 	void ClearRTVs();
 	void SetDeferredRTVs();
 	void SetLightRTV();
+	void SetParticleRTV();
 
 	void PresentScene();
 

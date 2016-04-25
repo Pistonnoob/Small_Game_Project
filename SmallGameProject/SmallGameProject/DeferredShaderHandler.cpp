@@ -506,3 +506,8 @@ ID3D11ShaderResourceView** DeferredShaderHandler::GetShaderResourceViews()
 {
 	return this->deferredShaderResources;
 }
+
+ID3D11DepthStencilView * DeferredShaderHandler::GetDepthView()
+{
+	return this->depthStencilView;
+}

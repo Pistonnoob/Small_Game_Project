@@ -9,8 +9,6 @@
 
 #include "ShaderStructLibrary.h"
 
-const int BUFFER_COUNT = 5;
-
 class ParticleShaderHandler {
 private:
 	struct CBPerEmitter
@@ -39,7 +37,7 @@ public:
 	ParticleShaderHandler();
 	~ParticleShaderHandler();
 
-	bool Initialize(ID3D11Device* device, HWND* hwnd, int screenWidth, int screenHeight);
+	bool Initialize(ID3D11Device* device, HWND* hwnd);
 	void Shutdown();
 
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, ParticleShaderParameters* params);

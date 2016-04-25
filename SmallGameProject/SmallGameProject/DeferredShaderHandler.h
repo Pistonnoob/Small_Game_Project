@@ -63,6 +63,8 @@ public:
 	int GetBufferCount();
 
 	ID3D11ShaderResourceView** GetShaderResourceViews();
+
+	ID3D11DepthStencilView* GetDepthView();
 };
 
 #endif
