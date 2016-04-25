@@ -85,7 +85,8 @@ float4 main(PSInput input) : SV_TARGET
 	float4 specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
 	lightIntensity = dot(normal, outVec);
-	if (lightIntensity < 0) {
+	if (lightIntensity < 0) 
+	{
 		lightIntensity = 0;
 	}
 
@@ -101,6 +102,9 @@ float4 main(PSInput input) : SV_TARGET
 	}
 	else
 	{
+		//pixel is in shadow
+		lightIntensity = 0;
+		
 		//calculate the depth of the light
 		lightDepthValue = positionLight.z / positionLight.w;
 
@@ -109,8 +113,8 @@ float4 main(PSInput input) : SV_TARGET
 
 		// Subtract the bias from the lightDepthValue.
 		lightDepthValue = lightDepthValue - bias;
-		lightIntensity = 0;
-		//shit is in shadow
+		
+
 		if (lightDepthValue < depthValue)
 		{
 			lightIntensity = saturate(dot(normal.xyz, outVec.xyz));
