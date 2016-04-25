@@ -149,6 +149,7 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Ai.cpp" />
     <ClCompile Include="Algorithm.cpp" />
+    <ClCompile Include="ArcFire.cpp" />
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="BomberEnemy.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
@@ -182,8 +183,10 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileHandler.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
+    <ClCompile Include="ReverseFire.cpp" />
     <ClCompile Include="ScreenQuad.cpp" />
     <ClCompile Include="SphereBoundingVolume.cpp" />
+    <ClCompile Include="SplitFire.cpp" />
     <ClCompile Include="StageState.cpp" />
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="Subject.cpp" />
@@ -194,6 +197,8 @@
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Abilities.h" />
+    <ClInclude Include="Ability.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Ai.h" />
     <ClInclude Include="Algorithm.h" />
