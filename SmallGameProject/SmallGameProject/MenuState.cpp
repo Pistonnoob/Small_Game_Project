@@ -1,4 +1,5 @@
 #include "MenuState.h"
+#include "GameStateHandler.h"
 
 
 
@@ -9,6 +10,7 @@ MenuState::MenuState()
 	this->selected = 0;
 	this->m_model = Model();
 	this->myTextures = Texture();
+	this->myCamera = CameraHandler();
 }
 
 
@@ -39,7 +41,8 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		bool victory = m_model.Initialize(device, deviceContext, "Menu");
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
 		worldMatrix *= DirectX::XMMatrixTranslation(0, -4, 0);
-		victory = this->camera.Initialize();
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -19.0f));
+		victory = this->myCamera.Initialize();
 		this->m_model.SetWorldMatrix(worldMatrix);
 
 		//Now initialize thy shields (texture views of changing nature!)
@@ -54,7 +57,10 @@ int MenuState::HandleInput(InputHandler * input)
 {
 	int result = 1;
 	int oldSelected = this->selected;
-
+	if (input->isKeyPressed(DIK_SPACE) || input->isKeyPressed(DIK_RETURN))
+	{
+		this->doOption = true;
+	}
 	if (input->isKeyPressed(DIK_DOWNARROW))
 	{
 		this->selected++;
@@ -82,23 +88,41 @@ int MenuState::HandleInput(InputHandler * input)
 		this->myTextures.SwapTextureView(oscarHasFallen, this->selected);
 	}
 
+	if (input->isKeyPressed(DIK_ESCAPE))
+	{
+		//Ask Loki to cheat and lie to the system that we have used the option END_GAME
+		this->doOption = true;
+		this->selected = MenuOption::END_GAME;
+	}
+
 	return result;
 }
 
 int MenuState::Update(float deltaTime)
 {
-	int result = 0;
+	int result = 1;
 
 	if (doOption)
 	{
+		this->doOption = false;
 		switch (this->selected)
 		{
-		case 0:
+		case MenuOption::START_GAME:
+		{
+			//Create a stage state and push it to the stack
+			StageState* newStage = new StageState();
+			newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
+			newStage->SetManualClearing(false);
+			this->m_GSH->PushState(newStage);
+		}
+		break;
+		case MenuOption::OPTIONS:
 			break;
-		case 1:
+		case MenuOption::END_GAME:
+		{
+			result = 0;
 			break;
-		case 2:
-			break;
+		}
 		default:
 			break;
 		}
@@ -110,6 +134,6 @@ int MenuState::Update(float deltaTime)
 int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
-	gHandler->DeferredRender(&this->m_model, &this->camera);
+	gHandler->DeferredRender(&this->m_model, &this->myCamera);
 	return result;
 }

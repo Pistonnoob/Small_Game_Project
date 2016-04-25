@@ -184,6 +184,7 @@
     <ClCompile Include="RangedEnemy.cpp" />
     <ClCompile Include="ScreenQuad.cpp" />
     <ClCompile Include="SphereBoundingVolume.cpp" />
+    <ClCompile Include="StageState.cpp" />
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="System.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="MoveLeftCommand.h" />
     <ClInclude Include="MoveRightCommand.h" />
     <ClInclude Include="MoveUpCommand.h" />
+    <ClInclude Include="MyMathLib.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="ParticleHandler.h" />
     <ClInclude Include="Player.h" />
@@ -232,6 +234,7 @@
     <ClInclude Include="ScreenQuad.h" />
     <ClInclude Include="ShaderStructLibrary.h" />
     <ClInclude Include="SphereBoundingVolume.h" />
+    <ClInclude Include="StageState.h" />
     <ClInclude Include="StartState.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="System.h" />

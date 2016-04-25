@@ -58,6 +58,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{a4d7dbfb-d6c6-4325-93c4-e4bb32e42cad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Libraries">
+      <UniqueIdentifier>{55a88415-2a2d-495e-b914-81eef98eb3fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -195,6 +198,9 @@
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="StageState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -296,9 +302,6 @@
     <ClInclude Include="ScreenQuad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderStructLibrary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CameraHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -315,9 +318,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Algorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MenuState.h">
@@ -340,6 +340,18 @@
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="StageState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMathLib.h">
+      <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Algorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderStructLibrary.h">
+      <Filter>Header Files\Libraries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
