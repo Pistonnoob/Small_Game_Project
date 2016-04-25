@@ -33,6 +33,11 @@ void Projectile::setMoveDir(DirectX::XMFLOAT3 newMoveDir)
 {
     this->moveDir = newMoveDir;
 }
+void Projectile::setPos(DirectX::XMFLOAT3 newPos)
+{
+    this->posX = newPos.x;
+    this->posZ = newPos.z;
+}
 DirectX::XMFLOAT3 Projectile::getOrigin()
 {
     return this->origin;
@@ -40,4 +45,9 @@ DirectX::XMFLOAT3 Projectile::getOrigin()
 DirectX::XMFLOAT3 Projectile::getMoveDir()
 {
     return this->moveDir;
+}
+DirectX::XMFLOAT3 Projectile::getPos()
+{
+    DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(this->posX, 0, this->posZ);
+    return pos;
 }

@@ -4,6 +4,7 @@
 #include "Ai.h"
 #include "Projectile.h"
 #include "Abilities.h"
+#include "Algorithm.h"
 
 class StageState :
 	public GameState
@@ -18,6 +19,8 @@ private:	//Variables
 	Ai m_AI;
 	vector<Enemy*> enemies;
     vector<Projectile*> projectiles;
+    Projectile* test;
+    float t;
 
     DirectX::XMFLOAT3 playerPos;
 

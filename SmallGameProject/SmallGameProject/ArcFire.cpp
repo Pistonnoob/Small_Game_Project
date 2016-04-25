@@ -1,4 +1,5 @@
 #include "Abilities.h"
+#include "Algorithm.h"
 
 ArcFire::ArcFire()
 {
@@ -18,6 +19,7 @@ void ArcFire::activate(std::vector<Projectile*>& projectiles, Model* projectileM
     float z = DirectX::XMVectorGetZ(dirVec);
 
     shootProjetiles(projectiles, projectileModel, pos, DirectX::XMFLOAT3(x, y, z), angle, nrOfProjectiles);
+
 }
 void ArcFire::update(std::vector<Projectile*>& projectiles, Model* projectileModel)
 {

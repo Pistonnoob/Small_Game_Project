@@ -67,7 +67,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
 		float zoomIn = 1.0f / 4.0f;
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 40.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
@@ -96,10 +96,10 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//Arm thy armies!
 		//creates the enemies must call setModel function to give enemies models
-		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
+		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
-		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
+		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
 		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
@@ -108,13 +108,15 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
-		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
+		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
         this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
         this->ability1 = new ArcFire();
         this->ability2 = new SplitFire();
         this->ability3 = new ReverseFire();
 
+        this->test = new Projectile();
+        this->test->Initialize(&this->m_ball,0,0,DirectX::XMFLOAT3(1,0,0));
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -221,6 +223,19 @@ int StageState::Update(float deltaTime)
     }
     this->ability3->update(this->projectiles, &this->m_ball);
 
+    /*t += Math::DEGREES_TO_RADIANS * 5;
+    if (t > 100)
+    {
+        t = -100;
+    }
+    DirectX::XMFLOAT3 pos = this->test->getPos();
+    int x = pos.x;
+    int z = pos.z;
+    //Algorithm::GetLissajousCurve(x, z, this->t * Math::DEGREES_TO_RADIANS * 5, 5, 5, 3, 2);
+    //Algorithm::GetEllipse(x, z, t, 15, 10);
+    //Algorithm::GetHypotrochoid(x, z, t, 5, 3, 10);
+    Algorithm::GetSineWave(x, z, t, 10, -8, 8);
+    this->test->setPos(DirectX::XMFLOAT3(x, 0, z));*/
 
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, this->playerPos);
@@ -267,9 +282,16 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
         gHandler->DeferredRender(this->projectiles.at(i)->getModel(), &this->myCamera);
     }
+    XMFLOAT3 pos;
+    DirectX::XMMATRIX worldMatrix;
+    /*pos = this->test->getPosition();
+    worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+    this->m_ball.SetWorldMatrix(worldMatrix);
 
-    XMFLOAT3 pos = this->playerPos;
-    DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+    gHandler->DeferredRender(this->test->getModel(), &this->myCamera);*/
+
+    pos = this->playerPos;
+    worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
     this->m_car.SetWorldMatrix(worldMatrix);
 
     gHandler->DeferredRender(&this->m_car, &this->myCamera);

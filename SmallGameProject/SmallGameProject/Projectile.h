@@ -16,8 +16,10 @@ public:
     virtual ~Projectile();
     void update();
     void setMoveDir(DirectX::XMFLOAT3 newMoveDir);
+    void setPos(DirectX::XMFLOAT3 newPos);
     DirectX::XMFLOAT3 getOrigin();
     DirectX::XMFLOAT3 getMoveDir();
+    DirectX::XMFLOAT3 getPos();
 
 };
 
