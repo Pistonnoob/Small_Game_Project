@@ -18,7 +18,6 @@ StageState::StageState()
 
 StageState::~StageState()
 {
-	this->Shutdown();
 }
 
 void StageState::Shutdown()

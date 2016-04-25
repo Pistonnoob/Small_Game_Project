@@ -11,7 +11,6 @@ GameState::GameState()
 
 GameState::~GameState()
 {
-	this->Shutdown();
 }
 
 void GameState::Shutdown()

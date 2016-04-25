@@ -233,6 +233,7 @@ void GraphicHandler::Shutdown()
 		this->lightShaderH = nullptr;
 	}
 
+	//delete shadowShaderHander object
 	if (this->shadowShaderH) {
 		this->shadowShaderH->Shutdown();
 		delete this->shadowShaderH;

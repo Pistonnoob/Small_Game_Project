@@ -363,9 +363,7 @@ void Texture::Shutdown()
 			this->textureViews.at(i)->Release();
 			this->textureViews.at(i) = nullptr;
 		}
-
 	}
-
 	//Release the texture
 	if (this->texture) {
 		this->texture->Release();

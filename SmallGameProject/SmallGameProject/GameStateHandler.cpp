@@ -7,7 +7,6 @@ GameStateHandler::GameStateHandler()
 
 GameStateHandler::~GameStateHandler()
 {
-	this->Shutdown();
 }
 
 void GameStateHandler::Shutdown()
