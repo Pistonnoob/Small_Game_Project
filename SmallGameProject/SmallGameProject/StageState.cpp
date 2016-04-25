@@ -155,6 +155,8 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
 
+	this->myParticleHandler.Render(gHandler, &this->myCamera);
+
 	//Render models
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
