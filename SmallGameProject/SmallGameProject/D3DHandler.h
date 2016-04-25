@@ -23,8 +23,8 @@ public:
 
 	void ClearDepthAndRTVViews();
 
-	void SetDepth(const bool &desired);
-	void SetRenderTargetView();
+	void SetDepth(const int &desired);
+	void SetRenderTargetView(ID3D11DepthStencilView* depthView = nullptr);
 
 	void PresentScene();
 
@@ -68,6 +68,7 @@ protected:
 	//RenderStates
 	ID3D11DepthStencilState* disableDepth;
 	ID3D11DepthStencilState* enableDepth;
+	ID3D11DepthStencilState* particleDepth;
 
 	D3D11_VIEWPORT gameViewport;
 

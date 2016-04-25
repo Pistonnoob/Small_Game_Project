@@ -131,24 +131,6 @@ bool FontShaderHandler::Initialize(ID3D11Device* device)
 		return false;
 	}
 
-	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
-	ZeroMemory(&rtbd, sizeof(rtbd));
-	rtbd.BlendEnable = true;
-	rtbd.SrcBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	rtbd.DestBlend = D3D11_BLEND_SRC_ALPHA;
-	rtbd.BlendOp = D3D11_BLEND_OP_ADD;
-	rtbd.SrcBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-	rtbd.DestBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-	rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	rtbd.RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
-
-	D3D11_BLEND_DESC blendDesc;
-	ZeroMemory(&blendDesc, sizeof(blendDesc));
-	blendDesc.AlphaToCoverageEnable = false;
-	blendDesc.RenderTarget[0] = rtbd;
-
-	device->CreateBlendState(&blendDesc, &this->transparencyBlendState);
-
 	return true;
 }
 
@@ -179,12 +161,6 @@ void FontShaderHandler::Shutdown()
 	if (this->vertexShader) {
 		this->vertexShader->Release();
 		this->vertexShader = nullptr;
-	}
-
-	//Release tranparencystate
-	if (this->transparencyBlendState) {
-		this->transparencyBlendState->Release();
-		this->transparencyBlendState = nullptr;
 	}
 
 	return;
@@ -280,8 +256,6 @@ bool FontShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
 		//Set shader color texture resource for pixel shader
 		deviceContext->PSSetShaderResources(0, 1, &fontTexture);
 	}
-
-	deviceContext->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
 
 	return true;
 }

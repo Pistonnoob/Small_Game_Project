@@ -209,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
+	  </ClCompile>
+    <ClCompile Include="ParticleShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -364,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
+	</ClInclude>
+    <ClInclude Include="ParticleShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +392,15 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="FontPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGeometryShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

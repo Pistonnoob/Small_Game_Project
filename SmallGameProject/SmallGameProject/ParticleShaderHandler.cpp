@@ -1,6 +1,6 @@
-#include "DeferredShaderHandler.h"
+#include "ParticleShaderHandler.h"
 
-DeferredShaderHandler::DeferredShaderHandler()
+ParticleShaderHandler::ParticleShaderHandler()
 {
 	this->vertexShader = nullptr;
 	this->geoShader = nullptr;
@@ -8,26 +8,20 @@ DeferredShaderHandler::DeferredShaderHandler()
 	this->layout = nullptr;
 	this->matrixBuffer = nullptr;
 	this->samplerState = nullptr;
-
-	for (int i = 0; i < BUFFER_COUNT; i++) {
-		this->deferredRenderTargetTextures[i] = nullptr;
-		this->deferredRenderTargetViews[i] = nullptr;
-		this->deferredShaderResources[i] = nullptr;
-	}
 }
 
-DeferredShaderHandler::~DeferredShaderHandler()
+ParticleShaderHandler::~ParticleShaderHandler()
 {
 }
 
-bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int screenWidth, int screenHeight)
+bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* geoShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -38,9 +32,9 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	pixelShaderBuffer = nullptr;
 	geoShaderBuffer = nullptr;
 
-	WCHAR* vsFilename = L"../SmallGameProject/DeferredVertexShader.hlsl";
-	WCHAR* gsFilename = L"../SmallGameProject/DeferredGeometryShader.hlsl";
-	WCHAR* psFilename = L"../SmallGameProject/DeferredPixelShader.hlsl";
+	WCHAR* vsFilename = L"../SmallGameProject/ParticleVertexShader.hlsl";
+	WCHAR* gsFilename = L"../SmallGameProject/ParticleGeometryShader.hlsl";
+	WCHAR* psFilename = L"../SmallGameProject/ParticlePixelShader.hlsl";
 
 	//Compile the vertex shader code
 	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &vertexShaderBuffer, &errorMessage);
@@ -78,7 +72,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 		return false;
 	}
 
-	
+
 	//Create the vertex shader from buffer
 	hresult = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &this->vertexShader);
 	if (FAILED(hresult)) {
@@ -100,32 +94,24 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 		return false;
 	}
 
-	
+
 
 	//Fill the vertex input layout description 
 	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
-	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	polygonLayout[0].InputSlot = 0;
 	polygonLayout[0].AlignedByteOffset = 0;
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[0].InstanceDataStepRate = 0;
 
-	polygonLayout[1].SemanticName = "TEXCOORD";
+	polygonLayout[1].SemanticName = "COLOR";
 	polygonLayout[1].SemanticIndex = 0;
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	polygonLayout[1].InputSlot = 0;
 	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[1].InstanceDataStepRate = 0;
-
-	polygonLayout[2].SemanticName = "NORMAL";
-	polygonLayout[2].SemanticIndex = 0;
-	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[2].InputSlot = 0;
-	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[2].InstanceDataStepRate = 0;
 
 	//Get the number of elements in the layout
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -144,11 +130,11 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	geoShaderBuffer = nullptr;
 	pixelShaderBuffer->Release();
 	pixelShaderBuffer = nullptr;
-	
+
 
 	//Fill the description of the dynamic matrix constant buffer that is in the vertex shader
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(CBPerObj);
+	matrixBufferDesc.ByteWidth = sizeof(CBPerEmitter);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	matrixBufferDesc.MiscFlags = 0;
@@ -184,108 +170,10 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 		return false;
 	}
 
-	D3D11_TEXTURE2D_DESC renderTextureDesc;
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-
-	//Initialize the render target texture description
-	ZeroMemory(&renderTextureDesc, sizeof(renderTextureDesc));
-
-	//Setup the render target texture description
-	renderTextureDesc.Width = screenWidth;
-	renderTextureDesc.Height = screenHeight;
-	renderTextureDesc.MipLevels = 1;
-	renderTextureDesc.ArraySize = 1;
-	renderTextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	renderTextureDesc.SampleDesc.Count = 1;
-	renderTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	renderTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	renderTextureDesc.CPUAccessFlags = 0;
-	renderTextureDesc.MiscFlags = 0;
-
-	//Create the render target textures
-	for (int i = 0; i < BUFFER_COUNT; i++) {
-		hresult = device->CreateTexture2D(&renderTextureDesc, NULL, &this->deferredRenderTargetTextures[i]);
-		if (FAILED(hresult)) {
-			MessageBox(*hwnd, L"device->CreateTexture2D", L"Error", MB_OK);
-			return false;
-		}
-	}
-
-	//Setup the description of the render target views
-	renderTargetViewDesc.Format = renderTextureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-	renderTargetViewDesc.Texture2D.MipSlice = 0;
-
-	//Create the render target views
-	for (int i = 0; i<BUFFER_COUNT; i++) {
-		hresult = device->CreateRenderTargetView(this->deferredRenderTargetTextures[i], &renderTargetViewDesc, &this->deferredRenderTargetViews[i]);
-		if (FAILED(hresult)) {
-			MessageBox(*hwnd, L"device->CreateRenderTargetView", L"Error", MB_OK);
-			return false;
-		}
-	}
-
-	//Setup the description of the shader resource view
-	shaderResourceViewDesc.Format = renderTextureDesc.Format;
-	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels = 1;
-
-	//Create the shader resource views
-	for (int i = 0; i < BUFFER_COUNT; i++) {
-		hresult = device->CreateShaderResourceView(this->deferredRenderTargetTextures[i], &shaderResourceViewDesc, &this->deferredShaderResources[i]);
-		if (FAILED(hresult)) {
-			MessageBox(*hwnd, L"device->CreateShaderResourceView", L"Error", MB_OK);
-			return false;
-		}
-	}
-	
-	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-
-	//Depth buffer desc
-	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-
-	//Fill depth buffer description	
-	depthBufferDesc.Width = screenWidth;
-	depthBufferDesc.Height = screenHeight;
-	depthBufferDesc.MipLevels = 1;
-	depthBufferDesc.ArraySize = 1;
-	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthBufferDesc.SampleDesc.Count = 1;
-	depthBufferDesc.SampleDesc.Quality = 0;
-	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthBufferDesc.CPUAccessFlags = 0;
-	depthBufferDesc.MiscFlags = 0;
-
-	//Create depth texture
-	hresult = device->CreateTexture2D(&depthBufferDesc, NULL, &this->depthStencilBuffer);
-	if (FAILED(hresult)) {
-		MessageBox(*hwnd, L"this->device->CreateTexture2D", L"Error", MB_OK);
-		return false;
-	}
-
-	//Init depth stencil view description
-	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-
-	//Fill the desc
-	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStencilViewDesc.Texture2D.MipSlice = 0;
-
-	//Create the depth stencil view
-	hresult = device->CreateDepthStencilView(this->depthStencilBuffer, &depthStencilViewDesc, &this->depthStencilView);
-	if (FAILED(hresult)) {
-		MessageBox(*hwnd, L"this->device->CreateDepthStencilView", L"Error", MB_OK);
-		return false;
-	}
-
 	return true;
 }
 
-void DeferredShaderHandler::Shutdown()
+void ParticleShaderHandler::Shutdown()
 {
 	//Release sampler state
 	if (this->samplerState) {
@@ -301,32 +189,6 @@ void DeferredShaderHandler::Shutdown()
 	if (this->layout) {
 		this->layout->Release();
 		this->layout = nullptr;
-	}
-
-	//Release the deferred render targets
-	for (int i = 0; i < BUFFER_COUNT; i++) {
-		if (this->deferredRenderTargetTextures[i]) {
-			this->deferredRenderTargetTextures[i]->Release();
-			this->deferredRenderTargetTextures[i] = nullptr;
-		}
-		if (this->deferredRenderTargetViews[i]) {
-			this->deferredRenderTargetViews[i]->Release();
-			this->deferredRenderTargetViews[i] = nullptr;
-		}
-		if (this->deferredShaderResources[i]) {
-			this->deferredShaderResources[i]->Release();
-			this->deferredShaderResources[i] = nullptr;
-		}
-	}
-
-	//Release the depth stuff
-	if (this->depthStencilBuffer) {
-		this->depthStencilBuffer->Release();
-		this->depthStencilBuffer = nullptr;
-	}
-	if (this->depthStencilView) {
-		this->depthStencilView->Release();
-		this->depthStencilView = nullptr;
 	}
 
 	//Release pixel shader
@@ -351,7 +213,7 @@ void DeferredShaderHandler::Shutdown()
 }
 
 
-bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters* params)
+bool ParticleShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, ParticleShaderParameters* params)
 {
 	bool result = false;
 
@@ -366,7 +228,7 @@ bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int index
 	return true;
 }
 
-void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename)
+void ParticleShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -400,11 +262,11 @@ void DeferredShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, H
 	return;
 }
 
-bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DeferredShaderParameters* params)
+bool ParticleShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, ParticleShaderParameters* params)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	CBPerObj* dataPtr;
+	CBPerEmitter* dataPtr;
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
@@ -419,25 +281,14 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	}
 
 	//Get pointer to the data
-	dataPtr = (CBPerObj*)mappedResource.pData;
+	dataPtr = (CBPerEmitter*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
 	dataPtr->world = params->worldMatrix;
 	dataPtr->view = params->viewMatrix;
 	dataPtr->projection = params->projectionMatrix;
 
-	dataPtr->diffColor = params->diffColor;
-	dataPtr->ambientColor = params->ambientColor;
-	dataPtr->specColor = params->specColor;
-
 	dataPtr->camPos = params->camPos;
-
-	if (!params->diffTexture) {
-		dataPtr->hasTexture = false;
-	}
-	else {
-		dataPtr->hasTexture = true;
-	}
 
 	//Unmap the constant buffer to give the GPU access agin
 	deviceContext->Unmap(this->matrixBuffer, 0);
@@ -446,8 +297,7 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	bufferNumber = 0;
 
 	//Set the constant buffer in vertex and pixel shader with updated values
-	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
-	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
+	deviceContext->GSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
 	if (params->diffTexture) {
 		//Set shader texture resource for pixel shader
@@ -456,7 +306,7 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	return true;
 }
 
-void DeferredShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart)
+void ParticleShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart)
 {
 	//Set the input layout for vertex
 	deviceContext->IASetInputLayout(this->layout);
@@ -472,42 +322,4 @@ void DeferredShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int
 	deviceContext->DrawIndexed(indexCount, indexStart, 0);
 
 	return;
-}
-
-void DeferredShaderHandler::SetDeferredRenderTargets(ID3D11DeviceContext* deviceContext)
-{
-	deviceContext->OMSetRenderTargets(BUFFER_COUNT, this->deferredRenderTargetViews, this->depthStencilView);
-}
-
-void DeferredShaderHandler::ClearRenderTargets(ID3D11DeviceContext* deviceContext)
-{
-	float color[4];
-
-	color[0] = 0.0f;
-	color[1] = 0.0f;
-	color[2] = 0.0f;
-	color[3] = 1.0f;
-
-	//Clear the render target textures
-	for (int i = 0; i < BUFFER_COUNT; i++) {
-		deviceContext->ClearRenderTargetView(this->deferredRenderTargetViews[i], color);
-	}
-
-	//Clear the depth buffer
-	deviceContext->ClearDepthStencilView(this->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
-
-int DeferredShaderHandler::GetBufferCount()
-{
-	return BUFFER_COUNT;
-}
-
-ID3D11ShaderResourceView** DeferredShaderHandler::GetShaderResourceViews()
-{
-	return this->deferredShaderResources;
-}
-
-ID3D11DepthStencilView * DeferredShaderHandler::GetDepthView()
-{
-	return this->depthStencilView;
 }
