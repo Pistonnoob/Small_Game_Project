@@ -45,6 +45,8 @@ public:
 	int CreateEmitterEllipse(ID3D11ShaderResourceView* texture, int widthConstant, int heightConstant);
 	int CreateEmitterLissajous(ID3D11ShaderResourceView* texture, int widthConstant, int heightConstant, int xLobes, int yLobes);
 	int CreateEmitterHypotrochoid(ID3D11ShaderResourceView* texture, int circleRadius, int containedCircleRadius, int pointOffset);
+private:	//Functions
+	int RenderBuffers(ID3D11DeviceContext* deviceContext);
 };
 
 #endif

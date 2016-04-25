@@ -39,6 +39,10 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	D3D11_SUBRESOURCE_DATA indexData;
 	this->world = DirectX::XMMatrixIdentity();
 
+	this->myTextures = Texture();
+	std::string skinOfMyFallenEnemies = "Particles.mtl";
+	bool victory = this->myTextures.Initialize(device, deviceContext, skinOfMyFallenEnemies);
+
 	int particleCnt = _countof(this->particles);
 	//sizeof(this->particles) / sizeof(Particle)
 	for (int i = 0; i < particleCnt; i++)
@@ -134,6 +138,15 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 {
 	int result = 0;
 
+	this->RenderBuffers(gHandler->GetDeviceContext());
+
+	ParticleShaderParameters parameters;
+
+	parameters.worldMatrix = this->world;
+	parameters.diffTexture = this->myTextures.GetTexture(0);
+
+	gHandler->ParticleRender(&parameters, camera);
+
 	return result;
 }
 
@@ -160,4 +173,20 @@ int ParticleHandler::CreateEmitterLissajous(ID3D11ShaderResourceView * texture, 
 int ParticleHandler::CreateEmitterHypotrochoid(ID3D11ShaderResourceView * texture, int circleRadius, int containedCircleRadius, int pointOffset)
 {
 	return 0;
+}
+
+int ParticleHandler::RenderBuffers(ID3D11DeviceContext * deviceContext)
+{
+	unsigned int stride;
+	unsigned offset;
+
+	//Set vertex buffer stride and offset
+	int result = 0;
+	stride = sizeof(VertexType);
+	offset = 0;
+	deviceContext->IASetVertexBuffers(0, 1, &this->vertexBuffer, &stride, &offset);
+	deviceContext->IASetIndexBuffer(this->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	return result;
 }
