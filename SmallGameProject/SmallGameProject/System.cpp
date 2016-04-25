@@ -10,7 +10,7 @@ System::System()
 
 System::~System()
 {
-
+	this->Shutdown();
 }
 
 bool System::Initialize()
@@ -289,10 +289,6 @@ bool System::Update(float dTime)
 	DirectX::XMMATRIX viewMatrix;
 	this->cameraH->GetViewMatrix(viewMatrix);
 	
-	//shadowMap
-	this->graphicH->SetShadowRTV();
-	this->graphicH->ShadowRender(this->testModel, this->cameraH);
-	
 	//lightning
 
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
@@ -302,7 +298,7 @@ bool System::Update(float dTime)
 	lightShaderParams->camPos = this->cameraH->GetCameraPos();
 	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
 
-	DirectX::XMMATRIX viewMatrix;
+//	DirectX::XMMATRIX viewMatrix;
 	this->cameraH->GetBaseViewMatrix(viewMatrix);
 
 	lightShaderParams->viewMatrix = viewMatrix;

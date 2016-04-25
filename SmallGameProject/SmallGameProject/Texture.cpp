@@ -358,8 +358,12 @@ void Texture::Shutdown()
 {
 	//Release the texture view resource
 	for (int i = 0; i < this->textureViews.size(); i++) {
-		this->textureViews.at(i)->Release();
-		this->textureViews.at(i) = nullptr;
+		if (this->textureViews.at(i) != nullptr)
+		{
+			this->textureViews.at(i)->Release();
+			this->textureViews.at(i) = nullptr;
+		}
+
 	}
 
 	//Release the texture

@@ -17,6 +17,7 @@ StartState::StartState(GameStateHandler * GSH)
 
 StartState::~StartState()
 {
+	this->Shutdown();
 }
 
 void StartState::Shutdown()

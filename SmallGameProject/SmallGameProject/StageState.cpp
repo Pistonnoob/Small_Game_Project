@@ -18,6 +18,7 @@ StageState::StageState()
 
 StageState::~StageState()
 {
+	this->Shutdown();
 }
 
 void StageState::Shutdown()
@@ -148,7 +149,6 @@ int StageState::Update(float deltaTime)
 int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
-
 	//Render models
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
@@ -161,6 +161,20 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	}
 	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
+
+	
+	
+	//shadowMap
+	gHandler->SetShadowRTV();
+
+	for (int i = 0; i < this->enemies.size(); i++)
+	{
+		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		this->m_car.SetWorldMatrix(worldMatrix);
+
+		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);
+	}
 
 
 	return result;

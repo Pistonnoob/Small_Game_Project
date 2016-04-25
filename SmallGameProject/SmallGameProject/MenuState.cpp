@@ -16,6 +16,7 @@ MenuState::MenuState()
 
 MenuState::~MenuState()
 {
+	this->Shutdown();
 }
 
 void MenuState::Shutdown()

@@ -18,7 +18,7 @@ InputHandler::InputHandler()
 
 InputHandler::~InputHandler()
 {
-
+	this->Shutdown();
 }
 
 void InputHandler::Initialize(HINSTANCE hInstance, HWND hwnd, int screenWidth, int screenHeight)
