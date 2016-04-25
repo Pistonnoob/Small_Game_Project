@@ -46,8 +46,9 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
 
-	//Create quad
-	//First triangle
+	//**Create quad**\\
+
+	//*First triangle*\\
 	//Top-Left
 	element.position = input[0].position;
 	element.position = mul(element.position, rotationMatrix);
@@ -73,7 +74,8 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	element.tex = float2(0.0f, 1.0f);
 	output.Append(element);
 	output.RestartStrip();
-	//Second triangle
+
+	//*Second triangle*\\
 	//Top-Left
 	element.position = input[0].position;
 	element.position = mul(element.position, rotationMatrix);
