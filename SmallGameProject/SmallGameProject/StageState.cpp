@@ -161,20 +161,12 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
-	
-	
 	//shadowMap
-	gHandler->SetShadowRTV();
-
+	gHandler->SetShadowRTV(); //här är läckan
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_car.SetWorldMatrix(worldMatrix);
-
 		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);
 	}
-
 
 	return result;
 }

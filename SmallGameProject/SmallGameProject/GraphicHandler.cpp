@@ -294,7 +294,7 @@ void GraphicHandler::SetLightRTV()
 
 void GraphicHandler::SetShadowRTV()
 {
-	this->shadowShaderH->SetViewPort(this->engine->GetDevice());
+	this->shadowShaderH->SetViewPort(this->engine->GetDeviceContext());
 	this->shadowShaderH->SetRenderTarget(this->engine->GetDeviceContext());
 }
 

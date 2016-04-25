@@ -283,14 +283,8 @@ bool System::Update(float dTime)
 	
 	//Render models
 	this->gameSH->Render(this->graphicH, hwnd);
-
-
-
-	DirectX::XMMATRIX viewMatrix;
-	this->cameraH->GetViewMatrix(viewMatrix);
 	
 	//lightning
-
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
 
 	this->graphicH->SetLightRTV();
@@ -298,7 +292,7 @@ bool System::Update(float dTime)
 	lightShaderParams->camPos = this->cameraH->GetCameraPos();
 	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
 
-//	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX viewMatrix;
 	this->cameraH->GetBaseViewMatrix(viewMatrix);
 
 	lightShaderParams->viewMatrix = viewMatrix;

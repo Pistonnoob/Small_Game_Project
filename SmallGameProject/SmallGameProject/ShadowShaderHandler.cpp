@@ -12,6 +12,18 @@ ShadowShaderHandler::~ShadowShaderHandler()
 
 bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nrOfResources, int screenWidth, int screenHeight) throw(...)
 {
+	this->viewPort = new D3D11_VIEWPORT;
+
+	float width = 1024.0f;
+	float height = 1024.0f;
+
+	this->viewPort->TopLeftX = 0.0f;
+	this->viewPort->TopLeftY = 0.0f;
+	this->viewPort->Width = width;
+	this->viewPort->Height = height;
+	this->viewPort->MinDepth = 0.0f;
+	this->viewPort->MaxDepth = 1.0f;
+
 	try
 	{
 		this->Create2DTexture(gDevice, screenWidth, screenHeight);
@@ -22,9 +34,6 @@ bool ShadowShaderHandler::Initialize(ID3D11Device * gDevice, HWND * hwnd, int nr
 		this->LoadVertexShaderFromFile();
 		this->CreateVertexLayout(gDevice);
 		this->CreateVertexShader(gDevice);
-
-		//vertexBuffer no longer needed
-		this->ReleaseVertexBuffer();
 
 		this->CreateConstantBuffer(gDevice);
 	}
@@ -74,13 +83,6 @@ void ShadowShaderHandler::Shutdown()
 		this->layout = nullptr;
 	}
 
-	if (this->nullResource != nullptr)
-	{
-		this->nullResource[0]->Release();
-		this->nullResource[0] = nullptr;
-		this->nullResource = nullptr;
-	}
-
 	if (this->viewPort != nullptr)
 	{
 		delete this->viewPort;
@@ -91,6 +93,12 @@ void ShadowShaderHandler::Shutdown()
 	{
 		this->vertexShaderBuffer->Release();
 		this->vertexShaderBuffer = nullptr;
+	}
+	
+	if (this->vertexShaderBuffer != nullptr)
+	{
+		vertexShaderBuffer->Release();
+		vertexShaderBuffer = nullptr;
 	}
 }
 
@@ -139,26 +147,15 @@ void ShadowShaderHandler::StartUp()
 	this->vertexShaderBuffer	= nullptr;
 	this->layout				= nullptr;
 	this->matrixBuffer			= nullptr;
-	this->nullResource			= nullptr;
 	this->viewPort				= nullptr;
 	this->mDepthMapSRV			= nullptr;
 	this->mDepthMapDSV			= nullptr;
 	this->depthMap				= nullptr;
 }
 
-void ShadowShaderHandler::SetViewPort(ID3D11Device * gDevice)
+void ShadowShaderHandler::SetViewPort(ID3D11DeviceContext * gDeviceContext)
 {
-	this->viewPort = new D3D11_VIEWPORT;
-	
-	float width = 1024.0f;
-	float height = 1024.0f;
-
-	this->viewPort->TopLeftX	= 0.0f;
-	this->viewPort->TopLeftY	= 0.0f;
-	this->viewPort->Width		= width;
-	this->viewPort->Height		= height;
-	this->viewPort->MinDepth	= 0.0f;
-	this->viewPort->MaxDepth	= 1.0f;
+	gDeviceContext->RSSetViewports(1,this->viewPort);
 }
 
 void ShadowShaderHandler::Create2DTexture(ID3D11Device * gDevice, int screenWidth, int screenHeight) throw(...)
@@ -278,15 +275,6 @@ void ShadowShaderHandler::CreateVertexLayout(ID3D11Device * gDevice) throw(...)
 
 	//Create the vertex input layout.
 	resultHelper = gDevice->CreateInputLayout(shadowVertexLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->layout);
-}
-
-void ShadowShaderHandler::ReleaseVertexBuffer()
-{
-	if (this->vertexShaderBuffer != nullptr)
-	{
-		vertexShaderBuffer->Release();
-		vertexShaderBuffer = nullptr;
-	}
 }
 
 void ShadowShaderHandler::CreateVertexShader(ID3D11Device * gDevice) throw(...)

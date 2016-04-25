@@ -22,7 +22,6 @@ private:
 	ID3D11VertexShader* vertexShader;
 	ID3D11InputLayout* layout;	
 	ID3D11Buffer* matrixBuffer;		
-	ID3D11ShaderResourceView** nullResource; 
 	
 	D3D11_VIEWPORT* viewPort; 
 
@@ -47,7 +46,7 @@ public:
 
 	//getters / setters
 	ID3D11ShaderResourceView* getShadowMapSRW() const;
-	void SetViewPort(ID3D11Device* gDevice);
+	void SetViewPort(ID3D11DeviceContext* gDeviceContext);
 
 
 private:
@@ -63,12 +62,9 @@ private:
 	*/
 	void LoadVertexShaderFromFile() throw(...);
 	void CreateVertexLayout(ID3D11Device* gDevice) throw(...);
-	void ReleaseVertexBuffer();
-	
 	void CreateVertexShader(ID3D11Device* gDevice) throw(...);
 	void CreateConstantBuffer(ID3D11Device* gDevice) throw(...);
 
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND* hwnd, WCHAR* shaderFilename);
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, ShadowShaderParameters* params) throw(...);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart);
 
