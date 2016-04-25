@@ -5,10 +5,23 @@
 class ParticleEmitter
 {
 private:
+
+	struct Particle {
+		float x, y, z, scale;
+		float r, g, b, rotation;
+		bool active;
+	};
+
+	struct VertexType {
+		DirectX::XMVECTOR position;
+		DirectX::XMVECTOR color;
+	};
+
 	float particleDeviationX, particleDeviationY, particleDeviationZ;
 	float particleVelocity;
 	float particleSize, particlesPerSecond;
 
+	int currentParticleCnt;
 	int maxParticles;
 	float accumulatedTime;
 
@@ -17,11 +30,9 @@ private:
 	ID3D11Buffer* indexBuffer;
 	ID3D11ShaderResourceView* texture;
 
-	struct Particle {
-		float x, y, z, scale;
-		float r, g, b, rotation;
-		bool active;
-	};
+	Particle* particles;
+	VertexType* vertices;
+
 public:
 	ParticleEmitter();
 	virtual ~ParticleEmitter();
