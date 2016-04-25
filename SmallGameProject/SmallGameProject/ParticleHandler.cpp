@@ -27,6 +27,8 @@ void ParticleHandler::Shutdown()
 		this->indexBuffer = NULL;
 	}
 
+	this->myTextures.Shutdown();
+
 }
 
 void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext)
@@ -115,6 +117,7 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 		result = false;
 	}
 
+	delete[] indices;
 }
 
 void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)

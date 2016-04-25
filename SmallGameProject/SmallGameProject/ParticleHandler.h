@@ -23,7 +23,6 @@ private:
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 
-	ID3D11ShaderResourceView* texture;
 	Texture myTextures;
 
 	Particle particles[5];

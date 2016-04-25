@@ -36,6 +36,8 @@ void StageState::Shutdown()
 	}
 	this->enemies.clear();
 
+	this->myParticleHandler.Shutdown();
+
 	//Release your m_AI
 
 	GameState::Shutdown();
