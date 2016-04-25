@@ -1,7 +1,7 @@
 #include "Entity.h"
 
 Entity::Entity() {
-	this->entityModel = new Model();
+	this->entityModel = nullptr;
 	this->entityBV = nullptr;
 	this->entitySubject = EntitySubject();
 }
