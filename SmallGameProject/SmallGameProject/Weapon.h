@@ -2,19 +2,21 @@
 #define WEAPON_H
 
 #include "Model.h"
+#include "Modifiers.h"
 
 class Weapon {
 
 private:
 	int const static CAP = 18;
 
-	Model* weaponModel;
-	bool statistics[CAP];
-	
-	bool setWeaponModifier(int WEAPON_ENUM);
-	void calculateModifiers();
+	float attackDamage;
+	float playerSpeed;
+	float attackSpeed;
 
-	void setAllToFalse();
+	Model* weaponModel;
+
+	//an array of adresses to the lib
+	bool weaponMods[CAP];
 public:
 	Weapon();
 	Weapon(float Hp, float MS, float Dmg);
@@ -26,8 +28,14 @@ public:
 	void ShutDown();
 
 	const Model* GetModel();
-	const int GetNrOFModifiers();
-	const float* GetModifiers();
+	void ActivateWeaponMod(const int &weaponEnum);
+
+private:
+	bool setWeaponModifier(int WEAPON_ENUM) throw(...);
+	void calculateFinalStats();
+	void StartUp();
+
+	void setAllToFalse();
 };
 
 #endif
