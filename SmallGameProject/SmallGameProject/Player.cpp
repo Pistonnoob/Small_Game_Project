@@ -30,6 +30,29 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	}
 
 	//Set the weapon pos to the Player
+	//Set the world matrix to a defualt state
+	DirectX::XMMATRIX playerWorldMatrix;
+	this->entityModel->GetWorldMatrix(playerWorldMatrix);
+		
+	//Initial offset
+	DirectX::XMMATRIX offset = DirectX::XMMatrixTranslation(this->posX, 0, this->posZ);
+	//create the new world matrix
+	playerWorldMatrix = playerWorldMatrix * offset;
+
+	//weapon matrix
+	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
+	offset = DirectX::XMMatrixTranslation(5, 3, 0);
+	//weaponWorldMatrix = weaponWorldMatrix * offset;
+
+	//Rotation matrix
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(180);
+
+	//give the player model its new 
+	this->entityModel->SetWorldMatrix(rotationMatrix * playerWorldMatrix);
+	this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponWorldMatrix);
+
+
+
 
 	return true;
 }
