@@ -227,6 +227,7 @@
     <ClInclude Include="MeleeEnemy.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Modifiers.h" />
     <ClInclude Include="MoveDownCommand.h" />
     <ClInclude Include="MoveLeftCommand.h" />
     <ClInclude Include="MoveRightCommand.h" />

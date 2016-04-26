@@ -380,6 +380,9 @@
     <ClInclude Include="EventLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Modifiers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredVertexShader.hlsl">

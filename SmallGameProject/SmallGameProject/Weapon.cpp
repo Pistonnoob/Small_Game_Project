@@ -1,55 +1,43 @@
 #include "Weapon.h"
 
+void Weapon::setAllToFalse()
+{
+	for (int i = 0; i < this->CAP; i++)
+	{
+		this->statistics[i] = false;
+	}
+}
+
 Weapon::Weapon()
 {
-	this->weapondModel = new Model();
-
-	for (int i = 0; i < this->nrOfModifiers; i++) {
-		this->modifyers[i] = 1.f;
-	}
+	this->weaponModel = new Model();
 }
 
 Weapon::Weapon(float Hp, float MS, float Dmg)
 {
-	this->weapondModel = new Model();
-
-	// Assign each invidual modifier
-	this->modifyers[0] = Hp;
-	this->modifyers[1] = MS;
-	this->modifyers[2] = Dmg;
-
+	this->weaponModel = new Model();
 }
 
 Weapon::~Weapon()
 {
-
 }
 
 bool Weapon::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename)
 {
-	return this->weapondModel->Initialize(device, deviceContext, objFilename);
+	return this->weaponModel->Initialize(device, deviceContext, objFilename);
 }
 
 void Weapon::ShutDown()
 {
-	if (this->weapondModel) {
-		this->weapondModel->Shutdown();
-		delete this->weapondModel;
-		this->weapondModel = nullptr;
+	if (this->weaponModel) 
+	{
+		this->weaponModel->Shutdown();
+		delete this->weaponModel;
+		this->weaponModel = nullptr;
 	}
 }
 
 const Model * Weapon::GetModel()
 {
-	return this->weapondModel;
-}
-
-const int Weapon::GetNrOFModifiers()
-{
-	return this->nrOfModifiers;
-}
-
-const float * Weapon::GetModifiers()
-{
-	return this->modifyers;
+	return this->weaponModel;
 }
