@@ -56,6 +56,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		bool cameraResult = this->myCamera.Initialize();
 		float zoomIn = 1.0f / 4.0f;
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 4.0f, -20.0f));
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
@@ -155,21 +156,21 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
 
-	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
 	//Render models
 	//renders all the actors in the enemies vector
-	for (int i = 0; i < this->enemies.size(); i++)
-	{
-		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_car.SetWorldMatrix(worldMatrix);
+	//for (int i = 0; i < this->enemies.size(); i++)
+	//{
+	//	XMFLOAT3 pos = this->enemies.at(i)->getPosition();
+	//	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+	//	this->m_car.SetWorldMatrix(worldMatrix);
 
-		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
-	}
-	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
-	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
+	//	gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
+	//}
+	////this->graphicH->DeferredRender(this->m_car, this->cameraH);
+	//gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
+	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
 	return result;
 }

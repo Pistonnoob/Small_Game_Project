@@ -96,6 +96,10 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	if (!indices) {
 		result = false;
 	}
+	for (int i = 0; i < particleCnt; i++)
+	{
+		indices[i] = i;
+	}
 
 	//Set up the description of the static index buffer
 	ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
