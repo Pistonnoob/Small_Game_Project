@@ -16,14 +16,18 @@ namespace Modifiers
 		SPEED_UPx10,				//6
 		SPEED_UPx20,				//7
 		SPEED_UPx30,				//8
-		
-		ATTACK_SPEED_UPx10,			//9
-		ATTACK_SPEED_UPx20,			//10
-		ATTACK_SPEED_UPx30,			//11
 
-		ATTACK_SPEED_DOWNx10,		//12
-		ATTACK_SPEED_DOWNx20,		//13
-		ATTACK_SPEED_DOWNx30		//14
+		SPEED_DOWNx10,				//9
+		SPEED_DOWNx20,				//10
+		SPEED_DOWNx30,				//11
+		
+		ATTACK_SPEED_UPx10,			//12
+		ATTACK_SPEED_UPx20,			//13
+		ATTACK_SPEED_UPx30,			//14
+
+		ATTACK_SPEED_DOWNx10,		//15
+		ATTACK_SPEED_DOWNx20,		//16
+		ATTACK_SPEED_DOWNx30		//17
 	};
 
 	//not yet implemented

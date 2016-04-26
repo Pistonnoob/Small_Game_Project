@@ -25,6 +25,8 @@ Weapon::~Weapon()
 bool Weapon::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename)
 {
 	return this->weaponModel->Initialize(device, deviceContext, objFilename);
+	this->setAllToFalse();
+
 }
 
 void Weapon::ShutDown()

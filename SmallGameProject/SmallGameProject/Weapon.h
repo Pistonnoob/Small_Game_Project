@@ -6,11 +6,11 @@
 class Weapon {
 
 private:
-	int const static CAP = 15;
+	int const static CAP = 18;
 
 	Model* weaponModel;
 	bool statistics[CAP];
-
+	
 	bool setWeaponModifier(int WEAPON_ENUM);
 	void calculateModifiers();
 
