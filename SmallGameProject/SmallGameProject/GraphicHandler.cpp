@@ -164,8 +164,6 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 
 void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera)
 {
-	this->engine->GetDeviceContext()->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
-
 	DirectX::XMMATRIX viewMatrix;
 	camera->GetViewMatrix(viewMatrix);
 
@@ -178,6 +176,7 @@ void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, Cam
 
 void GraphicHandler::TextRender()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
 	this->textH->Render(this->engine->GetDeviceContext(), this->orthographicMatrix);
 }
 
@@ -269,12 +268,14 @@ void GraphicHandler::SetDeferredRTVs()
 
 void GraphicHandler::SetLightRTV()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(0, 0, 0xffffffff);
 	this->engine->SetRenderTargetView();
 	this->engine->SetDepth(2);
 }
 
 void GraphicHandler::SetParticleRTV()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
 	this->engine->SetRenderTargetView(this->deferredShaderH->GetDepthView());
 	this->engine->SetDepth(3);
 }

@@ -76,7 +76,25 @@ int StartState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
 
+	gHandler->SetDeferredRTVs();
+
 	gHandler->DeferredRender(&this->startModel, &this->camera);
+
+	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+
+	gHandler->SetLightRTV();
+
+	lightShaderParams->camPos = this->camera.GetCameraPos();
+	lightShaderParams->lightPos = DirectX::XMFLOAT4(0.0f, 0.0f, -20.0f, 0.0f);
+
+	DirectX::XMMATRIX viewMatrix;
+	this->camera.GetBaseViewMatrix(viewMatrix);
+
+	lightShaderParams->viewMatrix = viewMatrix;
+
+	gHandler->LightRender(lightShaderParams);
+
+	delete lightShaderParams;
 	
 	return result;
 }

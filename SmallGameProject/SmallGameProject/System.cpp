@@ -277,30 +277,9 @@ bool System::Update(float dTime)
 
 	//Clear the render target views
 	this->graphicH->ClearRTVs();
-
-	//Set deferred render targets
-	this->graphicH->SetDeferredRTVs();
 	
 	//Render models
 	this->gameSH->Render(this->graphicH, hwnd);
-
-
-	
-	LightShaderParameters* lightShaderParams = new LightShaderParameters;
-
-	this->graphicH->SetLightRTV();
-
-	lightShaderParams->camPos = this->cameraH->GetCameraPos();
-	lightShaderParams->lightPos = this->cameraH->GetCameraPos();
-
-	DirectX::XMMATRIX viewMatrix;
-	this->cameraH->GetBaseViewMatrix(viewMatrix);
-
-	lightShaderParams->viewMatrix = viewMatrix;
-
-	this->graphicH->LightRender(lightShaderParams);
-
-	delete lightShaderParams;
 
 	this->graphicH->TextRender();
 
