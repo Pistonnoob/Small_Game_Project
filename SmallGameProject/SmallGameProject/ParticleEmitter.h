@@ -9,16 +9,16 @@ private:
 	struct Particle {
 		float x, y, z, scale;
 		float r, g, b, rotation;
-		Particle* next;
+		float velocity;
 		bool active;
 	};
 
 	struct VertexType {
-		DirectX::XMVECTOR position;
-		DirectX::XMVECTOR color;
+		DirectX::XMFLOAT4 position;
+		DirectX::XMFLOAT4 color;
 	};
 
-	float particleDeviationX, particleDeviationY, particleDeviationZ;
+	float particleDeviationX, particleDeviationY, particleDeviationZ, particleVelocityVariation;
 	float particleVelocity;
 	float particleSize, particlesPerSecond;
 
