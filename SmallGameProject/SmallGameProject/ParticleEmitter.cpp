@@ -52,6 +52,17 @@ void ParticleEmitter::Shutdown()
 		this->vertices = nullptr;
 	}
 
+	while (this->rootParticle->next != nullptr)
+	{
+		Particle* temp = this->rootParticle;
+		this->rootParticle = this->rootParticle->next;
+		delete temp;
+	}
+	if (this->rootParticle != nullptr)
+	{
+		delete this->rootParticle;
+	}
+
 }
 
 bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
@@ -59,6 +70,7 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
+
 
 	//Initialize the emitter
 	result = this->InitializeEmitter();
@@ -129,6 +141,13 @@ bool ParticleEmitter::InitializeEmitter()
 	{
 		this->particles[i].active = false;
 	}
+
+	this->rootParticle = new Particle{
+		0.0f, 0.0f, 0.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		nullptr,
+		true
+	};
 
 	this->currentParticleCnt = 0;
 
@@ -232,6 +251,15 @@ void ParticleEmitter::UpdateParticles(float dT)
 
 void ParticleEmitter::KillParticles()
 {
+	//Go through all particles
+	for (int i = 0; i < this->maxParticles; i++)
+	{
+		//The conditions for killing / restarting the particle
+		if (!this->particles[i].active)
+		{
+			//Kill the particle
+		}
+	}
 }
 
 bool ParticleEmitter::UpdateBuffers(ID3D11DeviceContext * deviceContext)

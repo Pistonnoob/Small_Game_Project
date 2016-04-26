@@ -9,6 +9,7 @@ private:
 	struct Particle {
 		float x, y, z, scale;
 		float r, g, b, rotation;
+		Particle* next;
 		bool active;
 	};
 
@@ -30,6 +31,7 @@ private:
 	ID3D11Buffer* indexBuffer;
 	ID3D11ShaderResourceView* texture;
 
+	Particle* rootParticle;
 	Particle* particles;
 	VertexType* vertices;
 
