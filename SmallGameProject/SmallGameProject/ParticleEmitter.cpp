@@ -94,8 +94,19 @@ bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)
 	//Release old particles
 	this->KillParticles();
 
-	//Emitt new particles
-	this->EmitParticles(dT);
+
+	float particleThresshold = (1000000.0f / this->particlesPerSecond);
+	/*if (this->accumulatedTime > particleThresshold)
+	{
+		this->accumulatedTime = this->accumulatedTime - particleThresshold;
+	}*/
+	while (this->accumulatedTime > particleThresshold)
+	{
+		this->accumulatedTime = this->accumulatedTime - particleThresshold;
+
+		//Emitt new particles
+		this->EmitParticles(dT);
+	}
 
 	//Update the particles
 	this->UpdateParticles(dT);
@@ -262,14 +273,10 @@ void ParticleEmitter::EmitParticles(float dT)
 	this->accumulatedTime += dT;
 
 	// Set emit particle to false for now.
-	emitParticle = false;
+	emitParticle = true;
 
 	// Check if it is time to emit a new particle or not.
-	if (this->accumulatedTime > (1000.0f / this->particlesPerSecond))
-	{
-		this->accumulatedTime = 0.0f;
-		emitParticle = true;
-	}
+	
 
 	// If there are particles to emit then emit one per frame.
 	if ((emitParticle == true) && (this->currentParticleCnt < (this->maxParticles - 1)))
@@ -297,7 +304,7 @@ void ParticleEmitter::EmitParticles(float dT)
 		found = false;
 		while (!found)
 		{
-			if ((this->particles[index].active == false) || (this->particles[index].z < positionZ))
+			if ((this->particles[index].active == false) /*|| (this->particles[index].z < positionZ)*/)
 			{
 				found = true;
 			}
@@ -328,6 +335,7 @@ void ParticleEmitter::EmitParticles(float dT)
 		}
 
 		// Now insert it into the particle array in the correct depth order.
+		positionX = -10.0f + (index * 2) % 50;
 		this->particles[index].x = positionX;
 		this->particles[index].y = positionY;
 		this->particles[index].z = positionZ;
@@ -367,8 +375,8 @@ void ParticleEmitter::KillParticles()
 			this->currentParticleCnt--;
 			for (int j = i; j < this->maxParticles - 1; j++)
 			{
-				this->particles[j] = this->particles[j + 1];
-				/*this->particles[j].x = this->particles[j + 1].x;
+				/*this->particles[j] = this->particles[j + 1];*/
+				this->particles[j].x = this->particles[j + 1].x;
 				this->particles[j].y = this->particles[j + 1].y;
 				this->particles[j].z = this->particles[j + 1].z;
 				this->particles[j].scale = this->particles[j + 1].scale;
@@ -377,7 +385,7 @@ void ParticleEmitter::KillParticles()
 				this->particles[j].b = this->particles[j + 1].b;
 				this->particles[j].rotation = this->particles[j + 1].rotation;
 				this->particles[j].active = this->particles[j + 1].active;
-				this->particles[j].velocity = this->particles[j + 1].velocity;*/
+				this->particles[j].velocity = this->particles[j + 1].velocity;
 			}
 		}
 	}

@@ -152,7 +152,7 @@ void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
 	}
 }
 
-int ParticleHandler::Update(int dT, ID3D11DeviceContext * deviceContext)
+int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
 {
 	int result = 0;
 

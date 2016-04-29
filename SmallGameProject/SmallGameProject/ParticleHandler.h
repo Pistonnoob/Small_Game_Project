@@ -37,7 +37,7 @@ public:
 	void Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	virtual void OnNotify(const Entity* entity, Events::ENTITY evnt);
 
-	int Update(int dT, ID3D11DeviceContext* deviceContext);
+	int Update(float dT, ID3D11DeviceContext* deviceContext);
 
 	int Render(GraphicHandler* gHandler, CameraHandler* camera);
 
