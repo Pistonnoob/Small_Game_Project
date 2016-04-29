@@ -176,7 +176,7 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 	return;
 }
 
-void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera)
+void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera, int amountOfParticles)
 {
 	DirectX::XMMATRIX viewMatrix;
 	camera->GetViewMatrix(viewMatrix);
@@ -185,7 +185,7 @@ void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, Cam
 	shaderParams->camPos = camera->GetCameraPos();
 	shaderParams->projectionMatrix = this->perspectiveMatrix;
 
-	this->particleShaderH->Render(this->engine->GetDeviceContext(), 5, 0, shaderParams);
+	this->particleShaderH->Render(this->engine->GetDeviceContext(), amountOfParticles, 0, shaderParams);
 }
 
 void GraphicHandler::TextRender()

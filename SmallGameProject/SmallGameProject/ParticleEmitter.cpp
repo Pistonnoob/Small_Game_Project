@@ -90,12 +90,14 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)
 {
 	bool result = false;
+	// Increment the frame time.
+	this->accumulatedTime += dT;
 
 	//Release old particles
 	this->KillParticles();
 
 
-	float particleThresshold = (1000000.0f / this->particlesPerSecond);
+	float particleThresshold = (1000.0f / this->particlesPerSecond);
 	/*if (this->accumulatedTime > particleThresshold)
 	{
 		this->accumulatedTime = this->accumulatedTime - particleThresshold;
@@ -119,7 +121,7 @@ bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)
 	return true;
 }
 
-void ParticleEmitter::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters)
+void ParticleEmitter::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles)
 {
 	//NOT IMPLEMENTED
 	this->RenderBuffers(deviceContext);
@@ -128,6 +130,7 @@ void ParticleEmitter::Render(ID3D11DeviceContext * deviceContext, ParticleShader
 
 	parameters.worldMatrix = this->world;
 	parameters.diffTexture = this->texture;
+	amountOfParticles = this->currentParticleCnt;
 }
 
 ID3D11ShaderResourceView * ParticleEmitter::GetTexture()
@@ -142,15 +145,15 @@ int ParticleEmitter::GetIndexCount()
 
 bool ParticleEmitter::InitializeEmitter()
 {
-	this->particleDeviationX = 6.0f;
+	this->particleDeviationX = 20.0f;
 	this->particleDeviationY = 0.1f;
 	this->particleDeviationZ = 2.0f;
 
 	this->particleVelocity = 1.0f;
-	this->particleVelocityVariation = 0.2f;
+	this->particleVelocityVariation = 2.0f;
 
 	this->particleSize = 0.2f;
-	this->particlesPerSecond = 250.0f;
+	this->particlesPerSecond = 600.0f;
 	this->maxParticles = 5000;
 
 	this->particles = new Particle[this->maxParticles];
@@ -269,8 +272,6 @@ void ParticleEmitter::EmitParticles(float dT)
 	int index, i, j;
 
 
-	// Increment the frame time.
-	this->accumulatedTime += dT;
 
 	// Set emit particle to false for now.
 	emitParticle = true;
@@ -285,10 +286,8 @@ void ParticleEmitter::EmitParticles(float dT)
 
 		// Now generate the randomized particle properties.
 		positionX = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationX;
-		positionY = 10.0f + (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
-		positionY = 10.0f;
+		positionY = 20.0f + (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
 		positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationZ;
-		positionZ = 0.0f;
 		velocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * particleVelocityVariation;
 
 		red = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
@@ -335,7 +334,6 @@ void ParticleEmitter::EmitParticles(float dT)
 		}
 
 		// Now insert it into the particle array in the correct depth order.
-		positionX = -10.0f + (index * 2) % 50;
 		this->particles[index].x = positionX;
 		this->particles[index].y = positionY;
 		this->particles[index].z = positionZ;
@@ -356,7 +354,7 @@ void ParticleEmitter::UpdateParticles(float dT)
 	// Each frame we update all the particles by making them move downwards using their position, velocity, and the frame time.
 	for (int i = 0; i<this->currentParticleCnt; i++)
 	{
-		this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT * 0.00001f);
+		this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 	}
 
 	return;

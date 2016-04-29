@@ -174,11 +174,12 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 	if (this->emitters.size())
 	{
-		this->emitters.at(0).Render(gHandler->GetDeviceContext(), parameters);
+		int amountOfParticles = 0;
+		this->emitters.at(0).Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
 		parameters.worldMatrix = this->world;
 		parameters.diffTexture = this->myTextures.GetTexture(1);
 
-		gHandler->ParticleRender(&parameters, camera);
+		gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	}
 
 

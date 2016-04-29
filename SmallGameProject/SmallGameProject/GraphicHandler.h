@@ -38,7 +38,7 @@ public:
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight, DirectX::XMMATRIX baseViewMatrix);
 	void DeferredRender(Model* model, CameraHandler* camera);
 	void LightRender(LightShaderParameters* shaderParams);
-	void ParticleRender(ParticleShaderParameters* shaderParams, CameraHandler* camera);
+	void ParticleRender(ParticleShaderParameters* shaderParams, CameraHandler* camera, int amountOfParticles);
 	void TextRender();
 	void Shutdown();
 
