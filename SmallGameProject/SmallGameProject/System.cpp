@@ -10,7 +10,7 @@ System::System()
 
 System::~System()
 {
-
+	this->Shutdown();
 }
 
 bool System::Initialize()
@@ -281,9 +281,8 @@ bool System::Update(float dTime)
 	
 	//Render models
 	this->gameSH->Render(this->graphicH, hwnd);
-
-
 	
+	//lightning
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
 
 	this->graphicH->SetLightRTV();

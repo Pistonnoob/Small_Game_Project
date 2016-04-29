@@ -30,7 +30,6 @@ bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 		this->entityBV->GenerateBounds(this->entityModel);
 	}
 
-
 	return true;
 }
 
@@ -71,6 +70,8 @@ Model* Entity::GetModel()
 {
     return this->entityModel;
 }
+
+
 
 DirectX::XMFLOAT3 Entity::GetPosition()
 {

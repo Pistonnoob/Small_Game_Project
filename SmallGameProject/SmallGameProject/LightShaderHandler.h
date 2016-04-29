@@ -28,6 +28,7 @@ private:
 	ID3D11InputLayout* layout;
 	ID3D11Buffer* matrixBuffer;
 	ID3D11SamplerState* samplerState;
+	ID3D11SamplerState* shadowSamplerState;
 	ID3D11ShaderResourceView** nullResource;
 	int nrOfShaderResources;
 

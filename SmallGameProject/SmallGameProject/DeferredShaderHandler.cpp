@@ -350,7 +350,6 @@ void DeferredShaderHandler::Shutdown()
 	return;
 }
 
-
 bool DeferredShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart, DeferredShaderParameters* params)
 {
 	bool result = false;

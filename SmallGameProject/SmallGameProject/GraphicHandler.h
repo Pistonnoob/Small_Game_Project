@@ -1,9 +1,11 @@
 #ifndef GRAPHICHANDLER_H
 #define GRAPHICHANDLER_H
 
+#include <D3D11.h>
 #include "D3DHandler.h"
 #include "DeferredShaderHandler.h"
 #include "LightShaderHandler.h"
+#include "ShadowShaderHandler.h"
 #include "ScreenQuad.h"
 #include "TextHandler.h"
 #include "Model.h"
@@ -18,27 +20,39 @@ protected:
 	D3DHandler* engine;
 	DeferredShaderHandler* deferredShaderH;
 	LightShaderHandler* lightShaderH;
+	ShadowShaderHandler* shadowShaderH;
 	ScreenQuad* screenQuad;
 	TextHandler* textH;
 
+	
 	int screenWidth;
 	int screenHeight;
 
 	DirectX::XMMATRIX perspectiveMatrix;
 	DirectX::XMMATRIX orthographicMatrix;
+
+	DirectX::XMMATRIX lightPerspective;
+	DirectX::XMMATRIX lightView;
+
+	DirectX::XMFLOAT4 lightPos;
+
 public:
 	GraphicHandler();
 	virtual ~GraphicHandler();
 
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight, DirectX::XMMATRIX baseViewMatrix);
+	
 	void DeferredRender(Model* model, CameraHandler* camera);
 	void LightRender(LightShaderParameters* shaderParams);
+	void ShadowRender(Model* model, CameraHandler* camera);
+	
 	void TextRender();
 	void Shutdown();
 
 	void ClearRTVs();
 	void SetDeferredRTVs();
 	void SetLightRTV();
+	void SetShadowRTV();
 
 	void PresentScene();
 

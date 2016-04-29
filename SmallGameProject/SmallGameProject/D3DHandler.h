@@ -27,6 +27,7 @@ public:
 	void SetRenderTargetView();
 
 	void PresentScene();
+	void SetViewport();
 
 	void Shutdown();
 protected:

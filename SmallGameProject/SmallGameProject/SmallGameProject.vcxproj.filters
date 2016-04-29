@@ -61,6 +61,12 @@
     <Filter Include="Header Files\Libraries">
       <UniqueIdentifier>{55a88415-2a2d-495e-b914-81eef98eb3fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Abilities">
+      <UniqueIdentifier>{7c7bf8c4-4755-4023-b095-62086d02a1db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Abilities">
+      <UniqueIdentifier>{721d7e91-2060-40fc-a973-d0986671d514}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Command.cpp">
       <Filter>Source Files</Filter>
@@ -177,6 +186,9 @@
     <ClCompile Include="TestState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
     <ClCompile Include="Algorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -195,11 +207,17 @@
     <ClCompile Include="BoxBoundingVolume.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="StageState.cpp">
       <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcFire.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ReverseFire.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitFire.cpp">
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="Actor.h">
       <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Command.h">
       <Filter>Header Files</Filter>
@@ -317,8 +338,8 @@
     <ClInclude Include="gameStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestState.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ShadowShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\GameStates</Filter>
@@ -338,9 +359,6 @@
     <ClInclude Include="Observer.h">
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="StageState.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
@@ -352,6 +370,15 @@
     </ClInclude>
     <ClInclude Include="ShaderStructLibrary.h">
       <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Ability.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Abilities.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="EventLib.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -368,6 +395,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowMapVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="FontVertexShader.hlsl">
