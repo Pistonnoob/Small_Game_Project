@@ -23,6 +23,8 @@ protected:
 	ScreenQuad* screenQuad;
 	TextHandler* textH;
 	ID3D11BlendState* transparencyBlendState;
+	ID3D11BlendState* disableTransparencyBlendState;
+	ID3D11BlendState* textTransparencyBlendState;
 
 	int screenWidth;
 	int screenHeight;

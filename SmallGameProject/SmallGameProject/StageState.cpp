@@ -178,7 +178,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->SetLightRTV();
 
 	lightShaderParams->camPos = this->myCamera.GetCameraPos();
-	lightShaderParams->lightPos = DirectX::XMFLOAT4(0.0f, 0.0f, -20.0f, 0.0f);
+	lightShaderParams->lightPos = DirectX::XMFLOAT4(0.0f, 0.0f, 5.0f, 0.0f);
 
 	DirectX::XMMATRIX viewMatrix;
 	this->myCamera.GetBaseViewMatrix(viewMatrix);
