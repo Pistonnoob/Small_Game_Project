@@ -109,7 +109,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
 
-		result = this->player.Initialize(device, deviceContext, "ogreFullG", "carSLS3", true);
+		result = this->player.Initialize(device, deviceContext, "PlayerSphere", "carSLS3", true);
 		if (!result) {
 			return false;
 		}
