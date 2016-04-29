@@ -4,6 +4,7 @@
 #include "Observer.h"
 #include <string>
 #include <fstream>
+#include "Modifiers.h"
 
 class GameData : public Observer {
 

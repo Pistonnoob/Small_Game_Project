@@ -3,12 +3,13 @@
 Weapon::Weapon()
 {
 	this->weaponModel = new Model();
-	this->StartUp();
+	this->weaponMods = nullptr;
 }
 
 Weapon::Weapon(float Hp, float MS, float Dmg)
 {
 	this->weaponModel = new Model();
+	this->weaponMods = nullptr;
 }
 
 Weapon::~Weapon()
@@ -18,6 +19,22 @@ Weapon::~Weapon()
 bool Weapon::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename)
 {
 	return this->weaponModel->Initialize(device, deviceContext, objFilename);
+
+	//setting the starting values
+	this->attackDamage = 10.0f;
+	this->attackSpeed = 10.0f;
+	this->playerSpeed = 10.0f;
+
+	this->name = "unknown";
+
+	//this->weaponMods = new bool[this->CAP];
+
+
+	//set all weapon modifiers off
+	//this->setAllToFalse();
+	//activates one modifier
+	//this->setWeaponModifier(Modifiers::WEAPON::DAMAGE_UPx10);
+
 }
 
 void Weapon::ShutDown()
@@ -28,6 +45,8 @@ void Weapon::ShutDown()
 		delete this->weaponModel;
 		this->weaponModel = nullptr;
 	}
+
+	delete[] this->weaponMods;
 }
 
 const Model * Weapon::GetModel()
@@ -61,20 +80,6 @@ void Weapon::calculateFinalStats()
 	{
 		//get data from the lib
 	}
-}
-
-void Weapon::StartUp()
-{
-	//setting the starting values
-	this->attackDamage = 10.0f;
-	this->attackSpeed = 10.0f;
-	this->playerSpeed = 10.0f;
-
-	//set all weapon modifiers off
-	this->setAllToFalse();
-	//activates one modifier
-	this->setWeaponModifier(Modifiers::WEAPON::DAMAGE_UPx10);
-	
 }
 
 void Weapon::setAllToFalse()

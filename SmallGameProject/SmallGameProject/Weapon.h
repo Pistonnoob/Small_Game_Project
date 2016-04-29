@@ -3,11 +3,14 @@
 
 #include "Model.h"
 #include "Modifiers.h"
+#include <string>
 
 class Weapon {
 
 private:
-	int const static CAP = 18;
+	std::string name;
+
+	int CAP = Modifiers::nrOfEnums;
 
 	float attackDamage;
 	float playerSpeed;
@@ -16,11 +19,10 @@ private:
 	Model* weaponModel;
 
 	//an array of adresses to the lib
-	bool weaponMods[CAP];
+	bool* weaponMods;
 public:
 	Weapon();
 	Weapon(float Hp, float MS, float Dmg);
-	
 	
 	~Weapon();
 
@@ -33,7 +35,6 @@ public:
 private:
 	bool setWeaponModifier(int WEAPON_ENUM) throw(...);
 	void calculateFinalStats();
-	void StartUp();
 
 	void setAllToFalse();
 };

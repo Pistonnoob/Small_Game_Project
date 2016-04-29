@@ -13,7 +13,7 @@ StageState::StageState()
     this->m_ball = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
-	Weapon testWeapon = Weapon();
+	
 
     this->playerPos = DirectX::XMFLOAT3(0, 0, 0);
 

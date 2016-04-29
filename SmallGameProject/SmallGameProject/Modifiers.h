@@ -30,6 +30,8 @@ namespace Modifiers
 		ATTACK_SPEED_DOWNx30		//17
 	};
 
+	int const static nrOfEnums = 18;
+
 	//not yet implemented
 	enum POWERUPS
 	{

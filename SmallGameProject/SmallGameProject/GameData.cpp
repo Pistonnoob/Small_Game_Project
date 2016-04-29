@@ -34,6 +34,9 @@ void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
 	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
 	//	this->enemiesKilled++;
 	//}
+
+
+	//if(evnt == unlockShotgun)
 	return;
 }
 
