@@ -5,7 +5,8 @@
 
 class Actor : public Entity {
 
-private:
+protected:
+    DirectX::XMFLOAT3 aimDir;
 
 public:
     Actor();
@@ -15,7 +16,10 @@ public:
     virtual void moveLeft() = 0;
     virtual void moveUp() = 0;
     virtual void moveDown() = 0;
+    virtual void fire() = 0;
     virtual void move(DirectX::XMFLOAT3 moveVec) = 0;
+    virtual void setAimDir(DirectX::XMFLOAT3 newDir);
+    virtual DirectX::XMFLOAT3 getAimDir();
 
 };
 

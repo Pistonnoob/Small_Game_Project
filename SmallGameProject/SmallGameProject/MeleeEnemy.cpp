@@ -10,9 +10,10 @@ MeleeEnemy::~MeleeEnemy()
 {
 }
 
-bool MeleeEnemy::Initialize(Model * model, bool isSphere)
+bool MeleeEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool isSphere)
 {
-	return Entity::Initialize(model, isSphere);
+    this->aimDir = DirectX::XMFLOAT3(0, 0, 0);
+	return Entity::Initialize(model, entitySubject, isSphere);
 }
 
 void MeleeEnemy::Shutdown()

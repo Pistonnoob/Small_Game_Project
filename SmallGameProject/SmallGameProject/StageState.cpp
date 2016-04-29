@@ -12,8 +12,12 @@ StageState::StageState()
     this->m_ball = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
+    this->projectileHandler = ProjectileHandler();
 
-    this->playerPos = DirectX::XMFLOAT3(0, 0, 0);
+    this->enemySubject = EntitySubject();
+    this->enemySubject.addObserver(&this->projectileHandler);
+
+    this->playerPos = DirectX::XMFLOAT3(15, 0, 20);
 
 	this->exitStage = false;
 }
@@ -30,6 +34,8 @@ void StageState::Shutdown()
     this->m_ball.Shutdown();
 	this->m_ground.Shutdown();
 
+    this->projectileHandler.ShutDown();
+    this->enemySubject.ShutDown();
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
@@ -38,13 +44,6 @@ void StageState::Shutdown()
 		delete enemyTemp;
 	}
 	this->enemies.clear();
-    for (int i = 0; i < this->projectiles.size(); i++)
-    {
-        Projectile* temp = this->projectiles.at(i);
-        temp->Shutdown();
-        delete temp;
-    }
-    this->projectiles.clear();
 
     delete this->ability1;
     delete this->ability2;
@@ -67,7 +66,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
 		float zoomIn = 1.0f / 4.0f;
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 40.0f / zoomIn, -7.0f / zoomIn));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
@@ -77,11 +76,12 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Army thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
+        this->projectileHandler.Initialize(device, this->m_deviceContext);
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
         this->m_ball = Model();
-		bool modelResult = this->m_car.Initialize(device, this->m_deviceContext, "carSLS3");
+		bool modelResult = this->m_car.Initialize(device, this->m_deviceContext, "box");
 		if (!modelResult) {
 			return false;
 		}
@@ -96,27 +96,27 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//Arm thy armies!
 		//creates the enemies must call setModel function to give enemies models
-		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
-		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
-		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 		 
 		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
-		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-        this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
+        //this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
         this->ability1 = new ArcFire();
         this->ability2 = new SplitFire();
         this->ability3 = new ReverseFire();
 
-        this->test = new Projectile();
-        this->test->Initialize(&this->m_ball,0,0,DirectX::XMFLOAT3(1,0,0));
+        //this->test = new Projectile();
+        //this->test->Initialize(&this->m_ball,0,0,DirectX::XMFLOAT3(1,0,0));
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -176,52 +176,23 @@ int StageState::Update(float deltaTime)
     //0x43 = C
     if (GetAsyncKeyState(0x43))
     {
-        for (int i = 0; i < this->projectiles.size(); i++)
-        {
-            Projectile* temp = this->projectiles.at(i);
-            temp->Shutdown();
-            delete temp;
-        }
-        this->projectiles.clear();
+
     }
     //0x31 = 1
     if (GetAsyncKeyState(0x31))
     {
-        for (int i = 0; i < this->projectiles.size(); i++)
-        {
-            Projectile* temp = this->projectiles.at(i);
-            temp->Shutdown();
-            delete temp;
-        }
-        this->projectiles.clear();
-        this->ability1->activate(this->projectiles, &this->m_ball, DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 1), 3.14 / 3, 15);
+        this->ability1->activate(nullptr, &this->enemySubject, this->playerPos, 3.14f, 15);
     }
     //0x32 = 2
     if (GetAsyncKeyState(0x32))
     {
-        for (int i = 0; i < this->projectiles.size(); i++)
-        {
-            Projectile* temp = this->projectiles.at(i);
-            temp->Shutdown();
-            delete temp;
-        }
-        this->projectiles.clear();
-        this->ability2->activate(this->projectiles, &this->m_ball, DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 1), 3.14 / 2, 4);
+
     }
-    this->ability2->update(this->projectiles, &this->m_ball);
     //0x33 = 3
     if (GetAsyncKeyState(0x33))
     {
-        for (int i = 0; i < this->projectiles.size(); i++)
-        {
-            Projectile* temp = this->projectiles.at(i);
-            temp->Shutdown();
-            delete temp;
-        }
-        this->projectiles.clear();
-        this->ability3->activate(this->projectiles, &this->m_ball, DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 1), 3.14 * 2, 30);
+
     }
-    this->ability3->update(this->projectiles, &this->m_ball);
 
     /*t += Math::DEGREES_TO_RADIANS * 5;
     if (t > 100)
@@ -239,10 +210,8 @@ int StageState::Update(float deltaTime)
 
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, this->playerPos);
-    for (int i = 0; i < this->projectiles.size(); i++)
-    {
-        this->projectiles.at(i)->update();
-    }
+    this->projectileHandler.update();
+
 	if (this->exitStage)
 	{
 		this->exitStage = false;
@@ -274,6 +243,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	}
+    this->projectileHandler.render(gHandler, &this->myCamera);
     for (int i = 0; i < this->projectiles.size(); i++)
     {
         XMFLOAT3 pos = this->projectiles.at(i)->getPosition();

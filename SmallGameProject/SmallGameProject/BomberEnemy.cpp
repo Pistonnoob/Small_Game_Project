@@ -10,14 +10,16 @@ BomberEnemy::~BomberEnemy()
 {
 }
 
-bool BomberEnemy::Initialize(Model* model, bool isSphere)
+bool BomberEnemy::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere)
 {
-	return Entity::Initialize(model, isSphere);
+    this->aimDir = DirectX::XMFLOAT3(0, 0, 0);
+	return Entity::Initialize(model, entitySubject, isSphere);
 }
 
 void BomberEnemy::Shutdown()
 {
 	Entity::Shutdown(true);
 }
+
 
 

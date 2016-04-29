@@ -3,7 +3,7 @@
 Entity::Entity() {
 	this->entityModel = nullptr;
 	this->entityBV = nullptr;
-	this->entitySubject = EntitySubject();
+    this->entitySubject = nullptr;
 }
 
 Entity::~Entity()
@@ -33,8 +33,10 @@ bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	return true;
 }
 
-bool Entity::Initialize(Model * model, bool isSphere)
+bool Entity::Initialize(Model * model, EntitySubject* entitySubject, bool isSphere)
 {
+    this->entitySubject = entitySubject;
+
 	this->entityModel = model;
 
 	//Generate the Bounding volume
@@ -65,7 +67,10 @@ void Entity::Shutdown(bool isEnemy)
 	this->entityBV = nullptr;
 
 }
-
+void Entity::addObservers(Observer * observer)
+{
+    this->entitySubject->addObserver(observer);
+}
 Model* Entity::getModel()
 {
     return this->entityModel;

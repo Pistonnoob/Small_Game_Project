@@ -11,7 +11,7 @@ public:
     BomberEnemy(float posX, float posZ);
     virtual~BomberEnemy();
 
-	bool Initialize(Model* model, bool isSphere);
+	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);
 	void Shutdown();
 
 };

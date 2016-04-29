@@ -10,11 +10,11 @@ class Entity {
 protected:
     float posX;
     float posZ;
+    EntitySubject* entitySubject;
 private:
 	
 	Model* entityModel;
 	BoundingVolume* entityBV;
-	EntitySubject entitySubject;
 
 public:
 	Entity();	//Entitys without BoundingVolume
@@ -24,8 +24,9 @@ public:
 	bool Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename,
 					bool isSphere);
 	// Secoundary initialize for instancing
-	bool Initialize(Model* model, bool isSphere);	
+	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);	
 	void Shutdown(bool isEnemy = false);
+    void addObservers(Observer* observer);
 
     Model* getModel();
     BoundingVolume* getBV();

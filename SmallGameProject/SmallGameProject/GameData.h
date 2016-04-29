@@ -27,7 +27,8 @@ public:
 	
 	virtual ~GameData();
 	static GameData* getInstance();
-	void onNotify(const Entity* entity, Events::ENTITY evnt);
+	void onNotify(Entity* entity, Events::ENTITY evnt);
+    void onNotify(Entity* entity, Events::BOSS evnt, float arc, int nrOfBullets);
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);

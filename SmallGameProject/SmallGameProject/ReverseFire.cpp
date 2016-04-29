@@ -8,20 +8,20 @@ ReverseFire::ReverseFire()
 ReverseFire::~ReverseFire()
 {
 }
-void ReverseFire::activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles)
+void ReverseFire::activate(Actor* actor, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles)
 {
     this->isActivated = true;
-    DirectX::XMMATRIX rotate = DirectX::XMMatrixRotationY(-angle / 2);
+    /*DirectX::XMMATRIX rotate = DirectX::XMMatrixRotationY(-angle / 2);
     DirectX::XMVECTOR dirVec = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
     dirVec = DirectX::XMVector3Transform(dirVec, rotate);
 
     float x = DirectX::XMVectorGetX(dirVec);
     float y = DirectX::XMVectorGetY(dirVec);
-    float z = DirectX::XMVectorGetZ(dirVec);
+    float z = DirectX::XMVectorGetZ(dirVec);*/
 
-    shootProjetiles(projectiles, projectileModel, pos, DirectX::XMFLOAT3(x, y, z), angle, nrOfProjectiles);
+    //shootProjetiles(projectiles, projectileModel, pos, DirectX::XMFLOAT3(x, y, z), angle, nrOfProjectiles);
 }
-void ReverseFire::update(std::vector<Projectile*>& projectiles, Model* projectileModel)
+void ReverseFire::update(Actor* actor, EntitySubject* entitySubject)
 {
     if (this->isActivated == true)
     {
@@ -29,7 +29,7 @@ void ReverseFire::update(std::vector<Projectile*>& projectiles, Model* projectil
     }
     if (this->counter >= 50 && this->isActivated == true)
     {
-        int size = projectiles.size();
+        /*int size = projectiles.size();
         for (int i = 0; i < size; i++)
         {
             DirectX::XMFLOAT3 dir = projectiles.at(i)->getMoveDir();
@@ -37,7 +37,7 @@ void ReverseFire::update(std::vector<Projectile*>& projectiles, Model* projectil
             dir.y *= -1;
             dir.z *= -1;
             projectiles.at(i)->setMoveDir(dir);
-        }
+        }*/
         this->isActivated = false;
         this->counter = 0;
     }

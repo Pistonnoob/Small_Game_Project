@@ -28,13 +28,18 @@ GameData* GameData::getInstance()
 	}
 }
 
-void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
+void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
 	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
 	//	this->enemiesKilled++;
 	//}
 	return;
+}
+
+void GameData::onNotify(Entity * entity, Events::BOSS evnt, float arc, int nrOfBullets)
+{
+    //??
 }
 
 bool GameData::SavePlayerData(std::string filename)

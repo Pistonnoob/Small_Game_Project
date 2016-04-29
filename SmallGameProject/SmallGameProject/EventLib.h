@@ -5,10 +5,15 @@ namespace Events {
 		CREATED,
 		IDLE,
 		MOVING,
-		DEAD
+		DEAD,
+        Fire
 
 	};
-
+    enum BOSS {
+        ARCFIRE,
+        SPLITFIREONBULLETS,
+        REVERSERBULLETS,
+    };
 	enum STAGE {
 		STAGECOMPLETED,
 		STAGESTART,

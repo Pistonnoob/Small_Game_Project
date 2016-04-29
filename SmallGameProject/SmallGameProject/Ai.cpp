@@ -78,14 +78,20 @@ void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos)
 }
 void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-
-    if (distanceBetween(actor->getPosition(), playerPos) > RANGED_MAX_DESIRED_DISTANCE)
+    float distance = distanceBetween(actor->getPosition(), playerPos);
+    if (distance > RANGED_MAX_DESIRED_DISTANCE)
     {
         moveToPlayer(actor, playerPos);
     }
-    else if (distanceBetween(actor->getPosition(), playerPos) < RANGED_MIN_DESIRED_DISTANCE)
+    else if (distance < RANGED_MIN_DESIRED_DISTANCE)
     {
         moveAwayFromPlayer(actor, playerPos);
+    }
+    if(distance < RANGED_MAX_DESIRED_DISTANCE)
+    {
+        float x = (playerPos.x - actor->getPosition().x) * 0.02f;
+        float z = (playerPos.z - actor->getPosition().z) * 0.02f;
+        this->commands.push_back(new FireCommand(DirectX::XMFLOAT3(x,0,z)));
     }
 }
 void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos)

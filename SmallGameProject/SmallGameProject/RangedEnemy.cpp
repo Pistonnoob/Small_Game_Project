@@ -10,12 +10,26 @@ RangedEnemy::~RangedEnemy()
 {
 }
 
-bool RangedEnemy::Initialize(Model * model, bool isSphere)
+bool RangedEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool isSphere)
 {
-	return Entity::Initialize(model, isSphere);
+    this->aimDir = DirectX::XMFLOAT3(0, 0, 0);
+	return Entity::Initialize(model, entitySubject, isSphere);
 }
 
 void RangedEnemy::Shutdown()
 {
 	Entity::Shutdown(true);
+}
+
+void RangedEnemy::fire()
+{
+    if (this->attackCD > ATTACK_DELAY)
+    {
+        this->entitySubject->notify(this, Events::ENTITY::Fire);
+        this->attackCD = 0;
+    }
+    else
+    {
+        this->attackCD++;
+    }
 }

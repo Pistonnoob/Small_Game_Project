@@ -25,6 +25,18 @@ void Enemy::moveDown()
 {
     this->posZ -= 0.05f;
 }
+void Enemy::fire()
+{
+    if (this->attackCD > BASE_ATTACK_DELAY)
+    {
+        this->entitySubject->notify(this, Events::ENTITY::Fire);
+        this->attackCD = 0;
+    }
+    else
+    {
+        this->attackCD++;
+    }
+}
 void Enemy::move(DirectX::XMFLOAT3 moveVec)
 {
     this->posX += moveVec.x;
