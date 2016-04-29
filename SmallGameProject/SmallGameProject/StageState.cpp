@@ -121,9 +121,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
         this->ability2 = new SplitFire();
         this->ability3 = new ReverseFire();
 
-        this->test = new Projectile();
-        this->test->Initialize(&this->m_ball,0,0,DirectX::XMFLOAT3(1,0,0));
-
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
 		this->m_ground = Model();

@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef MODIFIERS_H
+#define MODIFIERS_H
 namespace Modifiers
 {
 	//xNN stands for the amount of % the damage is increased
@@ -18,3 +18,4 @@ namespace Modifiers
 		SPREAD_INCREASE				//0
 	};
 }
+#endif
