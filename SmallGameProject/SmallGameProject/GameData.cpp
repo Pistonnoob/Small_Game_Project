@@ -43,9 +43,17 @@ void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
 	//	this->enemiesKilled++;
 	//}
 
-
-	//if(evnt == unlockShotgun)
 	return;
+}
+
+void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
+{
+	if (achi == Events::ACHIEVEMENT::WEAPON_UNLOCK)
+	{
+
+		this->weaponArsenal[Modifiers::WEAPON::SHOTGUN];
+	}
+
 }
 
 bool GameData::SavePlayerData(std::string filename)

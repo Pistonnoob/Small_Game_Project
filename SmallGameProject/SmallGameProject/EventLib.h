@@ -6,7 +6,6 @@ namespace Events {
 		IDLE,
 		MOVING,
 		DEAD
-
 	};
 
 	enum STAGE {
@@ -20,5 +19,17 @@ namespace Events {
 		WAVECOMPLETED,
 		WAVESTART,
 		WAVEEND
+	};
+
+	enum ACHIEVEMENT
+	{
+		WEAPON_UNLOCK,
+		POWERUP_UNLUCK,
+	};
+
+	enum PICKUP
+	{
+		WEAPON_PICKUP,
+		POWERUP_PICKUP
 	};
 }
