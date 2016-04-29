@@ -219,6 +219,9 @@
     <ClCompile Include="SplitFire.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -381,6 +384,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Modifiers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

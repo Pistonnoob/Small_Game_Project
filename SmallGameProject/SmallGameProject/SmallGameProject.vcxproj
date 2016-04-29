@@ -180,6 +180,7 @@
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="ParticleHandler.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileHandler.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Observer.h" />
     <ClInclude Include="ParticleHandler.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileHandler.h" />
     <ClInclude Include="RangedEnemy.h" />

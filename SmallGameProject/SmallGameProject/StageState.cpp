@@ -135,7 +135,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
-
 	}
 
 
