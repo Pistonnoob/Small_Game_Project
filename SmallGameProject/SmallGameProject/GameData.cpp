@@ -1,5 +1,9 @@
 #include "GameData.h"
 
+bool GameData::isInstatiated = false;
+
+GameData* GameData::single = nullptr;
+
 GameData::GameData(): Observer()
 {
 	this->playerHighScore = 0;
@@ -16,12 +20,15 @@ GameData::GameData(): Observer()
 	//uzi
 	this->weaponArsenal[Modifiers::WEAPON::UZI] = Weapon(5, 10, 15);
 
+	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
+		this->playerUnlockedWeapons[i] = false;
+
 }
 
 GameData::~GameData()
 {
-	isInstatiated = false;
-	delete this->single;
+	//isInstatiated = false;
+	//delete this->single;
 }
 
 GameData* GameData::getInstance()
@@ -34,6 +41,12 @@ GameData* GameData::getInstance()
 	else {
 		return single;
 	}
+}
+
+void GameData::shutdown()
+{
+	isInstatiated = false;
+	delete single;
 }
 
 void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
@@ -50,7 +63,6 @@ void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 {
 	if (achi == Events::ACHIEVEMENT::WEAPON_UNLOCK)
 	{
-
 		this->weaponArsenal[Modifiers::WEAPON::SHOTGUN];
 	}
 

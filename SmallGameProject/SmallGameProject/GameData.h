@@ -27,20 +27,20 @@ private:
 
 	//weapom related
 	Weapon weaponArsenal[Modifiers::nrOfWeapons];
-
-
+	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
 public:
 	virtual ~GameData();
 	static GameData* getInstance();
+
+	static void shutdown();
+
 	void onNotify(const Entity* entity, Events::ENTITY evnt);
+	void onNotify(const Entity* entity, Events::ACHIEVEMENT achi);
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
 
 	Weapon* getWeapon(int weaponEnum);
 };
-
-bool GameData::isInstatiated = false;
-GameData* GameData::single = nullptr;
 
 #endif

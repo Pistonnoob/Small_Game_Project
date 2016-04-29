@@ -305,6 +305,8 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	dataPtr->lightProjection = params->lightProjectionMatrix;
 
 	dataPtr->lightPos = params->lightPos;
+	//dataPtr->lightPos = DirectX::XMFLOAT3(0, 5, 0);
+	
 	dataPtr->camPos = params->camPos;
 
 	//Unmap the constant buffer to give the GPU access agin

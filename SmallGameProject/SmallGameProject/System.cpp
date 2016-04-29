@@ -6,6 +6,7 @@ System::System()
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
 	this->cameraH = nullptr;
+	this->gameData = nullptr;
 }
 
 System::~System()
@@ -50,6 +51,9 @@ bool System::Initialize()
 	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
+
+	//initialize the gameData singleton
+	this->gameData = GameData::getInstance();
 
 	this->testRot = 0;
 
@@ -130,7 +134,13 @@ void System::Shutdown()
 		delete this->gameSH;
 		this->gameSH = nullptr;
 	}
-
+	//shutdown the gameData
+	if (this->gameData)
+	{
+		GameData::shutdown();
+		//delete this->gameData;
+		this->gameData = nullptr;
+	}
 	//Shutdown the window
 	ShutdownWindow();
 }
