@@ -31,7 +31,10 @@ void ParticleHandler::Shutdown()
 
 	while (this->emitters.size())
 	{
-		this->emitters.back().Shutdown();
+		ParticleEmitter* emitter = this->emitters.back();
+		emitter->Shutdown();
+		delete emitter;
+		emitter = nullptr;
 		this->emitters.pop_back();
 	}
 	this->emitters.clear();
@@ -52,8 +55,8 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	std::string theNightSky = "Particles.mtl";
 	bool victory = this->myTextures.Initialize(device, deviceContext, theNightSky);
 
-	ParticleEmitter newEmitter = ParticleEmitter();
-	newEmitter.Initialize(device, this->myTextures.GetTexture(0));
+	EmitterPrototype* newEmitter = new EmitterPrototype();
+	newEmitter->Initialize(device, this->myTextures.GetTexture(0));
 	this->emitters.push_back(newEmitter);
 
 	int particleCnt = _countof(this->particles);
@@ -158,7 +161,7 @@ int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
 
 	for (auto emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
 	{
-		emitter->Update(dT, deviceContext);
+		(*emitter)->Update(dT, deviceContext);
 	}
 
 	return result;
@@ -175,7 +178,7 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 	if (this->emitters.size())
 	{
 		int amountOfParticles = 0;
-		this->emitters.at(0).Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
+		this->emitters.at(0)->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
 		parameters.worldMatrix = this->world;
 		parameters.diffTexture = this->myTextures.GetTexture(1);
 
