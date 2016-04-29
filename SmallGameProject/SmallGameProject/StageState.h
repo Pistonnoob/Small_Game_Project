@@ -19,7 +19,6 @@ private:	//Variables
 	Ai m_AI;
 	vector<Enemy*> enemies;
     vector<Projectile*> projectiles;
-    Projectile* test;
     float t;
 
     DirectX::XMFLOAT3 playerPos;
