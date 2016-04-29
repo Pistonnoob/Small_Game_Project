@@ -37,7 +37,7 @@ void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
 	return;
 }
 
-void GameData::onNotify(Entity * entity, Events::BOSS evnt, float arc, int nrOfBullets)
+void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
     //??
 }

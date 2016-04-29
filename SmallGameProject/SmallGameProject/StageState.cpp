@@ -17,8 +17,6 @@ StageState::StageState()
     this->enemySubject = EntitySubject();
     this->enemySubject.addObserver(&this->projectileHandler);
 
-    this->playerPos = DirectX::XMFLOAT3(15, 0, 20);
-
 	this->exitStage = false;
 }
 
@@ -105,7 +103,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
 		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 		 
-		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
+		this->enemies.push_back(new RangedEnemy(0.0f, 20.0f));
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
 		//this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
@@ -146,6 +144,27 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
+    if (input->isKeyPressed(DIK_C))
+    {
+
+    }
+
+    if (input->isKeyPressed(DIK_1))
+    {
+
+        this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0,0,0), 3.14f, 15);
+    }
+
+    if (input->isKeyPressed(DIK_2))
+    {
+
+    }
+
+    if (input->isKeyPressed(DIK_3))
+    {
+
+    }
+
 	return result;
 }
 
@@ -153,63 +172,9 @@ int StageState::Update(float deltaTime)
 {
 	int result = 1;
 
-    //0x57 = W
-    if (GetAsyncKeyState(0x57))
-    {
-        this->playerPos.z += 0.5f;
-    }
-    //0x53 = S
-    if (GetAsyncKeyState(0x53))
-    {
-        this->playerPos.z -= 0.5f;
-    }
-    //0x44 = D
-    if (GetAsyncKeyState(0x44))
-    {
-        this->playerPos.x += 0.5f;
-    }
-    //0x41 = A
-    if (GetAsyncKeyState(0x41))
-    {
-        this->playerPos.x -= 0.5f;
-    }
-    //0x43 = C
-    if (GetAsyncKeyState(0x43))
-    {
-
-    }
-    //0x31 = 1
-    if (GetAsyncKeyState(0x31))
-    {
-        this->ability1->activate(nullptr, &this->enemySubject, this->playerPos, 3.14f, 15);
-    }
-    //0x32 = 2
-    if (GetAsyncKeyState(0x32))
-    {
-
-    }
-    //0x33 = 3
-    if (GetAsyncKeyState(0x33))
-    {
-
-    }
-
-    /*t += Math::DEGREES_TO_RADIANS * 5;
-    if (t > 100)
-    {
-        t = -100;
-    }
-    DirectX::XMFLOAT3 pos = this->test->getPos();
-    int x = pos.x;
-    int z = pos.z;
-    //Algorithm::GetLissajousCurve(x, z, this->t * Math::DEGREES_TO_RADIANS * 5, 5, 5, 3, 2);
-    //Algorithm::GetEllipse(x, z, t, 15, 10);
-    //Algorithm::GetHypotrochoid(x, z, t, 5, 3, 10);
-    Algorithm::GetSineWave(x, z, t, 10, -8, 8);
-    this->test->setPos(DirectX::XMFLOAT3(x, 0, z));*/
 
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
-	this->m_AI.updateActors(this->enemies, this->playerPos);
+	//this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->projectileHandler.update();
 
 	if (this->exitStage)
@@ -232,40 +197,20 @@ int StageState::Update(float deltaTime)
 int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
+    XMFLOAT3 pos;
+    DirectX::XMMATRIX worldMatrix;
 
 	//Render models
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		pos = this->enemies.at(i)->getPosition();
+		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
 
 		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	}
     this->projectileHandler.render(gHandler, &this->myCamera);
-    for (int i = 0; i < this->projectiles.size(); i++)
-    {
-        XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
-        DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-        this->m_ball.SetWorldMatrix(worldMatrix);
-
-        gHandler->DeferredRender(this->projectiles.at(i)->getModel(), &this->myCamera);
-    }
-    XMFLOAT3 pos;
-    DirectX::XMMATRIX worldMatrix;
-    /*pos = this->test->getPosition();
-    worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-    this->m_ball.SetWorldMatrix(worldMatrix);
-
-    gHandler->DeferredRender(this->test->getModel(), &this->myCamera);*/
-
-    pos = this->playerPos;
-    worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-    this->m_car.SetWorldMatrix(worldMatrix);
-
-    gHandler->DeferredRender(&this->m_car, &this->myCamera);
-
 
 	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);

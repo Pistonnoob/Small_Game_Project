@@ -8,7 +8,7 @@ ReverseFire::ReverseFire()
 ReverseFire::~ReverseFire()
 {
 }
-void ReverseFire::activate(Actor* actor, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles)
+void ReverseFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles)
 {
     this->isActivated = true;
     /*DirectX::XMMATRIX rotate = DirectX::XMMatrixRotationY(-angle / 2);
@@ -21,7 +21,7 @@ void ReverseFire::activate(Actor* actor, EntitySubject* entitySubject, DirectX::
 
     //shootProjetiles(projectiles, projectileModel, pos, DirectX::XMFLOAT3(x, y, z), angle, nrOfProjectiles);
 }
-void ReverseFire::update(Actor* actor, EntitySubject* entitySubject)
+void ReverseFire::update(Enemy* enemy, EntitySubject* entitySubject)
 {
     if (this->isActivated == true)
     {

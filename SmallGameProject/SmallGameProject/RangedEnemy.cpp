@@ -4,6 +4,7 @@ RangedEnemy::RangedEnemy(float posX, float posZ)
 {
     this->posX = posX;
     this->posZ = posZ;
+    this->myType = Type::RANGED;
 }
 
 RangedEnemy::~RangedEnemy()

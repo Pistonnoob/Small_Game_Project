@@ -32,7 +32,7 @@ void EntitySubject::notify(Entity* entity, Events::ENTITY evnt)
 	}
 
 }
-void EntitySubject::notify(Entity* entity, Events::BOSS evnt, float arc, int nrOfBullets)
+void EntitySubject::notify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
     //Send the event to all the observers
     std::set<Observer*>::iterator it;										//Create the iterator

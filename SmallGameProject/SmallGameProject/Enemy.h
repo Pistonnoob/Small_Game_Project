@@ -5,6 +5,8 @@
 
 static int BASE_ATTACK_DELAY = 50;
 
+
+
 class Enemy : public Actor {
 
 protected:

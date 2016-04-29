@@ -17,43 +17,23 @@ bool ProjectileHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* de
 }
 void ProjectileHandler::ShutDown()
 {
-    for (int i = 0; i < this->projectiles.size(); i++)
-    {
-        Projectile* temp = this->projectiles.at(i);
-        temp->Shutdown();
-        delete temp;
-    }
-    this->projectiles.clear();
     this->m_ball.Shutdown();
+    this->clearProjectileVector(this->playerProjectiles);
+    this->clearProjectileVector(this->enemyProjectiles);
+    this->clearProjectileVector(this->bossProjectiles);
+
 }
 void ProjectileHandler::update()
 {
-    for (int i = 0; i < this->projectiles.size(); i++)
-    {
-        this->projectiles.at(i)->update();
-        DirectX::XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
-        if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
-        {
-            Projectile* temp = this->projectiles.at(i);
-            temp->Shutdown();
-            delete temp;
-            this->projectiles.erase(projectiles.begin() + i);
-            i--;
-        }
-    }
+    this->updateProjectileVector(this->playerProjectiles);
+    this->updateProjectileVector(this->enemyProjectiles  );
+    this->updateProjectileVector(this->bossProjectiles   );
 }
 void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)
 {
-    XMFLOAT3 pos;
-    DirectX::XMMATRIX worldMatrix;
-    for (int i = 0; i < this->projectiles.size(); i++)
-    {
-        pos = this->projectiles.at(i)->getPosition();
-        worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-        this->projectiles.at(i)->getModel()->SetWorldMatrix(worldMatrix);
-
-        gHandler->DeferredRender(this->projectiles.at(i)->getModel(), camera);
-    }
+    this->renderProjectileVector(gHandler, camera, this->playerProjectiles);
+    this->renderProjectileVector(gHandler, camera, this->enemyProjectiles);
+    this->renderProjectileVector(gHandler, camera, this->bossProjectiles);
 }
 void ProjectileHandler::onNotify(Entity* entity, Events::ENTITY evnt)
 {
@@ -68,41 +48,98 @@ void ProjectileHandler::onNotify(Entity* entity, Events::ENTITY evnt)
            XMFLOAT3 dir = ptr->getAimDir();
             XMFLOAT3 pos = ptr->getPosition();
             
-            this->projectiles.push_back(new Projectile());
-            this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, nullptr, pos.x, pos.z, dir);
+            this->enemyProjectiles.push_back(new Projectile());
+            this->enemyProjectiles.at(this->enemyProjectiles.size() - 1)->Initialize(&this->m_ball, nullptr, pos.x, pos.z, dir);
         }
         break;
     }
 }
 
-void ProjectileHandler::onNotify(Entity* entity, Events::BOSS evnt, float arc, int nrOfBullets)
+void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
-    Enemy* ptr = nullptr;
-    ptr = dynamic_cast<Enemy*>(entity);
+
+
+    std::vector<Projectile*>* vecPtr = nullptr;
+    if (entity->getType() == Type::RANGED)
+    {
+        vecPtr = &this->bossProjectiles;
+    }
+    else if(entity->getType() == Type::PLAYER)
+    {
+        vecPtr = &this->playerProjectiles;
+    }
+
     switch (evnt)
     {
-    case(Events::BOSS::ARCFIRE) :
-        fireInArc(ptr->getPosition(), ptr->getAimDir(), arc, nrOfBullets);
+    case(Events::UNIQUE_FIRE::ARCFIRE) :
+        fireInArc(*vecPtr, entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
             break;
     }
 }
-void ProjectileHandler::fireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float arc, int nrOfBullets)
+void ProjectileHandler::fireInArc(std::vector<Projectile*> &projectiles, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float arc, int nrOfBullets)
 {
-    DirectX::XMMATRIX rotation;
+    float x = dir.x;
+    float y = dir.y;
+    float z = dir.z;
+
+    DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationY(-arc / 2);
+    DirectX::XMVECTOR dirr = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
+    dirr = DirectX::XMVector3Transform(dirr, rotation);
+
     int nrOfProjectiles = nrOfBullets;
     rotation = DirectX::XMMatrixRotationY(arc / nrOfProjectiles);
-    DirectX::XMVECTOR dirr = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
-    float x;
-    float y;
-    float z;
+
     for (int i = 0; i <= nrOfProjectiles; i++)
     {
         x = DirectX::XMVectorGetX(dirr);
         y = DirectX::XMVectorGetY(dirr);
         z = DirectX::XMVectorGetZ(dirr);
-        Projectile* temp = new Projectile();
-        temp->Initialize(&this->m_ball, nullptr, pos.x, pos.z, dir);
-        projectiles.push_back(temp);
+        //Projectile* temp = new Projectile();
+        //temp->Initialize(&this->m_ball, nullptr, pos.x, pos.z, dir);
+        this->bossProjectiles.push_back(new Projectile());
+        this->bossProjectiles.at(this->bossProjectiles.size() - 1)->Initialize(&this->m_ball, nullptr, pos.x, pos.z, DirectX::XMFLOAT3(x, y, z));
         dirr = DirectX::XMVector3Transform(dirr, rotation);
     }
+}
+
+
+void ProjectileHandler::renderProjectileVector(GraphicHandler * gHandler, CameraHandler* camera, std::vector<Projectile*>& projectiles)
+{
+    XMFLOAT3 pos;
+    DirectX::XMMATRIX worldMatrix;
+    for (int i = 0; i < projectiles.size(); i++)
+    {
+        pos = projectiles.at(i)->getPosition();
+        worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+        projectiles.at(i)->getModel()->SetWorldMatrix(worldMatrix);
+
+        gHandler->DeferredRender(projectiles.at(i)->getModel(), camera);
+    }
+}
+void ProjectileHandler::updateProjectileVector(std::vector<Projectile*>& projectiles)
+{
+    for (int i = 0; i < projectiles.size(); i++)
+    {
+        projectiles.at(i)->update();
+        DirectX::XMFLOAT3 pos = projectiles.at(i)->getPosition();
+        if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
+        {
+            Projectile* temp = projectiles.at(i);
+            temp->Shutdown();
+            delete temp;
+            projectiles.erase(projectiles.begin() + i);
+            i--;
+        }
+    }
+}
+
+void ProjectileHandler::clearProjectileVector(std::vector<Projectile*>& projectiles)
+{
+    for (int i = 0; i < projectiles.size(); i++)
+    {
+        Projectile* temp = projectiles.at(i);
+        temp->Shutdown();
+        delete temp;
+    }
+    projectiles.clear();
 }

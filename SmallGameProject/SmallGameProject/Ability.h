@@ -15,8 +15,8 @@ protected:
 public:
     Ability() { this->isActivated = false; };
     virtual~Ability() {};
-    virtual void activate(Actor* actor, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles) = 0;
-    virtual void update(Actor* actor, EntitySubject* entitySubject) = 0;
+    virtual void activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles) = 0;
+    virtual void update(Enemy* enemy, EntitySubject* entitySubject) = 0;
     void shootProjetiles(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfBullets)
     {
         DirectX::XMMATRIX rotation;

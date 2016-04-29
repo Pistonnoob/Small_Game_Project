@@ -6,10 +6,10 @@ namespace Events {
 		IDLE,
 		MOVING,
 		DEAD,
-        Fire
+        Fire,
 
 	};
-    enum BOSS {
+    enum UNIQUE_FIRE {
         ARCFIRE,
         SPLITFIREONBULLETS,
         REVERSERBULLETS,

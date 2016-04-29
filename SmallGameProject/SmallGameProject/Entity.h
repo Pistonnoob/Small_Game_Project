@@ -4,6 +4,13 @@
 #include "SphereBoundingVolume.h"
 #include "EntitySubject.h"
 #include "Model.h"
+enum Type {
+    MELEEE,
+    RANGED,
+    BOMBER,
+    PLAYER,
+    BOSS
+};
 
 class Entity {
 
@@ -11,6 +18,8 @@ protected:
     float posX;
     float posZ;
     EntitySubject* entitySubject;
+    Type myType;
+    
 private:
 	
 	Model* entityModel;
@@ -27,6 +36,8 @@ public:
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);	
 	void Shutdown(bool isEnemy = false);
     void addObservers(Observer* observer);
+
+    Type getType();
 
     Model* getModel();
     BoundingVolume* getBV();

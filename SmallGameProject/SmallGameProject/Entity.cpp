@@ -71,6 +71,10 @@ void Entity::addObservers(Observer * observer)
 {
     this->entitySubject->addObserver(observer);
 }
+Type Entity::getType()
+{
+    return this->myType;
+}
 Model* Entity::getModel()
 {
     return this->entityModel;
