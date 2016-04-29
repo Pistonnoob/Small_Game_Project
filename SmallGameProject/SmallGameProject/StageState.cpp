@@ -14,6 +14,10 @@ StageState::StageState()
 	this->m_AI = Ai();
 
 	this->exitStage = false;
+
+	this->camPosX = -30.0f;
+	this->camPosZ = 0.0f;
+	this->inc = true;
 }
 
 
@@ -56,7 +60,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		bool cameraResult = this->myCamera.Initialize();
 		float zoomIn = 1.0f / 4.0f;
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 8.0f, -50.0f));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
@@ -148,6 +152,25 @@ int StageState::Update(float deltaTime)
 		}
 	}
 
+	this->camPosX += deltaTime / 100000;
+	
+	if (this->camPosX > 30) {
+		this->camPosX = -30.0f;
+		this->camPosZ = 0.0f;
+		this->inc = true;
+	}
+	if (this->camPosX > 0) {
+		this->inc = false;
+	}
+	if (this->inc && this->camPosZ > -30.0f) {
+		this->camPosZ -= deltaTime / 100000;
+	}
+	else if(!this->inc && this->camPosZ < 0.0f) {
+		this->camPosZ += deltaTime / 100000;
+	}
+
+	this->myCamera.SetCameraPos(DirectX::XMFLOAT3(this->camPosX, 4.0f, this->camPosZ));
+	this->myCamera.UpdateCamera();
 
 	return result;
 }

@@ -54,7 +54,7 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 		this->particles[i].scale = 2.0f;
 		this->particles[i].x = 0.0f + i * particles[i].scale * 0.5f;
 		this->particles[i].y = 0.0f + i * particles[i].scale * 0.5f;
-		this->particles[i].z = -10.0f + i * particles[i].scale * 0.0f;
+		this->particles[i].z = 0.0f + i * particles[i].scale * 0.5f;
 
 		this->particles[i].r = 0.0f + i * (i / float(particleCnt));
 		this->particles[i].g = 0.0f;

@@ -19,6 +19,9 @@ private:	//Variables
 
 	bool exitStage;
 
+	float camPosX;
+	float camPosZ;
+	bool inc;
 public:
 	StageState();
 	virtual ~StageState();
