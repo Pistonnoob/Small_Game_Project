@@ -34,7 +34,6 @@ private:
 
 	DirectX::XMMATRIX world;
 
-	Particle* rootParticle;
 	Particle* particles;
 	VertexType* vertices;
 

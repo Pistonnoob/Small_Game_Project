@@ -52,18 +52,6 @@ void ParticleEmitter::Shutdown()
 		this->vertices = nullptr;
 	}
 
-	/*while (this->rootParticle->next != nullptr)
-	{
-		Particle* temp = this->rootParticle;
-		this->rootParticle = this->rootParticle->next;
-		delete temp;
-	}*/
-	if (this->rootParticle != nullptr)
-	{
-		delete this->rootParticle;
-		this->rootParticle = nullptr;
-	}
-
 }
 
 bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
@@ -165,13 +153,6 @@ bool ParticleEmitter::InitializeEmitter()
 	{
 		this->particles[i].active = false;
 	}
-
-	this->rootParticle = new Particle{
-		0.0f, 0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		1.0f,
-		false
-	};
 
 	this->currentParticleCnt = 0.0f;
 
@@ -303,7 +284,7 @@ void ParticleEmitter::EmitParticles(float dT)
 		found = false;
 		while (!found)
 		{
-			if ((this->particles[index].active == false) /*|| (this->particles[index].z < positionZ)*/)
+			if ((this->particles[index].active == false) || (this->particles[index].z < positionZ))
 			{
 				found = true;
 			}
@@ -373,8 +354,8 @@ void ParticleEmitter::KillParticles()
 			this->currentParticleCnt--;
 			for (int j = i; j < this->maxParticles - 1; j++)
 			{
-				/*this->particles[j] = this->particles[j + 1];*/
-				this->particles[j].x = this->particles[j + 1].x;
+				this->particles[j] = this->particles[j + 1];
+				/*this->particles[j].x = this->particles[j + 1].x;
 				this->particles[j].y = this->particles[j + 1].y;
 				this->particles[j].z = this->particles[j + 1].z;
 				this->particles[j].scale = this->particles[j + 1].scale;
@@ -383,7 +364,7 @@ void ParticleEmitter::KillParticles()
 				this->particles[j].b = this->particles[j + 1].b;
 				this->particles[j].rotation = this->particles[j + 1].rotation;
 				this->particles[j].active = this->particles[j + 1].active;
-				this->particles[j].velocity = this->particles[j + 1].velocity;
+				this->particles[j].velocity = this->particles[j + 1].velocity;*/
 			}
 		}
 	}
