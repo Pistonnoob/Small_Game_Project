@@ -22,6 +22,7 @@ public:
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string playerModelFilename,
 		std::string weaponModelFilename, bool isSphere);
 	void Shutdown();
+	void Update();
 
 	Weapon* GetWeapon();
 

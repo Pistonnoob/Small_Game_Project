@@ -2,10 +2,10 @@
 
 Player::Player() : Actor()
 {
-	this->posX = 10;
-	this->posZ = 10;
+	this->posX = 0;
+	this->posZ = 0;
 	this->playerHealth = 100;
-	this->playerMovmentSpeed = 1;
+	this->playerMovmentSpeed = 10;
 	this->playerDamage = 1;
 	this->playerHighScore = 0;
 
@@ -29,6 +29,9 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 		return false;
 	}
 
+	//Rotation matrix
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(0);
+
 	//Set the weapon pos to the Player
 	//Set the world matrix to a defualt state
 	DirectX::XMMATRIX playerWorldMatrix;
@@ -39,20 +42,17 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	//create the new world matrix
 	playerWorldMatrix = playerWorldMatrix * offset;
 
+	//Set the model matrix
+	this->entityModel->SetWorldMatrix(playerWorldMatrix);
+
 	//weapon matrix
 	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
-	offset = DirectX::XMMatrixTranslation(5, 3, 0);
-	//weaponWorldMatrix = weaponWorldMatrix * offset;
-
-	//Rotation matrix
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(180);
+	offset = DirectX::XMMatrixTranslation(5, 4, 0);
+	weaponWorldMatrix = weaponWorldMatrix * offset;
 
 	//give the player model its new 
-	this->entityModel->SetWorldMatrix(rotationMatrix * playerWorldMatrix);
-	this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponWorldMatrix);
 
-
-
+	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
 	return true;
 }
@@ -66,6 +66,29 @@ void Player::Shutdown()
 		delete this->playerWeapon;
 		this->playerWeapon = nullptr;
 	}
+}
+
+void Player::Update()
+{
+	DirectX::XMMATRIX playerWorldMatrix;
+	this->entityModel->GetWorldMatrix(playerWorldMatrix);
+
+	//Initial offset
+	DirectX::XMMATRIX offset = DirectX::XMMatrixTranslation(this->posX, 0, this->posZ);
+	//create the new world matrix
+	playerWorldMatrix = offset;
+
+	//Set the model matrix
+	this->entityModel->SetWorldMatrix(playerWorldMatrix);
+
+	//weapon matrix
+	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
+	offset = DirectX::XMMatrixTranslation(5, 4, 0);
+	weaponWorldMatrix = weaponWorldMatrix * offset;
+
+	//give the player model its new 
+
+	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 }
 
 Weapon * Player::GetWeapon()
