@@ -56,7 +56,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		bool cameraResult = this->myCamera.Initialize();
 		float zoomIn = 1.0f / 4.0f;
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 4.0f, -20.0f));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 8.0f, -50.0f));
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
@@ -108,7 +108,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_ground.SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 		DirectX::XMMATRIX worldMatrix;
-		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
 
@@ -168,7 +168,26 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	//	gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	//}
 	////this->graphicH->DeferredRender(this->m_car, this->cameraH);
-	//gHandler->DeferredRender(&this->m_ground, &this->myCamera);
+
+	//Set deferred render targets
+	gHandler->SetDeferredRTVs();
+	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
+
+	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+
+	gHandler->SetLightRTV();
+
+	lightShaderParams->camPos = this->myCamera.GetCameraPos();
+	lightShaderParams->lightPos = DirectX::XMFLOAT4(0.0f, 0.0f, 5.0f, 0.0f);
+
+	DirectX::XMMATRIX viewMatrix;
+	this->myCamera.GetBaseViewMatrix(viewMatrix);
+
+	lightShaderParams->viewMatrix = viewMatrix;
+
+	gHandler->LightRender(lightShaderParams);
+
+	delete lightShaderParams;
 
 	gHandler->SetParticleRTV();
 	this->myParticleHandler.Render(gHandler, &this->myCamera);

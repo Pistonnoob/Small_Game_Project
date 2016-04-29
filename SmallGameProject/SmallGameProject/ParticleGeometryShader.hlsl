@@ -9,7 +9,7 @@ cbuffer CBPerEmitter
 
 struct GSInput
 {
-	float4 position : POSITION; //.a = scale
+	float4 position : SV_POSITION; //.a = scale
 	float4 color : COLOR; //.a = rotation
 };
 
@@ -51,7 +51,7 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	//*First triangle*\\
 	//Top-Left
 	element.position = input[0].position;
-	element.position = mul(element.position, rotationMatrix);
+	element.position = mul(element.position, worldMatrix);
 	element.position = mul(element.position, viewMatrix);
 	element.position = mul(element.position, projectionMatrix);
 	element.color = input[0].color;
@@ -59,7 +59,7 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	output.Append(element);
 	//Bottom-Right
 	element.position = float4(input[0].position.x + size, input[0].position.y - size, input[0].position.z, 1.0f);
-	element.position = mul(element.position, rotationMatrix);
+	element.position = mul(element.position, worldMatrix);
 	element.position = mul(element.position, viewMatrix);
 	element.position = mul(element.position, projectionMatrix);
 	element.color = input[0].color;
@@ -67,7 +67,7 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	output.Append(element);
 	//Bottom-Left
 	element.position = float4(input[0].position.x, input[0].position.y - size, input[0].position.z, 1.0f);
-	element.position = mul(element.position, rotationMatrix);
+	element.position = mul(element.position, worldMatrix);
 	element.position = mul(element.position, viewMatrix);
 	element.position = mul(element.position, projectionMatrix);
 	element.color = input[0].color;
@@ -78,7 +78,7 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	//*Second triangle*\\
 	//Top-Left
 	element.position = input[0].position;
-	element.position = mul(element.position, rotationMatrix);
+	element.position = mul(element.position, worldMatrix);
 	element.position = mul(element.position, viewMatrix);
 	element.position = mul(element.position, projectionMatrix);
 	element.color = input[0].color;
@@ -86,7 +86,7 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	output.Append(element);
 	//Top-Right
 	element.position = float4(input[0].position.x + size, input[0].position.y, input[0].position.z, 1.0f);
-	element.position = mul(element.position, rotationMatrix);
+	element.position = mul(element.position, worldMatrix);
 	element.position = mul(element.position, viewMatrix);
 	element.position = mul(element.position, projectionMatrix);
 	element.color = input[0].color;
@@ -94,7 +94,7 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	output.Append(element);
 	//Bottom-Right
 	element.position = float4(input[0].position.x + size, input[0].position.y - size, input[0].position.z, 1.0f);
-	element.position = mul(element.position, rotationMatrix);
+	element.position = mul(element.position, worldMatrix);
 	element.position = mul(element.position, viewMatrix);
 	element.position = mul(element.position, projectionMatrix);
 	element.color = input[0].color;

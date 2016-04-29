@@ -12,15 +12,8 @@ float4 main(PSInput input) : SV_TARGET
 {
 	float4 outputColor = particleTexture.Sample(mySampler, input.tex);
 
-	//If pixel is black, treat it as transparent
-	if (outputColor.r == 1 && outputColor.g == 1 && outputColor.b == 1) {
-		outputColor.a = 0.0f;
-	}
-	else {
-		outputColor.a = 0.5f;
-	}
-
 	outputColor.rgb = outputColor.rgb * input.color.rgb;
+	outputColor.a *= 0.4f;
 
 	return outputColor;
 }

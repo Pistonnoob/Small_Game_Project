@@ -51,14 +51,14 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	{
 		this->particles[i] = Particle();
 
-		this->particles[i].scale = 10.0f;
-		this->particles[i].x = 0.0f + i * particles[i].scale;
-		this->particles[i].y = 0.0f + i * particles[i].scale;
-		this->particles[i].z = 0.0f + i * particles[i].scale;
+		this->particles[i].scale = 2.0f;
+		this->particles[i].x = 0.0f + i * particles[i].scale * 0.5f;
+		this->particles[i].y = 0.0f + i * particles[i].scale * 0.5f;
+		this->particles[i].z = -10.0f + i * particles[i].scale * 0.0f;
 
-		this->particles[i].r = 0.0f;
+		this->particles[i].r = 0.0f + i * (i / float(particleCnt));
 		this->particles[i].g = 0.0f;
-		this->particles[i].b = 1.0f;
+		this->particles[i].b = 1.0f - i * (i / (float)particleCnt);
 		this->particles[i].rotation = 0.0f;
 	}
 
@@ -150,7 +150,7 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 	ParticleShaderParameters parameters;
 
 	parameters.worldMatrix = this->world;
-	parameters.diffTexture = this->myTextures.GetTexture(0);
+	parameters.diffTexture = this->myTextures.GetTexture(1);
 
 	gHandler->ParticleRender(&parameters, camera);
 

@@ -93,11 +93,11 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
 	ZeroMemory(&rtbd, sizeof(rtbd));
 	rtbd.BlendEnable = true;
-	rtbd.SrcBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	rtbd.DestBlend = D3D11_BLEND_SRC_ALPHA;
+	rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 	rtbd.BlendOp = D3D11_BLEND_OP_ADD;
-	rtbd.SrcBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-	rtbd.DestBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	rtbd.SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	rtbd.DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 	rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	rtbd.RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
 
@@ -107,6 +107,20 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	blendDesc.RenderTarget[0] = rtbd;
 
 	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->transparencyBlendState);
+
+	rtbd.BlendEnable = false;
+	blendDesc.RenderTarget[0] = rtbd;
+
+	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->disableTransparencyBlendState);
+
+	rtbd.BlendEnable = true;
+	rtbd.SrcBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.DestBlend = D3D11_BLEND_SRC_ALPHA;
+	rtbd.SrcBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.DestBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0] = rtbd;
+
+	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->textTransparencyBlendState);
 
 	return true;
 }
@@ -164,8 +178,6 @@ void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
 
 void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera)
 {
-	this->engine->GetDeviceContext()->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
-
 	DirectX::XMMATRIX viewMatrix;
 	camera->GetViewMatrix(viewMatrix);
 
@@ -178,6 +190,7 @@ void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, Cam
 
 void GraphicHandler::TextRender()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->textTransparencyBlendState, NULL, 0xffffffff);
 	this->textH->Render(this->engine->GetDeviceContext(), this->orthographicMatrix);
 }
 
@@ -262,19 +275,21 @@ void GraphicHandler::ClearRTVs()
 
 void GraphicHandler::SetDeferredRTVs()
 {
-	this->engine->GetDeviceContext()->OMSetBlendState(0, 0, 0xffffffff);
+	this->engine->GetDeviceContext()->OMSetBlendState(this->disableTransparencyBlendState, NULL, 0xffffffff);
 	this->deferredShaderH->SetDeferredRenderTargets(this->engine->GetDeviceContext());
 	this->engine->SetDepth(1);
 }
 
 void GraphicHandler::SetLightRTV()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->disableTransparencyBlendState, NULL, 0xffffffff);
 	this->engine->SetRenderTargetView();
 	this->engine->SetDepth(2);
 }
 
 void GraphicHandler::SetParticleRTV()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
 	this->engine->SetRenderTargetView(this->deferredShaderH->GetDepthView());
 	this->engine->SetDepth(3);
 }
