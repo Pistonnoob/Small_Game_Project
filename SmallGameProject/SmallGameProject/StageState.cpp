@@ -75,6 +75,10 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (cameraResult)
 			result = 1;
 
+		Weapon test = Weapon();
+		test.Initialize(device, deviceContext, "ogreFullG");
+		test.ShutDown();
+
 
 		//Army thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();

@@ -1,6 +1,6 @@
 #include "GameData.h"
-GameData::GameData()
-: Observer()
+
+GameData::GameData(): Observer()
 {
 	this->playerHighScore = 0;
 	this->playerHealth = 0;
@@ -8,6 +8,14 @@ GameData::GameData()
 	this->playerDamage = 0;
 
 	this->enemiesKilled = 0;
+	
+	//create pistol
+	this->weaponArsenal[0] = Weapon();
+	//shotgun
+	this->weaponArsenal[1] = Weapon(15, 10, 5);
+	//uzi
+	this->weaponArsenal[2] = Weapon(5, 10, 15);
+
 }
 
 GameData::~GameData()
@@ -85,3 +93,7 @@ bool GameData::LoadPlayerData(std::string filename)
 	return true;
 }
 
+Weapon * GameData::getWeapon(int weaponEnum)
+{
+	return &this->weaponArsenal[0];
+}

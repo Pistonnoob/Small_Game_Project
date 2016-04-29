@@ -17,26 +17,22 @@ private:
 	float attackSpeed;
 
 	Model* weaponModel;
-
-	//an array of adresses to the lib
-	bool* weaponMods;
 public:
 	Weapon();
-	Weapon(float Hp, float MS, float Dmg);
-	
+	Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed);
+
 	~Weapon();
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename);
 	void ShutDown();
 
 	const Model* GetModel();
-	void ActivateWeaponMod(const int &weaponEnum);
 
-private:
-	bool setWeaponModifier(int WEAPON_ENUM) throw(...);
-	void calculateFinalStats();
-
-	void setAllToFalse();
+	float getAttackDamageMod() const;
+	float getAttackSpeedMod() const;
+	float getPlayerSpeedMod() const;
 };
+
+
 
 #endif

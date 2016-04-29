@@ -1,15 +1,23 @@
 #include "Weapon.h"
 
+//not so strong weapon
 Weapon::Weapon()
 {
 	this->weaponModel = new Model();
-	this->weaponMods = nullptr;
+
+	this->attackDamage = 1.0f;
+	this->playerSpeed = 1.0f;
+	this->attackSpeed = 1.0f;
 }
 
-Weapon::Weapon(float Hp, float MS, float Dmg)
+//if you want to change the base-Stats
+Weapon::Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed)
 {
 	this->weaponModel = new Model();
-	this->weaponMods = nullptr;
+
+	this->attackDamage = attackDamage;
+	this->playerSpeed = playerSpeed;
+	this->attackSpeed = attackSpeed;
 }
 
 Weapon::~Weapon()
@@ -18,23 +26,16 @@ Weapon::~Weapon()
 
 bool Weapon::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename)
 {
-	return this->weaponModel->Initialize(device, deviceContext, objFilename);
+	bool result = true;
+
+	result = this->weaponModel->Initialize(device, deviceContext, objFilename);
 
 	//setting the starting values
 	this->attackDamage = 10.0f;
 	this->attackSpeed = 10.0f;
 	this->playerSpeed = 10.0f;
 
-	this->name = "unknown";
-
-	//this->weaponMods = new bool[this->CAP];
-
-
-	//set all weapon modifiers off
-	//this->setAllToFalse();
-	//activates one modifier
-	//this->setWeaponModifier(Modifiers::WEAPON::DAMAGE_UPx10);
-
+	return result;
 }
 
 void Weapon::ShutDown()
@@ -45,8 +46,6 @@ void Weapon::ShutDown()
 		delete this->weaponModel;
 		this->weaponModel = nullptr;
 	}
-
-	delete[] this->weaponMods;
 }
 
 const Model * Weapon::GetModel()
@@ -54,38 +53,17 @@ const Model * Weapon::GetModel()
 	return this->weaponModel;
 }
 
-void Weapon::ActivateWeaponMod(const int &weaponEnum)
+float Weapon::getAttackDamageMod() const
 {
-	this->weaponMods[weaponEnum] = true;
+	return this->attackDamage;
 }
 
-bool Weapon::setWeaponModifier(int WEAPON_ENUM) throw(...)
+float Weapon::getAttackSpeedMod() const
 {
-	bool result = true;
-	if (WEAPON_ENUM >= this->CAP)
-	{
-		throw("out of scope in weaponMod array in weapon.cpp");
-		result = false;
-	}
-	else
-	{
-		this->weaponMods[WEAPON_ENUM] = true;
-	}
-	return result;
+	return this->attackSpeed;
 }
 
-void Weapon::calculateFinalStats()
+float Weapon::getPlayerSpeedMod() const
 {
-	for (int i = 0; i < this->CAP; i++)
-	{
-		//get data from the lib
-	}
-}
-
-void Weapon::setAllToFalse()
-{
-	for (int i = 0; i < this->CAP; i++)
-	{
-		this->weaponMods[i] = false;
-	}
+	return this->playerSpeed;
 }

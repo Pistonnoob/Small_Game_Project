@@ -5,9 +5,11 @@
 #include <string>
 #include <fstream>
 #include "Modifiers.h"
+#include "Weapon.h"
 
-class GameData : public Observer {
 
+class GameData : public Observer
+{
 private:
 	static bool isInstatiated;	//Check flag
 	static GameData* single;
@@ -24,8 +26,12 @@ private:
 	//Achivement Related
 	int enemiesKilled;
 
+	//weapom related
+	int static const CAP = 3;
+	Weapon weaponArsenal[CAP];
+
+
 public:
-	
 	virtual ~GameData();
 	static GameData* getInstance();
 	void onNotify(const Entity* entity, Events::ENTITY evnt);
@@ -33,6 +39,7 @@ public:
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
 
+	Weapon* getWeapon(int weaponEnum);
 };
 
 bool GameData::isInstatiated = false;
