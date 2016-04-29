@@ -70,6 +70,7 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
+	this->world = DirectX::XMMatrixIdentity();
 
 
 	//Initialize the emitter
@@ -106,9 +107,15 @@ bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)
 	return true;
 }
 
-void ParticleEmitter::Render(ID3D11DeviceContext * deviceContext)
+void ParticleEmitter::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters)
 {
 	//NOT IMPLEMENTED
+	this->RenderBuffers(deviceContext);
+
+	ParticleShaderParameters parameters;
+
+	parameters.worldMatrix = this->world;
+	parameters.diffTexture = this->texture;
 }
 
 ID3D11ShaderResourceView * ParticleEmitter::GetTexture()

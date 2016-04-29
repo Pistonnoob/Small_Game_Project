@@ -2,6 +2,7 @@
 #define PARTICLEEMITTER_H
 #include <d3d11.h>
 #include <directxmath.h>
+#include "GraphicHandler.h"
 class ParticleEmitter
 {
 private:
@@ -31,6 +32,8 @@ private:
 	ID3D11Buffer* indexBuffer;
 	ID3D11ShaderResourceView* texture;
 
+	DirectX::XMMATRIX world;
+
 	Particle* rootParticle;
 	Particle* particles;
 	VertexType* vertices;
@@ -42,7 +45,7 @@ public:
 
 	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture);
 	bool Update(float dT, ID3D11DeviceContext* deviceContext);
-	void Render(ID3D11DeviceContext* deviceContext);
+	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters);
 
 	ID3D11ShaderResourceView* GetTexture();
 	int GetIndexCount();
