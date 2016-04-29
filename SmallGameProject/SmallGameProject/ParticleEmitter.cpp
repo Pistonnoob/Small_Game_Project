@@ -61,6 +61,7 @@ void ParticleEmitter::Shutdown()
 	if (this->rootParticle != nullptr)
 	{
 		delete this->rootParticle;
+		this->rootParticle = nullptr;
 	}
 
 }
@@ -130,7 +131,7 @@ int ParticleEmitter::GetIndexCount()
 
 bool ParticleEmitter::InitializeEmitter()
 {
-	this->particleDeviationX = 0.5f;
+	this->particleDeviationX = 6.0f;
 	this->particleDeviationY = 0.1f;
 	this->particleDeviationZ = 2.0f;
 
@@ -155,10 +156,10 @@ bool ParticleEmitter::InitializeEmitter()
 		0.0f, 0.0f, 0.0f, 1.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		1.0f,
-		true
+		false
 	};
 
-	this->currentParticleCnt = 0;
+	this->currentParticleCnt = 0.0f;
 
 	this->accumulatedTime = 0.0f;
 
@@ -277,14 +278,18 @@ void ParticleEmitter::EmitParticles(float dT)
 
 		// Now generate the randomized particle properties.
 		positionX = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationX;
-		positionY = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
+		positionY = 10.0f + (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
+		positionY = 10.0f;
 		positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationZ;
-
+		positionZ = 0.0f;
 		velocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * particleVelocityVariation;
 
 		red = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		green = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		blue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+		red = 0.0f;
+		green = 0.0f;
+		blue = 1.0f;
 
 		// Now since the particles need to be rendered from back to front for blending we have to sort the particle array.
 		// We will sort using Z depth so we need to find where in the list the particle should be inserted.
@@ -316,6 +321,8 @@ void ParticleEmitter::EmitParticles(float dT)
 			this->particles[i].b =this->particles[j].b;
 			this->particles[i].velocity = this->particles[j].velocity;
 			this->particles[i].active = this->particles[j].active;
+			this->particles[i].scale = this->particles[j].scale;
+			this->particles[i].rotation = this->particles[j].rotation;
 			i--;
 			j--;
 		}
@@ -329,6 +336,8 @@ void ParticleEmitter::EmitParticles(float dT)
 		this->particles[index].b = blue;
 		this->particles[index].velocity = velocity;
 		this->particles[index].active = true;
+		this->particles[index].scale = 2.0f;
+		this->particles[index].rotation = 0.0f;
 	}
 
 	return;
@@ -339,7 +348,7 @@ void ParticleEmitter::UpdateParticles(float dT)
 	// Each frame we update all the particles by making them move downwards using their position, velocity, and the frame time.
 	for (int i = 0; i<this->currentParticleCnt; i++)
 	{
-		this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT * 0.001f);
+		this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT * 0.00001f);
 	}
 
 	return;
@@ -351,7 +360,7 @@ void ParticleEmitter::KillParticles()
 	for (int i = 0; i < this->maxParticles; i++)
 	{
 		//The conditions for killing / restarting the particle
-		if (!this->particles[i].active)
+		if (this->particles[i].active && this->particles[i].y < -3.0f)
 		{
 			//Kill the particle
 			this->particles[i].active = false;

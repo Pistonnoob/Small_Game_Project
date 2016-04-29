@@ -135,6 +135,8 @@ int StageState::Update(float deltaTime)
 	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0, 0.0f, -20.0f));
 
+	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
+
 	if (this->exitStage)
 	{
 		this->exitStage = false;
