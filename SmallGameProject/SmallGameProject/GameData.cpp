@@ -10,11 +10,11 @@ GameData::GameData(): Observer()
 	this->enemiesKilled = 0;
 	
 	//create pistol
-	this->weaponArsenal[0] = Weapon();
+	this->weaponArsenal[Modifiers::WEAPON::PISTOL] = Weapon();
 	//shotgun
-	this->weaponArsenal[1] = Weapon(15, 10, 5);
+	this->weaponArsenal[Modifiers::WEAPON::SHOTGUN] = Weapon(15, 10, 5);
 	//uzi
-	this->weaponArsenal[2] = Weapon(5, 10, 15);
+	this->weaponArsenal[Modifiers::WEAPON::UZI] = Weapon(5, 10, 15);
 
 }
 

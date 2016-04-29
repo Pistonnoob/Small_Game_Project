@@ -10,8 +10,6 @@ class Weapon {
 private:
 	std::string name;
 
-	int CAP = Modifiers::nrOfEnums;
-
 	float attackDamage;
 	float playerSpeed;
 	float attackSpeed;

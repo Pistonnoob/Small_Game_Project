@@ -7,7 +7,6 @@
 #include "Modifiers.h"
 #include "Weapon.h"
 
-
 class GameData : public Observer
 {
 private:
@@ -27,8 +26,7 @@ private:
 	int enemiesKilled;
 
 	//weapom related
-	int static const CAP = 3;
-	Weapon weaponArsenal[CAP];
+	Weapon weaponArsenal[Modifiers::nrOfWeapons];
 
 
 public:
