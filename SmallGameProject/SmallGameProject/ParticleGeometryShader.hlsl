@@ -20,7 +20,7 @@ struct PSInput
 	float4 color : COLOR;
 };
 
-[maxvertexcount(6)]
+[maxvertexcount(12)]
 void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 {
 	PSInput element;
@@ -35,7 +35,7 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 
 	float3 camUp = float3(0.0f, 1.0f, 0.0f);
 
-	float3 right = normalize(cross(camUp, look));
+	float3 right = normalize(cross(look, camUp));
 
 	float3 up = cross(look, right);
 
@@ -125,6 +125,74 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	//element.position = input[0].position + bottomRight;
 	//element.position.w = 1.0f;
 	element.position = mul(element.position, rotationMatrix);
+	element.position = mul(element.position, viewMatrix);
+	element.position = mul(element.position, projectionMatrix);
+	element.color = input[0].color;
+	element.tex = float2(1.0f, 1.0f);
+	output.Append(element);
+	output.RestartStrip();
+
+	//**Create quad without rotation**\\
+
+	//*First triangle*\\
+	//Top-Left
+	element.position = input[0].position;
+	//element.position = input[0].position + topLeft;
+	//element.position.w = 1.0f;
+	element.position = mul(element.position, worldMatrix);
+	element.position = mul(element.position, viewMatrix);
+	element.position = mul(element.position, projectionMatrix);
+	element.color = input[0].color;
+	element.tex = float2(0.0f, 0.0f);
+	output.Append(element);
+	//Bottom-Right
+	element.position = float4(input[0].position.x + size, input[0].position.y - size, input[0].position.z, 1.0f);
+	//element.position = input[0].position + bottomRight;
+	//element.position.w = 1.0f;
+	element.position = mul(element.position, worldMatrix);
+	element.position = mul(element.position, viewMatrix);
+	element.position = mul(element.position, projectionMatrix);
+	element.color = input[0].color;
+	element.tex = float2(1.0f, 1.0f);
+	output.Append(element);
+	//Bottom-Left
+	element.position = float4(input[0].position.x, input[0].position.y - size, input[0].position.z, 1.0f);
+	//element.position = input[0].position + bottomLeft;
+	//element.position.w = 1.0f;
+	element.position = mul(element.position, worldMatrix);
+	element.position = mul(element.position, viewMatrix);
+	element.position = mul(element.position, projectionMatrix);
+	element.color = input[0].color;
+	element.tex = float2(0.0f, 1.0f);
+	output.Append(element);
+	output.RestartStrip();
+
+	//*Second triangle*\\
+	//Top-Left
+	element.position = input[0].position;
+	//element.position = input[0].position + topLeft;
+	//element.position.w = 1.0f;
+	element.position = mul(element.position, worldMatrix);
+	element.position = mul(element.position, viewMatrix);
+	element.position = mul(element.position, projectionMatrix);
+	element.color = input[0].color;
+	element.tex = float2(0.0f, 0.0f);
+	output.Append(element);
+	//Top-Right
+	element.position = float4(input[0].position.x + size, input[0].position.y, input[0].position.z, 1.0f);
+	//element.position = input[0].position + topRight;
+	//element.position.w = 1.0f;
+	element.position = mul(element.position, worldMatrix);
+	element.position = mul(element.position, viewMatrix);
+	element.position = mul(element.position, projectionMatrix);
+	element.color = input[0].color;
+	element.tex = float2(1.0f, 0.0f);
+	output.Append(element);
+	//Bottom-Right
+	element.position = float4(input[0].position.x + size, input[0].position.y - size, input[0].position.z, 1.0f);
+	//element.position = input[0].position + bottomRight;
+	//element.position.w = 1.0f;
+	element.position = mul(element.position, worldMatrix);
 	element.position = mul(element.position, viewMatrix);
 	element.position = mul(element.position, projectionMatrix);
 	element.color = input[0].color;
