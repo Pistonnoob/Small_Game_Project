@@ -114,7 +114,9 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		DirectX::XMMATRIX worldMatrix;
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
-
+		worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
+		worldMatrix *= DirectX::XMMatrixTranslation(0.0f, -3.5f, 2.0f);
+		this->m_car.SetWorldMatrix(worldMatrix);
 
 	}
 
@@ -195,22 +197,10 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	//Set deferred render targets
 	gHandler->SetDeferredRTVs();
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
-
-	LightShaderParameters* lightShaderParams = new LightShaderParameters;
+	gHandler->DeferredRender(&this->m_car, &this->myCamera);
 
 	gHandler->SetLightRTV();
-
-	lightShaderParams->camPos = this->myCamera.GetCameraPos();
-	lightShaderParams->lightPos = DirectX::XMFLOAT4(0.0f, 0.0f, 5.0f, 0.0f);
-
-	DirectX::XMMATRIX viewMatrix;
-	this->myCamera.GetBaseViewMatrix(viewMatrix);
-
-	lightShaderParams->viewMatrix = viewMatrix;
-
-	gHandler->LightRender(lightShaderParams);
-
-	delete lightShaderParams;
+	gHandler->LightRender(this->myCamera.GetCameraPos());
 
 	gHandler->SetParticleRTV();
 	this->myParticleHandler.Render(gHandler, &this->myCamera);

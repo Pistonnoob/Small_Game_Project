@@ -1,3 +1,5 @@
+#define MAX_LIGHTS 10
+
 Texture2D diffTexture : register(t0);
 Texture2D ambientTexture : register(t1);
 Texture2D specularTexture : register(t2);
@@ -5,7 +7,7 @@ Texture2D normalTexture: register(t3);
 Texture2D worldPosTexture: register(t4);
 SamplerState pointSampler : register(s0);
 
-cbuffer LightConstantBuffer
+cbuffer LightMatrixBuffer : register(b0)
 {
 	matrix worldMatrix;
 	matrix viewMatrix;
@@ -14,7 +16,19 @@ cbuffer LightConstantBuffer
 	matrix lightProjectionMatrix;
 
 	float4 camPos;
-	float4 lightPos;
+};
+
+cbuffer LightsCB : register(b1)
+{
+	float4 Ambient[MAX_LIGHTS];
+	float4 Diffuse[MAX_LIGHTS];
+	float4 Specular[MAX_LIGHTS];
+
+	float4 Position[MAX_LIGHTS];
+	float4 Attenuation[MAX_LIGHTS-1];
+
+	uint activeLights;
+	float3 padding;
 };
 
 struct PSInput
@@ -50,8 +64,7 @@ float4 main(PSInput input) : SV_TARGET
 	//Sample the texture with positions in world space from deferred render
 	worldPos = worldPosTexture.Sample(pointSampler, textCoords);
 
-	//Create the normalized vector from position to light source
-	float3 outVec = normalize(lightPos.xyz - (worldPos).xyz);
+	float3 outVec = normalize(-Position[0]);
 
 	//Create the normalized reflection vector
 	float3 refVec = normalize(reflect(-outVec, normal));
@@ -60,19 +73,63 @@ float4 main(PSInput input) : SV_TARGET
 	float3 viewDir = normalize(camPos - worldPos).xyz;
 
 	float specIntesity = saturate(dot(refVec, viewDir));
-	float shineFactor = 5.0f;
-	float lightSpecular = 0.65f;
+	float shineFactor = specColor.a;
+	float lightSpecular = Specular[0];
 
 	//Calculate the specular part
 	float4 specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
-	lightIntensity = dot(normal, outVec);
-	if (lightIntensity < 0) {
-		lightIntensity = 0;
+	float lightIntensityPart = dot(normal, outVec);
+	if (lightIntensityPart < 0) {
+		lightIntensityPart = 0;
 	}
+	outputColor = saturate((((diffColor.rgba * Diffuse[0]) + (specular.rgba * Specular[0])) * lightIntensityPart * 0.8f) + ((ambientColor.rgba * Ambient[0]) * 0.2f));
+
+	for (int i = 1; i <= activeLights; i++) {
+		//Create the normalized vector from position to light source
+		outVec = normalize(Position[i].xyz - (worldPos).xyz);
+		//Create the normalized reflection vector
+		refVec = normalize(reflect(-outVec, normal));
+
+		specIntesity = saturate(dot(refVec, viewDir));
+		lightSpecular = Specular[i];
+
+		//Calculate the specular part
+		specular += float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
+
+		lightIntensityPart = dot(normal, outVec);
+		if (lightIntensityPart < 0) {
+			lightIntensityPart = 0;
+		}
+		outputColor += saturate((((diffColor.rgba * Diffuse[i]) + (specular.rgba * Specular[i])) * lightIntensityPart * 0.8f) + ((ambientColor.rgba * Ambient[i]) * 0.2f));
+		//lightIntensity += lightIntensityPart;
+	}
+	outputColor = saturate(outputColor);
+	//saturate(lightIntensity);
+	//Create the normalized vector from position to light source
+	////float3 outVec = normalize(lightPos.xyz - (worldPos).xyz);
+	//float3 outVec = normalize(-Position[0]);
+
+	////Create the normalized reflection vector
+	//float3 refVec = normalize(reflect(-outVec, normal));
+
+	////Creathe the normalized vector from position to camera
+	//float3 viewDir = normalize(camPos - worldPos).xyz;
+
+	//float specIntesity = saturate(dot(refVec, viewDir));
+	//float shineFactor = 5.0f;
+	//float lightSpecular = 0.65f;
+
+	////Calculate the specular part
+	//float4 specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
+
+	//lightIntensity = dot(normal, outVec);
+	//if (lightIntensity < 0) {
+	//	lightIntensity = 0;
+	//}
 
 	//Combine everything for the output color
-	outputColor = saturate(((diffColor.rgba + specular.rgba) * lightIntensity * 0.8f) + ((ambientColor.rgba) * 0.2f));
+	//outputColor = saturate(((diffColor.rgba + specular.rgba) * lightIntensity * 0.8f) + ((ambientColor.rgba) * 0.2f));
 
 	//return float4(input.tex.x, input.tex.y, 0.0f, 1.0f);
 	//return float4(input.position.x / 800, input.position.y / 600, 0.0f, 1.0f);

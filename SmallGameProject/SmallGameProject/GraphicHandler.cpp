@@ -89,6 +89,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	//Create an orthographic projection matrix for 2D rendering
 	this->orthographicMatrix = DirectX::XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 	
+	this->baseViewMatrix = baseViewMatrix;
 
 	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
 	ZeroMemory(&rtbd, sizeof(rtbd));
@@ -121,6 +122,24 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	blendDesc.RenderTarget[0] = rtbd;
 
 	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->textTransparencyBlendState);
+
+	this->dirLight.Diffuse = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	this->dirLight.Ambient = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	this->dirLight.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	this->dirLight.Direction = DirectX::XMFLOAT4(-0.5f, -0.5f, -0.5f, 0.0f);
+
+	PointLight light;
+	light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	light.Position = DirectX::XMFLOAT4(0.0f, 0.0f, -5.0f, 1.0f);
+	light.Attenuation = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	this->AddPointLight(light);
+	/*light.Position = DirectX::XMFLOAT4(0.0f, 4.0f, -5.0f, 1.0f);
+	this->AddPointLight(light);
+	light.Position = DirectX::XMFLOAT4(0.0f, -4.0f, -5.0f, 1.0f);
+	this->AddPointLight(light);*/
 
 	return true;
 }
@@ -159,19 +178,28 @@ void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 	return;
 }
 
-void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
+void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 {
-	
+	LightShaderParameters* shaderParams = new LightShaderParameters;
 	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
+	shaderParams->viewMatrix = this->baseViewMatrix;
 	shaderParams->projectionMatrix = this->orthographicMatrix;
 	shaderParams->lightViewMatrix = DirectX::XMMatrixIdentity();
 	shaderParams->lightProjectionMatrix = DirectX::XMMatrixIdentity();
+
 	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
+
+	shaderParams->camPos = camPos;
+
+	shaderParams->dirLight = this->dirLight;
+	shaderParams->pointLights = this->pointLights;
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());
 	this->lightShaderH->Render(this->engine->GetDeviceContext(), 6, shaderParams);
 
 	this->lightShaderH->ResetPSShaderResources(this->engine->GetDeviceContext());
+
+	delete shaderParams;
 
 	return;
 }
@@ -265,6 +293,33 @@ int GraphicHandler::CreateTextHolder(int maxLength)
 bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color)
 {
 	return this->textH->UpdateSentence(this->engine->GetDeviceContext(), id, text, posX, posY, color);
+}
+
+void GraphicHandler::SetDirectionalLight(DirectionalLight light)
+{
+	this->dirLight = light;
+}
+
+void GraphicHandler::AddPointLight(PointLight light)
+{
+	this->pointLights.push_back(light);
+}
+
+void GraphicHandler::RemovePointLight(int index)
+{
+	if (index >= this->pointLights.size()) {
+		return;
+	}
+
+	for (int i = index; i < this->pointLights.size() - 1; i++) {
+		this->pointLights.at(i) = this->pointLights.at(i + 1);
+	}
+	this->pointLights.pop_back();
+}
+
+void GraphicHandler::RemoveAllPointLights()
+{
+	this->pointLights.clear();
 }
 
 void GraphicHandler::ClearRTVs()

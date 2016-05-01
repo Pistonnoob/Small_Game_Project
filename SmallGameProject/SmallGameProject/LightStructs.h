@@ -13,7 +13,7 @@ struct DirectionalLight
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular;
 
-	DirectX::XMFLOAT3 Direction;
+	DirectX::XMFLOAT4 Direction;
 	float pad;
 };
 
@@ -23,12 +23,11 @@ struct PointLight
 	DirectX::XMFLOAT4 Diffuse;
 	DirectX::XMFLOAT4 Specular;
 
-	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT4 Position;
 	float Range;
 
 	//controlls how light intensity falls of with distance
 	DirectX::XMFLOAT4 Attenuation;
-	float padding;
 };
 
 struct SpotLight
@@ -45,6 +44,5 @@ struct SpotLight
 
 	//controlls how light intensity falls of with distance
 	DirectX::XMFLOAT4 Attenuation;
-	float padding;
 };
 #endif

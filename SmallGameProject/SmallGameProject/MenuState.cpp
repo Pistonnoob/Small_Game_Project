@@ -136,24 +136,10 @@ int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 	int result = 0;
 
 	gHandler->SetDeferredRTVs();
-
 	gHandler->DeferredRender(&this->m_model, &this->myCamera);
 
-	LightShaderParameters* lightShaderParams = new LightShaderParameters;
-
 	gHandler->SetLightRTV();
-
-	lightShaderParams->camPos = this->myCamera.GetCameraPos();
-	lightShaderParams->lightPos = DirectX::XMFLOAT4(0.0f, 0.0f, -20.0f, 0.0f);
-
-	DirectX::XMMATRIX viewMatrix;
-	this->myCamera.GetBaseViewMatrix(viewMatrix);
-
-	lightShaderParams->viewMatrix = viewMatrix;
-
-	gHandler->LightRender(lightShaderParams);
-
-	delete lightShaderParams;
+	gHandler->LightRender(this->myCamera.GetCameraPos());
 
 	return result;
 }
