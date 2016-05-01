@@ -108,6 +108,32 @@ int EmitterPrototype::GetIndexCount()
 	return this->indexCount;
 }
 
+bool EmitterPrototype::SortParticles()
+{
+	//Define the distance from the camera to the particle
+	for (int i = 0; i < this->currentParticleCnt; i++)
+	{
+		float cameraDistance = pow(this->particles[i].x - cameraPos.x, 2) + pow(this->particles[i].y - cameraPos.y, 2) + pow(this->particles[i].z - this->cameraPos.z, 2);
+		//To get the real distance
+		//cameraDistance = sqrt(cameraDistance);
+		this->particles[i].cameraDistance = cameraDistance;
+	}
+	//Sort all our particles
+	std::sort(this->particles, this->particles + this->currentParticleCnt);
+	/*for (int i = 1; i < this->currentParticleCnt; i++)
+	{
+		if (this->particles[i].cameraDistance > this->particles[i - 1].cameraDistance)
+		{
+			bool somethingWentWrong = true;
+		}
+
+	}*/
+	//std::sort(0, this->currentParticleCnt, this->particles[0]);
+	//std::sort(this->particles[0], this->particles[this->currentParticleCnt]);
+	return true;
+}
+
+
 bool EmitterPrototype::InitializeEmitter()
 {
 	this->particleDeviationX = 20.0f;
@@ -247,35 +273,33 @@ void EmitterPrototype::EmitParticles(float dT)
 		positionY = 20.0f + (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
 		positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationZ;
 		velocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * particleVelocityVariation;
-
+		/*positionY = 20.0f;
+		positionZ = 0.0f;
+		velocity = particleVelocity;*/
 		red = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		green = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		blue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		red = 0.0f;
+		/*red = 0.0f;
 		green = 0.0f;
-		blue = 1.0f;
+		blue = 1.0f;*/
 
 		// Now since the particles need to be rendered from back to front for blending we have to sort the particle array.
 		// We will sort using Z depth so we need to find where in the list the particle should be inserted.
-		index = 0;
+		index = this->currentParticleCnt;
 		found = false;
-		while (!found)
+		while (!found && index < this->maxParticles)
 		{
-			if ((this->particles[index].active == false) || (this->particles[index].z < positionZ))
-			{
+			if ((this->particles[index].active == false))
 				found = true;
-			}
 			else
-			{
 				index++;
-			}
 		}
 
 		// Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle.
 		i = this->currentParticleCnt;
 		j = i - 1;
 
-		while (i != index)
+		/*while (i != index)
 		{
 			this->particles[i].x = this->particles[j].x;
 			this->particles[i].y = this->particles[j].y;
@@ -289,7 +313,10 @@ void EmitterPrototype::EmitParticles(float dT)
 			this->particles[i].rotation = this->particles[j].rotation;
 			i--;
 			j--;
-		}
+		}*/
+
+		//Because we will sort the array every time we render we will just set
+		//the data at the palce we find
 
 		// Now insert it into the particle array in the correct depth order.
 		this->particles[index].x = positionX;
@@ -326,23 +353,25 @@ void EmitterPrototype::KillParticles()
 		//The conditions for killing / restarting the particle
 		if (this->particles[i].active && this->particles[i].y < -3.0f)
 		{
+			//moce the last used particle to this one
+			this->particles[i] = this->particles[this->currentParticleCnt];
 			//Kill the particle
-			this->particles[i].active = false;
+			this->particles[this->currentParticleCnt].active = false;
 			this->currentParticleCnt--;
-			for (int j = i; j < this->maxParticles - 1; j++)
-			{
-				this->particles[j] = this->particles[j + 1];
-				/*this->particles[j].x = this->particles[j + 1].x;
-				this->particles[j].y = this->particles[j + 1].y;
-				this->particles[j].z = this->particles[j + 1].z;
-				this->particles[j].scale = this->particles[j + 1].scale;
-				this->particles[j].r = this->particles[j + 1].r;
-				this->particles[j].g = this->particles[j + 1].g;
-				this->particles[j].b = this->particles[j + 1].b;
-				this->particles[j].rotation = this->particles[j + 1].rotation;
-				this->particles[j].active = this->particles[j + 1].active;
-				this->particles[j].velocity = this->particles[j + 1].velocity;*/
-			}
+			//for (int j = i; j < this->maxParticles - 1; j++)
+			//{
+			//	this->particles[j] = this->particles[j + 1];
+			//	/*this->particles[j].x = this->particles[j + 1].x;
+			//	this->particles[j].y = this->particles[j + 1].y;
+			//	this->particles[j].z = this->particles[j + 1].z;
+			//	this->particles[j].scale = this->particles[j + 1].scale;
+			//	this->particles[j].r = this->particles[j + 1].r;
+			//	this->particles[j].g = this->particles[j + 1].g;
+			//	this->particles[j].b = this->particles[j + 1].b;
+			//	this->particles[j].rotation = this->particles[j + 1].rotation;
+			//	this->particles[j].active = this->particles[j + 1].active;
+			//	this->particles[j].velocity = this->particles[j + 1].velocity;*/
+			//}
 		}
 	}
 }
