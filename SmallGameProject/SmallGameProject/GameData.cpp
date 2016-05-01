@@ -4,49 +4,60 @@ bool GameData::isInstatiated = false;
 
 GameData* GameData::single = nullptr;
 
-GameData::GameData(): Observer()
+GameData::GameData(GameData const &): Observer()
 {
-	this->playerHighScore = 0;
-	this->playerHealth = 0;
-	this->playerMovmentSpeed = 0;
-	this->playerDamage = 0;
+	
+	playerHighScore = 0;
+	playerHealth = 0;
+	playerMovmentSpeed = 0;
+	playerDamage = 0;
 
-	this->enemiesKilled = 0;
+	enemiesKilled = 0;
 	
 	//create pistol
-	this->weaponArsenal[Modifiers::WEAPON::PISTOL] = Weapon();
+ 	weaponArsenal.push_back(Weapon());
 	//shotgun
-	this->weaponArsenal[Modifiers::WEAPON::SHOTGUN] = Weapon(15, 10, 5);
+	weaponArsenal.push_back(Weapon(15, 10, 5));
 	//uzi
-	this->weaponArsenal[Modifiers::WEAPON::UZI] = Weapon(5, 10, 15);
+	weaponArsenal.push_back(Weapon(5, 10, 15));
 
 	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
-		this->playerUnlockedWeapons[i] = false;
-
+		playerUnlockedWeapons[i] = false;
 }
 
 GameData::~GameData()
 {
 	//isInstatiated = false;
 	//delete this->single;
+	for (int i = 0; i < 3; i++)
+	{
+		weaponArsenal[i].ShutDown();
+	}
+	
 }
 
 GameData* GameData::getInstance()
 {
-	if (!isInstatiated) {
-		single = new GameData();
+	if (!isInstatiated) 
+	{
+  		single = new GameData(*single);
 		isInstatiated = true;
-		return single;
+		
 	}
-	else {
-		return single;
-	}
+	return single;
 }
 
 void GameData::shutdown()
 {
+	
+	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
+	{
+		weaponArsenal.at(i).ShutDown();
+	}
+	
 	isInstatiated = false;
 	delete single;
+	single = nullptr;
 }
 
 void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
@@ -63,7 +74,7 @@ void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 {
 	if (achi == Events::ACHIEVEMENT::WEAPON_UNLOCK)
 	{
-		this->weaponArsenal[Modifiers::WEAPON::SHOTGUN];
+		weaponArsenal[Modifiers::WEAPON::SHOTGUN];
 	}
 
 }
@@ -78,18 +89,18 @@ bool GameData::SavePlayerData(std::string filename)
 		return false;
 	}
 	else {
-		saveFile << this->playerHighScore << "\r\n";
-		saveFile << this->playerHealth << "\r\n";
-		saveFile << this->playerMovmentSpeed << "\r\n";
-		saveFile << this->playerDamage << "\r\n";
-		saveFile << this->enemiesKilled << "\r\n";
+		saveFile << playerHighScore << "\r\n";
+		saveFile << playerHealth << "\r\n";
+		saveFile << playerMovmentSpeed << "\r\n";
+		saveFile << playerDamage << "\r\n";
+		saveFile << enemiesKilled << "\r\n";
 
 		saveFile.close();
 	}
+
 	
 	return true;
 }
-
 bool GameData::LoadPlayerData(std::string filename)
 {
 	std::ifstream loadFile;
@@ -101,11 +112,11 @@ bool GameData::LoadPlayerData(std::string filename)
 	}
 	else {
 
-		loadFile >> this->playerHighScore;
-		loadFile >> this->playerHealth;
-		loadFile >> this->playerMovmentSpeed;
-		loadFile >> this->playerDamage;
-		loadFile >> this->enemiesKilled;
+		loadFile >> playerHighScore;
+		loadFile >> playerHealth;
+		loadFile >> playerMovmentSpeed;
+		loadFile >> playerDamage;
+		loadFile >> enemiesKilled;
 
 		loadFile.close();
 	}
@@ -115,5 +126,5 @@ bool GameData::LoadPlayerData(std::string filename)
 
 Weapon * GameData::getWeapon(int weaponEnum)
 {
-	return &this->weaponArsenal[0];
+	return &weaponArsenal[0];
 }

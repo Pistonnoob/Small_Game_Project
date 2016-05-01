@@ -11,7 +11,7 @@ System::System()
 
 System::~System()
 {
-	this->Shutdown();
+
 }
 
 bool System::Initialize()
@@ -53,9 +53,9 @@ bool System::Initialize()
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
 
 	//initialize the gameData singleton
-	this->gameData = GameData::getInstance();
+  	this->gameData = GameData::getInstance();
 
-	this->testRot = 0;
+   	this->testRot = 0;
 
 	return true;
 }
@@ -137,9 +137,7 @@ void System::Shutdown()
 	//shutdown the gameData
 	if (this->gameData)
 	{
-		GameData::shutdown();
-		//delete this->gameData;
-		this->gameData = nullptr;
+		this->gameData->shutdown();
 	}
 	//Shutdown the window
 	ShutdownWindow();

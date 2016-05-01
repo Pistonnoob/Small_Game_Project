@@ -6,6 +6,7 @@
 #include <fstream>
 #include "Modifiers.h"
 #include "Weapon.h"
+#include <vector> 
 
 class GameData : public Observer
 {
@@ -13,7 +14,9 @@ private:
 	static bool isInstatiated;	//Check flag
 	static GameData* single;
 
-	GameData();					//Only GameData will create itself
+	GameData(GameData const&);
+
+	//GameData();					//Only GameData will create itself
 
 	//Data
 	//Character
@@ -26,13 +29,13 @@ private:
 	int enemiesKilled;
 
 	//weapom related
-	Weapon weaponArsenal[Modifiers::nrOfWeapons];
+	std::vector<Weapon>weaponArsenal;
 	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
 public:
 	virtual ~GameData();
 	static GameData* getInstance();
 
-	static void shutdown();
+	void shutdown();
 
 	void onNotify(const Entity* entity, Events::ENTITY evnt);
 	void onNotify(const Entity* entity, Events::ACHIEVEMENT achi);
