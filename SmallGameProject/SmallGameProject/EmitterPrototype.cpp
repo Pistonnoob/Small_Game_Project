@@ -23,35 +23,14 @@ EmitterPrototype::~EmitterPrototype()
 {
 }
 
-void EmitterPrototype::Shutdown()
+void EmitterPrototype::ShutdownSpecific()
 {
-	if (this->vertexBuffer)
-	{
-		this->vertexBuffer->Release();
-		this->vertexBuffer = nullptr;
-	}
-
-	if (this->indexBuffer)
-	{
-		this->indexBuffer->Release();
-		this->indexBuffer = nullptr;
-	}
-
-	if (this->texture)
-		this->texture = nullptr;
 
 	if (this->particles)
 	{
 		delete[] this->particles;
 		this->particles = nullptr;
 	}
-
-	if (this->vertices)
-	{
-		delete[] this->vertices;
-		this->vertices = nullptr;
-	}
-
 }
 
 bool EmitterPrototype::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
@@ -75,11 +54,9 @@ bool EmitterPrototype::Initialize(ID3D11Device * device, ID3D11ShaderResourceVie
 	return true;
 }
 
-bool EmitterPrototype::Update(float dT, ID3D11DeviceContext * deviceContext)
+bool EmitterPrototype::UpdateSpecific(float dT, ID3D11DeviceContext * deviceContext)
 {
 	bool result = false;
-	// Increment the frame time.
-	this->accumulatedTime += dT;
 
 	//Release old particles
 	this->KillParticles();

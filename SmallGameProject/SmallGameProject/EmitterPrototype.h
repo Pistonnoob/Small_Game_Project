@@ -19,15 +19,15 @@ private:
 	float particleSize, particlesPerSecond;
 
 	Particle* particles;
-	VertexType* vertices;
+	/*VertexType* vertices;*/
 
 public:
 	EmitterPrototype();
 	virtual ~EmitterPrototype();
-	void Shutdown();
+	void ShutdownSpecific();
 
 	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture);
-	bool Update(float dT, ID3D11DeviceContext* deviceContext);
+	bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext);
 	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
 
 	ID3D11ShaderResourceView* GetTexture();
