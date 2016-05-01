@@ -20,7 +20,7 @@ struct PSInput
 	float4 color : COLOR;
 };
 
-[maxvertexcount(12)]
+[maxvertexcount(6)]
 void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 {
 	PSInput element;
