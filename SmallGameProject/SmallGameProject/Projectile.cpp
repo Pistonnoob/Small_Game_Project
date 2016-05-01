@@ -25,8 +25,8 @@ void Projectile::Shutdown()
 }
 void Projectile::update()
 {
-    this->posX += this->moveDir.x * 0.01f;
-    this->posZ += this->moveDir.z * 0.01f;
+    this->posX += this->moveDir.x;
+    this->posZ += this->moveDir.z;
 }
 void Projectile::setMoveDir(DirectX::XMFLOAT3 newMoveDir)
 {
