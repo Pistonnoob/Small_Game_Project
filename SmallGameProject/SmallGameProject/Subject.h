@@ -18,6 +18,7 @@ public:
 	virtual void addObserver(Observer* observer) = 0;
 	virtual void removeObserver(Observer* observer) = 0;
     virtual void notify(Entity* entity, Events::ENTITY evnt) = 0;
+	virtual void notify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets) = 0;
 };
 
 #endif

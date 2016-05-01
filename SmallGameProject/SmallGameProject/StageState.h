@@ -13,7 +13,7 @@ class StageState :
 {
 private:	//Variables
 	CameraHandler myCamera;
-    ProjectileHandler projectileHandler;
+    ProjectileHandler enemyPjHandler;
 	
 	Model m_car;
     Model m_ball;
@@ -23,7 +23,6 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
-    vector<Projectile*> projectiles;
 
     Ability* ability1;
     Ability* ability2;

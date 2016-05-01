@@ -1,6 +1,6 @@
 #include "GameData.h"
 GameData::GameData()
-: Observer()
+	: Observer()
 {
 	this->playerHighScore = 0;
 	this->playerHealth = 0;
@@ -39,7 +39,12 @@ void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
 
 void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
-    //??
+	//??
+}
+
+void GameData::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+{
+	//helloooooooo
 }
 
 bool GameData::SavePlayerData(std::string filename)
@@ -60,7 +65,7 @@ bool GameData::SavePlayerData(std::string filename)
 
 		saveFile.close();
 	}
-	
+
 	return true;
 }
 

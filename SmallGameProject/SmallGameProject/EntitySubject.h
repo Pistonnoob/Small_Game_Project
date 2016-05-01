@@ -16,6 +16,7 @@ class EntitySubject : public Subject{
 		virtual void removeObserver(Observer* observer);
         void notify(Entity* entity, Events::ENTITY evnt);
         void notify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+		void notify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
 
 };
 

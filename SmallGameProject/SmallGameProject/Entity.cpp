@@ -71,6 +71,10 @@ void Entity::addObservers(Observer * observer)
 {
     this->entitySubject->addObserver(observer);
 }
+DirectX::XMFLOAT3 Entity::getAimDir()
+{
+	return DirectX::XMFLOAT3(0, 0, 0);
+}
 Type Entity::getType()
 {
     return this->myType;

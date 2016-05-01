@@ -13,8 +13,8 @@ private:
 
 	GameData();					//Only GameData will create itself
 
-	//Data
-	//Character
+								//Data
+								//Character
 	int playerHighScore;
 	int playerHealth;
 	int playerMovmentSpeed;
@@ -24,11 +24,12 @@ private:
 	int enemiesKilled;
 
 public:
-	
+
 	virtual ~GameData();
 	static GameData* getInstance();
 	void onNotify(Entity* entity, Events::ENTITY evnt);
-    void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void onNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
