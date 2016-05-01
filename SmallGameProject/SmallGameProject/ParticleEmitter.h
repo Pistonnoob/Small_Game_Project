@@ -10,6 +10,10 @@ protected:	//Variables
 		DirectX::XMFLOAT4 position;
 		DirectX::XMFLOAT4 color;
 	};
+	struct InstanceType {
+		DirectX::XMFLOAT4 position;
+		DirectX::XMFLOAT4 color;
+	};
 
 	DirectX::XMMATRIX world;
 	float accumulatedTime;
@@ -17,13 +21,14 @@ protected:	//Variables
 	int currentParticleCnt;
 	int maxParticles;
 
-	int vertexCount, indexCount;
+	int vertexCount, instanceCount;
 
 	ID3D11Buffer* vertexBuffer;
-	ID3D11Buffer* indexBuffer;
+	ID3D11Buffer* instanceBuffer;
 	ID3D11ShaderResourceView* texture;
 
 	VertexType* vertices;
+	InstanceType* instances;
 public:
 	ParticleEmitter();
 	virtual ~ParticleEmitter();

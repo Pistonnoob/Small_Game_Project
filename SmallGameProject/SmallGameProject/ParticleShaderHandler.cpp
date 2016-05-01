@@ -21,7 +21,8 @@ bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* geoShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+	//Kim changed this [2 -> 4] so he can add the instancing data at the end
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[4];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;
@@ -112,6 +113,24 @@ bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[1].InstanceDataStepRate = 0;
+
+	//Kim is adding the instancing data over here :D
+	polygonLayout[2].SemanticName = "POSITION";
+	polygonLayout[2].SemanticIndex = 1;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	polygonLayout[2].InputSlot = 1;
+	polygonLayout[2].AlignedByteOffset = 0;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	polygonLayout[2].InstanceDataStepRate = 1;
+
+	polygonLayout[3].SemanticName = "COLOR";
+	polygonLayout[3].SemanticIndex = 1;
+	polygonLayout[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	polygonLayout[3].InputSlot = 1;
+	polygonLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	polygonLayout[3].InstanceDataStepRate = 1;
+
 
 	//Get the number of elements in the layout
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -306,7 +325,8 @@ bool ParticleShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	return true;
 }
 
-void ParticleShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart)
+//void ParticleShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexStart)
+void ParticleShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount, int instanceCount)
 {
 	//Set the input layout for vertex
 	deviceContext->IASetInputLayout(this->layout);
@@ -319,7 +339,10 @@ void ParticleShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int
 	deviceContext->PSSetSamplers(0, 1, &this->samplerState);
 
 	//Render the triangle
-	deviceContext->DrawIndexed(indexCount, indexStart, 0);
+	//deviceContext->DrawIndexed(indexCount, indexStart, 0);
+
+	//Render the instanced points / particles
+	deviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
 
 	return;
 }

@@ -19,7 +19,6 @@ private:
 	float particleSize, particlesPerSecond;
 
 	Particle* particles;
-	/*VertexType* vertices;*/
 
 public:
 	EmitterPrototype();
@@ -31,7 +30,7 @@ public:
 	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
 
 	ID3D11ShaderResourceView* GetTexture();
-	int GetIndexCount();
+	int GetInstanceCount();
 
 private:
 	bool InitializeEmitter();
@@ -43,7 +42,6 @@ private:
 
 	bool UpdateBuffers(ID3D11DeviceContext* deviceContext);
 
-	void RenderBuffers(ID3D11DeviceContext* deviceContext);
 };
 
 #endif

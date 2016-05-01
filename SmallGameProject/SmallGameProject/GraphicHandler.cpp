@@ -185,7 +185,7 @@ void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, Cam
 	shaderParams->camPos = camera->GetCameraPos();
 	shaderParams->projectionMatrix = this->perspectiveMatrix;
 
-	this->particleShaderH->Render(this->engine->GetDeviceContext(), amountOfParticles, 0, shaderParams);
+	this->particleShaderH->Render(this->engine->GetDeviceContext(), 1, amountOfParticles, shaderParams);
 }
 
 void GraphicHandler::TextRender()
