@@ -58,7 +58,7 @@ public:
 	ID3D11DeviceContext* GetDeviceContext();
 
 	int CreateTextHolder(int maxLength);
-	bool UpdateTextHolder(int id, const std::string& text, int posX, int posY, const DirectX::XMFLOAT3& color);
+	bool UpdateTextHolder(int id, const std::string& text, int posX, int posY, const DirectX::XMFLOAT3& color, float size);
 
 	void SetDirectionalLight(DirectionalLight light);
 	void AddPointLight(PointLight light);

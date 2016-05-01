@@ -266,7 +266,7 @@ bool System::Update(float dTime)
 
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
-	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 2.0f);
 
 	//Update models world matrices
 	this->testRot += dTime / 1000000;

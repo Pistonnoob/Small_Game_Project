@@ -290,9 +290,9 @@ int GraphicHandler::CreateTextHolder(int maxLength)
 	return this->textH->CreateSentence(this->engine->GetDevice(), maxLength);
 }
 
-bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color)
+bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color, float size)
 {
-	return this->textH->UpdateSentence(this->engine->GetDeviceContext(), id, text, posX, posY, color);
+	return this->textH->UpdateSentence(this->engine->GetDeviceContext(), id, text, posX, posY, color, size);
 }
 
 void GraphicHandler::SetDirectionalLight(DirectionalLight light)
