@@ -8,6 +8,7 @@ GraphicHandler::GraphicHandler()
 	this->particleShaderH = nullptr;
 	this->screenQuad = nullptr;
 	this->textH = nullptr;
+	this->activeRTV = 0;
 }
 
 GraphicHandler::~GraphicHandler()
@@ -146,6 +147,10 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 
 void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 {
+	if (this->activeRTV != 0) {
+		this->SetDeferredRTVs();
+		this->activeRTV = 0;
+	}
 	DeferredShaderParameters* params = new DeferredShaderParameters;
 
 	params->camPos = camera->GetCameraPos();
@@ -180,6 +185,10 @@ void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 
 void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 {
+	if (this->activeRTV != 2) {
+		this->SetLightRTV();
+		this->activeRTV = 2;
+	}
 	LightShaderParameters* shaderParams = new LightShaderParameters;
 	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	shaderParams->viewMatrix = this->baseViewMatrix;
@@ -206,6 +215,10 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 
 void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera)
 {
+	if (this->activeRTV != 3) {
+		this->SetParticleRTV();
+		this->activeRTV = 3;
+	}
 	DirectX::XMMATRIX viewMatrix;
 	camera->GetViewMatrix(viewMatrix);
 

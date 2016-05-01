@@ -195,14 +195,11 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	////this->graphicH->DeferredRender(this->m_car, this->cameraH);
 
 	//Set deferred render targets
-	gHandler->SetDeferredRTVs();
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 	gHandler->DeferredRender(&this->m_car, &this->myCamera);
 
-	gHandler->SetLightRTV();
 	gHandler->LightRender(this->myCamera.GetCameraPos());
 
-	gHandler->SetParticleRTV();
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
 	return result;

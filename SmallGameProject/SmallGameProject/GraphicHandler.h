@@ -36,6 +36,13 @@ protected:
 
 	DirectionalLight dirLight;
 	std::vector<PointLight> pointLights;
+
+	int activeRTV;
+
+private:
+	void SetDeferredRTVs();
+	void SetLightRTV();
+	void SetParticleRTV();
 public:
 	GraphicHandler();
 	virtual ~GraphicHandler();
@@ -48,10 +55,7 @@ public:
 	void Shutdown();
 
 	void ClearRTVs();
-	void SetDeferredRTVs();
-	void SetLightRTV();
-	void SetParticleRTV();
-
+	
 	void PresentScene();
 
 	ID3D11Device* GetDevice();
