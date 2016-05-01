@@ -175,9 +175,15 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 	ParticleShaderParameters parameters;
 
+	/*for (auto emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
+	{
+		int amount
+	}*/
 	if (this->emitters.size())
 	{
 		int amountOfParticles = 0;
+		this->emitters.at(0)->SetCameraPos(camera->GetCameraPos());
+		this->emitters.at(0)->SortParticles();
 		this->emitters.at(0)->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
 		parameters.worldMatrix = this->world;
 		parameters.diffTexture = this->myTextures.GetTexture(1);

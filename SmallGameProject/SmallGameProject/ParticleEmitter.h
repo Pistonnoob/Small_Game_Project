@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include "GraphicHandler.h"
+#include "Algorithm.h"
 class ParticleEmitter
 {
 protected:	//Variables
@@ -23,6 +24,8 @@ protected:	//Variables
 	ID3D11Buffer* indexBuffer;
 	ID3D11ShaderResourceView* texture;
 
+	DirectX::XMFLOAT3 cameraPos;
+
 	VertexType* vertices;
 public:
 	ParticleEmitter();
@@ -32,9 +35,14 @@ public:
 
 	virtual bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture);
 
+	void SetCameraPos(DirectX::XMFLOAT3 cameraPos);
+	void SetCameraPos(DirectX::XMFLOAT4 cameraPos);
+
 	bool Update(float dT, ID3D11DeviceContext* deviceContext);
+	bool distanceToCamera(float x, float y, float z);
 	virtual bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext) = 0;
 	virtual void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles) = 0;
+	virtual bool SortParticles() = 0;
 
 protected:	//Functions
 	virtual bool InitializeBuffers(ID3D11Device* device);

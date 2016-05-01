@@ -49,6 +49,7 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 	this->maxParticles = 5000;
 	this->currentParticleCnt = 0;
 	this->accumulatedTime = 0.0f;
+	this->cameraPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 
 
@@ -60,11 +61,28 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 	return true;
 }
 
+void ParticleEmitter::SetCameraPos(DirectX::XMFLOAT3 cameraPos)
+{
+	this->cameraPos = cameraPos;
+}
+
+void ParticleEmitter::SetCameraPos(DirectX::XMFLOAT4 cameraPos)
+{
+	this->cameraPos = DirectX::XMFLOAT3(cameraPos.x, cameraPos.y, cameraPos.z);
+}
+
+
+
 bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)
 {
 	// Increment the frame time.
 	this->accumulatedTime += dT;
 	return this->UpdateSpecific(dT, deviceContext);
+}
+
+bool ParticleEmitter::distanceToCamera(float x, float y, float z)
+{
+	return false;
 }
 
 bool ParticleEmitter::InitializeBuffers(ID3D11Device * device)

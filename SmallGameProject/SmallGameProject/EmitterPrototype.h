@@ -1,6 +1,7 @@
 #ifndef EMITTERPTROTOTYPE_H
 #define EMITTERPROTOTYPE_H
 #include "ParticleEmitter.h"
+#include <algorithm>
 class EmitterPrototype :
 	public ParticleEmitter
 {
@@ -10,7 +11,14 @@ private:
 		float x, y, z, scale;
 		float r, g, b, rotation;
 		float velocity;
+		//Not the true distance but close enough
+		float cameraDistance;
 		bool active;
+
+		bool operator<(const Particle& that)const {
+			//Sort in reverse order distance from camera > being optimal
+			return this->cameraDistance > that.cameraDistance;
+		}
 	};
 
 
@@ -33,6 +41,8 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	int GetIndexCount();
 
+	bool SortParticles();
+
 private:
 	bool InitializeEmitter();
 	bool InitializeBuffers(ID3D11Device* device);
@@ -40,6 +50,7 @@ private:
 	void EmitParticles(float dT);
 	void UpdateParticles(float dT);
 	void KillParticles();
+
 
 	bool UpdateBuffers(ID3D11DeviceContext* deviceContext);
 
