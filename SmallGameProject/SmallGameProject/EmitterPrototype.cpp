@@ -144,8 +144,8 @@ bool EmitterPrototype::InitializeEmitter()
 	this->particleVelocityVariation = 2.0f;
 
 	this->particleSize = 0.2f;
-	this->particlesPerSecond = 60.0f;
-	this->maxParticles = 800;
+	this->particlesPerSecond = 5.0f;
+	this->maxParticles = 40;
 
 	this->particles = new Particle[this->maxParticles];
 	if (!this->particles)
