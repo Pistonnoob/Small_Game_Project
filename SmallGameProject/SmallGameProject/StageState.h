@@ -9,6 +9,11 @@
 #include "ProjectileHandler.h"
 #include "Weapon.h"
 
+struct wavePattern
+{
+
+};
+
 class StageState :
 	public GameState
 {
@@ -24,6 +29,7 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
+
 
     Ability* ability1;
     Ability* ability2;
@@ -41,6 +47,7 @@ public:
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
+    virtual void readFile();
 
 private:	//Functions
 

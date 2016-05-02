@@ -225,3 +225,37 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	return result;
 }
+
+void StageState::readFile()
+{
+    string line;
+    ifstream myFile("Stage Spawn Pattern.txt");
+
+    if (myFile.is_open())
+    {
+        while (getline(myFile, line))
+        {
+            std::stringstream ss(line);
+            string waveLenght = "";
+            string enemyType = "";
+            string nrOfEnemies = "";
+            if (line.at(0) == 't')
+            {
+                size_t start = 1;
+                size_t end = line.find("");
+                waveLenght = line.substr(start, end);
+            }
+            else if(line.at(0) == '{')
+            {
+                size_t start = 1;
+                size_t end = line.find("*");
+                enemyType = line.substr(start, end);
+
+                start = end + 1;
+                end = line.find("}");
+                nrOfEnemies = line.substr(start, end);
+            }
+
+        }
+    }
+}
