@@ -8,11 +8,15 @@ namespace Events {
 		DEAD,
         Fire
 	};
-    enum UNIQUE_FIRE {
-        ARCFIRE,
-        SPLITFIREONBULLETS,
-        REVERSERBULLETS,
-    };
+	enum UNIQUE_FIRE {
+		ARCFIRE,
+		SPLITFIRE,
+		REVERSERBULLETS,
+	};
+	enum ABILITY_TRIGGER {
+		SPLITFIRE_ON_PROJECTILES,
+		REVERSER_PROJECTILES,
+	};
 	enum STAGE {
 		STAGECOMPLETED,
 		STAGESTART,

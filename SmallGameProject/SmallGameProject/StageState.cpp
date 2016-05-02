@@ -13,11 +13,11 @@ StageState::StageState()
     this->m_ball = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
-	
-    this->projectileHandler = ProjectileHandler();
+
+    this->enemyPjHandler = ProjectileHandler();
 
     this->enemySubject = EntitySubject();
-    this->enemySubject.addObserver(&this->projectileHandler);
+    this->enemySubject.addObserver(&this->enemyPjHandler);
 
 	this->exitStage = false;
 }
@@ -34,7 +34,7 @@ void StageState::Shutdown()
     this->m_ball.Shutdown();
 	this->m_ground.Shutdown();
 
-    this->projectileHandler.ShutDown();
+    this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
@@ -72,15 +72,16 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (cameraResult)
 			result = 1;
 
-		Weapon test = Weapon();
-		test.Initialize(device, deviceContext, "ogreFullG");
-		test.ShutDown();
+
 
 
 		//Army thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
-        this->projectileHandler.Initialize(device, this->m_deviceContext);
+        this->enemyPjHandler.Initialize(device, this->m_deviceContext);
+		
+		this->testWeap.Initialize(device, deviceContext, "string");
+
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -115,9 +116,17 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
         //this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
-        this->ability1 = new ArcFire();
-        this->ability2 = new SplitFire();
-        this->ability3 = new ReverseFire();
+		ArcFire* temp1 = new ArcFire();
+		temp1->Initialize(3.14f / 2, 1, 500, 50, 1, 400);
+		this->ability1 = temp1;
+
+		SplitFire* temp2 = new SplitFire();
+		temp2->Initialize(3.14f, 3, 500, 50, 1, 400, 5, 3.14f / 2);
+		this->ability2 = temp2;
+
+		ReverseFire* temp3 = new ReverseFire();
+		temp3->Initialize(3.14f / 2, 15, 500, 50, 1, 400);
+		this->ability3 = temp3;
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -146,26 +155,23 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
-    if (input->isKeyPressed(DIK_C))
-    {
+	if (input->isKeyPressed(DIK_1))
+	{
+		this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
+	}
+	this->ability1->update(this->enemies.at(0), &this->enemySubject);
 
-    }
+	if (input->isKeyPressed(DIK_2))
+	{
+		this->ability2->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
+	}
+	this->ability2->update(this->enemies.at(0), &this->enemySubject);
 
-    if (input->isKeyPressed(DIK_1))
-    {
-
-        this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0,0,0), 3.14f, 15);
-    }
-
-    if (input->isKeyPressed(DIK_2))
-    {
-
-    }
-
-    if (input->isKeyPressed(DIK_3))
-    {
-
-    }
+	if (input->isKeyPressed(DIK_3))
+	{
+		this->ability3->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
+	}
+	this->ability3->update(this->enemies.at(0), &this->enemySubject);
 
 	return result;
 }
@@ -174,10 +180,12 @@ int StageState::Update(float deltaTime)
 {
 	int result = 1;
 
+	this->enemies.at(0)->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
 
+	this->testWeap.shootWeapon(this->enemies.at(0));
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
 	//this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
-    this->projectileHandler.update();
+    this->enemyPjHandler.update();
 
 	if (this->exitStage)
 	{
@@ -212,9 +220,8 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	}
-    this->projectileHandler.render(gHandler, &this->myCamera);
+    this->enemyPjHandler.render(gHandler, &this->myCamera);
 
-	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
 	//shadowMap

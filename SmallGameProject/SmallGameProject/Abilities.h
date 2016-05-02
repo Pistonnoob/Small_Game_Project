@@ -8,14 +8,13 @@ class ArcFire : public Ability
 private:
 
 protected:
-    bool isActivated;
-
 
 public:
-    ArcFire();
-    virtual~ArcFire();
-    virtual void activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles);
-    virtual void update(Enemy* enemy, EntitySubject* entitySubject);
+	ArcFire();
+	virtual~ArcFire();
+	virtual void Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay);
+	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 
 
@@ -24,24 +23,31 @@ public:
 class SplitFire : public Ability
 {
 private:
-    int counter;
+
+protected:
+	int projectilesOnSplit;
+	float splitArc;
 public:
-    SplitFire();
-    virtual~SplitFire();
-    virtual void activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles);
-    virtual void update(Enemy* enemy, EntitySubject* entitySubject);
+	SplitFire();
+	virtual~SplitFire();
+	virtual void Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay, int projectilesOnSplit, float splitArc);
+	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 };
 
 class ReverseFire : public Ability
 {
 private:
-    int counter;
+
+protected:
+
 public:
-    ReverseFire();
-    virtual~ReverseFire();
-    virtual void activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles);
-    virtual void update(Enemy* enemy, EntitySubject* entitySubject);
+	ReverseFire();
+	virtual~ReverseFire();
+	virtual void Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay);
+	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 };
 

@@ -74,17 +74,24 @@ void Entity::addObservers(Observer * observer)
 
 DirectX::XMFLOAT3 Entity::getAimDir()
 {
-	return DirectX::XMFLOAT3(0,0,0);
+	return DirectX::XMFLOAT3(0, 0, 0);
+}
+
+EntitySubject * Entity::getEntitySubject() const
+{
+	return this->entitySubject;
 }
 
 Type Entity::getType()
 {
     return this->myType;
 }
+
 Model* Entity::getModel()
 {
     return this->entityModel;
 }
+
 BoundingVolume* Entity::getBV()
 {
     return this->entityBV;

@@ -67,3 +67,8 @@ float Weapon::getPlayerSpeedMod() const
 {
 	return this->playerSpeed;
 }
+
+void Weapon::shootWeapon(Entity * entity)
+{
+	entity->getEntitySubject()->notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14, 40);
+}

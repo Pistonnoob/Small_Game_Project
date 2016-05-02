@@ -4,6 +4,8 @@
 #include "Model.h"
 #include "Modifiers.h"
 #include <string>
+#include "Entity.h"
+
 
 class Weapon {
 
@@ -29,6 +31,8 @@ public:
 	float getAttackDamageMod() const;
 	float getAttackSpeedMod() const;
 	float getPlayerSpeedMod() const;
+
+	void shootWeapon(Entity* entity);
 };
 
 

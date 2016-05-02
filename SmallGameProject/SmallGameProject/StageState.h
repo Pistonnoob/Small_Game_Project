@@ -7,13 +7,14 @@
 #include "Algorithm.h"
 #include "EntitySubject.h"
 #include "ProjectileHandler.h"
+#include "Weapon.h"
 
 class StageState :
 	public GameState
 {
 private:	//Variables
 	CameraHandler myCamera;
-    ProjectileHandler projectileHandler;
+    ProjectileHandler enemyPjHandler;
 	
 	Model m_car;
     Model m_ball;
@@ -23,11 +24,12 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
-    vector<Projectile*> projectiles;
 
     Ability* ability1;
     Ability* ability2;
     Ability* ability3;
+
+	Weapon testWeap;
 
 	bool exitStage;
 

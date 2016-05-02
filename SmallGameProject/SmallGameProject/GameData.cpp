@@ -4,18 +4,17 @@ bool GameData::isInstatiated = false;
 
 GameData* GameData::single = nullptr;
 
-GameData::GameData(GameData const &): Observer()
+GameData::GameData(GameData const &) : Observer()
 {
-	
 	playerHighScore = 0;
 	playerHealth = 0;
 	playerMovmentSpeed = 0;
 	playerDamage = 0;
 
 	enemiesKilled = 0;
-	
+
 	//create pistol
- 	weaponArsenal.push_back(Weapon());
+	weaponArsenal.push_back(Weapon());
 	//shotgun
 	weaponArsenal.push_back(Weapon(15, 10, 5));
 	//uzi
@@ -80,7 +79,12 @@ void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 
 void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
-    //??
+	//??
+}
+
+void GameData::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+{
+	//helloooooooo
 }
 
 bool GameData::SavePlayerData(std::string filename)
@@ -102,8 +106,6 @@ bool GameData::SavePlayerData(std::string filename)
 
 		saveFile.close();
 	}
-
-	
 	return true;
 }
 bool GameData::LoadPlayerData(std::string filename)

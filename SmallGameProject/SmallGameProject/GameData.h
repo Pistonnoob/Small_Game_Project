@@ -15,11 +15,10 @@ private:
 	static GameData* single;
 
 	GameData(GameData const&);
+			//Only GameData will create itself
 
-	//GameData();					//Only GameData will create itself
-
-	//Data
-	//Character
+								//Data
+								//Character
 	int playerHighScore;
 	int playerHealth;
 	int playerMovmentSpeed;
@@ -41,7 +40,8 @@ public:
 	void onNotify(const Entity* entity, Events::ACHIEVEMENT achi);
 
 	void onNotify(Entity* entity, Events::ENTITY evnt);
-    void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void onNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);

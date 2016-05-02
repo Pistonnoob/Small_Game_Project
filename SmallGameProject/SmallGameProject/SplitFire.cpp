@@ -1,61 +1,49 @@
 #include "Abilities.h"
 
-SplitFire::SplitFire()
+SplitFire::SplitFire() : Ability()
 {
-    this->isActivated = false;
-    this->counter = 0;
 }
 SplitFire::~SplitFire()
 {
 }
-void SplitFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles)
+void SplitFire::Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay, int projectilesOnSplit, float splitArc)
 {
-    this->isActivated = true;
-    /*DirectX::XMMATRIX rotate = DirectX::XMMatrixRotationY(-angle / 2);
-    DirectX::XMVECTOR dirVec = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
-    dirVec = DirectX::XMVector3Transform(dirVec, rotate);
+	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
+	this->projectilesOnSplit = projectilesOnSplit;
+	this->splitArc = splitArc;
 
-    float x = DirectX::XMVectorGetX(dirVec);
-    float y = DirectX::XMVectorGetY(dirVec);
-    float z = DirectX::XMVectorGetZ(dirVec);*/
+}
+float SplitFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
+{
+	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
+	{
+		this->isActivated = true;
+		float x = (playerPos.x - enemy->getPosition().x) * 0.01f;
+		float z = (playerPos.z - enemy->getPosition().z) * 0.01f;
 
-    //shootProjetiles(projectiles, projectileModel, pos, DirectX::XMFLOAT3(x, y, z), angle, nrOfProjectiles);
+		enemy->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+
+		entitySubject->notify(enemy, Events::UNIQUE_FIRE::SPLITFIRE, this->arc, this->nrOfProjectiles);
+
+		this->cdCounter = 0;
+		this->chargesLeft--;
+
+		return this->attackDelay;
+	}
+	return 0;
 
 }
 void SplitFire::update(Enemy* enemy, EntitySubject* entitySubject)
 {
-    if (this->isActivated == true)
-    {
-        this->counter++;
-    }
-    if (this->isActivated == true && this->counter >= 30)
-    {
-        /*DirectX::XMMATRIX rotate;
-        DirectX::XMFLOAT3 pos;
-        DirectX::XMFLOAT3 dir;
-        DirectX::XMVECTOR dirVec;
-        Projectile* projectilePtr;
-
-        int size = projectiles.size();
-        for (int i = 0; i < size; i++)
-        {
-            projectilePtr = projectiles.at(i);
-            pos = projectilePtr->getPosition();
-            dir = projectilePtr->getMoveDir();
-            dirVec = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
-
-            float angle = 3.14f / 2;
-            int nrOfProjectiles = 5;
-            rotate = DirectX::XMMatrixRotationY(-angle / 2);
-            dirVec = DirectX::XMVector3Transform(dirVec, rotate);
-
-            float x = DirectX::XMVectorGetX(dirVec);
-            float y = DirectX::XMVectorGetY(dirVec);
-            float z = DirectX::XMVectorGetZ(dirVec);
-
-            //shootProjetiles(projectiles, projectilePtr->getModel(), pos, DirectX::XMFLOAT3(x, y, z), angle, nrOfProjectiles);
-        }*/
-        this->counter = 0;
-        this->isActivated = false;
-    }
+	Ability::update(enemy, entitySubject);
+	if (this->isActivated == true)
+	{
+		this->counter++;
+	}
+	if (this->isActivated == true && this->counter >= this->triggerDelay)
+	{
+		entitySubject->notify(enemy, Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES, this->splitArc, this->projectilesOnSplit);
+		this->counter = 0;
+		this->isActivated = false;
+	}
 }

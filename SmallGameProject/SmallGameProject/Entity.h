@@ -38,6 +38,8 @@ public:
     void addObservers(Observer* observer);
 	virtual DirectX::XMFLOAT3 getAimDir();
 
+	EntitySubject* getEntitySubject() const;
+
     Type getType();
 
     Model* getModel();
