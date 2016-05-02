@@ -135,6 +135,11 @@ void D3DHandler::PresentScene()
 	this->gSwapChain->Present(0, 0);
 }
 
+void D3DHandler::SetViewport()
+{
+	this->GetDeviceContext()->RSSetViewports(1, &this->gameViewport);
+}
+
 void D3DHandler::CreateDeviceAndContext() throw(...)
 {
 	HRESULT resultHelper;

@@ -6,15 +6,15 @@
 namespace Algorithm {
 	int GetParabola(int x);
 	//Stores the result in x and y
-	void GetParabola(int& x, int& y, int t);
+	void GetParabola(int& x, int& y, float t);
 	//Stores the result in x and y
-	void GetCircle(int& x, int&y, int t);
+	void GetCircle(int& x, int&y, float t);
 	//
-	void GetEllipse(int& x, int& y, int t, int a, int b);
+	void GetEllipse(int& x, int& y, float t, int a, int b);
 	//xLobes and yLobes describe the number of lobes of the figure
-	void GetLissajousCurve(int& x, int& y, int t, int a, int b, int xLobes, int yLobes);
+	void GetLissajousCurve(int& x, int& y, float t, int a, int b, int xLobes, int yLobes);
 	//A curve traced by a point attached to a circle of radius r rolling around the inside of a fixed circle of radius R, where the point is at a distance d from the center of the interior circle.
-	void GetHypotrochoid(int& x, int&y, int t, int bigR, int r, int d);
+	void GetHypotrochoid(int& x, int&y, float t, int bigR, int r, int d);
 
 	//Stores the result in x and y
 	void GetParabola(float& x, float& y, float t);

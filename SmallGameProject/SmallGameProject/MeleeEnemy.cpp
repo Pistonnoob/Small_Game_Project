@@ -9,3 +9,13 @@ MeleeEnemy::MeleeEnemy(float posX, float posZ)
 MeleeEnemy::~MeleeEnemy()
 {
 }
+
+bool MeleeEnemy::Initialize(Model * model, bool isSphere)
+{
+	return Entity::Initialize(model, isSphere);
+}
+
+void MeleeEnemy::Shutdown()
+{
+	Entity::Shutdown(true);
+}

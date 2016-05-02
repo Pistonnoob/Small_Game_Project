@@ -67,6 +67,12 @@
     <Filter Include="Source Files\Observers\ParticleHandler">
       <UniqueIdentifier>{56c0aaa9-8d43-4d7e-bd3d-583c23592928}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Abilities">
+      <UniqueIdentifier>{7c7bf8c4-4755-4023-b095-62086d02a1db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Abilities">
+      <UniqueIdentifier>{721d7e91-2060-40fc-a973-d0986671d514}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -183,6 +189,9 @@
     <ClCompile Include="TestState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
     <ClCompile Include="Algorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -218,6 +227,15 @@
     </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="ArcFire.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ReverseFire.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitFire.cpp">
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -335,8 +353,8 @@
     <ClInclude Include="gameStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestState.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ShadowShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\GameStates</Filter>
@@ -383,6 +401,15 @@
     <ClInclude Include="Particle.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
+    <ClInclude Include="Ability.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Abilities.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="EventLib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredVertexShader.hlsl">
@@ -398,6 +425,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowMapVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="FontVertexShader.hlsl">

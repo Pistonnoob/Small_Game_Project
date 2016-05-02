@@ -11,6 +11,8 @@ public:
     RangedEnemy(float posX, float posZ);
     virtual~RangedEnemy();
 
+	bool Initialize(Model* model, bool isSphere);
+	void Shutdown();
 };
 
 #endif

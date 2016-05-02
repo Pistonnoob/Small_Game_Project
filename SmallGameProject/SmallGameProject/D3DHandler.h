@@ -27,6 +27,7 @@ public:
 	void SetRenderTargetView(ID3D11DepthStencilView* depthView = nullptr);
 
 	void PresentScene();
+	void SetViewport();
 
 	void Shutdown();
 protected:
