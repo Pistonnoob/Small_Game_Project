@@ -186,6 +186,9 @@
     <ClCompile Include="TestState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
     <ClCompile Include="Algorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="SplitFire.cpp">
       <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUp.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FireCommand.cpp">
       <Filter>Source Files\Commands</Filter>
@@ -341,8 +347,8 @@
     <ClInclude Include="gameStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestState.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ShadowShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\GameStates</Filter>
@@ -383,6 +389,12 @@
     <ClInclude Include="EventLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Modifiers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="FireCommand.h">
       <Filter>Header Files\Commands</Filter>
     </ClInclude>
@@ -401,6 +413,9 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowMapVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="FontVertexShader.hlsl">

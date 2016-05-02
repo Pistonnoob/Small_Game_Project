@@ -6,6 +6,7 @@ System::System()
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
 	this->cameraH = nullptr;
+	this->gameData = nullptr;
 }
 
 System::~System()
@@ -51,7 +52,10 @@ bool System::Initialize()
 	//Initialize the GameStateHandler
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
 
-	this->testRot = 0;
+	//initialize the gameData singleton
+  	this->gameData = GameData::getInstance();
+
+   	this->testRot = 0;
 
 	return true;
 }
@@ -130,7 +134,11 @@ void System::Shutdown()
 		delete this->gameSH;
 		this->gameSH = nullptr;
 	}
-
+	//shutdown the gameData
+	if (this->gameData)
+	{
+		this->gameData->shutdown();
+	}
 	//Shutdown the window
 	ShutdownWindow();
 }
@@ -281,9 +289,8 @@ bool System::Update(float dTime)
 	
 	//Render models
 	this->gameSH->Render(this->graphicH, hwnd);
-
-
 	
+	//lightning
 	LightShaderParameters* lightShaderParams = new LightShaderParameters;
 
 	this->graphicH->SetLightRTV();

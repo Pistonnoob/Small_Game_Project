@@ -7,6 +7,7 @@
 #include "Algorithm.h"
 #include "EntitySubject.h"
 #include "ProjectileHandler.h"
+#include "Weapon.h"
 
 class StageState :
 	public GameState
@@ -27,6 +28,8 @@ private:	//Variables
     Ability* ability1;
     Ability* ability2;
     Ability* ability3;
+
+	Weapon testWeap;
 
 	bool exitStage;
 

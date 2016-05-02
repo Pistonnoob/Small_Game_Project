@@ -8,6 +8,7 @@ Player::Player() : Actor()
 	this->playerHighScore = 0;
 
 	this->playerWeapon = new Weapon();
+	this->playerWeapon = nullptr;
 }
 
 Player::~Player()

@@ -1,6 +1,7 @@
 #include "StageState.h"
 #include "GameStateHandler.h"
 #include "MyMathLib.h"
+#include "Weapon.h"
 
 
 
@@ -12,6 +13,7 @@ StageState::StageState()
     this->m_ball = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
+
     this->enemyPjHandler = ProjectileHandler();
 
     this->enemySubject = EntitySubject();
@@ -71,10 +73,15 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 			result = 1;
 
 
+
+
 		//Army thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
+		
+		this->testWeap.Initialize(device, deviceContext, "string");
+
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -121,9 +128,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		temp3->Initialize(3.14f / 2, 15, 500, 50, 1, 400);
 		this->ability3 = temp3;
 
-        //this->test = new Projectile();
-        //this->test->Initialize(&this->m_ball,0,0,DirectX::XMFLOAT3(1,0,0));
-
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
 		this->m_ground = Model();
@@ -137,7 +141,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		DirectX::XMMATRIX worldMatrix;
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
-
 
 	}
 
@@ -177,7 +180,9 @@ int StageState::Update(float deltaTime)
 {
 	int result = 1;
 
+	this->enemies.at(0)->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
 
+	this->testWeap.shootWeapon(this->enemies.at(0));
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->enemyPjHandler.update(deltaTime);
@@ -219,6 +224,12 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
+	//shadowMap
+	gHandler->SetShadowRTV(); //här är läckan
+	for (int i = 0; i < this->enemies.size(); i++)
+	{
+		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);
+	}
 
 	return result;
 }
