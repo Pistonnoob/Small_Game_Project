@@ -88,7 +88,7 @@ int TextHandler::CreateSentence(ID3D11Device* device, int maxLength)
 	return this->sentences.size() - 1; //Return string id, starts from 0
 }
 
-bool TextHandler::UpdateSentence(ID3D11DeviceContext* deviceContext, int id, const std::string& text, int posX, int posY, const DirectX::XMFLOAT3& color)
+bool TextHandler::UpdateSentence(ID3D11DeviceContext* deviceContext, int id, const std::string& text, int posX, int posY, const DirectX::XMFLOAT3& color, float size)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -108,7 +108,7 @@ bool TextHandler::UpdateSentence(ID3D11DeviceContext* deviceContext, int id, con
 	float drawPosX = ((this->screenWidth / 2) * -1) + posX; //Calculate position in window to draw on
 	float drawPosY = (this->screenHeight / 2) - posY;
 
-	this->font->BuildVertexArray((void*)vertices, text.c_str(), drawPosX, drawPosY); //Ask the font object to build the vertex array
+	this->font->BuildVertexArray((void*)vertices, text.c_str(), drawPosX, drawPosY, size); //Ask the font object to build the vertex array
 
 	result = deviceContext->Map(tempSentence->vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource); //Map the vertex buffer and discard it's content
 	if (FAILED(result))

@@ -17,6 +17,10 @@ StageState::StageState()
     this->playerPos = DirectX::XMFLOAT3(0, 0, 0);
 
 	this->exitStage = false;
+
+	this->camPosX = -30.0f;
+	this->camPosZ = 0.0f;
+	this->inc = true;
 }
 
 
@@ -141,7 +145,9 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		DirectX::XMMATRIX worldMatrix;
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
-
+		worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
+		worldMatrix *= DirectX::XMMatrixTranslation(0.0f, -3.5f, 2.0f);
+		this->m_car.SetWorldMatrix(worldMatrix);
 
 	}
 
@@ -182,6 +188,26 @@ int StageState::Update(float deltaTime)
 		}
 	}
 
+	/*this->camPosX += deltaTime / 100000;
+	
+	if (this->camPosX > 30) {
+		this->camPosX = -30.0f;
+		this->camPosZ = 0.0f;
+		this->inc = true;
+	}
+	if (this->camPosX > 0) {
+		this->inc = false;
+	}
+	if (this->inc && this->camPosZ > -30.0f) {
+		this->camPosZ -= deltaTime / 100000;
+	}
+	else if(!this->inc && this->camPosZ < 0.0f) {
+		this->camPosZ += deltaTime / 100000;
+
+	}
+
+	this->myCamera.SetCameraPos(DirectX::XMFLOAT3(this->camPosX, 4.0f, this->camPosZ));
+	this->myCamera.UpdateCamera();*/
 
 	return result;
 }
@@ -197,9 +223,12 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
-
 		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	}
+	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
+
+	//Set deferred render targets
+
     for (int i = 0; i < this->projectiles.size(); i++)
     {
         XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
@@ -216,8 +245,8 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
     gHandler->DeferredRender(this->test->getModel(), &this->myCamera);*/
 
-   
 	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
+
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
 	//shadowMap
@@ -226,8 +255,8 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);
 	}
 
-	gHandler->LightRender();
-	
+	gHandler->LightRender(this->myCamera.GetCameraPos());
+
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 	return result;
 }

@@ -20,6 +20,7 @@ private:	//Variables
 	Ai m_AI;
 	vector<Enemy*> enemies;
 	ParticleHandler myParticleHandler;
+
     vector<Projectile*> projectiles;
     float t;
 
@@ -31,6 +32,9 @@ private:	//Variables
 
 	bool exitStage;
 
+	float camPosX;
+	float camPosZ;
+	bool inc;
 public:
 	StageState();
 	virtual ~StageState();

@@ -350,6 +350,9 @@
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
+    <ClInclude Include="TestState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="gameStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -400,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="LightStructs.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ability.h">
       <Filter>Header Files\Abilities</Filter>
