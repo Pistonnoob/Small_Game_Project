@@ -162,6 +162,28 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 		return false;
 	}
 
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
+
+	if (FAILED(hresult))
+	{
+		MessageBox(*hwnd, L"device->CreateSamplerState", L"Error", MB_OK);
+		return false;
+	}
+
 	this->nrOfShaderResources = nrOfResources;
 
 	this->nullResource = new ID3D11ShaderResourceView*[this->nrOfShaderResources];
@@ -282,11 +304,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	LightsCB* dataPtrL;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	params->worldMatrix = XMMatrixTranspose(params->worldMatrix);
-	params->viewMatrix = XMMatrixTranspose(params->viewMatrix);
-	params->projectionMatrix = XMMatrixTranspose(params->projectionMatrix);
-	params->lightViewMatrix = XMMatrixTranspose(params->lightViewMatrix);
-	params->lightProjectionMatrix = XMMatrixTranspose(params->lightProjectionMatrix);
+	params->worldMatrix = DirectX::XMMatrixTranspose(params->worldMatrix);
+	params->viewMatrix = DirectX::XMMatrixTranspose(params->viewMatrix);
+	params->projectionMatrix = DirectX::XMMatrixTranspose(params->projectionMatrix);
+	params->lightViewMatrix = DirectX::XMMatrixTranspose(params->lightViewMatrix);
+	params->lightProjectionMatrix = DirectX::XMMatrixTranspose(params->lightProjectionMatrix);
 
 	ZeroMemory(&mappedResource, sizeof(mappedResource));
 	//Map the constant buffer so we can write to it (denies GPU access)
@@ -299,11 +321,12 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	dataPtrM = (LightMatrixBuffer*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
+
 	dataPtrM->world = params->worldMatrix;
 	dataPtrM->view = params->viewMatrix;
 	dataPtrM->projection = params->projectionMatrix;
-	dataPtrM->view = params->lightViewMatrix;
-	dataPtrM->projection = params->lightProjectionMatrix;
+	dataPtrM->lightView = params->lightViewMatrix;
+	dataPtrM->lightProjection = params->lightProjectionMatrix;
 
 	dataPtrM->camPos = params->camPos;
 
@@ -352,6 +375,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	if (params->deferredTextures) {
 		//Set shader texture resource for pixel shader
 		deviceContext->PSSetShaderResources(0, 5, params->deferredTextures);
+	}
+
+	if (params->shadowTexture)
+	{
+		deviceContext->PSSetShaderResources(5,1, &params->shadowTexture);
 	}
 
 	return true;

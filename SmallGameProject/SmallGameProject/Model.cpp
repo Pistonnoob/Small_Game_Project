@@ -175,21 +175,23 @@ void Model::GetDeferredShaderParameters(DeferredShaderParameters* params, int su
 	else {
 		indexCount = this->indexCount - indexStart;
 	}
-	Texture::Material tempMat = this->texture->GetMaterial(this->materialIndices.at(subsetIndex));
 
-	params->diffColor = tempMat.diffColor;
-	params->ambientColor = tempMat.ambientColor;
-	params->specColor = tempMat.specColor;
+	if (params) {
+		Texture::Material tempMat = this->texture->GetMaterial(this->materialIndices.at(subsetIndex));
 
-	params->worldMatrix = this->worldMatrix;
+		params->diffColor = tempMat.diffColor;
+		params->ambientColor = tempMat.ambientColor;
+		params->specColor = tempMat.specColor;
 
-	if (tempMat.hasTexture) {
-		params->diffTexture = this->texture->GetTexture(tempMat.textureIndex);
+		params->worldMatrix = this->worldMatrix;
+
+		if (tempMat.hasTexture) {
+			params->diffTexture = this->texture->GetTexture(tempMat.textureIndex);
+		}
+		else {
+			params->diffTexture = NULL;
+		}
 	}
-	else {
-		params->diffTexture = NULL;
-	}
-	
 }
 
 void Model::SetWorldMatrix(DirectX::XMMATRIX worldMatrix)

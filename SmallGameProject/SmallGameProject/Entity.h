@@ -17,12 +17,19 @@ private:
 	EntitySubject entitySubject;
 
 public:
-	Entity(Model* model);	//Entitys without BoundingVolume
-	Entity(Model* model, bool isSphere);	//Entitus with BoundingVolume, true = sphere, false = OOBB
-    void setModel(Model* model);
-    Model* getModel();
-    DirectX::XMFLOAT3 getPosition();
+	Entity();	//Entitys without BoundingVolume
 	virtual~Entity();
+
+	//Initialize for unique Entity
+	bool Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename,
+					bool isSphere);
+	// Secoundary initialize for instancing
+	bool Initialize(Model* model, bool isSphere);	
+	void Shutdown(bool isEnemy = false);
+
+    Model* getModel();
+    BoundingVolume* getBV();
+    DirectX::XMFLOAT3 getPosition();
 };
 
 #endif

@@ -1,12 +1,14 @@
 #include "Enemy.h"
 
 Enemy::Enemy()
+: Actor()
 {
 }
 
 Enemy::~Enemy()
 {
 }
+
 void Enemy::moveRight()
 {
     this->posX += 0.05f;

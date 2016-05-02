@@ -48,10 +48,11 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	if (!this->lightShaderH) {
 		return false;
 	}
-	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount());
+	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount() + 1);
 	if (!result) {
 		return false;
 	}
+
 
 	this->particleShaderH = new ParticleShaderHandler;
 	if (!this->particleShaderH) {
@@ -61,6 +62,15 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	if (!result) {
 		return false;
 	}
+
+	//here is were I put in the shadowShader
+	this->shadowShaderH = new ShadowShaderHandler;
+	if (this->shadowShaderH == false)
+	{
+		return false;
+	}
+	this->shadowShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount(), screenWidth, screenHeight);
+
 
 	this->screenQuad = new ScreenQuad;
 	if (!this->screenQuad) {
@@ -149,6 +159,19 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	light.Position = DirectX::XMFLOAT4(5.0f, 2.0f, 2.0f, 1.0f);
 	this->AddPointLight(light);
 
+	//creating the light matrises
+	fieldOfView = (float)DirectX::XM_PI / 2.0f;
+
+	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(50.0f, 50.0f, 50.0f, 1.0f);
+	DirectX::XMVECTOR lightUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+
+	this->lightPos = DirectX::XMFLOAT4(10.0f, 10.0f, 0.0f, 1.0f);
+
+	this->lightView= DirectX::XMMatrixLookAtLH(lightPos, lookAt, lightUp);
+	//this->lightPerspective = DirectX::XMMatrixOrthographicLH(1024.0f, 1024.0f, SCREEN_NEAR, SCREEN_DEPTH);
+	this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
+
 	return true;
 }
 
@@ -171,6 +194,7 @@ void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 	int indexCount;
 	int indexStart;
 	model->Render(this->engine->GetDeviceContext());
+
 	int nrOfSubsets = model->GetNrOfSubsets();
 	for (int i = 0; i < nrOfSubsets; i++) {
 		model->GetDeferredShaderParameters(params, i, indexCount, indexStart);
@@ -200,10 +224,11 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	shaderParams->viewMatrix = this->baseViewMatrix;
 	shaderParams->projectionMatrix = this->orthographicMatrix;
-	shaderParams->lightViewMatrix = DirectX::XMMatrixIdentity();
-	shaderParams->lightProjectionMatrix = DirectX::XMMatrixIdentity();
+	shaderParams->lightViewMatrix = this->lightView;
+	shaderParams->lightProjectionMatrix = this->lightPerspective;
 
 	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
+	shaderParams->shadowTexture = this->shadowShaderH->getShadowMapSRW();
 
 	shaderParams->camPos = camPos;
 
@@ -234,6 +259,45 @@ void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, Cam
 	shaderParams->projectionMatrix = this->perspectiveMatrix;
 
 	this->particleShaderH->Render(this->engine->GetDeviceContext(), 5, 0, shaderParams);
+}
+
+void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
+{
+	if (this->activeRTV != 1) {
+		this->SetShadowRTV();
+		this->activeRTV = 1;
+	}
+	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
+	shadowShaderParams->worldMatrix = DirectX::XMMatrixIdentity();
+	
+	
+	DirectX::XMMATRIX worldMatrix;
+	model->GetWorldMatrix(worldMatrix);
+
+	shadowShaderParams->viewMatrix = this->lightView;
+	shadowShaderParams->worldMatrix = worldMatrix;
+	shadowShaderParams->projectionMatrix = this->lightPerspective;
+
+	model->Render(this->engine->GetDeviceContext());
+
+	int indexCount = 0;
+	int indexStart = 0;
+
+	int nrOfSubsets = model->GetNrOfSubsets();
+	for (int i = 0; i < nrOfSubsets; i++) {
+		model->GetDeferredShaderParameters(nullptr, i, indexCount, indexStart);
+
+		this->shadowShaderH->Render(this->engine->GetDeviceContext(), indexCount, indexStart, shadowShaderParams);
+		delete shadowShaderParams;
+
+		shadowShaderParams = new ShadowShaderParameters;
+		
+		shadowShaderParams->viewMatrix = this->lightView;
+		shadowShaderParams->worldMatrix = worldMatrix;
+		shadowShaderParams->projectionMatrix = this->lightPerspective;
+
+	}
+	delete shadowShaderParams;
 }
 
 void GraphicHandler::TextRender()
@@ -283,6 +347,12 @@ void GraphicHandler::Shutdown()
 		this->particleShaderH->Shutdown();
 		delete this->particleShaderH;
 		this->particleShaderH = nullptr;
+	}
+	//delete shadowShaderHander object
+	if (this->shadowShaderH) {
+		this->shadowShaderH->Shutdown();
+		delete this->shadowShaderH;
+		this->shadowShaderH = nullptr;
 	}
 
 	//Delete the D3DHandler object
@@ -346,11 +416,13 @@ void GraphicHandler::ClearRTVs()
 {
 	this->deferredShaderH->ClearRenderTargets(this->engine->GetDeviceContext());
 	this->engine->ClearDepthAndRTVViews();
+	this->shadowShaderH->ClearShadowMap(this->engine->GetDeviceContext());
 }
 
 void GraphicHandler::SetDeferredRTVs()
 {
 	this->engine->GetDeviceContext()->OMSetBlendState(this->disableTransparencyBlendState, NULL, 0xffffffff);
+	this->engine->SetViewport();
 	this->deferredShaderH->SetDeferredRenderTargets(this->engine->GetDeviceContext());
 	this->engine->SetDepth(1);
 }
@@ -358,6 +430,7 @@ void GraphicHandler::SetDeferredRTVs()
 void GraphicHandler::SetLightRTV()
 {
 	this->engine->GetDeviceContext()->OMSetBlendState(this->disableTransparencyBlendState, NULL, 0xffffffff);
+	this->engine->SetViewport();
 	this->engine->SetRenderTargetView();
 	this->engine->SetDepth(2);
 }
@@ -367,6 +440,12 @@ void GraphicHandler::SetParticleRTV()
 	this->engine->GetDeviceContext()->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
 	this->engine->SetRenderTargetView(this->deferredShaderH->GetDepthView());
 	this->engine->SetDepth(3);
+}
+
+void GraphicHandler::SetShadowRTV()
+{
+	this->shadowShaderH->SetViewPort(this->engine->GetDeviceContext());
+	this->shadowShaderH->SetRenderTarget(this->engine->GetDeviceContext());
 }
 
 void GraphicHandler::PresentScene()

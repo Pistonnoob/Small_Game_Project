@@ -14,6 +14,7 @@ EntitySubject::~EntitySubject()
 		Observer* e = *it;
 		delete e;
 	}
+	this->observers.clear();
 }
 
 void EntitySubject::notify(const Entity* entity, Events::ENTITY evnt)

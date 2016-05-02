@@ -10,7 +10,7 @@ System::System()
 
 System::~System()
 {
-
+	this->Shutdown();
 }
 
 bool System::Initialize()
@@ -50,8 +50,6 @@ bool System::Initialize()
 	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
-
-	
 
 	this->testRot = 0;
 
