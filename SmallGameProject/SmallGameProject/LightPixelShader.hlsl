@@ -1,4 +1,5 @@
 #define MAX_LIGHTS 10
+#define SCENE_AMBIENT 0.1f
 
 Texture2D diffTexture : register(t0);
 Texture2D ambientTexture : register(t1);
@@ -45,9 +46,8 @@ float4 main(PSInput input) : SV_TARGET
 	float4 normal;
 	float4 worldPos;
 	float4 outputColor;
+	float4 outputAmbient;
 	float2 textCoords = float2(input.position.x / 800, input.position.y / 600);
-
-	float lightIntensity = 0.0f;
 
 	//Sample the diffuse texture from deferred render
 	diffColor = diffTexture.Sample(pointSampler, textCoords);
@@ -79,32 +79,44 @@ float4 main(PSInput input) : SV_TARGET
 	//Calculate the specular part
 	float4 specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
-	float lightIntensityPart = dot(normal, outVec);
-	if (lightIntensityPart < 0) {
-		lightIntensityPart = 0;
+	float lightIntensity = dot(normal, outVec);
+	if (lightIntensity < 0) {
+		lightIntensity = 0;
 	}
-	outputColor = saturate((((diffColor.rgba * Diffuse[0]) + (specular.rgba * Specular[0])) * lightIntensityPart * 0.8f) + ((ambientColor.rgba * Ambient[0]) * 0.2f));
+
+	outputColor = saturate(((diffColor.rgba * Diffuse[0]) + (specular.rgba * Specular[0])) * lightIntensity);
+	outputAmbient = ((ambientColor.rgba * Ambient[0]));
 
 	for (int i = 1; i <= activeLights; i++) {
+		outputAmbient += saturate((ambientColor.rgba * Ambient[i]));
 		//Create the normalized vector from position to light source
-		outVec = normalize(Position[i].xyz - (worldPos).xyz);
-		//Create the normalized reflection vector
-		refVec = normalize(reflect(-outVec, normal));
+		outVec = Position[i].xyz - (worldPos).xyz;
+		float distToLight = length(outVec);
+		if (distToLight <= Attenuation[i - 1].x) {
+			outVec = normalize(outVec);
+			//Create the normalized reflection vector
+			refVec = normalize(reflect(-outVec, normal));
 
-		specIntesity = saturate(dot(refVec, viewDir));
-		lightSpecular = Specular[i];
+			specIntesity = saturate(dot(refVec, viewDir));
+			lightSpecular = Specular[i];
 
-		//Calculate the specular part
-		specular += float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
+			//Calculate the specular part
+			specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
-		lightIntensityPart = dot(normal, outVec);
-		if (lightIntensityPart < 0) {
-			lightIntensityPart = 0;
+			lightIntensity = dot(normal, outVec);
+			if (lightIntensity < 0) {
+				lightIntensity = 0;
+			}
+
+			float atten = Attenuation[i - 1].y + Attenuation[i - 1].z * distToLight + Attenuation[i - 1].w * distToLight * distToLight;
+			float lumen = (1.0f / atten);
+			lightIntensity = lightIntensity * lumen;
+
+			outputColor += saturate(((diffColor.rgba * Diffuse[i]) + (specular.rgba * Specular[i])) * lightIntensity);
 		}
-		outputColor += saturate((((diffColor.rgba * Diffuse[i]) + (specular.rgba * Specular[i])) * lightIntensityPart * 0.8f) + ((ambientColor.rgba * Ambient[i]) * 0.2f));
-		//lightIntensity += lightIntensityPart;
 	}
-	outputColor = saturate(outputColor);
+	outputAmbient = saturate(outputAmbient) * SCENE_AMBIENT;
+	outputColor = saturate(outputColor + outputAmbient);
 	//saturate(lightIntensity);
 	//Create the normalized vector from position to light source
 	////float3 outVec = normalize(lightPos.xyz - (worldPos).xyz);

@@ -332,7 +332,7 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 		dataPtrL->Ambient[i] = currLight.Ambient;
 		dataPtrL->Specular[i] = currLight.Specular;
 		dataPtrL->Position[i] = currLight.Position;
-		dataPtrL->Attenuation[i] = currLight.Attenuation;
+		dataPtrL->Attenuation[i-1] = currLight.Attenuation;
 	}
 
 	//Unmap the constant buffer to give the GPU access agin
