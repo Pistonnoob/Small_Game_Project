@@ -3,7 +3,7 @@
 #include "Observer.h"
 #include "Algorithm.h"
 #include "Texture.h"
-#include "ParticleEmitter.h"
+#include "EmitterPrototype.h"
 #include "GraphicHandler.h"
 #include "CameraHandler.h"
 
@@ -11,7 +11,7 @@ class ParticleHandler :
 	public Observer
 {
 private:
-	std::vector<ParticleEmitter> emitters;
+	std::vector<ParticleEmitter*> emitters;
 	struct Particle {
 		float x, y, z, scale;
 		float r, g, b, rotation;
@@ -36,6 +36,8 @@ public:
 
 	void Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	virtual void OnNotify(const Entity* entity, Events::ENTITY evnt);
+
+	int Update(float dT, ID3D11DeviceContext* deviceContext);
 
 	int Render(GraphicHandler* gHandler, CameraHandler* camera);
 

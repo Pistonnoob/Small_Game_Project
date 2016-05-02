@@ -53,7 +53,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 		return false;
 	}
 
-
 	this->particleShaderH = new ParticleShaderHandler;
 	if (!this->particleShaderH) {
 		return false;
@@ -62,7 +61,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	if (!result) {
 		return false;
 	}
-
 	//here is were I put in the shadowShader
 	this->shadowShaderH = new ShadowShaderHandler;
 	if (this->shadowShaderH == false)
@@ -171,7 +169,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	this->lightView= DirectX::XMMatrixLookAtLH(lightPos, lookAt, lightUp);
 	//this->lightPerspective = DirectX::XMMatrixOrthographicLH(1024.0f, 1024.0f, SCREEN_NEAR, SCREEN_DEPTH);
 	this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
-
 	return true;
 }
 
@@ -245,7 +242,8 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 	return;
 }
 
-void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera)
+
+void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera, int amountOfParticles)
 {
 	if (this->activeRTV != 3) {
 		this->SetParticleRTV();
@@ -258,7 +256,7 @@ void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, Cam
 	shaderParams->camPos = camera->GetCameraPos();
 	shaderParams->projectionMatrix = this->perspectiveMatrix;
 
-	this->particleShaderH->Render(this->engine->GetDeviceContext(), 5, 0, shaderParams);
+	this->particleShaderH->Render(this->engine->GetDeviceContext(), amountOfParticles, 0, shaderParams);
 }
 
 void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)

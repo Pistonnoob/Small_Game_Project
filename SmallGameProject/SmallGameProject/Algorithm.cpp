@@ -47,11 +47,53 @@ void Algorithm::GetHypotrochoid(int& x, int&y, float t, int bigR, int r, int d)
 	y = distanceFromOrigo * sin(angle) - d * sin((distanceFromOrigo / r) * angle);
 }
 
-
-void Algorithm::GetSawtoothWave(int& x, int& y, int t, int period, int min, int max)
+void Algorithm::GetParabola(float& x, float& y, float t)
 {
 	x = t;
-	y = (t % period) * max + min;
+	y = x * x;
+}
+
+void Algorithm::GetCircle(float& x, float&y, float t)
+{
+	x = cos(t);
+	y = sin(t);
+}
+
+
+void Algorithm::GetEllipse(float& x, float& y, float t, float a, float b)
+{
+	x = a * cos(t);
+	y = b * sin(t);
+}
+
+void Algorithm::GetLissajousCurve(float& x, float& y, float t, float a, float b, float xLobes, float yLobes)
+{
+	x = a * cos(xLobes * t);
+	y = b * sin(yLobes * t);
+}
+
+void Algorithm::GetHypotrochoid(float& x, float&y, float t, float bigR, float r, float d)
+{
+	float tX = 0, tY = 0;
+	float distanceFromOrigo = bigR - r;
+	GetCircle(tX, tY, t);
+	//Apply the distance
+	tX *= distanceFromOrigo;
+	tY *= distanceFromOrigo;
+	//Angle between origin and innerCircleOrigin.
+	float angle = atan2(tY - 0.0f, tX - 0.0f);
+	//Calculate the local x and y
+	x = distanceFromOrigo * cos(angle) + d * cos((distanceFromOrigo / r) * angle);
+	y = distanceFromOrigo * sin(angle) - d * sin((distanceFromOrigo / r) * angle);
+	/*x = tX;
+	y = tY;*/
+}
+
+
+void Algorithm::GetSawtoothWave(int& x, int& y, float t, int period, int min, int max)
+{
+	x = t;
+	y = (x % period) * max + min;
 }
 
 void Algorithm::GetTriangleWave(int & x, int & y, float t, int period, int min, int max)
@@ -71,4 +113,22 @@ void Algorithm::GetSineWave(int & x, int & y, float t, int period, int max, int 
 {
 	x = t;
 	y = (max - min) * sin((float)x / period) + min;
+}
+
+void Algorithm::GetSawtoothWave(float & x, float & y, float t, float period, float min, float max)
+{
+	x = t;
+	y = (x - int(x / period) * period) * max + min;
+}
+
+void Algorithm::GetTriangleWave(float & x, float & y, float t, float period, float min, float max)
+{
+	x = t;
+	y = abs(x - int(x / period) * period - max) + min;
+}
+
+void Algorithm::GetSquareWave(float & x, float & y, float t, float period, float min, float max)
+{
+	x = t;
+	y = (x - int(x / period) * period) < max ? max : min;
 }

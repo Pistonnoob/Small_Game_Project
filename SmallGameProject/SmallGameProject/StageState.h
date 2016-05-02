@@ -19,7 +19,6 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
-
 	ParticleHandler myParticleHandler;
 
     vector<Projectile*> projectiles;

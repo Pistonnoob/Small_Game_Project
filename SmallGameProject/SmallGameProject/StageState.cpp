@@ -79,8 +79,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		float zoomIn = 1.0f / 4.0f;
 
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 40.0f / zoomIn, -7.0f / zoomIn));
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 8.0f, -50.0f));
 
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		this->myCamera.UpdateCamera();
@@ -171,6 +170,11 @@ int StageState::Update(float deltaTime)
 {
 	int result = 1;
 
+	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0, 0.0f, -20.0f));
+
+	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
+
 	if (this->exitStage)
 	{
 		this->exitStage = false;
@@ -254,6 +258,5 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->LightRender(this->myCamera.GetCameraPos());
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
-
 	return result;
 }

@@ -29,6 +29,16 @@ void ParticleHandler::Shutdown()
 
 	this->myTextures.Shutdown();
 
+	while (this->emitters.size())
+	{
+		ParticleEmitter* emitter = this->emitters.back();
+		emitter->Shutdown();
+		delete emitter;
+		emitter = nullptr;
+		this->emitters.pop_back();
+	}
+	this->emitters.clear();
+
 }
 
 void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext)
@@ -44,6 +54,10 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	this->myTextures = Texture();
 	std::string theNightSky = "Particles.mtl";
 	bool victory = this->myTextures.Initialize(device, deviceContext, theNightSky);
+
+	EmitterPrototype* newEmitter = new EmitterPrototype();
+	newEmitter->Initialize(device, this->myTextures.GetTexture(0));
+	this->emitters.push_back(newEmitter);
 
 	int particleCnt = _countof(this->particles);
 	//sizeof(this->particles) / sizeof(Particle)
@@ -141,18 +155,42 @@ void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
 	}
 }
 
+int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
+{
+	int result = 0;
+
+	for (auto emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
+	{
+		(*emitter)->Update(dT, deviceContext);
+	}
+
+	return result;
+}
+
 int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 {
 	int result = 0;
 
-	this->RenderBuffers(gHandler->GetDeviceContext());
+	//this->RenderBuffers(gHandler->GetDeviceContext());
 
 	ParticleShaderParameters parameters;
 
-	parameters.worldMatrix = this->world;
-	parameters.diffTexture = this->myTextures.GetTexture(1);
+	/*for (auto emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
+	{
+		int amount
+	}*/
+	if (this->emitters.size())
+	{
+		int amountOfParticles = 0;
+		this->emitters.at(0)->SetCameraPos(camera->GetCameraPos());
+		this->emitters.at(0)->SortParticles();
+		this->emitters.at(0)->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
+		parameters.worldMatrix = this->world;
+		parameters.diffTexture = this->myTextures.GetTexture(1);
 
-	gHandler->ParticleRender(&parameters, camera);
+		gHandler->ParticleRender(&parameters, camera, amountOfParticles);
+	}
+
 
 	return result;
 }

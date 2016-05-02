@@ -24,7 +24,6 @@ protected:
 	LightShaderHandler* lightShaderH;
 	ParticleShaderHandler* particleShaderH;
 	ShadowShaderHandler* shadowShaderH;
-
 	ScreenQuad* screenQuad;
 	TextHandler* textH;
 	ID3D11BlendState* transparencyBlendState;
@@ -61,8 +60,10 @@ public:
 	bool initialize(HWND* hwnd, int screenWidth, int screenHeight, DirectX::XMMATRIX baseViewMatrix);
 	
 	void DeferredRender(Model* model, CameraHandler* camera);
+
+	
 	void LightRender(DirectX::XMFLOAT4 camPos);
-	void ParticleRender(ParticleShaderParameters* shaderParams, CameraHandler* camera);
+	void ParticleRender(ParticleShaderParameters* shaderParams, CameraHandler* camera, int amountOfParticles);
 	void ShadowRender(Model* model, CameraHandler* camera);
 
 	void TextRender();

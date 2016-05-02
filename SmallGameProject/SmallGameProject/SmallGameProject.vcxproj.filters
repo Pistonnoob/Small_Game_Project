@@ -61,7 +61,6 @@
     <Filter Include="Header Files\Libraries">
       <UniqueIdentifier>{55a88415-2a2d-495e-b914-81eef98eb3fd}</UniqueIdentifier>
     </Filter>
-
     <Filter Include="Header Files\Observers\ParticleHandler">
       <UniqueIdentifier>{7e806ecd-2082-4354-9967-ef7515cbb75e}</UniqueIdentifier>
     </Filter>
@@ -222,6 +221,12 @@
     </ClCompile>
     <ClCompile Include="ParticleShaderHandler.cpp">
       <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterPrototype.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
     <ClCompile Include="ArcFire.cpp">
       <Filter>Source Files\Abilities</Filter>
@@ -384,7 +389,6 @@
     <ClInclude Include="ShaderStructLibrary.h">
       <Filter>Header Files\Libraries</Filter>
     </ClInclude>
-
     <ClInclude Include="ParticleHandler.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
@@ -393,6 +397,12 @@
     </ClInclude>
     <ClInclude Include="ParticleShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterPrototype.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
     <ClInclude Include="LightStructs.h">
       <Filter>Header Files</Filter>

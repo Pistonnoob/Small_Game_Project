@@ -4,18 +4,6 @@
 
 ParticleEmitter::ParticleEmitter()
 {
-	this->particleDeviationX = this->particleDeviationY = this->particleDeviationZ = 0.0f;
-	this->particleVelocity = 0.0f;
-	this->particleSize = this->particlesPerSecond = 0.0f;
-
-	this->currentParticleCnt = 0;
-	this->maxParticles = 0;
-	this->accumulatedTime = 0.0f;
-	this->vertexCount = this->indexCount = 0;
-
-	this->vertexBuffer = this->indexBuffer = nullptr;
-
-	this->texture = nullptr;
 }
 
 
@@ -40,29 +28,13 @@ void ParticleEmitter::Shutdown()
 	if (this->texture)
 		this->texture = nullptr;
 
-	if (this->particles)
-	{
-		delete[] this->particles;
-		this->particles = nullptr;
-	}
-
 	if (this->vertices)
 	{
 		delete[] this->vertices;
 		this->vertices = nullptr;
 	}
 
-	while (this->rootParticle->next != nullptr)
-	{
-		Particle* temp = this->rootParticle;
-		this->rootParticle = this->rootParticle->next;
-		delete temp;
-	}
-	if (this->rootParticle != nullptr)
-	{
-		delete this->rootParticle;
-	}
-
+	this->ShutdownSpecific();
 }
 
 bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
@@ -70,13 +42,17 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
+	this->world = DirectX::XMMatrixIdentity();
+	this->vertexBuffer = nullptr;
+	this->indexBuffer = nullptr;
+	this->vertexCount = this->indexCount = 0;
+	this->maxParticles = 5000;
+	this->currentParticleCnt = 0;
+	this->accumulatedTime = 0.0f;
+	this->cameraPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 
-	//Initialize the emitter
-	result = this->InitializeEmitter();
-	if (!result)
-		return false;
-	
+
 	//Initialize the buffers
 	result = this->InitializeBuffers(device);
 	if (!result)
@@ -85,75 +61,28 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 	return true;
 }
 
+void ParticleEmitter::SetCameraPos(DirectX::XMFLOAT3 cameraPos)
+{
+	this->cameraPos = cameraPos;
+}
+
+void ParticleEmitter::SetCameraPos(DirectX::XMFLOAT4 cameraPos)
+{
+	this->cameraPos = DirectX::XMFLOAT3(cameraPos.x, cameraPos.y, cameraPos.z);
+}
+
+
+
 bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)
 {
-	bool result = false;
-
-	//Release old particles
-	this->KillParticles();
-
-	//Emitt new particles
-	this->EmitParticles(dT);
-
-	//Update the particles
-	this->UpdateParticles(dT);
-
-	//Update the dynamic vertex buffer with the new position of each particle
-	result = this->UpdateBuffers(deviceContext);
-	if (!result)
-		return false;
-
-	return true;
+	// Increment the frame time.
+	this->accumulatedTime += dT;
+	return this->UpdateSpecific(dT, deviceContext);
 }
 
-void ParticleEmitter::Render(ID3D11DeviceContext * deviceContext)
+bool ParticleEmitter::distanceToCamera(float x, float y, float z)
 {
-	//NOT IMPLEMENTED
-}
-
-ID3D11ShaderResourceView * ParticleEmitter::GetTexture()
-{
-	return this->texture;
-}
-
-int ParticleEmitter::GetIndexCount()
-{
-	return this->indexCount;
-}
-
-bool ParticleEmitter::InitializeEmitter()
-{
-	this->particleDeviationX = 0.5f;
-	this->particleDeviationY = 0.1f;
-	this->particleDeviationZ = 2.0f;
-
-	this->particleVelocity = 1.0f;
-	this->particleSize = 0.2f;
-	this->particlesPerSecond = 100.0f;
-	this->maxParticles = 5000;
-
-	this->particles = new Particle[this->maxParticles];
-	if (!this->particles)
-		return false;
-
-	//Initialize particle list
-	for (int i = 0; i < this->maxParticles; i++)
-	{
-		this->particles[i].active = false;
-	}
-
-	this->rootParticle = new Particle{
-		0.0f, 0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		nullptr,
-		true
-	};
-
-	this->currentParticleCnt = 0;
-
-	this->accumulatedTime = 0.0f;
-
-	return true;
+	return false;
 }
 
 bool ParticleEmitter::InitializeBuffers(ID3D11Device * device)
@@ -166,7 +95,7 @@ bool ParticleEmitter::InitializeBuffers(ID3D11Device * device)
 
 
 	// Set the maximum number of vertices in the vertex array.
-	this->vertexCount = this->maxParticles * 6;
+	this->vertexCount = this->maxParticles;
 
 	// Set the maximum number of indices in the index array.
 	this->indexCount = this->vertexCount;
@@ -241,32 +170,26 @@ bool ParticleEmitter::InitializeBuffers(ID3D11Device * device)
 	return true;
 }
 
-void ParticleEmitter::EmitParticles(float dT)
-{
-}
-
-void ParticleEmitter::UpdateParticles(float dT)
-{
-}
-
-void ParticleEmitter::KillParticles()
-{
-	//Go through all particles
-	for (int i = 0; i < this->maxParticles; i++)
-	{
-		//The conditions for killing / restarting the particle
-		if (!this->particles[i].active)
-		{
-			//Kill the particle
-		}
-	}
-}
-
-bool ParticleEmitter::UpdateBuffers(ID3D11DeviceContext * deviceContext)
-{
-	return false;
-}
-
 void ParticleEmitter::RenderBuffers(ID3D11DeviceContext * deviceContext)
 {
+	unsigned int stride;
+	unsigned int offset;
+
+
+	// Set vertex buffer stride and offset.
+	stride = sizeof(VertexType);
+	offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetVertexBuffers(0, 1, &this->vertexBuffer, &stride, &offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetIndexBuffer(this->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer.
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	return;
 }
+
+
