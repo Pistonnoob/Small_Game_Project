@@ -16,9 +16,9 @@ Player::~Player()
 }
 
 bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string playerModelFilename,
-	std::string weaponModelFile, bool isSphere)
+	std::string weaponModelFile, bool isSphere, EntitySubject* entitySub)
 {
-	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere)) {
+	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere, entitySub)) {
 		return false;
 	}
 
@@ -37,6 +37,11 @@ void Player::Shutdown()
 		this->playerWeapon = nullptr;
 	}
 	Entity::Shutdown(false);
+}
+
+Weapon * Player::getPlayerWeapon()
+{
+	return this->playerWeapon;
 }
 
 void Player::moveRight()

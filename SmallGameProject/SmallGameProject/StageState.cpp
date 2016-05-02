@@ -19,9 +19,9 @@ StageState::StageState()
 	this->enemySubject.addObserver(&this->enemyPjHandler);
 	
 
-	this->playerSubject = EntitySubject();
+	this->playerSubject = new EntitySubject();
 	this->playerPjHandler = ProjectileHandler();
-	this->playerSubject.addObserver(&this->playerPjHandler);
+	this->playerSubject->addObserver(&this->playerPjHandler);
 	
 	this->hero = new Player();
 
@@ -44,13 +44,13 @@ void StageState::Shutdown()
     this->enemySubject.ShutDown();
 
 	this->playerPjHandler.ShutDown();
-	this->playerSubject.ShutDown();
+	this->playerSubject->ShutDown();
+	delete this->playerSubject;
+	this->playerSubject = nullptr;
 	
-	//typecasting to player
-	Player* ptr = static_cast<Player*>(this->hero);
-	ptr->Shutdown();
-
+	this->hero->Shutdown();
 	delete this->hero;
+
 	this->hero = nullptr;
 
 	//Release the enemies
@@ -97,7 +97,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
 
 		//the hero will rise
- 		this->hero->Initialize(device, deviceContext, "sphere1", false);
+ 		this->hero->Initialize(device, deviceContext, "sphere1","ogreFullG", false, this->playerSubject);
 		this->playerPjHandler.Initialize(device, deviceContext);
 
 		//Form thy armies from the clay!
@@ -174,7 +174,8 @@ int StageState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_1))
 	{
-		this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
+		//this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
+		this->hero->fire(); //how do I update this shiet
 	}
 	this->ability1->update(this->enemies.at(0), &this->enemySubject);
 
@@ -243,13 +244,21 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	//render
 	gHandler->DeferredRender(this->hero->getModel(), &this->myCamera);
 
+	//calculate THE PLAYER WEAPON position and mathemagics
+	pos.x += 15;
+	pos.z += 15;
+	worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+	this->m_car.SetWorldMatrix(worldMatrix);
+
+	//render PLAYER WEAPON
+	gHandler->DeferredRender(this->hero->getPlayerWeapon()->GetModel(), &this->myCamera);
 
     this->enemyPjHandler.render(gHandler, &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
 	//shadowMap
-	gHandler->SetShadowRTV(); //här är läckan
+	gHandler->SetShadowRTV();
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
 		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);

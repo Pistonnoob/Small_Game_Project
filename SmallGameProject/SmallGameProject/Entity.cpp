@@ -11,9 +11,10 @@ Entity::~Entity()
 
 }
 
-bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename, bool isSphere)
+bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename, bool isSphere, EntitySubject* entitySub)
 {
 	this->entityModel = new Model();
+	this->entitySubject = entitySub;
 	//If we fail to initialize the model
 	if (!this->entityModel->Initialize(device, deviceContext, objFilename))
 	{

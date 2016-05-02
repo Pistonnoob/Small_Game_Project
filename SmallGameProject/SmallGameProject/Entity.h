@@ -31,7 +31,7 @@ public:
 
 	//Initialize for unique Entity
 	bool Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename,
-					bool isSphere);
+					bool isSphere, EntitySubject* entitySub);
 	// Secoundary initialize for instancing
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);	
 	virtual void Shutdown(bool isEnemy = false);

@@ -48,7 +48,7 @@ void Weapon::ShutDown()
 	}
 }
 
-const Model * Weapon::GetModel()
+Model * Weapon::GetModel()
 {
 	return this->weaponModel;
 }

@@ -25,9 +25,9 @@ private:	//Variables
     EntitySubject enemySubject;
 
 	//player variables
-	EntitySubject playerSubject;
+	EntitySubject* playerSubject;
 	ProjectileHandler playerPjHandler;
-	Entity* hero;
+	Player* hero;
 	
 	Ai m_AI;
 	vector<Enemy*> enemies;

@@ -26,7 +26,7 @@ public:
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename);
 	virtual void ShutDown();
 
-	const Model* GetModel();
+	Model* GetModel();
 
 	float getAttackDamageMod() const;
 	float getAttackSpeedMod() const;
