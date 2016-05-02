@@ -91,7 +91,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		
 
 		//the hero will rise
- 		this->hero->Initialize(device, deviceContext, "sphere1", true);
+ 		this->hero->Initialize(device, deviceContext, "sphere1", false);
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -189,10 +189,7 @@ int StageState::HandleInput(InputHandler * input)
 int StageState::Update(float deltaTime)
 {
 	int result = 1;
-
-	this->enemies.at(0)->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
-
-	this->testWeap.shootWeapon(this->enemies.at(0));
+ 
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
 	//this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->enemyPjHandler.update();
@@ -231,12 +228,15 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	}
 
+	//calculate player position and mathemagics
 	pos = this->hero->getPosition();
 	worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 	this->m_car.SetWorldMatrix(worldMatrix);
 
+	//render
 	gHandler->DeferredRender(this->hero->getModel(), &this->myCamera);
-	
+
+
     this->enemyPjHandler.render(gHandler, &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);

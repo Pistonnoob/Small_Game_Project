@@ -13,8 +13,9 @@ Entity::~Entity()
 
 bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename, bool isSphere)
 {
+	this->entityModel = new Model();
 	//If we fail to initialize the model
-	if (!this->entityModel->Ini tialize(device, deviceContext, objFilename))
+	if (!this->entityModel->Initialize(device, deviceContext, objFilename))
 	{
 		return false;
 	}
@@ -66,6 +67,11 @@ void Entity::Shutdown(bool isEnemy)
 	}
 	this->entityBV = nullptr;
 
+	if (this->entityModel)
+	{
+		delete this->entityModel;
+		this->entityModel = nullptr;
+	}
 }
 void Entity::addObservers(Observer * observer)
 {
