@@ -138,6 +138,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
         readFile();
+        spawnWave();
 	}
 
 
@@ -237,7 +238,7 @@ void StageState::readFile()
         getline(myFile, line);
         while (line.at(0) != ' ')
         {
-            wave waveTemp;
+            Level waveTemp;
             //getline(myFile, line);
             string waveLenght = "";
             string enemyType = "";
@@ -257,7 +258,7 @@ void StageState::readFile()
             getline(myFile, line);
             for (int i = 0; i < 4; i++)
             {
-                toSpawn temp;
+                Wave temp;
                 if (line.at(1) == '}')
                 {
                     enemyType = "";
@@ -289,4 +290,9 @@ void StageState::readFile()
         }
 
     }
+}
+
+void StageState::spawnWave()
+{
+
 }
