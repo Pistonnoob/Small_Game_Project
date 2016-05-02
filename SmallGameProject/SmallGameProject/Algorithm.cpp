@@ -115,7 +115,7 @@ void Algorithm::GetSineWave(int & x, int & y, float t, int period, int max, int 
 	y = (max - min) * sin((float)x / period) + min;
 }
 
-void Algorithm::GetSawtoothWave(float & x, float & y, float t, float period, float min, float max)
+inline void Algorithm::GetSawtoothWave(float & x, float & y, float t, float period, float min, float max)
 {
 	x = t;
 	y = (x - int(x / period) * period) * max + min;

@@ -31,7 +31,7 @@ namespace Algorithm {
 	void GetTriangleWave(int & x, int & y, float t, int period, int min, int max);
 	void GetSquareWave(int & x, int & y, float t, int period, int min, int max);
 	void GetSineWave(int& x, int& y, float t, int period, int min, int max);
-	void GetSawtoothWave(float& x, float& y, float t, float period, float min, float max);
+	inline void GetSawtoothWave(float& x, float& y, float t, float period, float min, float max);
 	void GetTriangleWave(float & x, float & y, float t, float period, float min, float max);
 	void GetSquareWave(float & x, float & y, float t, float period, float min, float max);
 }
