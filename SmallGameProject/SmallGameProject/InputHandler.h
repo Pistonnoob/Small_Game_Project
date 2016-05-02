@@ -44,6 +44,8 @@ public:
 	bool isKeyDown(unsigned int key);
 	bool isKeyReleased(unsigned int key);
 
+	DirectX::XMFLOAT2 getMousePos();
+
 };
 
 #endif

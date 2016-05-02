@@ -266,3 +266,8 @@ bool InputHandler::isKeyReleased(unsigned int key)
 
 	return false;
 }
+
+DirectX::XMFLOAT2 InputHandler::getMousePos()
+{
+	return DirectX::XMFLOAT2(this->mouseX, this->mouseY);;
+}

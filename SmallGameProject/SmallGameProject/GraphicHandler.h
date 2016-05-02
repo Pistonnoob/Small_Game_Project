@@ -61,6 +61,12 @@ public:
 
 	int CreateTextHolder(int maxLength);
 	bool UpdateTextHolder(int id, const std::string& text, int posX, int posY, const DirectX::XMFLOAT3& color);
+
+	DirectX::XMMATRIX GetPerspectiveMatrix();
+	DirectX::XMMATRIX GetOrthograpicMatrix();
+	int GetScreenWidth();
+	int GetScreenHeight();
+
 };
 
 #endif

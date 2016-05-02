@@ -165,14 +165,15 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyDown(DIK_A)) {
 		this->player.moveLeft();
 	}
+
 	return result;
 }
 
-int StageState::Update(float deltaTime)
+int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
 
-	this->player.Update();
+	this->player.Update(input, gHandler, &this->myCamera);
 
 	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0, 0.0f, -20.0f));

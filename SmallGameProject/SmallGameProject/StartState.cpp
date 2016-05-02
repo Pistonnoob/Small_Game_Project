@@ -57,7 +57,7 @@ int StartState::HandleInput(InputHandler * input)
 	return result;
 }
 
-int StartState::Update(float deltaTime)
+int StartState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
 	if (this->startGame)

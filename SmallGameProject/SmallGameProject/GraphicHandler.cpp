@@ -13,6 +13,8 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 {
 	std::string errorMessage;
 	bool result;
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 
 	//Create the Direct3D handler
 	this->engine = new D3DHandler;
@@ -268,6 +270,26 @@ int GraphicHandler::CreateTextHolder(int maxLength)
 bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color)
 {
 	return this->textH->UpdateSentence(this->engine->GetDeviceContext(), id, text, posX, posY, color);
+}
+
+DirectX::XMMATRIX GraphicHandler::GetPerspectiveMatrix()
+{
+	return this->perspectiveMatrix;
+}
+
+DirectX::XMMATRIX GraphicHandler::GetOrthograpicMatrix()
+{
+	return this->orthographicMatrix;
+}
+
+int GraphicHandler::GetScreenWidth()
+{
+	return this->screenWidth;
+}
+
+int GraphicHandler::GetScreenHeight()
+{
+	return this->screenHeight;
 }
 
 void GraphicHandler::ClearRTVs()
