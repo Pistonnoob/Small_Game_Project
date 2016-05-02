@@ -111,6 +111,7 @@ void Font::BuildVertexArray(void* vertices, const char* text, float drawPosX, fl
 	int nrLetters = (int)strlen(text);
 	int letter = 0;
 	int index = 0;
+	float dx, dy = 0.0f;
 
 	for (int i = 0; i < nrLetters; i++) {
 		letter = text[i] - 32;
@@ -119,11 +120,13 @@ void Font::BuildVertexArray(void* vertices, const char* text, float drawPosX, fl
 			drawPosX += (3.0f * size);
 		}
 		else {
-			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX, drawPosY - (16 * size), 0.0f); //Bottom left
+			dx = float(this->fontChars[letter].size * size);
+			dy = (16.0f * size);
+			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX, drawPosY - dy, 0.0f); //Bottom left
 			verticesPtr[index].texture = DirectX::XMFLOAT2(this->fontChars[letter].left, 1.0f);
 			index++;
 
-			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX + (this->fontChars[letter].size * size), drawPosY, 0.0f); //Top right
+			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX + dx, drawPosY, 0.0f); //Top right
 			verticesPtr[index].texture = DirectX::XMFLOAT2(this->fontChars[letter].right, 0.0f);
 			index++;
 
@@ -131,19 +134,19 @@ void Font::BuildVertexArray(void* vertices, const char* text, float drawPosX, fl
 			verticesPtr[index].texture = DirectX::XMFLOAT2(this->fontChars[letter].left, 0.0f);
 			index++;
 
-			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX, drawPosY - (16 * size), 0.0f); //Bottom left
+			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX, drawPosY - dy, 0.0f); //Bottom left
 			verticesPtr[index].texture = DirectX::XMFLOAT2(this->fontChars[letter].left, 1.0f);
 			index++;
 
-			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX + (this->fontChars[letter].size * size), drawPosY - (16 * size), 0.0f); //Bottom right
+			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX + dx, drawPosY - dy, 0.0f); //Bottom right
 			verticesPtr[index].texture = DirectX::XMFLOAT2(this->fontChars[letter].right, 1.0f);
 			index++;
 
-			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX + (this->fontChars[letter].size * size), drawPosY, 0.0f); //Top right
+			verticesPtr[index].position = DirectX::XMFLOAT3(drawPosX + dx, drawPosY, 0.0f); //Top right
 			verticesPtr[index].texture = DirectX::XMFLOAT2(this->fontChars[letter].right, 0.0f);
 			index++;
 
-			drawPosX += (this->fontChars[letter].size * size) + (1.0f * size);
+			drawPosX += (dx + (1.0f * size));
 		}
 	}
 
