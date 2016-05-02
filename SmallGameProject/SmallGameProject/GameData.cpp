@@ -60,7 +60,7 @@ void GameData::shutdown()
 	single = nullptr;
 }
 
-void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
+void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
 	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
@@ -76,7 +76,11 @@ void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 	{
 		weaponArsenal[Modifiers::WEAPON::SHOTGUN];
 	}
+}
 
+void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
+{
+    //??
 }
 
 bool GameData::SavePlayerData(std::string filename)
@@ -88,7 +92,8 @@ bool GameData::SavePlayerData(std::string filename)
 	if (!saveFile.is_open()) {
 		return false;
 	}
-	else {
+	else 
+	{
 		saveFile << playerHighScore << "\r\n";
 		saveFile << playerHealth << "\r\n";
 		saveFile << playerMovmentSpeed << "\r\n";
@@ -110,7 +115,8 @@ bool GameData::LoadPlayerData(std::string filename)
 	if (!loadFile.is_open()) {
 		return false;
 	}
-	else {
+	else 
+	{
 
 		loadFile >> playerHighScore;
 		loadFile >> playerHealth;

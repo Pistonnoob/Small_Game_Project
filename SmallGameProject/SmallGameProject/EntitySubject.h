@@ -7,13 +7,15 @@ class EntitySubject : public Subject{
 
 	private:
 		std::set<Observer*> observers;
-		void notify(const Entity* entity, Events::ENTITY evnt);
 
 	public:
 		EntitySubject();
 		virtual ~EntitySubject();
+        void ShutDown();
 		virtual void addObserver(Observer* observer);
 		virtual void removeObserver(Observer* observer);
+        void notify(Entity* entity, Events::ENTITY evnt);
+        void notify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
 
 };
 

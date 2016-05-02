@@ -14,8 +14,8 @@ protected:
 public:
     ArcFire();
     virtual~ArcFire();
-    virtual void activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles);
-    virtual void update(std::vector<Projectile*>& projectiles, Model* projectileModel);
+    virtual void activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles);
+    virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 
 
@@ -28,8 +28,8 @@ private:
 public:
     SplitFire();
     virtual~SplitFire();
-    virtual void activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles);
-    virtual void update(std::vector<Projectile*>& projectiles, Model* projectileModel);
+    virtual void activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles);
+    virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 };
 
@@ -40,8 +40,8 @@ private:
 public:
     ReverseFire();
     virtual~ReverseFire();
-    virtual void activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles);
-    virtual void update(std::vector<Projectile*>& projectiles, Model* projectileModel);
+    virtual void activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos, float arc, int nrOfProjectiles);
+    virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 };
 

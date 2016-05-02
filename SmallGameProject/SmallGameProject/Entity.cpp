@@ -3,7 +3,7 @@
 Entity::Entity() {
 	this->entityModel = nullptr;
 	this->entityBV = nullptr;
-	this->entitySubject = EntitySubject();
+    this->entitySubject = nullptr;
 }
 
 Entity::~Entity()
@@ -33,8 +33,10 @@ bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	return true;
 }
 
-bool Entity::Initialize(Model * model, bool isSphere)
+bool Entity::Initialize(Model * model, EntitySubject* entitySubject, bool isSphere)
 {
+    this->entitySubject = entitySubject;
+
 	this->entityModel = model;
 
 	//Generate the Bounding volume
@@ -65,7 +67,20 @@ void Entity::Shutdown(bool isEnemy)
 	this->entityBV = nullptr;
 
 }
+void Entity::addObservers(Observer * observer)
+{
+    this->entitySubject->addObserver(observer);
+}
 
+DirectX::XMFLOAT3 Entity::getAimDir()
+{
+	return DirectX::XMFLOAT3(0,0,0);
+}
+
+Type Entity::getType()
+{
+    return this->myType;
+}
 Model* Entity::getModel()
 {
     return this->entityModel;
@@ -74,6 +89,7 @@ BoundingVolume* Entity::getBV()
 {
     return this->entityBV;
 }
+
 DirectX::XMFLOAT3 Entity::getPosition()
 {
     DirectX::XMFLOAT3 pos;

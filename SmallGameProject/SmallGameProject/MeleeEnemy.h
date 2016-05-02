@@ -11,7 +11,7 @@ public:
     MeleeEnemy(float posX, float posZ);
     virtual~MeleeEnemy();
 
-	bool Initialize(Model* model, bool isSphere);
+	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);
 	void Shutdown();
 };
 

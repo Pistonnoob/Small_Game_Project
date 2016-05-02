@@ -40,6 +40,9 @@ public:
 	void onNotify(const Entity* entity, Events::ENTITY evnt);
 	void onNotify(const Entity* entity, Events::ACHIEVEMENT achi);
 
+	void onNotify(Entity* entity, Events::ENTITY evnt);
+    void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
 

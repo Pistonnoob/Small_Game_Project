@@ -5,14 +5,18 @@ namespace Events {
 		CREATED,
 		IDLE,
 		MOVING,
-		DEAD
+		DEAD,
+        Fire
 	};
-
+    enum UNIQUE_FIRE {
+        ARCFIRE,
+        SPLITFIREONBULLETS,
+        REVERSERBULLETS,
+    };
 	enum STAGE {
 		STAGECOMPLETED,
 		STAGESTART,
 		STAGEEND
-
 	};
 
 	enum WAVE {
