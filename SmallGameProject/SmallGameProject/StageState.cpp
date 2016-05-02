@@ -137,6 +137,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
+        readFile();
 	}
 
 
@@ -233,29 +234,59 @@ void StageState::readFile()
 
     if (myFile.is_open())
     {
-        while (getline(myFile, line))
+        getline(myFile, line);
+        while (line.at(0) != ' ')
         {
-            std::stringstream ss(line);
+            wave waveTemp;
+            //getline(myFile, line);
             string waveLenght = "";
             string enemyType = "";
             string nrOfEnemies = "";
+
+
             if (line.at(0) == 't')
             {
                 size_t start = 1;
-                size_t end = line.find("");
-                waveLenght = line.substr(start, end);
+                size_t end = line.find("}");
+                waveLenght = line.substr(start, end - 1);
             }
-            else if(line.at(0) == '{')
-            {
-                size_t start = 1;
-                size_t end = line.find("*");
-                enemyType = line.substr(start, end);
+            std::stringstream ss(waveLenght);
+            ss >> waveTemp.time;
+            this->waves.push_back(waveTemp);
 
-                start = end + 1;
-                end = line.find("}");
-                nrOfEnemies = line.substr(start, end);
+            getline(myFile, line);
+            for (int i = 0; i < 4; i++)
+            {
+                toSpawn temp;
+                if (line.at(1) == '}')
+                {
+                    enemyType = "";
+                    nrOfEnemies = "00";
+                }
+                else if (line.at(0) == '{')
+                {
+                    size_t start = 1;
+                    size_t end = line.find("*");
+                    enemyType = line.substr(start, end - 1);
+
+                    size_t start2 = end + 1;
+                    size_t end2 = line.find("}");
+                    nrOfEnemies = line.substr(start2, end2 - 1);
+                }
+
+
+                temp.type = enemyType;
+
+                nrOfEnemies.pop_back();
+                std::stringstream ss2(nrOfEnemies);
+                ss2 >> temp.amount;
+                getline(myFile, line);
+
+                //this->wave.push_back(temp);
+                this->waves.at(this->waves.size() - 1).toSpawn.push_back(temp);
             }
 
         }
+
     }
 }

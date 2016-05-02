@@ -9,11 +9,17 @@
 #include "ProjectileHandler.h"
 #include "Weapon.h"
 
-struct wavePattern
+
+struct toSpawn
 {
-
+    string type;
+    int amount;
 };
-
+struct wave
+{
+    int time;
+    vector<toSpawn> toSpawn;
+};
 class StageState :
 	public GameState
 {
@@ -29,6 +35,8 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
+    //vector<toSpawn> wave;
+    vector<wave> waves;
 
 
     Ability* ability1;
