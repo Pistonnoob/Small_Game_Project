@@ -27,10 +27,10 @@ namespace Algorithm {
 	//A curve traced by a pofloat attached to a circle of radius r rolling around the inside of a fixed circle of radius R, where the pofloat is at a distance d from the center of the floaterior circle.
 	void GetHypotrochoid(float& x, float&y, float t, float bigR, float r, float d);
 
-	void GetSawtoothWave(int& x, int& y, int t, int period, int min, int max);
-	void GetTriangleWave(int & x, int & y, int t, int period, int min, int max);
-	void GetSquareWave(int & x, int & y, int t, int period, int min, int max);
-	void GetSineWave(int& x, int& y, int t, int period, int min, int max);
+	void GetSawtoothWave(int& x, int& y, float t, int period, int min, int max);
+	void GetTriangleWave(int & x, int & y, float t, int period, int min, int max);
+	void GetSquareWave(int & x, int & y, float t, int period, int min, int max);
+	void GetSineWave(int& x, int& y, float t, int period, int min, int max);
 	void GetSawtoothWave(float& x, float& y, float t, float period, float min, float max);
 	void GetTriangleWave(float & x, float & y, float t, float period, float min, float max);
 	void GetSquareWave(float & x, float & y, float t, float period, float min, float max);

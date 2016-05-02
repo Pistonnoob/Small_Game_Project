@@ -90,10 +90,10 @@ void Algorithm::GetHypotrochoid(float& x, float&y, float t, float bigR, float r,
 }
 
 
-void Algorithm::GetSawtoothWave(int& x, int& y, int t, int period, int min, int max)
+void Algorithm::GetSawtoothWave(int& x, int& y, float t, int period, int min, int max)
 {
 	x = t;
-	y = (t % period) * max + min;
+	y = (x % period) * max + min;
 }
 
 void Algorithm::GetTriangleWave(int & x, int & y, float t, int period, int min, int max)
