@@ -14,7 +14,7 @@ public:
     void Initialize(Model* model,EntitySubject* entitySubject, float posX, float posZ, DirectX::XMFLOAT3 moveDir);
     void Shutdown();
     virtual ~Projectile();
-    void update();
+    void update(float deltaTime);
     void setMoveDir(DirectX::XMFLOAT3 newMoveDir);
     void setPos(DirectX::XMFLOAT3 newPos);
     DirectX::XMFLOAT3 getOrigin();

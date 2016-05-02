@@ -36,8 +36,6 @@ private:	//Variables
     Ability* ability2;
     Ability* ability3;
 
-	Weapon testWeap;
-
 	bool exitStage;
 
 public:

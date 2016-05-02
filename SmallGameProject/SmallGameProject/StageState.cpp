@@ -45,6 +45,13 @@ void StageState::Shutdown()
 
     this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
+
+	this->playerPjHandler.ShutDown();
+	this->playerSubject.ShutDown();
+	this->hero->Shutdown();
+
+
+
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
@@ -54,10 +61,11 @@ void StageState::Shutdown()
 	}
 	this->enemies.clear();
 
+	
+
     delete this->ability1;
     delete this->ability2;
     delete this->ability3;
-
 	//Release your m_AI
 
 	GameState::Shutdown();
@@ -82,16 +90,14 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 			result = 1;
 
 
-
-
 		//Army thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
-		
 
 		//the hero will rise
  		this->hero->Initialize(device, deviceContext, "sphere1", false);
+		this->playerPjHandler.Initialize(device, deviceContext);
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -131,11 +137,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->ability1 = temp1;
 
 		SplitFire* temp2 = new SplitFire();
-		temp2->Initialize(3.14f, 3, 500, 50, 1, 400, 5, 3.14f / 2);
+		temp2->Initialize(3.14f, 3, 100, 50, 1, 50, 5, 3.14f / 2);
 		this->ability2 = temp2;
 
 		ReverseFire* temp3 = new ReverseFire();
-		temp3->Initialize(3.14f / 2, 15, 500, 50, 1, 400);
+		temp3->Initialize(3.14f / 2, 15, 100, 50, 1, 50);
 		this->ability3 = temp3;
 
 		//Place the ground beneeth your feet and thank the gods for their
@@ -191,8 +197,8 @@ int StageState::Update(float deltaTime)
 	int result = 1;
  
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
-	//this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
-    this->enemyPjHandler.update();
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
+    this->enemyPjHandler.update(deltaTime);
 
 	if (this->exitStage)
 	{

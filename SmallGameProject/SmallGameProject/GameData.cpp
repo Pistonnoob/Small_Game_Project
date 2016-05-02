@@ -30,7 +30,7 @@ GameData::~GameData()
 	//delete this->single;
 	for (int i = 0; i < 3; i++)
 	{
-		weaponArsenal[i].ShutDown();
+		weaponArsenal.at(i).ShutDown();
 	}
 	
 }

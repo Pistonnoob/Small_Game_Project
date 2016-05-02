@@ -28,7 +28,7 @@ public:
 	~ProjectileHandler();
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	void ShutDown();
-	void update();
+	void update(float deltaTime);
 	void render(GraphicHandler * gHandler, CameraHandler* camera);
 	bool intersectionTest(Entity* entity);
 	virtual void onNotify(Entity* entity, Events::ENTITY evnt);
