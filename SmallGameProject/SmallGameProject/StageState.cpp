@@ -179,8 +179,8 @@ int StageState::Update(float deltaTime)
 
 
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
-	//this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
-    this->enemyPjHandler.update();
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
+    this->enemyPjHandler.update(deltaTime);
 
 	if (this->exitStage)
 	{

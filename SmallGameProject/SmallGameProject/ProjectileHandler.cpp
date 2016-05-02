@@ -27,11 +27,11 @@ void ProjectileHandler::ShutDown()
 	this->projectiles.clear();
 
 }
-void ProjectileHandler::update()
+void ProjectileHandler::update(float deltaTime)
 {
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
-		this->projectiles.at(i)->update();
+		this->projectiles.at(i)->update(deltaTime);
 		DirectX::XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
 		if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
 		{
