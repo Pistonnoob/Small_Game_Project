@@ -34,7 +34,7 @@ public:
 					bool isSphere);
 	// Secoundary initialize for instancing
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);	
-	void Shutdown(bool isEnemy = false);
+	virtual void Shutdown(bool isEnemy = false);
     void addObservers(Observer* observer);
 	virtual DirectX::XMFLOAT3 getAimDir();
 

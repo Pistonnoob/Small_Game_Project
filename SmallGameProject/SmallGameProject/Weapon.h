@@ -24,7 +24,7 @@ public:
 	~Weapon();
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename);
-	void ShutDown();
+	virtual void ShutDown();
 
 	const Model* GetModel();
 

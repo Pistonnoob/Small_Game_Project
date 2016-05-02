@@ -41,7 +41,7 @@ private:	//Variables
 public:
 	StageState();
 	virtual ~StageState();
-	void Shutdown();
+	virtual void Shutdown();
 
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 

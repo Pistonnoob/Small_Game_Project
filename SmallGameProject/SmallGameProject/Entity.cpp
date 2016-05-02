@@ -55,14 +55,16 @@ bool Entity::Initialize(Model * model, EntitySubject* entitySubject, bool isSphe
 }
 
 void Entity::Shutdown(bool isEnemy)
-{
-	if (this->entityModel && !isEnemy) {
+ {
+	if (this->entityModel && !isEnemy) 
+	{
 		this->entityModel->Shutdown();
 		delete this->entityModel;
 		this->entityModel = nullptr;
 	}
 
-	if (this->entityBV) {
+	if (this->entityBV) 
+	{
 		delete this->entityBV;
 	}
 	this->entityBV = nullptr;

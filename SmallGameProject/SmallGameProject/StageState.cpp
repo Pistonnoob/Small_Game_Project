@@ -25,9 +25,6 @@ StageState::StageState()
 	
 	this->hero = new Player();
 
-    
-    
-
 	this->exitStage = false;
 }
 
@@ -48,8 +45,22 @@ void StageState::Shutdown()
 
 	this->playerPjHandler.ShutDown();
 	this->playerSubject.ShutDown();
-	this->hero->Shutdown();
+	
+	if (this->hero->getType() == Type::PLAYER)
+	{
+		Player* ptr = (Player*)this->hero;
+		ptr->Shutdown();
+	}
+	delete this->hero;
+	this->hero = nullptr;
 
+
+	/*
+	Player* ptr = dynamic_cast<Player*>(this->hero);
+	if (ptr != nullptr)
+		ptr->Shutdown();
+	*/
+	
 
 
 	//Release the enemies

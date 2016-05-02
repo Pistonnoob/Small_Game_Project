@@ -31,13 +31,12 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 
 void Player::Shutdown()
 {
-	Entity::Shutdown();
-
 	if (this->playerWeapon) {
 		this->playerWeapon->ShutDown();
 		delete this->playerWeapon;
 		this->playerWeapon = nullptr;
 	}
+	Entity::Shutdown(false);
 }
 
 void Player::moveRight()
