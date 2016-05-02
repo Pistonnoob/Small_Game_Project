@@ -144,7 +144,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	light.Position = DirectX::XMFLOAT4(0.0f, 2.0f, -4.0f, 1.0f);
-	light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.09f, 0.032f);
+	light.Attenuation = DirectX::XMFLOAT4(50.0f, 0.5f, 0.09f, 0.032f);
 	this->AddPointLight(light);
 
 	light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -163,14 +163,14 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	fieldOfView = (float)DirectX::XM_PI / 2.0f;
 
 	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(50.0f, 50.0f, 50.0f, 1.0f);
+	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(10.0f, 10.0f, 10.0f, 1.0f);
 	DirectX::XMVECTOR lightUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 
 	this->lightPos = DirectX::XMFLOAT4(10.0f, 10.0f, 0.0f, 1.0f);
 
-	this->lightView= DirectX::XMMatrixLookAtLH(lightPos, lookAt, lightUp);
-	//this->lightPerspective = DirectX::XMMatrixOrthographicLH(1024.0f, 1024.0f, SCREEN_NEAR, SCREEN_DEPTH);
-	this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
+	this->lightView = DirectX::XMMatrixLookAtLH(lightPos, lookAt, lightUp);
+	this->lightPerspective = DirectX::XMMatrixOrthographicLH(64.0f, 64.0f, SCREEN_NEAR, SCREEN_DEPTH);
+	//this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
 
 	return true;
 }
