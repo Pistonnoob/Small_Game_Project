@@ -72,8 +72,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 			result = 1;
 
 
-
-
 		//Army thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
@@ -118,11 +116,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->ability1 = temp1;
 
 		SplitFire* temp2 = new SplitFire();
-		temp2->Initialize(3.14f, 3, 500, 50, 1, 400, 5, 3.14f / 2);
+		temp2->Initialize(3.14f, 3, 100, 50, 1, 50, 5, 3.14f / 2);
 		this->ability2 = temp2;
 
 		ReverseFire* temp3 = new ReverseFire();
-		temp3->Initialize(3.14f / 2, 15, 500, 50, 1, 400);
+		temp3->Initialize(3.14f / 2, 15, 100, 50, 1, 50);
 		this->ability3 = temp3;
 
 		//Place the ground beneeth your feet and thank the gods for their

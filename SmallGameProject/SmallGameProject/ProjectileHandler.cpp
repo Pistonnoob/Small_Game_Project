@@ -21,8 +21,12 @@ void ProjectileHandler::ShutDown()
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
 		Projectile* temp = this->projectiles.at(i);
-		temp->Shutdown();
-		delete temp;
+        if (temp != nullptr)
+        {
+            temp->Shutdown();
+            delete temp;
+        }
+
 	}
 	this->projectiles.clear();
 
@@ -31,16 +35,21 @@ void ProjectileHandler::update(float deltaTime)
 {
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
-		this->projectiles.at(i)->update(deltaTime);
-		DirectX::XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
-		if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
-		{
-			Projectile* temp = this->projectiles.at(i);
-			temp->Shutdown();
-			delete temp;
-			this->projectiles.erase(projectiles.begin() + i);
-			i--;
-		}
+        if (this->projectiles.at(i) != nullptr)
+        {
+            this->projectiles.at(i)->update(deltaTime);
+            DirectX::XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
+            if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
+            {
+                Projectile* temp = this->projectiles.at(i);
+                temp->Shutdown();
+                delete temp;
+                this->projectiles.at(i) = nullptr;
+                //this->projectiles.erase(projectiles.begin() + i);
+                //i--;
+            }
+        }
+
 	}
 }
 void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)
@@ -49,11 +58,14 @@ void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)
 	DirectX::XMMATRIX worldMatrix;
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
-		pos = this->projectiles.at(i)->getPosition();
-		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->projectiles.at(i)->getModel()->SetWorldMatrix(worldMatrix);
+        if (this->projectiles.at(i) != nullptr)
+        {
+            pos = this->projectiles.at(i)->getPosition();
+            worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+            this->projectiles.at(i)->getModel()->SetWorldMatrix(worldMatrix);
 
-		gHandler->DeferredRender(this->projectiles.at(i)->getModel(), camera);
+            gHandler->DeferredRender(this->projectiles.at(i)->getModel(), camera);
+        }
 	}
 }
 bool ProjectileHandler::intersectionTest(Entity * entity)
@@ -164,35 +176,52 @@ void ProjectileHandler::fireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, 
 }
 void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBullets)
 {
+    int projectilesErased = 0;
 	DirectX::XMFLOAT3 dir;
 	DirectX::XMFLOAT3 pos;
 	for (int i = evnt.start; i < evnt.end; i++)
 	{
-		if (i >= this->projectiles.size())
-		{
-			break;
-		}
-		switch (evnt.type)
-		{
-		case(Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES) :
+        if (i >= this->projectiles.size())
+        {
+            break;
+        }
+        if (this->projectiles.at(i) == nullptr)
+        {
+            this->projectiles.erase(projectiles.begin() + i);
+            i--;
+            evnt.end--;
+            projectilesErased++;
+        }
+        else
+        {
+            switch (evnt.type)
+            {
+            case(Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES) :
 
-			dir = this->projectiles.at(i)->getMoveDir();
-			pos = this->projectiles.at(i)->getPos();
-			this->fireInArc(pos, dir, arc, nrOfBullets);
+                dir = this->projectiles.at(i)->getMoveDir();
+                pos = this->projectiles.at(i)->getPos();
+                this->fireInArc(pos, dir, arc, nrOfBullets);
 
-			break;
-		case(Events::ABILITY_TRIGGER::REVERSER_PROJECTILES) :
+                break;
+            case(Events::ABILITY_TRIGGER::REVERSER_PROJECTILES) :
 
-			dir = this->projectiles.at(i)->getMoveDir();
+                dir = this->projectiles.at(i)->getMoveDir();
 
-			dir.x *= -1;
-			dir.y *= -1;
-			dir.z *= -1;
+                dir.x *= -1;
+                dir.y *= -1;
+                dir.z *= -1;
 
-			this->projectiles.at(i)->setMoveDir(dir);
+                this->projectiles.at(i)->setMoveDir(dir);
 
-			break;
-		}
+                break;
+            }
+        }
+
 	}
+    for (int i = 0; i < this->eventsToTrack.size(); i++)
+    {
+        this->eventsToTrack.at(i).start -= projectilesErased;
+        this->eventsToTrack.at(i).end -= projectilesErased;
+    }
 }
 
