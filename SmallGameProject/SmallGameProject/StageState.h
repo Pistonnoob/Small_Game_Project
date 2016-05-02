@@ -8,6 +8,7 @@
 #include "EntitySubject.h"
 #include "ProjectileHandler.h"
 #include "Weapon.h"
+#include "Player.h"
 
 class StageState :
 	public GameState
@@ -15,6 +16,7 @@ class StageState :
 private:	//Variables
 	CameraHandler myCamera;
     ProjectileHandler enemyPjHandler;
+
 	
 	Model m_car;
     Model m_ball;
@@ -22,6 +24,11 @@ private:	//Variables
 
     EntitySubject enemySubject;
 
+	//player variables
+	EntitySubject playerSubject;
+	ProjectileHandler playerPjHandler;
+	Entity* hero;
+	
 	Ai m_AI;
 	vector<Enemy*> enemies;
 

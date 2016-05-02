@@ -14,10 +14,19 @@ StageState::StageState()
 	this->m_ground = Model();
 	this->m_AI = Ai();
 
+	this->enemySubject = EntitySubject();
     this->enemyPjHandler = ProjectileHandler();
+	this->enemySubject.addObserver(&this->enemyPjHandler);
+	
 
-    this->enemySubject = EntitySubject();
-    this->enemySubject.addObserver(&this->enemyPjHandler);
+	this->playerSubject = EntitySubject();
+	this->playerPjHandler = ProjectileHandler();
+	this->playerSubject.addObserver(&this->playerPjHandler);
+	
+	this->hero = new Player();
+
+    
+    
 
 	this->exitStage = false;
 }
@@ -80,8 +89,9 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
 		
-		this->testWeap.Initialize(device, deviceContext, "string");
 
+		//the hero will rise
+ 		this->hero->Initialize(device, deviceContext, "sphere1", true);
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -220,6 +230,13 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
 	}
+
+	pos = this->hero->getPosition();
+	worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+	this->m_car.SetWorldMatrix(worldMatrix);
+
+	gHandler->DeferredRender(this->hero->getModel(), &this->myCamera);
+	
     this->enemyPjHandler.render(gHandler, &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);

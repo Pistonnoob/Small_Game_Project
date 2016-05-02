@@ -8,7 +8,6 @@ Player::Player() : Actor()
 	this->playerHighScore = 0;
 
 	this->playerWeapon = new Weapon();
-	this->playerWeapon = nullptr;
 }
 
 Player::~Player()
@@ -65,4 +64,9 @@ void Player::move(DirectX::XMFLOAT3 moveVec)
 {
 	this->posX += moveVec.x;
 	this->posZ += moveVec.z;
+}
+
+void Player::fire()
+{
+	playerWeapon->shootWeapon(this);
 }

@@ -28,6 +28,7 @@ public:
 	virtual void moveUp();
 	virtual void moveDown();
 	virtual void move(DirectX::XMFLOAT3 moveVec);
+	virtual void fire();
 };
 
 #endif
