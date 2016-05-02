@@ -46,22 +46,12 @@ void StageState::Shutdown()
 	this->playerPjHandler.ShutDown();
 	this->playerSubject.ShutDown();
 	
-	if (this->hero->getType() == Type::PLAYER)
-	{
-		Player* ptr = (Player*)this->hero;
-		ptr->Shutdown();
-	}
+	//typecasting to player
+	Player* ptr = static_cast<Player*>(this->hero);
+	ptr->Shutdown();
+
 	delete this->hero;
 	this->hero = nullptr;
-
-
-	/*
-	Player* ptr = dynamic_cast<Player*>(this->hero);
-	if (ptr != nullptr)
-		ptr->Shutdown();
-	*/
-	
-
 
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
