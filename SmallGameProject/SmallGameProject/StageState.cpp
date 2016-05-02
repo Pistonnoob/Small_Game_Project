@@ -48,7 +48,6 @@ void StageState::Shutdown()
     delete this->ability1;
     delete this->ability2;
     delete this->ability3;
-
 	//Release your m_AI
 
 	GameState::Shutdown();
@@ -79,8 +78,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_AI = Ai();
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
-		
-		this->testWeap.Initialize(device, deviceContext, "string");
 
 
 		//Form thy armies from the clay!
@@ -180,9 +177,6 @@ int StageState::Update(float deltaTime)
 {
 	int result = 1;
 
-	this->enemies.at(0)->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
-
-	this->testWeap.shootWeapon(this->enemies.at(0));
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->enemyPjHandler.update(deltaTime);

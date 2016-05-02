@@ -25,8 +25,8 @@ void Projectile::Shutdown()
 }
 void Projectile::update(float deltaTime)
 {
-    this->posX += this->moveDir.x * deltaTime;
-    this->posZ += this->moveDir.z * deltaTime;
+    this->posX += this->moveDir.x * (deltaTime / 10000);
+    this->posZ += this->moveDir.z * (deltaTime / 10000);
 }
 void Projectile::setMoveDir(DirectX::XMFLOAT3 newMoveDir)
 {
