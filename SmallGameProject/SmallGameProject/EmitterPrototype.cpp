@@ -247,9 +247,10 @@ void EmitterPrototype::EmitParticles(float dT)
 
 	// Check if it is time to emit a new particle or not.
 	float particleThresshold = (1000.0f / this->particlesPerSecond);
+	float timeOverflow = dT;
 	while (this->accumulatedTime > particleThresshold)
 	{
-		float timeOverflow = dT - (1000.0f / this->particlesPerSecond);
+		timeOverflow = timeOverflow - particleThresshold;
 		this->accumulatedTime = this->accumulatedTime - particleThresshold;
 
 
@@ -322,6 +323,7 @@ void EmitterPrototype::EmitParticles(float dT)
 			this->particles[index].active = true;
 			this->particles[index].scale = 2.0f;
 			this->particles[index].rotation = 0.0f;
+			this->particles[index].time = timeOverflow / 1000;
 
 			this->currentParticleCnt++;
 		}
