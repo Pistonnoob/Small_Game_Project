@@ -1,25 +1,26 @@
 #ifndef EMITTERPTROTOTYPE_H
 #define EMITTERPROTOTYPE_H
 #include "ParticleEmitter.h"
+#include "Particle.h"
 #include <algorithm>
 class EmitterPrototype :
 	public ParticleEmitter
 {
 private:
 
-	struct Particle {
-		float x, y, z, scale;
-		float r, g, b, rotation;
-		float velocity;
-		//Not the true distance but close enough
-		float cameraDistance;
-		bool active;
+	//struct Particle {
+	//	float x, y, z, scale;
+	//	float r, g, b, rotation;
+	//	float velocity;
+	//	//Not the true distance but close enough
+	//	float cameraDistance;
+	//	bool active;
 
-		bool operator<(const Particle& that)const {
-			//Sort in reverse order distance from camera > being optimal
-			return this->cameraDistance > that.cameraDistance;
-		}
-	};
+	//	bool operator<(const Particle& that)const {
+	//		//Sort in reverse order distance from camera > being optimal
+	//		return this->cameraDistance > that.cameraDistance;
+	//	}
+	//};
 
 
 	float particleDeviationX, particleDeviationY, particleDeviationZ, particleVelocityVariation;

@@ -216,6 +216,9 @@
     <ClCompile Include="EmitterPrototype.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -375,6 +378,9 @@
       <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
     <ClInclude Include="EmitterPrototype.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
   </ItemGroup>

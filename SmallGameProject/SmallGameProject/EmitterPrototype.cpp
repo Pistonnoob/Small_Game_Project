@@ -144,8 +144,8 @@ bool EmitterPrototype::InitializeEmitter()
 	this->particleVelocityVariation = 2.0f;
 
 	this->particleSize = 0.2f;
-	this->particlesPerSecond = 600.0f;
-	this->maxParticles = 5000;
+	this->particlesPerSecond = 60.0f;
+	this->maxParticles = 800;
 
 	this->particles = new Particle[this->maxParticles];
 	if (!this->particles)
@@ -264,14 +264,16 @@ void EmitterPrototype::EmitParticles(float dT)
 
 
 	// If there are particles to emit then emit one per frame.
-	if ((emitParticle == true) && (this->currentParticleCnt < (this->maxParticles - 1)))
+	if ((emitParticle == true) && (this->currentParticleCnt < (this->maxParticles /*- 1*/)))
 	{
-		this->currentParticleCnt++;
 
 		// Now generate the randomized particle properties.
 		positionX = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationX;
 		positionY = 20.0f + (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
 		positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationZ;
+		positionX = 0.0f;
+		positionY = 10.0f;
+		positionZ = 0.0f;
 		velocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * particleVelocityVariation;
 		/*positionY = 20.0f;
 		positionZ = 0.0f;
@@ -279,9 +281,9 @@ void EmitterPrototype::EmitParticles(float dT)
 		red = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		green = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		blue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		/*red = 0.0f;
+		red = 0.0f;
 		green = 0.0f;
-		blue = 1.0f;*/
+		blue = 1.0f;
 
 		// Now since the particles need to be rendered from back to front for blending we have to sort the particle array.
 		// We will sort using Z depth so we need to find where in the list the particle should be inserted.
@@ -329,6 +331,8 @@ void EmitterPrototype::EmitParticles(float dT)
 		this->particles[index].active = true;
 		this->particles[index].scale = 2.0f;
 		this->particles[index].rotation = 0.0f;
+
+		this->currentParticleCnt++;
 	}
 
 	return;
@@ -337,9 +341,22 @@ void EmitterPrototype::EmitParticles(float dT)
 void EmitterPrototype::UpdateParticles(float dT)
 {
 	// Each frame we update all the particles by making them move downwards using their position, velocity, and the frame time.
-	for (int i = 0; i<this->currentParticleCnt; i++)
+	/*for (int i = 0; i<this->currentParticleCnt; i++)
 	{
 		this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
+	}*/
+	for (int i = 0; i<this->currentParticleCnt; i++)
+	{
+		this->particles[i].time += dT / (500);
+		//this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
+		float x = 0, y = 0;
+		float period = 2.0f, min = -6.0f, max = 8.0f;
+		float time = this->particles[i].time;
+		//Algorithm::GetSawtoothWave(x, y, this->particles[i].time, period, min, max);
+		//Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
+		Algorithm::GetHypotrochoid(x, y, time, 6, 2, 4);
+		this->particles[i].x = x;
+		this->particles[i].y = y;
 	}
 
 	return;
@@ -351,7 +368,7 @@ void EmitterPrototype::KillParticles()
 	for (int i = 0; i < this->maxParticles; i++)
 	{
 		//The conditions for killing / restarting the particle
-		if (this->particles[i].active && this->particles[i].y < -3.0f)
+		if (this->particles[i].active && this->particles[i].y < -800000000.0f)
 		{
 			//moce the last used particle to this one
 			this->particles[i] = this->particles[this->currentParticleCnt];
