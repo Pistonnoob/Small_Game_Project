@@ -127,7 +127,7 @@ bool EmitterPrototype::InitializeEmitter()
 
 	this->particleSize = 0.2f;
 	this->particlesPerSecond = 4.0f;
-	this->maxParticles = 100;
+	this->maxParticles = 10;
 
 	this->particles = new Particle[this->maxParticles];
 	if (!this->particles)
@@ -313,7 +313,7 @@ void EmitterPrototype::EmitParticles(float dT)
 			this->particles[index].velocity = velocity;
 			this->particles[index].active = true;
 			this->particles[index].scale = 1.0f;
-			this->particles[index].uCoord = 0.25f;
+			this->particles[index].uCoord = 0.50f;
 			this->particles[index].time = this->accumulatedTime;
 
 			this->currentParticleCnt++;
@@ -343,7 +343,7 @@ void EmitterPrototype::UpdateParticles(float dT)
 		Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
 		//Algorithm::GetTriangleWave(x, y, time, period, min, max);
 		this->particles[i].x = x;
-		this->particles[i].y = y;
+		this->particles[i].z = y;
 	}
 
 	return;
