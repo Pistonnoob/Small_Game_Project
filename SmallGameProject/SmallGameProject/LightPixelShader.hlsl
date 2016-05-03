@@ -9,6 +9,7 @@ Texture2D worldPosTexture: register(t4);
 Texture2D shadowMapTexture: register(t5);
 
 SamplerState pointSampler : register(s0);
+SamplerState shadowSampler : register(s1);
 
 cbuffer LightMatrixBuffer : register(b0)
 {
@@ -62,7 +63,7 @@ float4 main(PSInput input) : SV_TARGET
 	//float4 lightPos = (10.0f, 10.0f, 0.0f, 1.0f);
 
 	// Set the bias value for fixing the floating point precision issues.
-	float bias = 0.00002f;
+	float bias = 0.00005f;
 
 	//Sample the diffuse texture from deferred render
 	diffColor = diffTexture.Sample(pointSampler, textCoords);
@@ -83,10 +84,8 @@ float4 main(PSInput input) : SV_TARGET
 	float3 outVec = normalize(-Position[0]);
 
 	//Move the position to projection space for the light
-	positionLight = mul(worldPos, lightViewMatrix);
-	positionLight = mul(positionLight, lightProjectionMatrix);
-
-	
+	positionLight = mul(lightViewMatrix, worldPos);
+	positionLight = mul(lightProjectionMatrix, positionLight);
 
 	//calculate the projected texture coordinate
 	shadowUV.x = (positionLight.x / positionLight.w) * 0.5f + 0.5f;
@@ -107,7 +106,7 @@ float4 main(PSInput input) : SV_TARGET
 		lightDepthValue = positionLight.z / positionLight.w;
 
 		//sample the shadowmap
-		depthValue = shadowMapTexture.Sample(pointSampler, shadowUV).r;
+		depthValue = shadowMapTexture.Sample(shadowSampler, shadowUV).r;
 
 		// Subtract the bias from the lightDepthValue.
 		lightDepthValue = lightDepthValue - bias;

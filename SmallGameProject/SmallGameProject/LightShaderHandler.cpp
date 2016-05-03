@@ -140,6 +140,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 	}
 
 	//Fill the texture sampler state description
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -162,6 +163,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 		return false;
 	}
 
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -176,7 +178,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	hresult = device->CreateSamplerState(&samplerDesc, &this->samplerState);
+	hresult = device->CreateSamplerState(&samplerDesc, &this->shadowSamplerState);
 
 	if (FAILED(hresult))
 	{
@@ -210,6 +212,11 @@ void LightShaderHandler::Shutdown()
 	if (this->samplerState) {
 		this->samplerState->Release();
 		this->samplerState = nullptr;
+	}
+	//Release shadow sampler state
+	if (this->shadowSamplerState) {
+		this->shadowSamplerState->Release();
+		this->shadowSamplerState = nullptr;
 	}
 	//Release matrix constant buffer
 	if (this->matrixBuffer) {
@@ -304,11 +311,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	LightsCB* dataPtrL;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	params->worldMatrix = DirectX::XMMatrixTranspose(params->worldMatrix);
+	/*params->worldMatrix = DirectX::XMMatrixTranspose(params->worldMatrix);
 	params->viewMatrix = DirectX::XMMatrixTranspose(params->viewMatrix);
 	params->projectionMatrix = DirectX::XMMatrixTranspose(params->projectionMatrix);
 	params->lightViewMatrix = DirectX::XMMatrixTranspose(params->lightViewMatrix);
-	params->lightProjectionMatrix = DirectX::XMMatrixTranspose(params->lightProjectionMatrix);
+	params->lightProjectionMatrix = DirectX::XMMatrixTranspose(params->lightProjectionMatrix);*/
 
 	ZeroMemory(&mappedResource, sizeof(mappedResource));
 	//Map the constant buffer so we can write to it (denies GPU access)
@@ -379,7 +386,7 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 
 	if (params->shadowTexture)
 	{
-		deviceContext->PSSetShaderResources(5,1, &params->shadowTexture);
+		deviceContext->PSSetShaderResources(5, 1, &params->shadowTexture);
 	}
 
 	return true;
@@ -396,6 +403,7 @@ void LightShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int in
 	deviceContext->PSSetShader(this->pixelShader, NULL, 0);
 	//Set the sampler state in pixel shader
 	deviceContext->PSSetSamplers(0, 1, &this->samplerState);
+	deviceContext->PSSetSamplers(1, 1, &this->shadowSamplerState);
 
 	//Render the triangle
 	deviceContext->DrawIndexed(indexCount, 0, 0);

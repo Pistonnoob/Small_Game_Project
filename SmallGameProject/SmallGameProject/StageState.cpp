@@ -81,6 +81,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 8.0f, -50.0f));
 
+
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
@@ -115,14 +116,14 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		/*this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
-		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
-		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
-		 
-		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		// 
+		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
 		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
         this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);*/
@@ -140,7 +141,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (!result) {
 			return false;
 		}
-		this->m_ground.SetColor(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+		this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
 
 		DirectX::XMMATRIX worldMatrix;
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
