@@ -329,7 +329,6 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 
 	//Copy the matrices to the constant buffer
 
-	dataPtrM->world = params->worldMatrix;
 	dataPtrM->view = params->viewMatrix;
 	dataPtrM->projection = params->projectionMatrix;
 	dataPtrM->lightView = params->lightViewMatrix;

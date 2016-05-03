@@ -221,7 +221,6 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 		this->activeRTV = 2;
 	}
 	LightShaderParameters* shaderParams = new LightShaderParameters;
-	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	shaderParams->viewMatrix = this->baseViewMatrix;
 	shaderParams->projectionMatrix = this->orthographicMatrix;
 	shaderParams->lightViewMatrix = this->lightView;

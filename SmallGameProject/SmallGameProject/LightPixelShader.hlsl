@@ -13,7 +13,6 @@ SamplerState shadowSampler : register(s1);
 
 cbuffer LightMatrixBuffer : register(b0)
 {
-	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
 	matrix lightViewMatrix;
