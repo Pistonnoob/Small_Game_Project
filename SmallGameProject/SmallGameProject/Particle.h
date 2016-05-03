@@ -6,7 +6,7 @@ class Particle
 public:
 	//Variables
 	float x, y, z, scale;
-	float r, g, b, uCoord;
+	float r, g, b, rotation;
 	float velocity;
 	//Not the true distance but close enough
 	float cameraDistance;
