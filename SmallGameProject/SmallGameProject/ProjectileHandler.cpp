@@ -140,6 +140,9 @@ void ProjectileHandler::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, 
 		}
 	}
 }
+void ProjectileHandler::onNotify(Entity * entity, Events::PICKUP evnt)
+{
+}
 void ProjectileHandler::fireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float arc, int nrOfBullets)
 {
 	float x = dir.x;

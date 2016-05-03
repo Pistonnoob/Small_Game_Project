@@ -9,6 +9,7 @@
 #include "ProjectileHandler.h"
 #include "Weapon.h"
 #include "Player.h"
+#include "GameData.h"
 
 
 struct Wave
@@ -36,8 +37,8 @@ private:	//Variables
     EntitySubject enemySubject;
 
 	//player variables
-	EntitySubject* playerSubject;
-	ProjectileHandler playerPjHandler;
+	EntitySubject playerSubject;
+	ProjectileHandler playerProjectile;
 	Player* hero;
 	
 	Ai m_AI;

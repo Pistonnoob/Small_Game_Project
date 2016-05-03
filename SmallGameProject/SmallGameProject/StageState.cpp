@@ -17,14 +17,14 @@ StageState::StageState()
 	this->enemySubject = EntitySubject();
     this->enemyPjHandler = ProjectileHandler();
 	this->enemySubject.addObserver(&this->enemyPjHandler);
-	
 
-	this->playerSubject = new EntitySubject();
-	this->playerPjHandler = ProjectileHandler();
-	this->playerSubject->addObserver(&this->playerPjHandler);
+	this->playerSubject = EntitySubject();
+	this->playerProjectile = ProjectileHandler();
+
+	this->playerSubject.addObserver(&this->playerProjectile);
+	this->playerSubject.addObserver(GameData::getInstance());
 	
 	this->hero = new Player();
-
 	this->exitStage = false;
 }
 
@@ -43,10 +43,8 @@ void StageState::Shutdown()
     this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
 
-	this->playerPjHandler.ShutDown();
-	this->playerSubject->ShutDown();
-	delete this->playerSubject;
-	this->playerSubject = nullptr;
+	this->playerSubject.ShutDown();
+	this->playerProjectile.ShutDown();
 	
 	this->hero->Shutdown();
 	delete this->hero;
@@ -94,11 +92,12 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_AI = Ai();
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
+		
 
 		//the hero will rise
- 		this->hero->Initialize(device, deviceContext, "sphere1","ogreFullG", false, this->playerSubject);
-		this->playerPjHandler.Initialize(device, deviceContext);
-
+ 		this->hero->Initialize(device, deviceContext, "sphere1","ogreFullG", false, &this->playerSubject);
+		this->playerProjectile.Initialize(device, this->m_deviceContext);
+		
 		//Form thy armies from the clay!
 		this->m_car = Model();
         this->m_ball = Model();
@@ -177,7 +176,7 @@ int StageState::HandleInput(InputHandler * input)
 	{
 		//this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
 	    //how do I update this shiet
-		//this->hero->fire();
+		this->hero->getEntitySubject()->notify(this->hero, Events::PICKUP::POWERUP_PICKUP);
 	}
 	this->ability1->update(this->enemies.at(0), &this->enemySubject);
 
@@ -206,7 +205,7 @@ int StageState::Update(float deltaTime)
 	
 	this->hero->fire(deltaTime);
 
-	this->playerPjHandler.update(deltaTime);
+	this->playerProjectile.update(deltaTime);
 
 	if (this->exitStage)
 	{
@@ -260,7 +259,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->DeferredRender(this->hero->getPlayerWeapon()->GetModel(), &this->myCamera);
 	
 	//render shots
-	playerPjHandler.render(gHandler, &this->myCamera);
+	this->playerProjectile.render(gHandler, &this->myCamera);
 
     this->enemyPjHandler.render(gHandler, &this->myCamera);
 

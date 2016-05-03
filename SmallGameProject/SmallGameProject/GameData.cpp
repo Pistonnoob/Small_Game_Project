@@ -59,6 +59,11 @@ void GameData::shutdown()
 	single = nullptr;
 }
 
+void GameData::Update(float deltaTime)
+{
+
+}
+
 void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
@@ -87,6 +92,19 @@ void GameData::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc
 	//helloooooooo
 }
 
+void GameData::onNotify(Entity * entity, Events::PICKUP evnt)
+{
+	Player* ptr = nullptr;
+
+	ptr = dynamic_cast<Player*>(entity);
+
+	//här behöver avgöras vad som tas upp upp
+
+
+	//resulterar till:
+	ptr->setPowerUp(Modifiers::POWERUPS::SPREAD);
+}
+
 bool GameData::SavePlayerData(std::string filename)
 {
 	std::ofstream saveFile;
@@ -108,6 +126,7 @@ bool GameData::SavePlayerData(std::string filename)
 	}
 	return true;
 }
+
 bool GameData::LoadPlayerData(std::string filename)
 {
 	std::ifstream loadFile;
@@ -130,6 +149,11 @@ bool GameData::LoadPlayerData(std::string filename)
 	}
 
 	return true;
+}
+
+void GameData::render(GraphicHandler * gHandler, CameraHandler * camera)
+{
+	system("pause");
 }
 
 Weapon * GameData::getWeapon(int weaponEnum)

@@ -3,7 +3,6 @@
 Entity::Entity() {
 	this->entityModel = nullptr;
 	this->entityBV = nullptr;
-    this->entitySubject = nullptr;
 }
 
 Entity::~Entity()

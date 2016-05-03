@@ -29,10 +29,6 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	PowerUp penetration = PowerUp();
 	PowerUp weave = PowerUp();
 
-	spread.setTimePowerup(10);
-	penetration.setTimePowerup(10);
-	weave.setTimePowerup(10);
-
 
 	this->powerups.push_back(spread);
 	this->powerups.push_back(penetration);
@@ -58,6 +54,11 @@ Weapon * Player::getPlayerWeapon()
 
 void Player::PowerPickup(const int & POWER_ENUM)
 {
+}
+
+void Player::setPowerUp(Modifiers::POWERUPS powerUp)
+{
+	this->powerups.at(powerUp).setTimePowerup(10);
 }
 
 void Player::moveRight()
@@ -94,17 +95,11 @@ void Player::fire(const float &deltaT)
 	{
 		playerWeapon->shootWeapon(this);
 	}
-	else if(this->powerups.at(1).Update(deltaT) == true)
-	{
-		this->setAimDir(DirectX::XMFLOAT3(0, 0, -1));
-		playerWeapon->shootWeapon(this);
-	}
-
 }
 
 void Player::fire()
 {
-	this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
+	//this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
 
-	playerWeapon->shootWeapon(this);
+	//playerWeapon->shootWeapon(this);
 }

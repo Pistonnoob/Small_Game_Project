@@ -17,6 +17,8 @@ class EntitySubject : public Subject{
         void notify(Entity* entity, Events::ENTITY evnt);
         void notify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
 		void notify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+		
+		void EntitySubject::notify(Entity* entity, Events::PICKUP evnt);
 
 };
 

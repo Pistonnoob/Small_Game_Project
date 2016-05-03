@@ -26,6 +26,7 @@ bool PowerUp::Update(float dt)
 	bool activePow = true;
 	//dt är förgången tid per frame
 	this->timeLeft -= convTime;
+	
 	if (this->timeLeft < 0.0f)
 	{
 		activePow = false;

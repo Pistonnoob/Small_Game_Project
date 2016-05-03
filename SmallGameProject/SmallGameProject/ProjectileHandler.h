@@ -34,6 +34,7 @@ public:
 	virtual void onNotify(Entity* entity, Events::ENTITY evnt);
 	virtual void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
 	virtual void onNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	virtual void onNotify(Entity* entity, Events::PICKUP evnt);
 
 	void fireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float arc, int nrOfBullets);
 

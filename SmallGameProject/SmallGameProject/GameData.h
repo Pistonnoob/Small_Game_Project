@@ -7,6 +7,8 @@
 #include "Modifiers.h"
 #include "Weapon.h"
 #include <vector> 
+#include "Player.h"
+#include "GameState.h"
 
 class GameData : public Observer
 {
@@ -32,9 +34,11 @@ private:
 	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
 public:
 	virtual ~GameData();
+
 	static GameData* getInstance();
 
 	void shutdown();
+	void Update(float deltaTime);
 
 	void onNotify(const Entity* entity, Events::ENTITY evnt);
 	void onNotify(const Entity* entity, Events::ACHIEVEMENT achi);
@@ -43,8 +47,12 @@ public:
 	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
 	void onNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
 
+	void onNotify(Entity* entity, Events::PICKUP evnt);
+
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
+
+	void render(GraphicHandler * gHandler, CameraHandler* camera);
 
 	Weapon* getWeapon(int weaponEnum);
 };

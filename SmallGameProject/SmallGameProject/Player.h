@@ -30,6 +30,8 @@ public:
 	Weapon* getPlayerWeapon();
 	void PowerPickup(const int &POWER_ENUM);
 
+	void setPowerUp(Modifiers::POWERUPS powerUp);
+
 
 
 	virtual void moveRight();
