@@ -126,7 +126,7 @@ bool EmitterPrototype::InitializeEmitter()
 	this->particleVelocityVariation = 2.0f;
 
 	this->particleSize = 0.2f;
-	this->particlesPerSecond = 2.0f;
+	this->particlesPerSecond = 4.0f;
 	this->maxParticles = 100;
 
 	this->particles = new Particle[this->maxParticles];
@@ -312,8 +312,8 @@ void EmitterPrototype::EmitParticles(float dT)
 			this->particles[index].b = blue;
 			this->particles[index].velocity = velocity;
 			this->particles[index].active = true;
-			this->particles[index].scale = 2.0f;
-			this->particles[index].uCoord = 0.0f;
+			this->particles[index].scale = 1.0f;
+			this->particles[index].uCoord = 0.25f;
 			this->particles[index].time = this->accumulatedTime;
 
 			this->currentParticleCnt++;
