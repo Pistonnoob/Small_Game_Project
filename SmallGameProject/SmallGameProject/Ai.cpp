@@ -21,7 +21,7 @@ void Ai::updateActors(std::vector<Enemy*>& actors, DirectX::XMFLOAT3 playerPos)
 }
 void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    BomberEnemy* ptr = nullptr;
+    /*BomberEnemy* ptr = nullptr;
     ptr = dynamic_cast<BomberEnemy*>(actor);
     if (ptr != nullptr)
     {
@@ -46,7 +46,27 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos)
             }
         }
 
-    }
+    }*/
+	if (actor->getType() == Type::BOMBER)
+	{
+		BomberEnemy* bPtr = (BomberEnemy*)actor;
+		updateBomber(bPtr, playerPos);
+	}
+	else if (actor->getType() == Type::RANGED)
+	{
+		RangedEnemy* bPtr = (RangedEnemy*)actor;
+		updateRange(bPtr, playerPos);
+	}
+	else if(actor->getType() == Type::MELEEE)
+	{
+		MeleeEnemy* bPtr = (MeleeEnemy*)actor;
+		updateMelee(bPtr, playerPos);
+	}
+	else
+	{
+
+	}
+
     if (commands.size() != 0)
     {
         //int action = rand() % commands.size();
