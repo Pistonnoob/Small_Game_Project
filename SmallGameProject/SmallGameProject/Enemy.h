@@ -4,6 +4,7 @@
 #include "Actor.h"
 
 static float BASE_ATTACK_DELAY = 0.5f;
+static float MOVEMENT_SPEED = 10.0f;
 
 
 

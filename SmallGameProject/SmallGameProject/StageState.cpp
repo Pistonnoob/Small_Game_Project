@@ -137,11 +137,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->ability1 = temp1;
 
 		SplitFire* temp2 = new SplitFire();
-		temp2->Initialize(3.14f, 3, 15, 10, 1, 12, 5, 3.14f / 2);
+		temp2->Initialize(3.14f, 3, 15, 10, 3, 12, 5, 3.14f / 2);
 		this->ability2 = temp2;
 
 		ReverseFire* temp3 = new ReverseFire();
-		temp3->Initialize(3.14f / 2, 15, 10, 50, 1, 12);
+		temp3->Initialize(3.14f / 2, 15, 10, 50, 3, 12);
 		this->ability3 = temp3;
 
 		//Place the ground beneeth your feet and thank the gods for their
@@ -195,16 +195,16 @@ int StageState::HandleInput(InputHandler * input)
 int StageState::Update(float deltaTime)
 {
 	int result = 1;
-
-	this->ability1->update(this->enemies.at(0), &this->enemySubject, deltaTime);
-	this->ability2->update(this->enemies.at(0), &this->enemySubject, deltaTime);
-	this->ability3->update(this->enemies.at(0), &this->enemySubject, deltaTime);
+	float newDT = deltaTime / 1000000;
+	this->ability1->update(this->enemies.at(0), &this->enemySubject, newDT);
+	this->ability2->update(this->enemies.at(0), &this->enemySubject, newDT);
+	this->ability3->update(this->enemies.at(0), &this->enemySubject, newDT);
 	
 
-	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), deltaTime);
-    this->enemyPjHandler.update(deltaTime);
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), newDT);
+    this->enemyPjHandler.update(newDT);
 
-	this->playerPjHandler.update(deltaTime);
+	this->playerPjHandler.update(newDT);
 
 	if (this->exitStage)
 	{

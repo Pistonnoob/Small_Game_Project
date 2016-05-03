@@ -11,19 +11,19 @@ Enemy::~Enemy()
 
 void Enemy::moveRight(float deltaTime)
 {
-    this->posX += 0.05f;
+    this->posX += MOVEMENT_SPEED * deltaTime;
 }
 void Enemy::moveLeft(float deltaTime)
 {
-    this->posX -= 0.05f;
+    this->posX -= MOVEMENT_SPEED * deltaTime;
 }
 void Enemy::moveUp(float deltaTime)
 {
-    this->posZ += 0.05f;
+    this->posZ += MOVEMENT_SPEED * deltaTime;
 }
 void Enemy::moveDown(float deltaTime)
 {
-    this->posZ -= 0.05f;
+	this->posZ -= MOVEMENT_SPEED * deltaTime;
 }
 void Enemy::fire(float deltaTime)
 {
@@ -34,7 +34,7 @@ void Enemy::fire(float deltaTime)
     }
     else
     {
-        this->attackCD += 1 * (deltaTime / 1000000);
+        this->attackCD += 1.0f * deltaTime;
     }
 }
 void Enemy::move(DirectX::XMFLOAT3 moveVec)

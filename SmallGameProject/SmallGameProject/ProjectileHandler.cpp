@@ -33,26 +33,22 @@ void ProjectileHandler::update(float deltaTime)
 {
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
-        if (this->projectiles.at(i) != nullptr)
+        this->projectiles.at(i)->update(deltaTime);
+        DirectX::XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
+        if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
         {
-            this->projectiles.at(i)->update(deltaTime);
-            DirectX::XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
-            if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
-            {
-                Projectile* temp = this->projectiles.at(i);
-                temp->Shutdown();
-                delete temp;
-                this->projectiles.at(i) = nullptr;
-                this->projectiles.erase(projectiles.begin() + i);
-                i--;
-				for (int a = 0; a < this->eventsToTrack.size(); a++)
-				{
-					this->eventsToTrack.at(a).end--;
-					this->eventsToTrack.at(a).start--;
-				}
-            }
+            Projectile* temp = this->projectiles.at(i);
+            temp->Shutdown();
+            delete temp;
+            this->projectiles.at(i) = nullptr;
+            this->projectiles.erase(projectiles.begin() + i);
+            i--;
+			for (int a = 0; a < this->eventsToTrack.size(); a++)
+			{
+				this->eventsToTrack.at(a).end--;
+				this->eventsToTrack.at(a).start--;
+			}
         }
-
 	}
 }
 void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)

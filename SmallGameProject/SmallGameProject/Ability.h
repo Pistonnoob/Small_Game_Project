@@ -4,11 +4,14 @@
 #include "Model.h"
 #include "Enemy.h"
 
+static float REFRESH_RATE = 5.0f;
+
 class Ability
 {
 private:
 
 protected:
+	std::vector<float> timers;
 	bool isActivated;
 
 	float arc;

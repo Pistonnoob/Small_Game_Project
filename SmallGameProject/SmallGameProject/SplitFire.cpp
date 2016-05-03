@@ -18,6 +18,7 @@ float SplitFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::X
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
 		this->isActivated = true;
+		this->timers.push_back(this->triggerDelay);
 		float x = (playerPos.x - enemy->getPosition().x);
 		float z = (playerPos.z - enemy->getPosition().z);
 
@@ -36,14 +37,15 @@ float SplitFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::X
 void SplitFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {
 	Ability::update(enemy, entitySubject, deltaTime);
-	if (this->isActivated == true)
+
+	for (int i = 0; i < this->timers.size(); i++)
 	{
-		this->counter += 5.0f * (deltaTime / 1000000);
+		this->timers.at(i) -= REFRESH_RATE * deltaTime;
+		if (this->timers.at(i) <= 0.0f)
+		{
+			entitySubject->notify(enemy, Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES, this->splitArc, this->projectilesOnSplit);
+			this->timers.erase(this->timers.begin() + i);
+		}
 	}
-	if (this->isActivated == true && this->counter >= this->triggerDelay)
-	{
-		entitySubject->notify(enemy, Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES, this->splitArc, this->projectilesOnSplit);
-		this->counter = 0;
-		this->isActivated = false;
-	}
+
 }
