@@ -19,9 +19,9 @@ StageState::StageState()
 	this->enemySubject.addObserver(&this->enemyPjHandler);
 	
 
-	this->playerSubject = new EntitySubject();
-	this->playerPjHandler = ProjectileHandler();
-	this->playerSubject->addObserver(&this->playerPjHandler);
+	//this->playerSubject = new EntitySubject();
+	//this->playerPjHandler = ProjectileHandler();
+	//this->playerSubject->addObserver(&this->playerPjHandler);
 	
 	//this->hero = new Player();
 
@@ -43,10 +43,10 @@ void StageState::Shutdown()
     this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
 
-	this->playerPjHandler.ShutDown();
-	this->playerSubject->ShutDown();
-	delete this->playerSubject;
-	this->playerSubject = nullptr;
+	//this->playerPjHandler.ShutDown();
+	//this->playerSubject->ShutDown();
+	//delete this->playerSubject;
+	//this->playerSubject = nullptr;
 	
 	//this->hero->Shutdown();
 	//delete this->hero;
@@ -98,7 +98,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//the hero will rise
  		//this->hero->Initialize(device, deviceContext, "sphere1","ogreFullG", false, this->playerSubject);
-		this->playerPjHandler.Initialize(device, deviceContext);
+		//this->playerPjHandler.Initialize(device, deviceContext);
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -159,8 +159,8 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
-        readFile();
-        spawnWave();
+        //readFile();
+        //spawnWave();
 	}
 
 
@@ -204,7 +204,7 @@ int StageState::Update(float deltaTime)
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->enemyPjHandler.update(deltaTime);
 
-	this->playerPjHandler.update(deltaTime);
+	//this->playerPjHandler.update(deltaTime);
 
 	if (this->exitStage)
 	{
