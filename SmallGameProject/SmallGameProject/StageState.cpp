@@ -112,7 +112,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//Arm thy armies!
 		//creates the enemies must call setModel function to give enemies models
-		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
+		/*this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
 		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
@@ -125,7 +125,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
 		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-        this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+        this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);*/
 
         this->ability1 = new ArcFire();
         this->ability2 = new SplitFire();

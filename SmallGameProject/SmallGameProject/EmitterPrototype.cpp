@@ -104,6 +104,7 @@ bool EmitterPrototype::SortParticles()
 	for (int i = 0; i < this->currentParticleCnt; i++)
 	{
 		float cameraDistance = pow(this->particles[i].x - cameraPos.x, 2) + pow(this->particles[i].y - cameraPos.y, 2) + pow(this->particles[i].z - this->cameraPos.z, 2);
+		//float cameraDistance = this->particles[i].y;
 		//To get the real distance
 		//cameraDistance = sqrt(cameraDistance);
 		this->particles[i].cameraDistance = cameraDistance;
@@ -134,8 +135,8 @@ bool EmitterPrototype::InitializeEmitter()
 	this->particleVelocityVariation = 2.0f;
 
 	this->particleSize = 0.2f;
-	this->particlesPerSecond = 5.0f;
-	this->maxParticles = 40;
+	this->particlesPerSecond = 500.0f;
+	this->maxParticles = 5000;
 
 	this->particles = new Particle[this->maxParticles];
 	if (!this->particles)
@@ -250,10 +251,9 @@ void EmitterPrototype::EmitParticles(float dT)
 	float timeOverflow = dT;
 	while (this->accumulatedTime > particleThresshold)
 	{
-		timeOverflow = timeOverflow - particleThresshold;
 		this->accumulatedTime = this->accumulatedTime - particleThresshold;
-
-
+		timeOverflow = timeOverflow - particleThresshold;
+		
 
 		// If there are particles to emit then emit one per frame.
 		if (this->currentParticleCnt < (this->maxParticles /*- 1*/))
@@ -323,10 +323,11 @@ void EmitterPrototype::EmitParticles(float dT)
 			this->particles[index].active = true;
 			this->particles[index].scale = 2.0f;
 			this->particles[index].rotation = 0.0f;
-			this->particles[index].time = timeOverflow / 1000;
+			this->particles[index].time = this->accumulatedTime;
 
 			this->currentParticleCnt++;
 		}
+
 	}
 
 	return;
@@ -344,11 +345,12 @@ void EmitterPrototype::UpdateParticles(float dT)
 		this->particles[i].time += dT / (500);
 		//this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 		float x = 0, y = 0;
-		float period = 2.0f, min = -6.0f, max = 8.0f;
+		float period = 8.0f, min = 0, max = 4.0f;
 		float time = this->particles[i].time;
+		float width = 40;
 		//Algorithm::GetSawtoothWave(x, y, this->particles[i].time, period, min, max);
-		//Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
-		Algorithm::GetHypotrochoid(x, y, time, 6, 2, 4);
+		Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
+		//Algorithm::GetTriangleWave(x, y, time, period, min, max);
 		this->particles[i].x = x;
 		this->particles[i].y = y;
 	}

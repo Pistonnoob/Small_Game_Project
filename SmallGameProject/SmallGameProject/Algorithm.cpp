@@ -115,7 +115,7 @@ void Algorithm::GetSineWave(int & x, int & y, float t, int period, int max, int 
 	y = (max - min) * sin((float)x / period) + min;
 }
 
-inline void Algorithm::GetSawtoothWave(float & x, float & y, float t, float period, float min, float max)
+void Algorithm::GetSawtoothWave(float & x, float & y, float t, float period, float min, float max)
 {
 	x = t;
 	y = (x - int(x / period) * period) * max + min;
@@ -124,7 +124,7 @@ inline void Algorithm::GetSawtoothWave(float & x, float & y, float t, float peri
 void Algorithm::GetTriangleWave(float & x, float & y, float t, float period, float min, float max)
 {
 	x = t;
-	y = abs(x - int(x / period) * period - max) + min;
+	y = abs(x - int(x / period) *  period - max) + min;
 }
 
 void Algorithm::GetSquareWave(float & x, float & y, float t, float period, float min, float max)
