@@ -111,7 +111,7 @@ void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos)
     {
         float x = (playerPos.x - actor->getPosition().x) * 0.02f;
         float z = (playerPos.z - actor->getPosition().z) * 0.02f;
-        this->commands.push_back(new FireCommand(DirectX::XMFLOAT3(x,0,z)));
+        //this->commands.push_back(new FireCommand(DirectX::XMFLOAT3(x,0,z)));
     }
 }
 void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos)

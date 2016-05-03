@@ -11,15 +11,19 @@
 #include "Player.h"
 
 
+struct ToSpawn
+{
+	Type type;
+	int amount;
+};
 struct Wave
 {
-    string type;
-    int amount;
+	int time;
+	vector<ToSpawn> toSpawn;
 };
 struct Level
 {
-    int time;
-    vector<Wave> toSpawn;
+    vector<Wave> wave;
 };
 class StageState :
 	public GameState
@@ -43,7 +47,8 @@ private:	//Variables
 	Ai m_AI;
 	vector<Enemy*> enemies;
     //vector<toSpawn> wave;
-    vector<Level> waves;
+    vector<Level> levels;
+	vector<DirectX::XMFLOAT3> spawnPoints;
 
 
     Ability* ability1;
@@ -62,8 +67,10 @@ public:
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
-    virtual void readFile();
-    virtual void spawnWave();
+    virtual void readFile(string fileName);
+    virtual void spawnWave(int index);
+	virtual void spawnEnemy(Type type, int pointIndex);
+	virtual Type convertToEnemyType(string type);
 
 private:	//Functions
 

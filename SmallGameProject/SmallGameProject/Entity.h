@@ -5,6 +5,7 @@
 #include "EntitySubject.h"
 #include "Model.h"
 enum Type {
+	NONE,
     MELEEE,
     RANGED,
     BOMBER,

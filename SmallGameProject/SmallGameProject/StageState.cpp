@@ -158,8 +158,8 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
-        //readFile();
-        //spawnWave();
+        readFile("Stage1.txt");
+        spawnWave(0);
 	}
 
 
@@ -273,71 +273,163 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	return result;
 }
 
-void StageState::readFile()
+void StageState::readFile(string fileName)
 {
     string line;
-    ifstream myFile("Stage Spawn Pattern.txt");
+    ifstream myFile(fileName);
 
     if (myFile.is_open())
     {
+		int nrOfSpawnPoints = 0;
         getline(myFile, line);
-        while (line.at(0) != ' ')
-        {
-            Level waveTemp;
-            //getline(myFile, line);
-            string waveLenght = "";
-            string enemyType = "";
-            string nrOfEnemies = "";
+
+		string xStr;
+		string zStr;
+		while(line.at(0) == 'p')
+		{
+			std::stringstream ss;
+			DirectX::XMFLOAT3 point;
+			point.y = 0;
+			size_t start = 1;
+			size_t end = line.find(",");
+			xStr = line.substr(start, end - 1);
+			ss << xStr;
+			ss >> point.x;
+			ss.clear();
+
+			start = end + 1;
+			end = line.find("}");
+			zStr = line.substr(start, end - 1);
+			zStr.pop_back();
+			ss << zStr;
+			ss >> point.z;
+			ss.clear();
+
+			nrOfSpawnPoints++;
+			this->spawnPoints.push_back(point);
+			getline(myFile, line);
+		}
+		while (line == "new Level")
+		{
+			getline(myFile, line);
+			Level temp;
+			this->levels.push_back(temp);
+			while (line != "new Level" && line != "end")
+			{
+				Wave waveTemp;
+				ToSpawn spawnTemp;
+				string waveLenght = "";
+				string enemyType = "";
+				string nrOfEnemies = "";
+
+				//get wave lenght
+				size_t start = 1;
+				size_t end = line.find("}");
+				waveLenght = line.substr(start, end - 1);
+
+				std::stringstream ss(waveLenght);
+				ss >> waveTemp.time;
+				ss.clear();
+
+				getline(myFile, line);
+				for (int i = 0; i < nrOfSpawnPoints; i++)
+				{
+					spawnTemp.amount = 0;
+					spawnTemp.type = Type::NONE;
+					if (line.at(1) == '}')
+					{
+					}
+					else if (line.at(0) == '{')
+					{
+						//get enemy type
+						size_t start = 1;
+						size_t end = line.find("*");
+						enemyType = line.substr(start, end - 1);
+						spawnTemp.type = convertToEnemyType(enemyType);
+
+						//get nr of enemies to spawn
+						size_t start2 = end + 1;
+						size_t end2 = line.find("}");
+						nrOfEnemies = line.substr(start2, end2 - 1);
+						nrOfEnemies.pop_back();
+						std::stringstream ss2(nrOfEnemies);
+						ss2 >> spawnTemp.amount;
+
+					}
+					waveTemp.toSpawn.push_back(spawnTemp);
 
 
-            if (line.at(0) == 't')
-            {
-                size_t start = 1;
-                size_t end = line.find("}");
-                waveLenght = line.substr(start, end - 1);
-            }
-            std::stringstream ss(waveLenght);
-            ss >> waveTemp.time;
-            this->waves.push_back(waveTemp);
+					getline(myFile, line);
+				}
+				this->levels.at(this->levels.size() - 1).wave.push_back(waveTemp);
+			}
 
-            getline(myFile, line);
-            for (int i = 0; i < 4; i++)
-            {
-                Wave temp;
-                if (line.at(1) == '}')
-                {
-                    enemyType = "";
-                    nrOfEnemies = "00";
-                }
-                else if (line.at(0) == '{')
-                {
-                    size_t start = 1;
-                    size_t end = line.find("*");
-                    enemyType = line.substr(start, end - 1);
+		}
 
-                    size_t start2 = end + 1;
-                    size_t end2 = line.find("}");
-                    nrOfEnemies = line.substr(start2, end2 - 1);
-                }
-
-
-                temp.type = enemyType;
-
-                nrOfEnemies.pop_back();
-                std::stringstream ss2(nrOfEnemies);
-                ss2 >> temp.amount;
-                getline(myFile, line);
-
-                //this->wave.push_back(temp);
-                this->waves.at(this->waves.size() - 1).toSpawn.push_back(temp);
-            }
-
-        }
 
     }
 }
 
-void StageState::spawnWave()
+void StageState::spawnWave(int index)
 {
+	//level
+	// |->wave
+	//      |->time
+	//      |->toSpawn
+	//           |->type
+	//			 |->amnount
+	for (int i = 0; i < this->spawnPoints.size(); i++)
+	{
+		Type type = this->levels.at(0).wave.at(index).toSpawn.at(i).type;
+		int amount = this->levels.at(0).wave.at(index).toSpawn.at(i).amount;
+		for (int t = 0; t < amount; t++)
+		{
+			spawnEnemy(type, i);
+		}
 
+	}
+}
+void StageState::spawnEnemy(Type type, int pointIndex)
+{
+	//this->enemies.push_back(new RangedEnemy(0.0f, 20.0f));
+	//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
+	int x = this->spawnPoints.at(pointIndex).x;
+	int z = this->spawnPoints.at(pointIndex).z;
+	switch (type)
+	{
+	case(Type::BOMBER) :
+		this->enemies.push_back(new BomberEnemy(x, z));
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &this->enemySubject, true);
+		break;
+	case(Type::RANGED) :
+		this->enemies.push_back(new RangedEnemy(x, z));
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &this->enemySubject, true);
+		break;
+	case(Type::MELEEE) :
+		this->enemies.push_back(new MeleeEnemy(x, z));
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &this->enemySubject, true);
+		break;
+	case(Type::BOSS) :
+
+		break;
+	}
+}
+Type StageState::convertToEnemyType(string type)
+{
+	if (type == "B")
+	{
+		return Type::BOMBER;
+	}
+	else if (type == "R")
+	{
+		return Type::RANGED;
+	}
+	else if (type == "M")
+	{
+		return Type::MELEEE;
+	}
+	else
+	{
+		return Type::BOSS;
+	}
 }
