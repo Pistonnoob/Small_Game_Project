@@ -133,15 +133,15 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
         //this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
 		ArcFire* temp1 = new ArcFire();
-		temp1->Initialize(3.14f / 2, 1, 500, 50, 1, 400);
+		temp1->Initialize(3.14f / 2, 1, 10, 50, 1, 100);
 		this->ability1 = temp1;
 
 		SplitFire* temp2 = new SplitFire();
-		temp2->Initialize(3.14f, 3, 100, 50, 1, 50, 5, 3.14f / 2);
+		temp2->Initialize(3.14f, 3, 15, 10, 1, 12, 5, 3.14f / 2);
 		this->ability2 = temp2;
 
 		ReverseFire* temp3 = new ReverseFire();
-		temp3->Initialize(3.14f / 2, 15, 100, 50, 1, 50);
+		temp3->Initialize(3.14f / 2, 15, 10, 50, 1, 12);
 		this->ability3 = temp3;
 
 		//Place the ground beneeth your feet and thank the gods for their
@@ -175,22 +175,19 @@ int StageState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_1))
 	{
-		//this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
-		this->hero->fire(); //how do I update this shiet
+		this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
+		//this->hero->fire(0.0f); //how do I update this shiet
 	}
-	this->ability1->update(this->enemies.at(0), &this->enemySubject);
 
 	if (input->isKeyPressed(DIK_2))
 	{
 		this->ability2->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
 	}
-	this->ability2->update(this->enemies.at(0), &this->enemySubject);
 
 	if (input->isKeyPressed(DIK_3))
 	{
 		this->ability3->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
 	}
-	this->ability3->update(this->enemies.at(0), &this->enemySubject);
 
 	return result;
 }
@@ -198,8 +195,12 @@ int StageState::HandleInput(InputHandler * input)
 int StageState::Update(float deltaTime)
 {
 	int result = 1;
- 
-	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
+
+	this->ability1->update(this->enemies.at(0), &this->enemySubject, deltaTime);
+	this->ability2->update(this->enemies.at(0), &this->enemySubject, deltaTime);
+	this->ability3->update(this->enemies.at(0), &this->enemySubject, deltaTime);
+	
+
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), deltaTime);
     this->enemyPjHandler.update(deltaTime);
 

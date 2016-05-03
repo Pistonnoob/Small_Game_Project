@@ -30,7 +30,7 @@ public:
 	virtual void moveUp(float deltaTime);
 	virtual void moveDown(float deltaTime);
 	virtual void move(DirectX::XMFLOAT3 moveVec);
-	virtual void fire();
+	virtual void fire(float deltaTime);
 };
 
 #endif

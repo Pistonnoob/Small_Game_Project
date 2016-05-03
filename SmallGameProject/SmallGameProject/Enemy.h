@@ -3,14 +3,14 @@
 
 #include "Actor.h"
 
-static int BASE_ATTACK_DELAY = 50;
+static float BASE_ATTACK_DELAY = 0.5f;
 
 
 
 class Enemy : public Actor {
 
 protected:
-    int attackCD;
+    float attackCD;
 public:
     Enemy();
     virtual~Enemy();
@@ -23,7 +23,7 @@ public:
     virtual void moveLeft(float deltaTime);
     virtual void moveUp(float deltaTime);
     virtual void moveDown(float deltaTime);
-    virtual void fire();
+    virtual void fire(float deltaTime);
     virtual void move(DirectX::XMFLOAT3 moveVec) ;
 
 };

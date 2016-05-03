@@ -32,8 +32,8 @@ float ArcFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMF
 	return 0;
 
 }
-void ArcFire::update(Enemy* enemy, EntitySubject* entitySubject)
+void ArcFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {
-	Ability::update(enemy, entitySubject);
+	Ability::update(enemy, entitySubject, deltaTime);
 
 }

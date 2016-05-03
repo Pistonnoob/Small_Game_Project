@@ -19,6 +19,7 @@ class ProjectileHandler : public Observer {
 
 private:
 	std::vector<Projectile*> projectiles;
+	std::vector<Projectile*> unique_Projectiles;
 	std::vector<trigger_event> eventsToTrack;
 	Model m_ball;
 

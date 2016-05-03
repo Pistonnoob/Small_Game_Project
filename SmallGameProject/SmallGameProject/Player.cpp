@@ -70,7 +70,7 @@ void Player::move(DirectX::XMFLOAT3 moveVec)
 	this->posZ += moveVec.z;
 }
 
-void Player::fire()
+void Player::fire(float deltaTime)
 {
 	this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
 	playerWeapon->shootWeapon(this);

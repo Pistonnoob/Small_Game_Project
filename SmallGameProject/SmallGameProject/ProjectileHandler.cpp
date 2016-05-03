@@ -21,11 +21,9 @@ void ProjectileHandler::ShutDown()
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
 		Projectile* temp = this->projectiles.at(i);
-        if (temp != nullptr)
-        {
-            temp->Shutdown();
-            delete temp;
-        }
+
+        temp->Shutdown();
+        delete temp;
 
 	}
 	this->projectiles.clear();
@@ -45,8 +43,13 @@ void ProjectileHandler::update(float deltaTime)
                 temp->Shutdown();
                 delete temp;
                 this->projectiles.at(i) = nullptr;
-                //this->projectiles.erase(projectiles.begin() + i);
-                //i--;
+                this->projectiles.erase(projectiles.begin() + i);
+                i--;
+				for (int a = 0; a < this->eventsToTrack.size(); a++)
+				{
+					this->eventsToTrack.at(a).end--;
+					this->eventsToTrack.at(a).start--;
+				}
             }
         }
 
@@ -58,15 +61,13 @@ void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)
 	DirectX::XMMATRIX worldMatrix;
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
-        if (this->projectiles.at(i) != nullptr)
-        {
-            pos = this->projectiles.at(i)->getPosition();
-            worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-            this->projectiles.at(i)->getModel()->SetWorldMatrix(worldMatrix);
+        pos = this->projectiles.at(i)->getPosition();
+        worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+        this->projectiles.at(i)->getModel()->SetWorldMatrix(worldMatrix);
 
-            gHandler->DeferredRender(this->projectiles.at(i)->getModel(), camera);
-        }
+        gHandler->DeferredRender(this->projectiles.at(i)->getModel(), camera);
 	}
+
 }
 bool ProjectileHandler::intersectionTest(Entity * entity)
 {
@@ -85,6 +86,17 @@ void ProjectileHandler::onNotify(Entity* entity, Events::ENTITY evnt)
 
 		XMFLOAT3 dir = entity->getAimDir();
 		XMFLOAT3 pos = entity->getPosition();
+
+		DirectX::XMVECTOR dirr = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
+		dirr = DirectX::XMVector3Normalize(dirr);
+
+		float x = DirectX::XMVectorGetX(dirr);
+		float y = DirectX::XMVectorGetY(dirr);
+		float z = DirectX::XMVectorGetZ(dirr);
+
+		dir.x = x;
+		dir.y = y;
+		dir.z = z;
 
 		this->projectiles.push_back(new Projectile());
 		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, nullptr, pos.x, pos.z, dir);
@@ -181,16 +193,9 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
 	DirectX::XMFLOAT3 pos;
 	for (int i = evnt.start; i < evnt.end; i++)
 	{
-        if (i >= this->projectiles.size())
+        if (i >= this->projectiles.size() || evnt.end < evnt.start)
         {
             break;
-        }
-        if (this->projectiles.at(i) == nullptr)
-        {
-            this->projectiles.erase(projectiles.begin() + i);
-            i--;
-            evnt.end--;
-            projectilesErased++;
         }
         else
         {

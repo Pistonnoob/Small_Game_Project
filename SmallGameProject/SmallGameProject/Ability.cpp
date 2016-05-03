@@ -24,12 +24,12 @@ void Ability::Initialize(float arc, int nrOfProjectiles, int cooldown, int attac
 	}
 
 }
-void Ability::update(Enemy * enemy, EntitySubject * entitySubject)
+void Ability::update(Enemy * enemy, EntitySubject * entitySubject, float deltaTime)
 {
 	if (this->isActivated == true || this->chargesLeft < this->maxCharges)
 	{
-		this->cdCounter++;
-		this->chargesRefresh++;
+		this->cdCounter += 5.0f * (deltaTime / 1000000);
+		this->chargesRefresh += 5.0f * (deltaTime / 1000000);
 	}
 
 	if (this->chargesRefresh > this->cooldown && this->chargesLeft < this->maxCharges)

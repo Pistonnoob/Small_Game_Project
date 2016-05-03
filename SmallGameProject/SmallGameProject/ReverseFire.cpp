@@ -16,8 +16,8 @@ float ReverseFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX:
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
 		this->isActivated = true;
-		float x = (playerPos.x - enemy->getPosition().x) * 0.01f;
-		float z = (playerPos.z - enemy->getPosition().z) * 0.01f;
+		float x = (playerPos.x - enemy->getPosition().x);
+		float z = (playerPos.z - enemy->getPosition().z);
 
 		enemy->setAimDir(DirectX::XMFLOAT3(x, 0, z));
 
@@ -30,12 +30,12 @@ float ReverseFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX:
 	}
 	return 0;
 }
-void ReverseFire::update(Enemy* enemy, EntitySubject* entitySubject)
+void ReverseFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {
-	Ability::update(enemy, entitySubject);
+	Ability::update(enemy, entitySubject, deltaTime);
 	if (this->isActivated == true)
 	{
-		this->counter++;
+		this->counter += 5.0f * (deltaTime/ 1000000);
 	}
 	if (this->counter >= this->triggerDelay && this->isActivated == true)
 	{
