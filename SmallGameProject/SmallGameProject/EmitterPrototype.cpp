@@ -333,17 +333,18 @@ void EmitterPrototype::UpdateParticles(float dT)
 	}*/
 	for (int i = 0; i<this->currentParticleCnt; i++)
 	{
-		this->particles[i].time += dT / (500);
+		this->particles[i].time += dT / (1000);
 		//this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 		float x = 0, y = 0;
 		float period = 8.0f, min = 0, max = 4.0f;
-		float time = this->particles[i].time;
+		float time = this->particles[i].time * this->particles[i].velocity / 800;
 		float width = 40;
 		//Algorithm::GetSawtoothWave(x, y, this->particles[i].time, period, min, max);
-		Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
+		//Algorithm::GetEllipse(x, y, time, 8, 8);
+		Algorithm::GetHypotrochoid(x, y, time, 6, 2, 10);
 		//Algorithm::GetTriangleWave(x, y, time, period, min, max);
 		this->particles[i].x = x;
-		this->particles[i].y = y;
+		this->particles[i].z = y;
 	}
 
 	return;
