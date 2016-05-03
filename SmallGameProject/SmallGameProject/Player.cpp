@@ -88,9 +88,9 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	weaponWorldMatrix = weaponWorldMatrix * offset;
 
 	//give the player model its new 
+	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
 	this->rotatePlayerTowardsMouse(input->getMousePos(), gHandler, cameraH);
-	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
 }
 
