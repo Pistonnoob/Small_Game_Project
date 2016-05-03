@@ -139,7 +139,7 @@ float4 main(PSInput input) : SV_TARGET
 	outputAmbient = ((ambientColor.rgba * Ambient[0]));
 
 	for (int i = 1; i <= activeLights; i++) {
-		outputAmbient += saturate((ambientColor.rgba * Ambient[i]));
+		outputAmbient += ambientColor.rgba * Ambient[i];
 		//Create the normalized vector from position to light source
 		outVec = Position[i].xyz - (worldPos).xyz;
 		float distToLight = length(outVec);
@@ -148,7 +148,7 @@ float4 main(PSInput input) : SV_TARGET
 			//Create the normalized reflection vector
 			refVec = normalize(reflect(-outVec, normal));
 
-			specIntesity = saturate(dot(refVec, viewDir));
+			specIntesity = dot(refVec, viewDir);
 			lightSpecular = Specular[i];
 
 			//Calculate the specular part
@@ -163,7 +163,7 @@ float4 main(PSInput input) : SV_TARGET
 			float lumen = (1.0f / atten);
 			lightIntensity = lightIntensity * lumen;
 
-			outputColor += saturate(((diffColor.rgba * Diffuse[i]) + (specular.rgba * Specular[i])) * lightIntensity);
+			outputColor += ((diffColor.rgba * Diffuse[i]) + (specular.rgba * Specular[i])) * lightIntensity;
 		}
 	}
 	outputAmbient = saturate(outputAmbient) * SCENE_AMBIENT;

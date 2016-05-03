@@ -143,20 +143,20 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(0.0f, 2.0f, -4.0f, 1.0f);
+	light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
 	light.Attenuation = DirectX::XMFLOAT4(50.0f, 0.5f, 0.09f, 0.032f);
 	this->AddPointLight(light);
 
 	light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 	light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 	light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(-5.0f, 2.0f, 2.0f, 1.0f);
+	light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
 	this->AddPointLight(light);
 
 	light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(5.0f, 2.0f, 2.0f, 1.0f);
+	light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
 	this->AddPointLight(light);
 
 	//creating the light matrises
