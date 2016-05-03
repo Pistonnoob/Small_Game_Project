@@ -116,17 +116,17 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
-		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
-		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
-		 
-		this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		// 
+		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
-		this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-        this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
+  //      this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
 
         this->ability1 = new ArcFire();
         this->ability2 = new SplitFire();
