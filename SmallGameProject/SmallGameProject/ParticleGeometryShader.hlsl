@@ -68,25 +68,25 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 
 	//**Create quad**\\
 
-	float4 viewPos = mul(input[0].position, worldMatrix);
-	viewPos = mul(input[0].position, viewMatrix);
+	float4 viewPos = mul(worldMatrix, input[0].position);
+	viewPos = mul(viewMatrix, viewPos);
 
 	//*First triangle*\\
 	//Top-Left
 	element.position = float4(viewPos.x - size, viewPos.y + size, viewPos.z, viewPos.w);;
-	element.position = mul(element.position, projectionMatrix);
+	element.position = mul(projectionMatrix, element.position);
 	element.color = input[0].color;
 	element.tex = float2(0.0f, 0.0f);
 	output.Append(element);
 	//Bottom-Right
 	element.position = float4(viewPos.x + size, viewPos.y - size, viewPos.z, viewPos.w);
-	element.position = mul(element.position, projectionMatrix);
+	element.position = mul(projectionMatrix, element.position);
 	element.color = input[0].color;
 	element.tex = float2(1.0f, 1.0f);
 	output.Append(element);
 	//Bottom-Left
 	element.position = float4(viewPos.x - size, viewPos.y - size, viewPos.z, viewPos.w);
-	element.position = mul(element.position, projectionMatrix);
+	element.position = mul(projectionMatrix, element.position);
 	element.color = input[0].color;
 	element.tex = float2(0.0f, 1.0f);
 	output.Append(element);
@@ -95,19 +95,19 @@ void main(point GSInput input[1], inout TriangleStream< PSInput > output)
 	//*Second triangle*\\
 	//Top-Left
 	element.position = float4(viewPos.x - size, viewPos.y + size, viewPos.z, viewPos.w);;
-	element.position = mul(element.position, projectionMatrix);
+	element.position = mul(projectionMatrix, element.position);
 	element.color = input[0].color;
 	element.tex = float2(0.0f, 0.0f);
 	output.Append(element);
 	//Top-Right
 	element.position = float4(viewPos.x + size, viewPos.y + size, viewPos.z, viewPos.w);
-	element.position = mul(element.position, projectionMatrix);
+	element.position = mul(projectionMatrix, element.position);
 	element.color = input[0].color;
 	element.tex = float2(1.0f, 0.0f);
 	output.Append(element);
 	//Bottom-Right
 	element.position = float4(viewPos.x + size, viewPos.y - size, viewPos.z, viewPos.w);
-	element.position = mul(element.position, projectionMatrix);
+	element.position = mul(projectionMatrix, element.position);
 	element.color = input[0].color;
 	element.tex = float2(1.0f, 1.0f);
 	output.Append(element);

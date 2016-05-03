@@ -311,11 +311,11 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	LightsCB* dataPtrL;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	params->worldMatrix = DirectX::XMMatrixTranspose(params->worldMatrix);
+	/*params->worldMatrix = DirectX::XMMatrixTranspose(params->worldMatrix);
 	params->viewMatrix = DirectX::XMMatrixTranspose(params->viewMatrix);
 	params->projectionMatrix = DirectX::XMMatrixTranspose(params->projectionMatrix);
 	params->lightViewMatrix = DirectX::XMMatrixTranspose(params->lightViewMatrix);
-	params->lightProjectionMatrix = DirectX::XMMatrixTranspose(params->lightProjectionMatrix);
+	params->lightProjectionMatrix = DirectX::XMMatrixTranspose(params->lightProjectionMatrix);*/
 
 	ZeroMemory(&mappedResource, sizeof(mappedResource));
 	//Map the constant buffer so we can write to it (denies GPU access)

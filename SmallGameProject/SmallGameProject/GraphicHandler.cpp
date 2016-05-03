@@ -169,7 +169,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	this->lightPos = DirectX::XMFLOAT4(10.0f, 10.0f, 0.0f, 1.0f);
 
 	this->lightView = DirectX::XMMatrixLookAtLH(lightPos, lookAt, lightUp);
-	this->lightPerspective = DirectX::XMMatrixOrthographicLH(64.0f, 64.0f, SCREEN_NEAR, SCREEN_DEPTH);
+	this->lightPerspective = DirectX::XMMatrixOrthographicLH(32.0f, 32.0f, SCREEN_NEAR, SCREEN_DEPTH);
 	//this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
 
 	return true;

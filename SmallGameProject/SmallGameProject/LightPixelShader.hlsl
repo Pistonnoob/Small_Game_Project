@@ -84,8 +84,8 @@ float4 main(PSInput input) : SV_TARGET
 	float3 outVec = normalize(-Position[0]);
 
 	//Move the position to projection space for the light
-	positionLight = mul(worldPos, lightViewMatrix);
-	positionLight = mul(positionLight, lightProjectionMatrix);
+	positionLight = mul(lightViewMatrix, worldPos);
+	positionLight = mul(lightProjectionMatrix, positionLight);
 
 	//calculate the projected texture coordinate
 	shadowUV.x = (positionLight.x / positionLight.w) * 0.5f + 0.5f;

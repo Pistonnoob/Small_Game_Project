@@ -31,9 +31,9 @@ PSInput main(VSInput input)
 
 	//Multiply the position with world-, view- and projectionmatrix
 	//Save the world-pos of the vertex
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.position = mul(worldMatrix, input.position);
+	output.position = mul(viewMatrix, output.position);
+	output.position = mul(projectionMatrix, output.position);
 
 	//Store the uv for output
 	output.tex = input.tex;
