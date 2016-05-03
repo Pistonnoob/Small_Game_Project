@@ -72,5 +72,6 @@ void Player::move(DirectX::XMFLOAT3 moveVec)
 
 void Player::fire()
 {
+	this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
 	playerWeapon->shootWeapon(this);
 }
