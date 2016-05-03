@@ -4,6 +4,9 @@
 #include "Actor.h"
 #include "Weapon.h"
 #include <fstream>
+#include "PowerUp.h"
+#include <vector>
+#include "Modifiers.h"
 
 class Player : public Actor {
 
@@ -12,6 +15,8 @@ private:
 	int playerMovmentSpeed;
 	int playerDamage;
 	int playerHighScore;
+
+	std::vector<PowerUp>powerups;
 
 	Weapon* playerWeapon;
 
@@ -23,6 +28,8 @@ public:
 		std::string weaponModelFile, bool isSphere, EntitySubject* entitySub);
 	void Shutdown();
 	Weapon* getPlayerWeapon();
+	void PowerPickup(const int &POWER_ENUM);
+
 
 
 	virtual void moveRight();
@@ -30,6 +37,7 @@ public:
 	virtual void moveUp();
 	virtual void moveDown();
 	virtual void move(DirectX::XMFLOAT3 moveVec);
+	virtual void fire(const float &deltaT);
 	virtual void fire();
 };
 

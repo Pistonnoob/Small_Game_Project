@@ -25,6 +25,18 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
 		return false;
 	}
+	PowerUp spread = PowerUp();
+	PowerUp penetration = PowerUp();
+	PowerUp weave = PowerUp();
+
+	spread.setTimePowerup(10);
+	penetration.setTimePowerup(10);
+	weave.setTimePowerup(10);
+
+
+	this->powerups.push_back(spread);
+	this->powerups.push_back(penetration);
+	this->powerups.push_back(weave);
 
 	return true;
 }
@@ -42,6 +54,10 @@ void Player::Shutdown()
 Weapon * Player::getPlayerWeapon()
 {
 	return this->playerWeapon;
+}
+
+void Player::PowerPickup(const int & POWER_ENUM)
+{
 }
 
 void Player::moveRight()
@@ -70,8 +86,25 @@ void Player::move(DirectX::XMFLOAT3 moveVec)
 	this->posZ += moveVec.z;
 }
 
+void Player::fire(const float &deltaT)
+{
+	this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
+
+	if (this->powerups.at(0).Update(deltaT) == true)
+	{
+		playerWeapon->shootWeapon(this);
+	}
+	else if(this->powerups.at(1).Update(deltaT) == true)
+	{
+		this->setAimDir(DirectX::XMFLOAT3(0, 0, -1));
+		playerWeapon->shootWeapon(this);
+	}
+
+}
+
 void Player::fire()
 {
 	this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
+
 	playerWeapon->shootWeapon(this);
 }

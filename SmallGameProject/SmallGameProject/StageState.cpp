@@ -176,7 +176,8 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_1))
 	{
 		//this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
-		this->hero->fire(); //how do I update this shiet
+	    //how do I update this shiet
+		//this->hero->fire();
 	}
 	this->ability1->update(this->enemies.at(0), &this->enemySubject);
 
@@ -202,6 +203,8 @@ int StageState::Update(float deltaTime)
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->enemyPjHandler.update(deltaTime);
+	
+	this->hero->fire(deltaTime);
 
 	this->playerPjHandler.update(deltaTime);
 

@@ -11,7 +11,7 @@ public:
 
 	float getTimeLeft() const;
 
-	void startPowerup(float timeActive);
+	void setTimePowerup(float timeActive);
 	bool Update(float dt);
 };
 

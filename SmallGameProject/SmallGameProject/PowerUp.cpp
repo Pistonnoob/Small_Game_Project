@@ -15,19 +15,20 @@ float PowerUp::getTimeLeft() const
 	return this->timeLeft;
 }
 
-void PowerUp::startPowerup(float timeActive)
+void PowerUp::setTimePowerup(float timeActive)
 {
 	this->timeLeft = timeActive;
 }
 
 bool PowerUp::Update(float dt)
 {
-	bool result = false;
+	float convTime = dt / 1000000;
+	bool activePow = true;
 	//dt är förgången tid per frame
-	this->timeLeft -= dt;
+	this->timeLeft -= convTime;
 	if (this->timeLeft < 0.0f)
 	{
-		result = true;
+		activePow = false;
 	}
-	return result;
+	return activePow;
 }
