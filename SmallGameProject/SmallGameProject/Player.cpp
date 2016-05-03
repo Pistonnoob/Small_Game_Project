@@ -8,7 +8,6 @@ Player::Player() : Actor()
 	this->playerHighScore = 0;
 
 	this->playerWeapon = new Weapon();
-	this->playerWeapon = nullptr;
 }
 
 Player::~Player()
@@ -17,9 +16,9 @@ Player::~Player()
 }
 
 bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string playerModelFilename,
-	std::string weaponModelFile, bool isSphere)
+	std::string weaponModelFile, bool isSphere, EntitySubject* entitySub)
 {
-	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere)) {
+	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere, entitySub)) {
 		return false;
 	}
 
@@ -32,13 +31,17 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 
 void Player::Shutdown()
 {
-	Entity::Shutdown();
-
 	if (this->playerWeapon) {
 		this->playerWeapon->ShutDown();
 		delete this->playerWeapon;
 		this->playerWeapon = nullptr;
 	}
+	Entity::Shutdown(false);
+}
+
+Weapon * Player::getPlayerWeapon()
+{
+	return this->playerWeapon;
 }
 
 void Player::moveRight()
@@ -65,4 +68,10 @@ void Player::move(DirectX::XMFLOAT3 moveVec)
 {
 	this->posX += moveVec.x;
 	this->posZ += moveVec.z;
+}
+
+void Player::fire()
+{
+	this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
+	playerWeapon->shootWeapon(this);
 }

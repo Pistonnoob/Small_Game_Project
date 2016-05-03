@@ -8,6 +8,7 @@
 #include "EntitySubject.h"
 #include "ProjectileHandler.h"
 #include "Weapon.h"
+#include "Player.h"
 
 
 struct Wave
@@ -26,6 +27,7 @@ class StageState :
 private:	//Variables
 	CameraHandler myCamera;
     ProjectileHandler enemyPjHandler;
+
 	
 	Model m_car;
     Model m_ball;
@@ -33,6 +35,11 @@ private:	//Variables
 
     EntitySubject enemySubject;
 
+	//player variables
+	EntitySubject* playerSubject;
+	ProjectileHandler playerPjHandler;
+	Player* hero;
+	
 	Ai m_AI;
 	vector<Enemy*> enemies;
     //vector<toSpawn> wave;
@@ -48,7 +55,7 @@ private:	//Variables
 public:
 	StageState();
 	virtual ~StageState();
-	void Shutdown();
+	virtual void Shutdown();
 
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 

@@ -48,7 +48,7 @@ void Weapon::ShutDown()
 	}
 }
 
-const Model * Weapon::GetModel()
+Model * Weapon::GetModel()
 {
 	return this->weaponModel;
 }
@@ -70,5 +70,6 @@ float Weapon::getPlayerSpeedMod() const
 
 void Weapon::shootWeapon(Entity * entity)
 {
+	//player powerups
 	entity->getEntitySubject()->notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14, 40);
 }
