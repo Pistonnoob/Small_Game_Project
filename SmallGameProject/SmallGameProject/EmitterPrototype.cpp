@@ -312,7 +312,7 @@ void EmitterPrototype::EmitParticles(float dT)
 			this->particles[index].b = blue;
 			this->particles[index].velocity = velocity;
 			this->particles[index].active = true;
-			this->particles[index].scale = 1.0f;
+			this->particles[index].scale = 0.4f;
 			this->particles[index].uCoord = 0.25f;
 			this->particles[index].time = this->accumulatedTime;
 
@@ -331,6 +331,7 @@ void EmitterPrototype::UpdateParticles(float dT)
 	{
 		this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 	}*/
+	float size = 1.0f / 3.0f;
 	for (int i = 0; i<this->currentParticleCnt; i++)
 	{
 		this->particles[i].time += dT / (1000);
@@ -343,8 +344,8 @@ void EmitterPrototype::UpdateParticles(float dT)
 		//Algorithm::GetEllipse(x, y, time, 8, 8);
 		Algorithm::GetHypotrochoid(x, y, time, 6, 2, 10);
 		//Algorithm::GetTriangleWave(x, y, time, period, min, max);
-		this->particles[i].x = x;
-		this->particles[i].z = y;
+		this->particles[i].x = x * size;
+		this->particles[i].z = y * size;
 	}
 
 	return;
