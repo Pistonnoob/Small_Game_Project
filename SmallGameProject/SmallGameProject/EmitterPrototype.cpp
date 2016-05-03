@@ -110,17 +110,8 @@ bool EmitterPrototype::SortParticles()
 		this->particles[i].cameraDistance = cameraDistance;
 	}
 	//Sort all our particles
-	std::sort(this->particles, this->particles + this->currentParticleCnt);
-	/*for (int i = 1; i < this->currentParticleCnt; i++)
-	{
-		if (this->particles[i].cameraDistance > this->particles[i - 1].cameraDistance)
-		{
-			bool somethingWentWrong = true;
-		}
+	std::sort(this->particles, this->particles + this->currentParticleCnt, by_cameraPos());
 
-	}*/
-	//std::sort(0, this->currentParticleCnt, this->particles[0]);
-	//std::sort(this->particles[0], this->particles[this->currentParticleCnt]);
 	return true;
 }
 
