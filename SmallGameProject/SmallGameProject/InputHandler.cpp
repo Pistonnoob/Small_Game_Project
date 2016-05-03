@@ -194,30 +194,33 @@ void InputHandler::ReadMouse()
 
 	}
 
+
 	return;
 }
 
 void InputHandler::ProcessInput()
 {
-	//Update the mouse position (not physicly)
+
 	this->mouseX += this->DIMouseState.lX;
 	this->mouseY += this->DIMouseState.lY;
 
-	if (this->mouseX < 0) {
-		this->mouseX = 0;
-	}
+	//Update the mouse position (not physicly)
 
-	if (this->mouseX > this->screenWidth) {
-		this->mouseX = this->screenWidth;
-	}
+	//if (this->mouseX < 0) {
+	//	this->mouseX = 0;
+	//}
 
-	if (this->mouseY < 0) {
-		this->mouseY = 0;
-	}
+	//if (this->mouseX > this->screenWidth) {
+	//	this->mouseX = this->screenWidth;
+	//}
 
-	if (this->mouseY > this->screenHeight) {
-		this->mouseY = this->screenHeight;
-	}
+	//if (this->mouseY < 0) {
+	//	this->mouseY = 0;
+	//}
+
+	//if (this->mouseY > this->screenHeight) {
+	//	this->mouseY = this->screenHeight;
+	//}
 }
 
 DirectX::XMVECTOR InputHandler::GetMouseDeltaPos()
@@ -269,5 +272,8 @@ bool InputHandler::isKeyReleased(unsigned int key)
 
 DirectX::XMFLOAT2 InputHandler::getMousePos()
 {
-	return DirectX::XMFLOAT2(this->mouseX, this->mouseY);;
+	POINT tempP;
+	GetCursorPos(&tempP);
+
+	return DirectX::XMFLOAT2(tempP.x, tempP.y);;
 }

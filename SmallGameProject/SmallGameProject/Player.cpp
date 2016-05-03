@@ -2,8 +2,8 @@
 
 Player::Player() : Actor()
 {
-	this->posX = 10;
-	this->posZ = 10;
+	this->posX = 0.f;
+	this->posZ = 0.f;
 	this->playerHealth = 100;
 	this->playerMovmentSpeed = 10;
 	this->playerDamage = 1;
@@ -126,6 +126,8 @@ void Player::move(DirectX::XMFLOAT3 moveVec)
 
 void Player::rotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)
 {
+	// The angle is calculated in Normal Device Space
+
 	DirectX::XMVECTOR playerPos = XMVectorSet(this->posX, 0, this->posZ, 1);
 	DirectX::XMMATRIX modelWorld;
 	DirectX::XMMATRIX cameraView;
@@ -143,32 +145,46 @@ void Player::rotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 	playerPos = DirectX::XMVector4Transform(playerPos, cameraView);
 	playerPos = DirectX::XMVector4Transform(playerPos, projection);
 
-
+	//Move player pos to a float4 to be able to devide each value with w
 	XMFLOAT4 v;
 	XMStoreFloat4(&v, playerPos);
 
 	v.x = v.x / v.w;
 	v.y = v.y / v.w;
 	v.z = v.z / v.w;
-	v.w = 1;
 
+	// Re-save it
 	playerPos = XMLoadFloat4(&v);
-	DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet(((2 * mousePos.x) / screenWidth) - 1, ((-2 * mousePos.y) / screenHeight) + 1, 1, 1);
+
+	DirectX::XMFLOAT4X4 tempProj;
+	DirectX::XMStoreFloat4x4(&tempProj, projection);
+
+	//Move the cords to the window
+	float mouseX = mousePos.x - (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+	float mouseY = mousePos.y - (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+
+	// Get the mouse pos in -1, 1
+	mouseX = (((2 * mouseX) / screenWidth) - 1);
+	mouseY = (((-2 * mouseY) / screenHeight) + 1);
+
+	//Move the pos to a vector
+	DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet( mouseX, mouseY , 1, 1);
 	
-	if (DirectX::XMVectorGetX(mousePosV) < 0 && DirectX::XMVectorGetY(mousePosV) < 0) {
-		float i = DirectX::XMVectorGetX(mousePosV);
-		float j = DirectX::XMVectorGetY(mousePosV);
-		int tk = 0;
-	}
+	//Direction vector
+	XMVECTOR dirVec = XMVector2Normalize(mousePosV - playerPos);
+	this->forwardDir = dirVec;
+	float angle = atan2(XMVectorGetY(dirVec), XMVectorGetX(dirVec));
 
+	//Create the rotation matrix
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(-angle);
 
+	//Apply rotation
+	DirectX::XMMATRIX weaponModelMatrix;
+	DirectX::XMMATRIX playermodelMatrix;
+	this->playerWeapon->GetModel()->GetWorldMatrix(weaponModelMatrix);
+	this->entityModel->GetWorldMatrix(playermodelMatrix);
 
-	DirectX::XMVECTOR dot = DirectX::XMVector2Dot(playerPos, mousePosV);
-
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(DirectX::XMVectorGetX(dot) * 52);
-
-	DirectX::XMMATRIX modelMatrix;
-	this->playerWeapon->GetModel()->GetWorldMatrix(modelMatrix);
-	this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * modelMatrix);
+	this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
+	this->entityModel->SetWorldMatrix(rotationMatrix * playermodelMatrix);
 
 }
