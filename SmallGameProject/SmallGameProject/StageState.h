@@ -10,6 +10,17 @@
 #include "Weapon.h"
 #include "Player.h"
 
+
+struct Wave
+{
+    string type;
+    int amount;
+};
+struct Level
+{
+    int time;
+    vector<Wave> toSpawn;
+};
 class StageState :
 	public GameState
 {
@@ -31,6 +42,9 @@ private:	//Variables
 	
 	Ai m_AI;
 	vector<Enemy*> enemies;
+    //vector<toSpawn> wave;
+    vector<Level> waves;
+
 
     Ability* ability1;
     Ability* ability2;
@@ -48,6 +62,8 @@ public:
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
+    virtual void readFile();
+    virtual void spawnWave();
 
 private:	//Functions
 
