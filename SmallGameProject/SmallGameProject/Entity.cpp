@@ -69,12 +69,6 @@ void Entity::Shutdown(bool isEnemy)
 		delete this->entityBV;
 	}
 	this->entityBV = nullptr;
-
-	if (this->entityModel != nullptr)
-	{
-		this->entityModel->Shutdown();
-		this->entityModel = nullptr;
-	}
 }
 void Entity::addObservers(Observer * observer)
 {
