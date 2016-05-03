@@ -82,16 +82,19 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	//Set the model matrix
 	this->entityModel->SetWorldMatrix(playerWorldMatrix);
 
-	//weapon matrix
-	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
-	offset = DirectX::XMMatrixTranslation(5, 4, 0);
-	weaponWorldMatrix = weaponWorldMatrix * offset;
 
 	//give the player model its new 
-	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
+	
 
 	this->rotatePlayerTowardsMouse(input->getMousePos(), gHandler, cameraH);
 
+	//weapon matrix
+	this->entityModel->GetWorldMatrix(playerWorldMatrix);
+	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
+	offset = DirectX::XMMatrixTranslation(5, 4, 0);
+	weaponWorldMatrix = offset * weaponWorldMatrix;
+
+	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 }
 
 Weapon * Player::GetWeapon()
@@ -185,7 +188,7 @@ void Player::rotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 	this->playerWeapon->GetModel()->GetWorldMatrix(weaponModelMatrix);
 	this->entityModel->GetWorldMatrix(playermodelMatrix);
 
-	this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
+	//this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
 	this->entityModel->SetWorldMatrix(rotationMatrix * playermodelMatrix);
 
 }
