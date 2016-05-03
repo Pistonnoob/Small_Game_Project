@@ -19,11 +19,11 @@ StageState::StageState()
 	this->enemySubject.addObserver(&this->enemyPjHandler);
 	
 
-	//this->playerSubject = new EntitySubject();
-	//this->playerPjHandler = ProjectileHandler();
-	//this->playerSubject->addObserver(&this->playerPjHandler);
+	this->playerSubject = new EntitySubject();
+	this->playerPjHandler = ProjectileHandler();
+	this->playerSubject->addObserver(&this->playerPjHandler);
 	
-	//this->hero = new Player();
+	this->hero = new Player();
 
 	this->exitStage = false;
 }
@@ -43,14 +43,13 @@ void StageState::Shutdown()
     this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
 
-	//this->playerPjHandler.ShutDown();
-	//this->playerSubject->ShutDown();
-	//delete this->playerSubject;
-	//this->playerSubject = nullptr;
+	this->playerPjHandler.ShutDown();
+	this->playerSubject->ShutDown();
+	delete this->playerSubject;
+	this->playerSubject = nullptr;
 	
-	//this->hero->Shutdown();
-	//delete this->hero;
-
+	this->hero->Shutdown();
+	delete this->hero;
 	this->hero = nullptr;
 
 	//Release the enemies
@@ -97,8 +96,8 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
 
 		//the hero will rise
- 		//this->hero->Initialize(device, deviceContext, "sphere1","ogreFullG", false, this->playerSubject);
-		//this->playerPjHandler.Initialize(device, deviceContext);
+ 		this->hero->Initialize(device, deviceContext, "sphere1","ogreFullG", false, this->playerSubject);
+		this->playerPjHandler.Initialize(device, deviceContext);
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -177,7 +176,7 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_1))
 	{
 		//this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
-		//this->hero->fire(); //how do I update this shiet
+		this->hero->fire(); //how do I update this shiet
 	}
 	this->ability1->update(this->enemies.at(0), &this->enemySubject);
 
@@ -204,7 +203,7 @@ int StageState::Update(float deltaTime)
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->enemyPjHandler.update(deltaTime);
 
-	//this->playerPjHandler.update(deltaTime);
+	this->playerPjHandler.update(deltaTime);
 
 	if (this->exitStage)
 	{
@@ -241,12 +240,12 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	}
 
 	//calculate player position and mathemagics
-	//pos = this->hero->getPosition();
-	//worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-	//this->m_car.SetWorldMatrix(worldMatrix);
+	pos = this->hero->getPosition();
+	worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+	this->m_car.SetWorldMatrix(worldMatrix);
 
 	//render
-	//gHandler->DeferredRender(this->hero->getModel(), &this->myCamera);
+	gHandler->DeferredRender(this->hero->getModel(), &this->myCamera);
 
 	//calculate THE PLAYER WEAPON position and mathemagics
 	pos.x += 15;
@@ -255,7 +254,10 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	this->m_car.SetWorldMatrix(worldMatrix);
 
 	//render PLAYER WEAPON
-	//gHandler->DeferredRender(this->hero->getPlayerWeapon()->GetModel(), &this->myCamera);
+	gHandler->DeferredRender(this->hero->getPlayerWeapon()->GetModel(), &this->myCamera);
+	
+	//render shots
+	playerPjHandler.render(gHandler, &this->myCamera);
 
     this->enemyPjHandler.render(gHandler, &this->myCamera);
 
