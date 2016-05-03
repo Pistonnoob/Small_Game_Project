@@ -67,6 +67,12 @@
     <Filter Include="Source Files\Abilities">
       <UniqueIdentifier>{721d7e91-2060-40fc-a973-d0986671d514}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entities\Actors\Boss">
+      <UniqueIdentifier>{d36024ce-e9e7-4793-895e-bfa57661bedb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities\Actors\Boss">
+      <UniqueIdentifier>{23df29d9-3d49-4f64-b43a-ecd1de4eb192}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -227,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="Ability.cpp">
       <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Source Files\Entities\Actors\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="FireCommand.h">
       <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Header Files\Entities\Actors\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,10 +19,10 @@ public:
 	virtual void Shutdown() = 0;
 	
 
-    virtual void moveRight();
-    virtual void moveLeft();
-    virtual void moveUp();
-    virtual void moveDown();
+    virtual void moveRight(float deltaTime);
+    virtual void moveLeft(float deltaTime);
+    virtual void moveUp(float deltaTime);
+    virtual void moveDown(float deltaTime);
     virtual void fire();
     virtual void move(DirectX::XMFLOAT3 moveVec) ;
 

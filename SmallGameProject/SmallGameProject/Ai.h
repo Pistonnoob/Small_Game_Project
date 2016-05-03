@@ -9,7 +9,7 @@
 #include "BomberEnemy.h"
 #include "MeleeEnemy.h"
 #include "RangedEnemy.h"
-#include "Enemy.h"
+#include "Boss.h"
 #include <vector>
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -36,12 +36,12 @@ public:
     Ai();
     ~Ai();
 
-    void updateActors(std::vector<Enemy*>& actors, DirectX::XMFLOAT3 playerPos);
-    void updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos);
+    void updateActors(std::vector<Enemy*>& actors, DirectX::XMFLOAT3 playerPos, float deltaTime);
+    void updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime);
     void updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos);
     void updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos);
     void updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos);
-    void updateBoss(Enemy* actor, DirectX::XMFLOAT3 playerPos);
+    void updateBoss(Boss* actor, DirectX::XMFLOAT3 playerPos);
     void separateActors(std::vector<Enemy*>& actors);
 
     int getNrOfActions() const;

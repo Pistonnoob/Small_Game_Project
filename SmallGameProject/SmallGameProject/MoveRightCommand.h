@@ -8,7 +8,7 @@ class MoveRightCommand : public Command {
 private:
 
 public:
-    virtual void execute(Actor& actor);
+    virtual void execute(Actor& actor, float deltaTime);
 
 };
 

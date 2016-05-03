@@ -4,7 +4,7 @@ BomberEnemy::BomberEnemy(float posX, float posZ)
 {
     this->posX = posX;
     this->posZ = posZ;
-    this->myType = Type::RANGED;
+    this->myType = Type::BOMBER;
 }
 
 BomberEnemy::~BomberEnemy()

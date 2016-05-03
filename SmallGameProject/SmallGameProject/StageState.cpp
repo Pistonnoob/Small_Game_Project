@@ -200,7 +200,7 @@ int StageState::Update(float deltaTime)
 	int result = 1;
  
 	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
-	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), deltaTime);
     this->enemyPjHandler.update(deltaTime);
 
 	this->playerPjHandler.update(deltaTime);
@@ -391,8 +391,6 @@ void StageState::spawnWave(int index)
 }
 void StageState::spawnEnemy(Type type, int pointIndex)
 {
-	//this->enemies.push_back(new RangedEnemy(0.0f, 20.0f));
-	//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 	int x = this->spawnPoints.at(pointIndex).x;
 	int z = this->spawnPoints.at(pointIndex).z;
 	switch (type)

@@ -44,22 +44,22 @@ Weapon * Player::getPlayerWeapon()
 	return this->playerWeapon;
 }
 
-void Player::moveRight()
+void Player::moveRight(float deltaTime)
 {
 	this->posX += (0.05f * this->playerMovmentSpeed);
 }
 
-void Player::moveLeft()
+void Player::moveLeft(float deltaTime)
 {
 	this->posX -= (0.05f * this->playerMovmentSpeed);
 }
 
-void Player::moveUp()
+void Player::moveUp(float deltaTime)
 {
 	this->posZ += (0.05f * this->playerMovmentSpeed);
 }
 
-void Player::moveDown()
+void Player::moveDown(float deltaTime)
 {
 	this->posZ -= (0.05f * this->playerMovmentSpeed);
 }

@@ -9,19 +9,19 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::moveRight()
+void Enemy::moveRight(float deltaTime)
 {
     this->posX += 0.05f;
 }
-void Enemy::moveLeft()
+void Enemy::moveLeft(float deltaTime)
 {
     this->posX -= 0.05f;
 }
-void Enemy::moveUp()
+void Enemy::moveUp(float deltaTime)
 {
     this->posZ += 0.05f;
 }
-void Enemy::moveDown()
+void Enemy::moveDown(float deltaTime)
 {
     this->posZ -= 0.05f;
 }
