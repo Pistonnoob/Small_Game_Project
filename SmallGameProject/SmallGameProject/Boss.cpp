@@ -22,15 +22,35 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 	this->aimDir = DirectX::XMFLOAT3(0, 0, 0);
 
 	ArcFire* temp1 = new ArcFire();
-	temp1->Initialize(0.0f, 1, 0.5f, 0.5f, 1, 1);
+	float arc			= 0.0f;
+	int nrOfProjectiles	= 1;
+	float cooldown		= 0.5f;
+	float attackDelay	= 0.5f;
+	int charges			= 1;
+	float triggerDelay	= 1;
+	temp1->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
 	this->abilities.push_back(temp1);
 
 	SplitFire* temp2 = new SplitFire();
-	temp2->Initialize(3.14f * 2, 5, 4, 1, 1, 0.5f, 5, 3.14f / 2);
+	arc						= 3.14f * 2;
+	nrOfProjectiles			= 5;
+	cooldown				= 4;
+	attackDelay				= 1;
+	charges					= 1;
+	triggerDelay			= 0.5f;
+	int projeciltesOnSplit	= 5;
+	float splitArc			= 3.14f / 2;
+	temp2->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay, projeciltesOnSplit, splitArc);
 	this->abilities.push_back(temp2);
 
 	ReverseFire* temp3 = new ReverseFire();
-	temp3->Initialize(3.14f * 2, 15, 8, 3, 1, 3);
+	arc					= 3.14f * 2;
+	nrOfProjectiles		= 15;
+	cooldown			= 8;
+	attackDelay			= 3;
+	charges				= 1;
+	triggerDelay		= 2.5f;
+	temp3->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
 	this->abilities.push_back(temp3);
 
 	return Entity::Initialize(model, entitySubject, isSphere);

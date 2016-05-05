@@ -204,7 +204,7 @@ void ProjectileHandler::fireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, 
 }
 void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBullets)
 {
-    int projectilesErased = 0;
+    int projectilesToErase = 0;
 	DirectX::XMFLOAT3 dir;
 	DirectX::XMFLOAT3 pos;
 	float arcSplit = 0;
@@ -233,6 +233,7 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
 				this->projectiles.erase(this->projectiles.begin() + i);
 				i--;
 				evnt.end--;
+				projectilesToErase++;
 
                 break;
 			case(Events::UNIQUE_FIRE::REVERSERBULLETS) :
@@ -250,5 +251,14 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
         }
 
 	}
+	if (projectilesToErase > 0)
+	{
+		for (int i = 0; i < this->eventsToTrack.size(); i++)
+		{
+			this->eventsToTrack.at(i).start -= projectilesToErase;
+			this->eventsToTrack.at(i).end -= projectilesToErase;
+		}
+	}
+
 }
 

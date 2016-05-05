@@ -142,6 +142,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->currentWave = 0;
 		this->timeToNextWave = this->levels.at(currentLevel).wave.at(currentWave).time;
 
+		//test boss
+		//Boss* boss = new Boss(0, 10);
+		//boss->Initialize(&this->m_car, &this->enemySubject, true, 1);
+		//this->enemies.push_back(boss);
+
 		//Arm thy armies!
         spawnWave(this->currentLevel, this->currentWave);
 	}
@@ -184,7 +189,7 @@ int StageState::Update(float deltaTime)
 			if (this->currentLevel < this->levels.size())
 			{
 				this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
-				//spawnWave(this->currentLevel, this->currentWave);
+				spawnWave(this->currentLevel, this->currentWave);
 			}
 		}
 	}
