@@ -21,3 +21,16 @@ void MeleeEnemy::Shutdown()
 {
 	Entity::Shutdown(true);
 }
+
+void MeleeEnemy::fire(float deltaTime)
+{
+	if (this->attackCD > M_ATTACK_DELAY)
+	{
+		this->entitySubject->notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 5);
+		this->attackCD = 0;
+	}
+	else
+	{
+		this->attackCD += deltaTime;
+	}
+}

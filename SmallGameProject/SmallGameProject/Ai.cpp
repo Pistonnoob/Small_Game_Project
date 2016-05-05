@@ -24,35 +24,35 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 	if (actor->getType() == Type::BOMBER)
 	{
 		BomberEnemy* bPtr = (BomberEnemy*)actor;
-		updateBomber(bPtr, playerPos);
+		updateBomber(bPtr, playerPos, deltaTime);
 	}
 	else if (actor->getType() == Type::RANGED)
 	{
 		RangedEnemy* bPtr = (RangedEnemy*)actor;
-		updateRange(bPtr, playerPos);
+		updateRange(bPtr, playerPos, deltaTime);
 	}
 	else if(actor->getType() == Type::MELEEE)
 	{
 		MeleeEnemy* bPtr = (MeleeEnemy*)actor;
-		updateMelee(bPtr, playerPos);
+		updateMelee(bPtr, playerPos, deltaTime);
 	}
 	else
 	{
 		Boss* bossPtr = (Boss*)actor;
-		updateBoss(bossPtr, playerPos);
+		updateBoss(bossPtr, playerPos, deltaTime);
 	}
 
     if (commands.size() != 0)
     {
-        //int action = rand() % commands.size();
+        int action = rand() % commands.size();
 
-        //this->commands.at(action)->execute(*actor);
-        for (int i = 0; i < commands.size(); i++)
+        this->commands.at(action)->execute(*actor, deltaTime);
+        /*for (int i = 0; i < commands.size(); i++)
         {
             this->commands.at(i)->execute(*actor, deltaTime);
-        }
-        //delete this->commands.at(action);
-        //this->commands.at(action) = nullptr;
+        }*/
+        delete this->commands.at(action);
+        this->commands.at(action) = nullptr;
 
     }
     //moveToPlayer(actor, playerPos);
@@ -64,15 +64,27 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
     }
     this->commands.clear();
 }
-void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos)
+void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
 	float distance = distanceBetween(actor->getPosition(), playerPos);
     if (distance > 7.5f)
     {
         moveToPlayer(actor, playerPos);
     }
+	if (distance < 10.0f)
+	{
+		bool canExlpode = actor->chargeExplosion(deltaTime);
+		if (canExlpode == true)
+		{
+			float x = (playerPos.x - actor->getPosition().x);
+			float z = (playerPos.z - actor->getPosition().z);
+			actor->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+			this->commands.push_back(new FireCommand());
+		}
+	}
+
 }
-void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos)
+void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
     float distance = distanceBetween(actor->getPosition(), playerPos);
     if (distance > RANGED_MAX_DESIRED_DISTANCE)
@@ -91,7 +103,7 @@ void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos)
         this->commands.push_back(new FireCommand());
     }
 }
-void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos)
+void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
 	float distance = distanceBetween(actor->getPosition(), playerPos);
     if (distance > MELEE_MAX_DESIRED_DISTANCE)
@@ -102,8 +114,15 @@ void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos)
     {
         moveAwayFromPlayer(actor, playerPos);
     }
+	else
+	{
+		float x = (playerPos.x - actor->getPosition().x);
+		float z = (playerPos.z - actor->getPosition().z);
+		actor->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+		this->commands.push_back(new FireCommand());
+	}
 }
-void Ai::updateBoss(Boss* actor, DirectX::XMFLOAT3 playerPos)
+void Ai::updateBoss(Boss* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
 
 }

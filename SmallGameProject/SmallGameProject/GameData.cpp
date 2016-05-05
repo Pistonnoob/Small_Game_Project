@@ -79,12 +79,18 @@ void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 
 void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
-	//??
+}
+
+void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay)
+{
+}
+
+void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay, float arcOnSplit, int projectilesOnSplit)
+{
 }
 
 void GameData::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
 {
-	//helloooooooo
 }
 
 bool GameData::SavePlayerData(std::string filename)

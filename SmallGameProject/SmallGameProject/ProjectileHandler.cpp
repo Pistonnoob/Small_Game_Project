@@ -50,6 +50,16 @@ void ProjectileHandler::update(float deltaTime)
 			}
         }
 	}
+	for (int i = 0; i < this->eventsToTrack.size(); i++)
+	{
+		this->eventsToTrack.at(i).timer -= deltaTime;
+		if (this->eventsToTrack.at(i).timer <= 0)
+		{
+			triggerEvent(this->eventsToTrack.at(i), 0, 0);
+			this->eventsToTrack.erase(this->eventsToTrack.begin() + i);
+			i--;
+		}
+	}
 }
 void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)
 {
@@ -111,42 +121,52 @@ void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float
 		fireInArc(entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
 
 		break;
-	case(Events::UNIQUE_FIRE::SPLITFIRE) :
-
-		event.start = this->projectiles.size();
-		event.type = Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES;
-
-		fireInArc(entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
-
-		event.end = this->projectiles.size();
-
-		this->eventsToTrack.push_back(event);
-
-		break;
+	}
+}
+void ProjectileHandler::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay)
+{
+	trigger_event trigger;
+	switch (evnt)
+	{
 	case(Events::UNIQUE_FIRE::REVERSERBULLETS) :
 
-		event.start = this->projectiles.size();
-		event.type = Events::ABILITY_TRIGGER::REVERSER_PROJECTILES;
+		trigger.timer = triggerDelay;
+		trigger.start = this->projectiles.size();
+		trigger.type = evnt;
+		trigger.arc = 0;
+		trigger.nrOfProjectiles = 0;
 
 		fireInArc(entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
 
-		event.end = this->projectiles.size();
-		this->eventsToTrack.push_back(event);
+		trigger.end = this->projectiles.size();
+		this->eventsToTrack.push_back(trigger);
+
+		break;
+	}
+}
+void ProjectileHandler::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay, float arcOnSplit, int projectilesOnSplit)
+{
+	trigger_event trigger;
+	switch (evnt)
+	{
+	case(Events::UNIQUE_FIRE::SPLITFIRE) :
+
+		trigger.timer = triggerDelay;
+		trigger.start = this->projectiles.size();
+		trigger.type = evnt;
+		trigger.arc = arcOnSplit;
+		trigger.nrOfProjectiles = projectilesOnSplit;
+
+		fireInArc(entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
+
+		trigger.end = this->projectiles.size();
+		this->eventsToTrack.push_back(trigger);
 
 		break;
 	}
 }
 void ProjectileHandler::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
 {
-	for (int i = 0; i < this->eventsToTrack.size(); i++)
-	{
-		if (this->eventsToTrack.at(i).type == evnt)
-		{
-			this->triggerEvent(this->eventsToTrack.at(i), arc, nrOfBullets);
-			this->eventsToTrack.erase(this->eventsToTrack.begin() + i);
-			break;
-		}
-	}
 }
 void ProjectileHandler::fireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float arc, int nrOfBullets)
 {
@@ -187,6 +207,9 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
     int projectilesErased = 0;
 	DirectX::XMFLOAT3 dir;
 	DirectX::XMFLOAT3 pos;
+	float arcSplit = 0;
+	float nrOfProjectiles = 0;
+
 	for (int i = evnt.start; i < evnt.end; i++)
 	{
         if (i >= this->projectiles.size() || evnt.end < evnt.start)
@@ -197,14 +220,17 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
         {
             switch (evnt.type)
             {
-            case(Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES) :
+			case(Events::UNIQUE_FIRE::SPLITFIRE) :
 
                 dir = this->projectiles.at(i)->getMoveDir();
                 pos = this->projectiles.at(i)->getPos();
-                this->fireInArc(pos, dir, arc, nrOfBullets);
+				arcSplit = evnt.arc;
+				nrOfProjectiles = evnt.nrOfProjectiles;
+
+                this->fireInArc(pos, dir, arcSplit, nrOfProjectiles);
 
                 break;
-            case(Events::ABILITY_TRIGGER::REVERSER_PROJECTILES) :
+			case(Events::UNIQUE_FIRE::REVERSERBULLETS) :
 
                 dir = this->projectiles.at(i)->getMoveDir();
 
@@ -219,10 +245,5 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
         }
 
 	}
-    for (int i = 0; i < this->eventsToTrack.size(); i++)
-    {
-        this->eventsToTrack.at(i).start -= projectilesErased;
-        this->eventsToTrack.at(i).end -= projectilesErased;
-    }
 }
 

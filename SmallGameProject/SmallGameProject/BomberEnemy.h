@@ -3,6 +3,8 @@
 
 #include "Enemy.h"
 
+static float EXPLOSION_DELAY = 5.0f;
+
 class BomberEnemy : public Enemy {
 
 private:
@@ -13,6 +15,9 @@ public:
 
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);
 	void Shutdown();
+	virtual bool chargeExplosion(float deltaTime);
+
+	virtual void fire(float deltaTime);
 
 };
 

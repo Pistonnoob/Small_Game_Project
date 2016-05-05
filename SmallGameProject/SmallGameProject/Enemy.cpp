@@ -34,7 +34,7 @@ void Enemy::fire(float deltaTime)
     }
     else
     {
-        this->attackCD += 1.0f * deltaTime;
+        this->attackCD += deltaTime;
     }
 }
 void Enemy::move(DirectX::XMFLOAT3 moveVec)

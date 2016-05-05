@@ -7,7 +7,7 @@ ArcFire::ArcFire() : Ability()
 ArcFire::~ArcFire()
 {
 }
-void ArcFire::Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay)
+void ArcFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, int triggerDelay)
 {
 	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
 

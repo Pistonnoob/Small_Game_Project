@@ -46,14 +46,12 @@ private:	//Variables
 	
 	Ai m_AI;
 	vector<Enemy*> enemies;
-    //vector<toSpawn> wave;
+
+	float timeToNextWave;
+	int currentLevel;
+	int currentWave;
     vector<Level> levels;
 	vector<DirectX::XMFLOAT3> spawnPoints;
-
-
-    Ability* ability1;
-    Ability* ability2;
-    Ability* ability3;
 
 	bool exitStage;
 
@@ -68,7 +66,7 @@ public:
 	virtual int Update(float deltaTime);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
     virtual void readFile(string fileName);
-    virtual void spawnWave(int index);
+    virtual void spawnWave(int levelIndex, int waveIndex);
 	virtual void spawnEnemy(Type type, int pointIndex);
 	virtual Type convertToEnemyType(string type);
 

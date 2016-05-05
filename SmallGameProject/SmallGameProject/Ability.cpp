@@ -10,7 +10,7 @@ Ability::Ability()
 Ability::~Ability()
 {
 }
-void Ability::Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay)
+void Ability::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, int triggerDelay)
 {
 	this->arc = arc;
 	this->nrOfProjectiles = nrOfProjectiles;
@@ -19,18 +19,16 @@ void Ability::Initialize(float arc, int nrOfProjectiles, int cooldown, int attac
 	this->maxCharges = maxCharges;
 	this->chargesLeft = maxCharges;
 	this->triggerDelay = triggerDelay;
-	if (this->cooldown < this->triggerDelay)
-	{
-		this->cooldown = this->triggerDelay + 1;
-	}
 
 }
 void Ability::update(Enemy * enemy, EntitySubject * entitySubject, float deltaTime)
 {
-	if (this->isActivated == true || this->chargesLeft < this->maxCharges)
+	if (this->chargesLeft < this->maxCharges)
 	{
-		this->cdCounter += REFRESH_RATE * deltaTime;
-		this->chargesRefresh += REFRESH_RATE * deltaTime;
+		//this->cdCounter += REFRESH_RATE * deltaTime;
+		//this->chargesRefresh += REFRESH_RATE * deltaTime;
+		this->cdCounter += deltaTime;
+		this->chargesRefresh += deltaTime;
 	}
 
 	if (this->chargesRefresh > this->cooldown && this->chargesLeft < this->maxCharges)

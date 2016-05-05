@@ -61,11 +61,16 @@ void StageState::Shutdown()
 	}
 	this->enemies.clear();
 
-	
+	for (int i = 0; i < this->levels.size(); i++)
+	{
+		for (int a = 0; a < this->levels.at(i).wave.size(); a++)
+		{
+			this->levels.at(i).wave.at(a).toSpawn.clear();
+		}
+		this->levels.at(i).wave.clear();
+	}
+	this->levels.clear();
 
-    delete this->ability1;
-    delete this->ability2;
-    delete this->ability3;
 	//Release your m_AI
 
 	GameState::Shutdown();
@@ -115,34 +120,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
         this->m_ball.SetColor(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 
-		//Arm thy armies!
-		//creates the enemies must call setModel function to give enemies models
-		//this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
-		//this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
-
-		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
-		 
-		this->enemies.push_back(new RangedEnemy(0.0f, 20.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
-
-		//this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-        //this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
-
-		ArcFire* temp1 = new ArcFire();
-		temp1->Initialize(3.14f / 2, 1, 10, 50, 1, 100);
-		this->ability1 = temp1;
-
-		SplitFire* temp2 = new SplitFire();
-		temp2->Initialize(3.14f, 3, 15, 10, 3, 12, 5, 3.14f / 2);
-		this->ability2 = temp2;
-
-		ReverseFire* temp3 = new ReverseFire();
-		temp3->Initialize(3.14f / 2, 15, 10, 50, 3, 12);
-		this->ability3 = temp3;
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -159,7 +137,13 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
         readFile("Stage1.txt");
-        spawnWave(0);
+
+		this->currentLevel = 0;
+		this->currentWave = 0;
+		this->timeToNextWave = this->levels.at(currentLevel).wave.at(currentWave).time;
+
+		//Arm thy armies!
+        spawnWave(this->currentLevel, this->currentWave);
 	}
 
 
@@ -173,20 +157,9 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
-	if (input->isKeyPressed(DIK_1))
+	if (input->isKeyPressed(DIK_C))
 	{
-		this->ability1->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
-		//this->hero->fire(0.0f); //how do I update this shiet
-	}
 
-	if (input->isKeyPressed(DIK_2))
-	{
-		this->ability2->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
-	}
-
-	if (input->isKeyPressed(DIK_3))
-	{
-		this->ability3->activate(this->enemies.at(0), &this->enemySubject, DirectX::XMFLOAT3(0, 0, 0));
 	}
 
 	return result;
@@ -196,10 +169,25 @@ int StageState::Update(float deltaTime)
 {
 	int result = 1;
 	float newDT = deltaTime / 1000000;
-	this->ability1->update(this->enemies.at(0), &this->enemySubject, newDT);
-	this->ability2->update(this->enemies.at(0), &this->enemySubject, newDT);
-	this->ability3->update(this->enemies.at(0), &this->enemySubject, newDT);
 	
+	this->timeToNextWave -= newDT;
+	if (this->timeToNextWave <= 0)
+	{
+		if (this->currentLevel < this->levels.size())
+		{
+			this->currentWave++;
+			if (this->currentWave >= this->levels.at(this->currentLevel).wave.size())
+			{
+				this->currentWave = 0;
+				this->currentLevel++;
+			}
+			if (this->currentLevel < this->levels.size())
+			{
+				this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
+				spawnWave(this->currentLevel, this->currentWave);
+			}
+		}
+	}
 
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), newDT);
     this->enemyPjHandler.update(newDT);
@@ -371,7 +359,7 @@ void StageState::readFile(string fileName)
     }
 }
 
-void StageState::spawnWave(int index)
+void StageState::spawnWave(int levelIndex, int waveIndex)
 {
 	//level
 	// |->wave
@@ -381,8 +369,8 @@ void StageState::spawnWave(int index)
 	//			 |->amnount
 	for (int i = 0; i < this->spawnPoints.size(); i++)
 	{
-		Type type = this->levels.at(0).wave.at(index).toSpawn.at(i).type;
-		int amount = this->levels.at(0).wave.at(index).toSpawn.at(i).amount;
+		Type type = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).type;
+		int amount = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).amount;
 		for (int t = 0; t < amount; t++)
 		{
 			spawnEnemy(type, i);
