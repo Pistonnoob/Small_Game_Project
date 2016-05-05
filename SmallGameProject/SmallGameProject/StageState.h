@@ -9,6 +9,7 @@
 #include "ProjectileHandler.h"
 #include "Weapon.h"
 #include "Player.h"
+#include "Boss.h"
 
 
 struct ToSpawn

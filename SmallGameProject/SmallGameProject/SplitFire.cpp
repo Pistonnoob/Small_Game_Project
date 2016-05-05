@@ -6,7 +6,7 @@ SplitFire::SplitFire() : Ability()
 SplitFire::~SplitFire()
 {
 }
-void SplitFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, int triggerDelay, int projectilesOnSplit, float splitArc)
+void SplitFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay, int projectilesOnSplit, float splitArc)
 {
 	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
 	this->projectilesOnSplit = projectilesOnSplit;
@@ -30,7 +30,7 @@ float SplitFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::X
 
 		return this->attackDelay;
 	}
-	return 0;
+	return -1;
 
 }
 void SplitFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)

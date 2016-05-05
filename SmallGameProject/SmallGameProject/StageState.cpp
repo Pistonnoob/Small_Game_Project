@@ -184,7 +184,7 @@ int StageState::Update(float deltaTime)
 			if (this->currentLevel < this->levels.size())
 			{
 				this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
-				spawnWave(this->currentLevel, this->currentWave);
+				//spawnWave(this->currentLevel, this->currentWave);
 			}
 		}
 	}
@@ -397,7 +397,9 @@ void StageState::spawnEnemy(Type type, int pointIndex)
 		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &this->enemySubject, true);
 		break;
 	case(Type::BOSS) :
-
+		Boss* boss = new Boss(x, z);
+		boss->Initialize(&this->m_car, &this->enemySubject, true, 1);
+		this->enemies.push_back(boss);
 		break;
 	}
 }

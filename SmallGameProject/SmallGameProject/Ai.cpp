@@ -124,7 +124,16 @@ void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos, float delta
 }
 void Ai::updateBoss(Boss* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
-
+	actor->update(playerPos, deltaTime);
+	float distance = distanceBetween(actor->getPosition(), playerPos);
+	if (distance > 20.0f)
+	{
+		this->moveToPlayer(actor, playerPos);
+	}
+	if (distance < 10.0f)
+	{
+		this->moveAwayFromPlayer(actor, playerPos);
+	}
 }
 
 //private functions

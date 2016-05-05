@@ -123,7 +123,7 @@ void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float
 		break;
 	}
 }
-void ProjectileHandler::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay)
+void ProjectileHandler::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
 {
 	trigger_event trigger;
 	switch (evnt)
@@ -144,7 +144,7 @@ void ProjectileHandler::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, floa
 		break;
 	}
 }
-void ProjectileHandler::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay, float arcOnSplit, int projectilesOnSplit)
+void ProjectileHandler::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
 {
 	trigger_event trigger;
 	switch (evnt)
@@ -228,6 +228,11 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
 				nrOfProjectiles = evnt.nrOfProjectiles;
 
                 this->fireInArc(pos, dir, arcSplit, nrOfProjectiles);
+				this->projectiles.at(i)->Shutdown();
+				delete this->projectiles.at(i);
+				this->projectiles.erase(this->projectiles.begin() + i);
+				i--;
+				evnt.end--;
 
                 break;
 			case(Events::UNIQUE_FIRE::REVERSERBULLETS) :

@@ -10,7 +10,7 @@ Ability::Ability()
 Ability::~Ability()
 {
 }
-void Ability::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, int triggerDelay)
+void Ability::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay)
 {
 	this->arc = arc;
 	this->nrOfProjectiles = nrOfProjectiles;
@@ -36,4 +36,14 @@ void Ability::update(Enemy * enemy, EntitySubject * entitySubject, float deltaTi
 		this->chargesRefresh = 0;
 		this->chargesLeft++;
 	}
+}
+
+float Ability::getCooldown()
+{
+	return this->cooldown;
+}
+
+float Ability::getCDCounter()
+{
+	return this->cdCounter;
 }

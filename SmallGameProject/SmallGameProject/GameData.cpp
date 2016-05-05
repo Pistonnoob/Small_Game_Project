@@ -81,11 +81,11 @@ void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, in
 {
 }
 
-void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay)
+void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
 {
 }
 
-void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay, float arcOnSplit, int projectilesOnSplit)
+void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
 {
 }
 

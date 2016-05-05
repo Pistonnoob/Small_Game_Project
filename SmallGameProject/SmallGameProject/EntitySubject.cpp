@@ -44,7 +44,7 @@ void EntitySubject::notify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, 
     }
 }
 
-void EntitySubject::notify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay)
+void EntitySubject::notify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
 {
 	//Send the event to all the observers
 	std::set<Observer*>::iterator it;										//Create the iterator
@@ -56,7 +56,7 @@ void EntitySubject::notify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc,
 	}
 }
 
-void EntitySubject::notify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay, float arcOnSplit, int projectilesOnSplit)
+void EntitySubject::notify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
 {
 	//Send the event to all the observers
 	std::set<Observer*>::iterator it;										//Create the iterator

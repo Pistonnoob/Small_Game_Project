@@ -6,7 +6,7 @@ ReverseFire::ReverseFire() : Ability()
 ReverseFire::~ReverseFire()
 {
 }
-void ReverseFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, int triggerDelay)
+void ReverseFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay)
 {
 	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
 
@@ -29,7 +29,7 @@ float ReverseFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX:
 
 		return this->attackDelay;
 	}
-	return 0;
+	return -1;
 }
 void ReverseFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {

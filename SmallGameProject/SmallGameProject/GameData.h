@@ -41,8 +41,8 @@ public:
 
 	void onNotify(Entity* entity, Events::ENTITY evnt);
 	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
-	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay);
-	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, int triggerDelay, float arcOnSplit, int projectilesOnSplit);
+	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay);
+	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit);
 	void onNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
 
 	bool SavePlayerData(std::string filename);
