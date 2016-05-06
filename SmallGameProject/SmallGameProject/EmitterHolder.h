@@ -1,10 +1,19 @@
 #ifndef EMITTERHOLDER_H
 #define EMITTERHOLDER_H
-class EmitterHolder
+#include "ParticleEmitter.h"
+#include "Particle.h"
+#include <algorithm>
+class EmitterHolder :
+	public ParticleEmitter
 {
+private:
+
 public:
 	EmitterHolder();
-	~EmitterHolder();
+	virtual ~EmitterHolder();
+
+private:
+
 };
 
 #endif
