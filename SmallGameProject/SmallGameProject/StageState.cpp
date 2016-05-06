@@ -183,6 +183,7 @@ int StageState::Update(float deltaTime)
     RemoveDeadEnemies();
  
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), newDT);
+
     this->enemyPjHandler.update(newDT);
 
 	this->playerPjHandler.update(newDT);

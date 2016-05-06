@@ -5,7 +5,7 @@
 Ai::Ai()
 {
     srand(unsigned(time(0)));
-
+    this->nrOfActions = 2;
 }
 Ai::~Ai()
 {
@@ -41,21 +41,20 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 		Boss* bossPtr = (Boss*)actor;
 		updateBoss(bossPtr, playerPos, deltaTime);
 	}
-
-    if (commands.size() != 0)
+    for (int i = 0; i < this->nrOfActions; i++)
     {
-        int action = rand() % commands.size();
-
-        this->commands.at(action)->execute(*actor, deltaTime);
-        /*for (int i = 0; i < commands.size(); i++)
+        if (commands.size() != 0)
         {
-            this->commands.at(i)->execute(*actor, deltaTime);
-        }*/
-        delete this->commands.at(action);
-        this->commands.at(action) = nullptr;
+            int action = rand() % commands.size();
 
+            this->commands.at(action)->execute(*actor, deltaTime);
+            delete this->commands.at(action);
+            this->commands.at(action) = nullptr;
+            this->commands.erase(this->commands.begin() + action);
+
+        }
     }
-    //moveToPlayer(actor, playerPos);
+
 
     for (int i = 0; i < commands.size(); i++)
     {
