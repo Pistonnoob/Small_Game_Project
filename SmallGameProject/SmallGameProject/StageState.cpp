@@ -239,6 +239,11 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
 	//Render models
+
+	//Player and weapon render
+	gHandler->DeferredRender(this->player.GetModel(), &this->myCamera);
+	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
