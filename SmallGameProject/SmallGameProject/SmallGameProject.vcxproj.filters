@@ -237,6 +237,9 @@
     <ClCompile Include="SplitFire.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="HubState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -353,9 +356,6 @@
     <ClInclude Include="TestState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gameStruct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ShadowShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
@@ -416,6 +416,9 @@
     <ClInclude Include="EventLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HubState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredVertexShader.hlsl">
@@ -451,5 +454,6 @@
     <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="ShadowMapVertexShader.hlsl" />
   </ItemGroup>
 </Project>

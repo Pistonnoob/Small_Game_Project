@@ -333,6 +333,9 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		gHandler->ShadowRender(this->enemies[i]->GetModel(), &this->myCamera);
 	}
 
+	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
+	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
