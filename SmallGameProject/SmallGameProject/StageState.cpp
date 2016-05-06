@@ -13,6 +13,9 @@ StageState::StageState()
 	this->m_ball = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
+	this->player = Player();
+
+    this->playerPos = DirectX::XMFLOAT3(0, 0, 0);
 
 	this->playerPos = DirectX::XMFLOAT3(0, 0, 0);
 
@@ -60,7 +63,7 @@ void StageState::Shutdown()
 
 	this->myParticleHandler.Shutdown();
 
-	//Release your m_AI
+	this->player.Shutdown();
 
 	GameState::Shutdown();
 }
@@ -133,7 +136,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->ability2 = new SplitFire();
 		this->ability3 = new ReverseFire();
 
-
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
 		this->m_ground = Model();
@@ -150,7 +152,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
 		worldMatrix *= DirectX::XMMatrixTranslation(0.0f, -3.5f, 2.0f);
 		this->m_car.SetWorldMatrix(worldMatrix);
-
 
 		PointLight light;
 		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -171,6 +172,14 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
 		this->pointLights.push_back(light);
+
+		result = this->player.Initialize(device, deviceContext, "sphere1", "carSLS3", true);
+		if (!result) {
+			return false;
+		}
+
+		DirectX::XMFLOAT3 a = this->player.GetPosition();
+		int i = 0;
 	}
 
 
@@ -181,16 +190,35 @@ int StageState::HandleInput(InputHandler * input)
 {
 	int result = 1;
 
-	if (input->isKeyPressed(DIK_ESCAPE))
+	if (input->isKeyDown(DIK_ESCAPE))
 		this->exitStage = true;
 
+	if (input->isKeyDown(DIK_W)) {
+		this->player.moveUp();
+	}
+	if (input->isKeyDown(DIK_S)) {
+		this->player.moveDown();
+	}
+	if (input->isKeyDown(DIK_D)) {
+		this->player.moveRight();
+	}
+	if (input->isKeyDown(DIK_A)) {
+		this->player.moveLeft();
+	}
 
 	return result;
 }
 
-int StageState::Update(float deltaTime)
+int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
+
+	this->player.Update(input, gHandler, &this->myCamera);
+
+	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0, 0.0f, -20.0f));
+
+	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
 	if (this->exitStage)
 	{
@@ -234,33 +262,61 @@ int StageState::Update(float deltaTime)
 int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
-
 	//Render models
+
+	//Player and weapon render
+	gHandler->DeferredRender(this->player.GetModel(), &this->myCamera);
+	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
+		XMFLOAT3 pos = this->enemies.at(i)->GetPosition();
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
-		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
+
+		gHandler->DeferredRender(this->enemies.at(i)->GetModel(), &this->myCamera);
+
 	}
+    for (int i = 0; i < this->projectiles.size(); i++)
+    {
+        XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
+        DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+        this->m_ball.SetWorldMatrix(worldMatrix);
+
+        gHandler->DeferredRender(this->projectiles.at(i)->GetModel(), &this->myCamera);
+    }
+
 	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
 
 	//Set deferred render targets
 
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
-		XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
+		XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_ball.SetWorldMatrix(worldMatrix);
 
-		gHandler->DeferredRender(this->projectiles.at(i)->getModel(), &this->myCamera);
+		gHandler->DeferredRender(this->projectiles.at(i)->GetModel(), &this->myCamera);
 	}
 	XMFLOAT3 pos;
 	DirectX::XMMATRIX worldMatrix;
 	/*pos = this->test->getPosition();
 	worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 	this->m_ball.SetWorldMatrix(worldMatrix);
+    for (int i = 0; i < this->projectiles.size(); i++)
+    {
+        XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
+        DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+        this->m_ball.SetWorldMatrix(worldMatrix);
+
+        gHandler->DeferredRender(this->projectiles.at(i)->GetModel(), &this->myCamera);
+    }
+    XMFLOAT3 pos;
+    DirectX::XMMATRIX worldMatrix;
+    /*pos = this->test->getPosition();
+    worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+    this->m_ball.SetWorldMatrix(worldMatrix);
 
 	gHandler->DeferredRender(this->test->getModel(), &this->myCamera);*/
 
@@ -271,7 +327,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	//shadowMap
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);
+		gHandler->ShadowRender(this->enemies[i]->GetModel(), &this->myCamera);
 	}
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);

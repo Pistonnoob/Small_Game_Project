@@ -10,11 +10,12 @@ class Entity {
 protected:
     float posX;
     float posZ;
-private:
-	
+
 	Model* entityModel;
 	BoundingVolume* entityBV;
 	EntitySubject entitySubject;
+
+private:
 
 public:
 	Entity();	//Entitys without BoundingVolume
@@ -27,9 +28,10 @@ public:
 	bool Initialize(Model* model, bool isSphere);	
 	void Shutdown(bool isEnemy = false);
 
-    Model* getModel();
-    BoundingVolume* getBV();
-    DirectX::XMFLOAT3 getPosition();
+    Model* GetModel();
+    BoundingVolume* GetBV();
+    DirectX::XMFLOAT3 GetPosition();
+
 };
 
 #endif

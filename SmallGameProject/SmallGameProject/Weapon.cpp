@@ -2,8 +2,9 @@
 
 Weapon::Weapon()
 {
-	this->weapondModel = new Model();
 
+	this->weapondModel = new Model();
+	
 	for (int i = 0; i < this->nrOfModifiers; i++) {
 		this->modifyers[i] = 1.f;
 	}
@@ -39,7 +40,7 @@ void Weapon::ShutDown()
 	}
 }
 
-const Model * Weapon::GetModel()
+Model * Weapon::GetModel()
 {
 	return this->weapondModel;
 }

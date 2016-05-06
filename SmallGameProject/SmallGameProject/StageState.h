@@ -3,6 +3,7 @@
 #include "GameState.h"
 #include "ParticleHandler.h"
 #include "Ai.h"
+#include "Player.h"
 #include "Projectile.h"
 #include "Abilities.h"
 #include "Algorithm.h"
@@ -19,9 +20,11 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
-	ParticleHandler myParticleHandler;
 
-    vector<Projectile*> projectiles;
+	Player player;
+	ParticleHandler myParticleHandler;
+	vector<Projectile*> projectiles;
+
     float t;
 
     DirectX::XMFLOAT3 playerPos;
@@ -43,10 +46,8 @@ public:
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 
 	virtual int HandleInput(InputHandler* input);
-	virtual int Update(float deltaTime);
+	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
-
-private:	//Functions
 
 };
 

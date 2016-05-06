@@ -33,7 +33,7 @@ public:
 
 
 	virtual int HandleInput(InputHandler* input);
-	virtual int Update(float deltaTime);
+	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
 };
 

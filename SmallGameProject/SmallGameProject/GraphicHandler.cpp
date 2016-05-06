@@ -19,6 +19,8 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 {
 	std::string errorMessage;
 	bool result;
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 
 	//Create the Direct3D handler
 	this->engine = new D3DHandler;
@@ -61,6 +63,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	if (!result) {
 		return false;
 	}
+
 	//here is were I put in the shadowShader
 	this->shadowShaderH = new ShadowShaderHandler;
 	if (this->shadowShaderH == false)
@@ -68,7 +71,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 		return false;
 	}
 	this->shadowShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount(), screenWidth, screenHeight);
-
 
 	this->screenQuad = new ScreenQuad;
 	if (!this->screenQuad) {
@@ -201,6 +203,7 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos, std::vector<PointLigh
 	LightShaderParameters* shaderParams = new LightShaderParameters;
 	shaderParams->viewMatrix = this->baseViewMatrix;
 	shaderParams->projectionMatrix = this->orthographicMatrix;
+
 	shaderParams->lightViewMatrix = this->lightView;
 	shaderParams->lightProjectionMatrix = this->lightPerspective;
 
@@ -221,7 +224,6 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos, std::vector<PointLigh
 
 	return;
 }
-
 
 void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera, int amountOfParticles)
 {
@@ -245,6 +247,7 @@ void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 		this->SetShadowRTV();
 		this->activeRTV = 1;
 	}
+
 	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
 	shadowShaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	
@@ -326,6 +329,7 @@ void GraphicHandler::Shutdown()
 		delete this->particleShaderH;
 		this->particleShaderH = nullptr;
 	}
+
 	//delete shadowShaderHander object
 	if (this->shadowShaderH) {
 		this->shadowShaderH->Shutdown();
@@ -366,6 +370,26 @@ bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX
 void GraphicHandler::SetDirectionalLight(DirectionalLight light)
 {
 	this->dirLight = light;
+}
+
+DirectX::XMMATRIX GraphicHandler::GetPerspectiveMatrix()
+{
+	return this->perspectiveMatrix;
+}
+
+DirectX::XMMATRIX GraphicHandler::GetOrthograpicMatrix()
+{
+	return this->orthographicMatrix;
+}
+
+int GraphicHandler::GetScreenWidth()
+{
+	return this->screenWidth;
+}
+
+int GraphicHandler::GetScreenHeight()
+{
+	return this->screenHeight;
 }
 
 void GraphicHandler::ClearRTVs()

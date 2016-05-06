@@ -62,7 +62,7 @@ float4 main(PSInput input) : SV_TARGET
 	//float4 lightPos = (10.0f, 10.0f, 0.0f, 1.0f);
 
 	// Set the bias value for fixing the floating point precision issues.
-	float bias = 0.00005f;
+	float bias = 0.00002f;
 
 	//Sample the diffuse texture from deferred render
 	diffColor = diffTexture.Sample(pointSampler, textCoords);
@@ -78,7 +78,6 @@ float4 main(PSInput input) : SV_TARGET
 	
 	//Sample the texture with positions in world space from deferred render
 	worldPos = worldPosTexture.Sample(pointSampler, textCoords);
-
 
 	float3 outVec = normalize(-Position[0]);
 

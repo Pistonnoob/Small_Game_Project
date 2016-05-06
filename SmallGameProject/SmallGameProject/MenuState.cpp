@@ -109,7 +109,7 @@ int MenuState::HandleInput(InputHandler * input)
 	return result;
 }
 
-int MenuState::Update(float deltaTime)
+int MenuState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
 

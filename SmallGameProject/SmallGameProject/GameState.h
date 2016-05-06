@@ -28,7 +28,7 @@ public:
 	void SetManualClearing(bool myCase);
 
 	virtual int HandleInput(InputHandler* input) = 0;
-	virtual int Update(float deltaTime) = 0;
+	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler) = 0;
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd) = 0;
 	
 };
