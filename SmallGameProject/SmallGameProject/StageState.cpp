@@ -60,11 +60,6 @@ void StageState::Shutdown()
 
 	this->myParticleHandler.Shutdown();
 
-	this->test->Shutdown();
-	delete this->test;
-	this->test = nullptr;
-
-
 	//Release your m_AI
 
 
