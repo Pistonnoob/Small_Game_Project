@@ -104,22 +104,30 @@ Weapon * Player::GetWeapon()
 
 void Player::moveRight()
 {
-	this->posX += (0.05f * this->playerMovmentSpeed);
+	if (this->posX < 42.0f) {
+		this->posX += (0.05f * this->playerMovmentSpeed);
+	}
 }
 
 void Player::moveLeft()
 {
-	this->posX -= (0.05f * this->playerMovmentSpeed);
+	if (this->posX > -42.0f) {
+		this->posX -= (0.05f * this->playerMovmentSpeed);
+	}
 }
 
 void Player::moveUp()
 {
-	this->posZ += (0.05f * this->playerMovmentSpeed);
+	if (this->posZ < 42.0f) {
+		this->posZ += (0.05f * this->playerMovmentSpeed);
+	}
 }
 
 void Player::moveDown()
 {
-	this->posZ -= (0.05f * this->playerMovmentSpeed);
+	if (this->posZ > -42.0f) {
+		this->posZ -= (0.05f * this->playerMovmentSpeed);
+	}
 }
 
 void Player::move(DirectX::XMFLOAT3 moveVec)
