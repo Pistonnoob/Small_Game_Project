@@ -1,6 +1,7 @@
 #ifndef STAGESTATE_H
 #define STAGESTATE_H
 #include "GameState.h"
+#include "ParticleHandler.h"
 #include "Ai.h"
 #include "Projectile.h"
 #include "Abilities.h"
@@ -18,8 +19,9 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
+	ParticleHandler myParticleHandler;
+
     vector<Projectile*> projectiles;
-    Projectile* test;
     float t;
 
     DirectX::XMFLOAT3 playerPos;
@@ -30,6 +32,9 @@ private:	//Variables
 
 	bool exitStage;
 
+	float camPosX;
+	float camPosZ;
+	bool inc;
 public:
 	StageState();
 	virtual ~StageState();

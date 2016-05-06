@@ -28,7 +28,7 @@ GameData* GameData::getInstance()
 	}
 }
 
-void GameData::onNotify(const Entity* entity, Events::ENTITY evnt)
+void GameData::OnNotify(const Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
 	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {

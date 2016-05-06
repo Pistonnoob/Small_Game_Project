@@ -134,6 +134,10 @@ int MenuState::Update(float deltaTime)
 int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
+
 	gHandler->DeferredRender(&this->m_model, &this->myCamera);
+
+	gHandler->LightRender(this->myCamera.GetCameraPos());
+
 	return result;
 }
