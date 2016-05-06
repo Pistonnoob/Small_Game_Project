@@ -17,10 +17,6 @@ private:
 	static GameData* single;
 
 	GameData(GameData const&);
-			//Only GameData will create itself
-
-								//Data
-								//Character
 	int playerHighScore;
 	int playerHealth;
 	int playerMovmentSpeed;
@@ -35,26 +31,25 @@ private:
 public:
 	virtual ~GameData();
 
-	static GameData* getInstance();
+	static GameData* GetInstance();
 
-	void shutdown();
+	void Shutdown();
 	void Update(float deltaTime);
 
-	void onNotify(const Entity* entity, Events::ENTITY evnt);
-	void onNotify(const Entity* entity, Events::ACHIEVEMENT achi);
+	void OnNotify(Entity* entity, Events::ENTITY evnt);
+	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::PICKUP evnt);
 
-	void onNotify(Entity* entity, Events::ENTITY evnt);
-	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
-	void onNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	void OnNotify(const Entity* entity, Events::ACHIEVEMENT achi);
 
-	void onNotify(Entity* entity, Events::PICKUP evnt);
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
 
-	void render(GraphicHandler * gHandler, CameraHandler* camera);
+	void Render(GraphicHandler * gHandler, CameraHandler* camera);
 
-	Weapon* getWeapon(int weaponEnum);
+	Weapon* GetWeapon(int weaponEnum);
 };
 
 #endif

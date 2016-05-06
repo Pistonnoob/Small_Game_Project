@@ -7,6 +7,6 @@ FireCommand::FireCommand(DirectX::XMFLOAT3 dir)
 
 void FireCommand::execute(Actor& actor)
 {
-    actor.setAimDir(this->dir);
-    actor.fire();
+    actor.SetAimDir(this->dir);
+    actor.Fire();
 }

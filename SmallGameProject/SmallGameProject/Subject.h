@@ -8,17 +8,14 @@ class Subject {
 
 protected:
 	std::set<Observer*> observers;
-
-private:
-
-
 public:
 	Subject();
 	virtual ~Subject();
-	virtual void addObserver(Observer* observer) = 0;
-	virtual void removeObserver(Observer* observer) = 0;
-    virtual void notify(Entity* entity, Events::ENTITY evnt) = 0;
-	virtual void notify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets) = 0;
+	virtual void AddObserver(Observer* observer) = 0;
+	virtual void RemoveObserver(Observer* observer) = 0;
+    virtual void Notify(Entity* entity, Events::ENTITY evnt) = 0;
+	virtual void Notify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets) = 0;
+	virtual void Notify(Entity* entity, Events::PICKUP evnt) = 0;
 };
 
 #endif

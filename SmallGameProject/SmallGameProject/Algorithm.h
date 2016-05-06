@@ -16,10 +16,24 @@ namespace Algorithm {
 	//A curve traced by a point attached to a circle of radius r rolling around the inside of a fixed circle of radius R, where the point is at a distance d from the center of the interior circle.
 	void GetHypotrochoid(int& x, int&y, float t, int bigR, int r, int d);
 
-	void GetSawtoothWave(int& x, int& y, int t, int period, int min, int max);
+	//Stores the result in x and y
+	void GetParabola(float& x, float& y, float t);
+	//Stores the result in x and y
+	void GetCircle(float& x, float&y, float t);
+	//
+	void GetEllipse(float& x, float& y, float t, float a, float b);
+	//xLobes and yLobes describe the number of lobes of the figure
+	void GetLissajousCurve(float& x, float& y, float t, float a, float b, float xLobes, float yLobes);
+	//A curve traced by a pofloat attached to a circle of radius r rolling around the inside of a fixed circle of radius R, where the pofloat is at a distance d from the center of the floaterior circle.
+	void GetHypotrochoid(float& x, float&y, float t, float bigR, float r, float d);
+
+	void GetSawtoothWave(int& x, int& y, float t, int period, int min, int max);
 	void GetTriangleWave(int & x, int & y, float t, int period, int min, int max);
-	void GetSquareWave(int & x, int & y, float t, int period, int max, int min);
-	void GetSineWave(int& x, int& y, float t, int period, int max, int min);
+	void GetSquareWave(int & x, int & y, float t, int period, int min, int max);
+	void GetSineWave(int& x, int& y, float t, int period, int min, int max);
+	void GetSawtoothWave(float& x, float& y, float t, float period, float min, float max);
+	void GetTriangleWave(float & x, float & y, float t, float period, float min, float max);
+	void GetSquareWave(float & x, float & y, float t, float period, float min, float max);
 }
 
 

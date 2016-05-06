@@ -35,7 +35,7 @@ GameData::~GameData()
 	
 }
 
-GameData* GameData::getInstance()
+GameData* GameData::GetInstance()
 {
 	if (!isInstatiated) 
 	{
@@ -46,7 +46,7 @@ GameData* GameData::getInstance()
 	return single;
 }
 
-void GameData::shutdown()
+void GameData::Shutdown()
 {
 	
 	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
@@ -64,7 +64,7 @@ void GameData::Update(float deltaTime)
 
 }
 
-void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
+void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
 	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
@@ -74,7 +74,7 @@ void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
 	return;
 }
 
-void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
+void GameData::OnNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 {
 	if (achi == Events::ACHIEVEMENT::WEAPON_UNLOCK)
 	{
@@ -82,17 +82,17 @@ void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 	}
 }
 
-void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
+void GameData::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
 	//??
 }
 
-void GameData::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+void GameData::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
 {
 	//helloooooooo
 }
 
-void GameData::onNotify(Entity * entity, Events::PICKUP evnt)
+void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
 	Player* ptr = nullptr;
 
@@ -103,7 +103,7 @@ void GameData::onNotify(Entity * entity, Events::PICKUP evnt)
 
 	//resulterar till:
 
-	ptr->setPowerUp(Modifiers::POWERUPS::SPREAD);
+	ptr->SetPowerUp(Modifiers::POWERUPS::SPREAD);
 }
 
 bool GameData::SavePlayerData(std::string filename)
@@ -152,12 +152,12 @@ bool GameData::LoadPlayerData(std::string filename)
 	return true;
 }
 
-void GameData::render(GraphicHandler * gHandler, CameraHandler * camera)
+void GameData::Render(GraphicHandler * gHandler, CameraHandler * camera)
 {
 	system("pause");
 }
 
-Weapon * GameData::getWeapon(int weaponEnum)
+Weapon * GameData::GetWeapon(int weaponEnum)
 {
 	return &weaponArsenal[0];
 }

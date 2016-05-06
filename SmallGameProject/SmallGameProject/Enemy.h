@@ -19,12 +19,12 @@ public:
 	virtual void Shutdown() = 0;
 	
 
-    virtual void moveRight();
-    virtual void moveLeft();
-    virtual void moveUp();
-    virtual void moveDown();
-    virtual void fire();
-    virtual void move(DirectX::XMFLOAT3 moveVec) ;
+    virtual void MoveRight();
+    virtual void MoveLeft();
+    virtual void MoveUp();
+    virtual void MoveDown();
+    virtual void Fire();
+    virtual void Move(DirectX::XMFLOAT3 moveVec) ;
 
 };
 

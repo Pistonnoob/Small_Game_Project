@@ -16,12 +16,12 @@ float ReverseFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX:
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
 		this->isActivated = true;
-		float x = (playerPos.x - enemy->getPosition().x) * 0.01f;
-		float z = (playerPos.z - enemy->getPosition().z) * 0.01f;
+		float x = (playerPos.x - enemy->GetPosition().x) * 0.01f;
+		float z = (playerPos.z - enemy->GetPosition().z) * 0.01f;
 
-		enemy->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+		enemy->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
 
-		entitySubject->notify(enemy, Events::UNIQUE_FIRE::REVERSERBULLETS, this->arc, this->nrOfProjectiles);
+		entitySubject->Notify(enemy, Events::UNIQUE_FIRE::REVERSERBULLETS, this->arc, this->nrOfProjectiles);
 
 		this->cdCounter = 0;
 		this->chargesLeft--;
@@ -39,7 +39,7 @@ void ReverseFire::update(Enemy* enemy, EntitySubject* entitySubject)
 	}
 	if (this->counter >= this->triggerDelay && this->isActivated == true)
 	{
-		entitySubject->notify(enemy, Events::ABILITY_TRIGGER::REVERSER_PROJECTILES, 3.14f, 15);
+		entitySubject->Notify(enemy, Events::ABILITY_TRIGGER::REVERSER_PROJECTILES, 3.14f, 15);
 		this->isActivated = false;
 		this->counter = 0;
 	}

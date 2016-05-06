@@ -31,14 +31,14 @@ void ProjectileHandler::ShutDown()
 	this->projectiles.clear();
 
 }
-void ProjectileHandler::update(float deltaTime)
+void ProjectileHandler::Update(float deltaTime)
 {
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
         if (this->projectiles.at(i) != nullptr)
         {
             this->projectiles.at(i)->update(deltaTime);
-            DirectX::XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
+            DirectX::XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
             if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
             {
                 Projectile* temp = this->projectiles.at(i);
@@ -52,7 +52,7 @@ void ProjectileHandler::update(float deltaTime)
 
 	}
 }
-void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)
+void ProjectileHandler::Render(GraphicHandler * gHandler, CameraHandler* camera)
 {
 	XMFLOAT3 pos;
 	DirectX::XMMATRIX worldMatrix;
@@ -60,15 +60,15 @@ void ProjectileHandler::render(GraphicHandler * gHandler, CameraHandler* camera)
 	{
         if (this->projectiles.at(i) != nullptr)
         {
-            pos = this->projectiles.at(i)->getPosition();
+            pos = this->projectiles.at(i)->GetPosition();
             worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-            this->projectiles.at(i)->getModel()->SetWorldMatrix(worldMatrix);
+            this->projectiles.at(i)->GetModel()->SetWorldMatrix(worldMatrix);
 
-            gHandler->DeferredRender(this->projectiles.at(i)->getModel(), camera);
+            gHandler->DeferredRender(this->projectiles.at(i)->GetModel(), camera);
         }
 	}
 }
-bool ProjectileHandler::intersectionTest(Entity * entity)
+bool ProjectileHandler::IntersectionTest(Entity * entity)
 {
 	bool result = false;
 
@@ -76,15 +76,15 @@ bool ProjectileHandler::intersectionTest(Entity * entity)
 
 	return result;
 }
-void ProjectileHandler::onNotify(Entity* entity, Events::ENTITY evnt)
+void ProjectileHandler::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
 
 	switch (evnt)
 	{
 	case(Events::ENTITY::Fire) :
 
-		XMFLOAT3 dir = entity->getAimDir();
-		XMFLOAT3 pos = entity->getPosition();
+		XMFLOAT3 dir = entity->GetAimDir();
+		XMFLOAT3 pos = entity->GetPosition();
 
 		this->projectiles.push_back(new Projectile());
 		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, nullptr, pos.x, pos.z, dir);
@@ -92,7 +92,7 @@ void ProjectileHandler::onNotify(Entity* entity, Events::ENTITY evnt)
 	}
 }
 
-void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
+void ProjectileHandler::OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
 
 	trigger_event event;
@@ -100,7 +100,7 @@ void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float
 	{
 	case(Events::UNIQUE_FIRE::ARCFIRE) :
 
-		fireInArc(entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
+		FireInArc(entity->GetPosition(), entity->GetAimDir(), arc, nrOfBullets);
 
 		break;
 	case(Events::UNIQUE_FIRE::SPLITFIRE) :
@@ -108,7 +108,7 @@ void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float
 		event.start = this->projectiles.size();
 		event.type = Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES;
 
-		fireInArc(entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
+		FireInArc(entity->GetPosition(), entity->GetAimDir(), arc, nrOfBullets);
 
 		event.end = this->projectiles.size();
 
@@ -120,7 +120,7 @@ void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float
 		event.start = this->projectiles.size();
 		event.type = Events::ABILITY_TRIGGER::REVERSER_PROJECTILES;
 
-		fireInArc(entity->getPosition(), entity->getAimDir(), arc, nrOfBullets);
+		FireInArc(entity->GetPosition(), entity->GetAimDir(), arc, nrOfBullets);
 
 		event.end = this->projectiles.size();
 		this->eventsToTrack.push_back(event);
@@ -128,7 +128,7 @@ void ProjectileHandler::onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float
 		break;
 	}
 }
-void ProjectileHandler::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+void ProjectileHandler::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
 {
 	for (int i = 0; i < this->eventsToTrack.size(); i++)
 	{
@@ -140,10 +140,10 @@ void ProjectileHandler::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, 
 		}
 	}
 }
-void ProjectileHandler::onNotify(Entity * entity, Events::PICKUP evnt)
+void ProjectileHandler::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
 }
-void ProjectileHandler::fireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float arc, int nrOfBullets)
+void ProjectileHandler::FireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float arc, int nrOfBullets)
 {
 	float x = dir.x;
 	float y = dir.y;
@@ -203,7 +203,7 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
 
                 dir = this->projectiles.at(i)->getMoveDir();
                 pos = this->projectiles.at(i)->getPos();
-                this->fireInArc(pos, dir, arc, nrOfBullets);
+                this->FireInArc(pos, dir, arc, nrOfBullets);
 
                 break;
             case(Events::ABILITY_TRIGGER::REVERSER_PROJECTILES) :

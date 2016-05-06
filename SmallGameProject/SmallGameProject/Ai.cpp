@@ -71,14 +71,15 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 }
 void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    if (distanceBetween(actor->getPosition(), playerPos) > 0.5f)
+
+    if (distanceBetween(actor->GetPosition(), playerPos) > 0.5f)
     {
         moveToPlayer(actor, playerPos);
     }
 }
 void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    float distance = distanceBetween(actor->getPosition(), playerPos);
+    float distance = distanceBetween(actor->GetPosition(), playerPos);
     if (distance > RANGED_MAX_DESIRED_DISTANCE)
     {
         moveToPlayer(actor, playerPos);
@@ -89,18 +90,18 @@ void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos)
     }
     if(distance < RANGED_MAX_DESIRED_DISTANCE)
     {
-        float x = (playerPos.x - actor->getPosition().x) * 0.02f;
-        float z = (playerPos.z - actor->getPosition().z) * 0.02f;
+        float x = (playerPos.x - actor->GetPosition().x) * 0.02f;
+        float z = (playerPos.z - actor->GetPosition().z) * 0.02f;
         this->commands.push_back(new FireCommand(DirectX::XMFLOAT3(x,0,z)));
     }
 }
 void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    if (distanceBetween(actor->getPosition(), playerPos) > MELEE_MAX_DESIRED_DISTANCE)
+    if (distanceBetween(actor->GetPosition(), playerPos) > MELEE_MAX_DESIRED_DISTANCE)
     {
         moveToPlayer(actor, playerPos);
     }
-    else if (distanceBetween(actor->getPosition(), playerPos) < MELEE_MIN_DESIRED_DISTANCE)
+    else if (distanceBetween(actor->GetPosition(), playerPos) < MELEE_MIN_DESIRED_DISTANCE)
     {
         moveAwayFromPlayer(actor, playerPos);
     }
@@ -114,38 +115,38 @@ void Ai::updateBoss(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 void Ai::moveToPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 {
     DirectX::XMFLOAT3 pos = playerPos;
-    if (actor->getPosition().x < playerPos.x )
+    if (actor->GetPosition().x < playerPos.x )
     {
         this->commands.push_back(new MoveRightCommand());
     }
-    else if (actor->getPosition().x > playerPos.x )
+    else if (actor->GetPosition().x > playerPos.x )
     {
         this->commands.push_back(new MoveLeftCommand());
     }
-    if (actor->getPosition().z < playerPos.z )
+    if (actor->GetPosition().z < playerPos.z )
     {
         this->commands.push_back(new MoveUpCommand());
     }
-    else if (actor->getPosition().z > playerPos.z)
+    else if (actor->GetPosition().z > playerPos.z)
     {
         this->commands.push_back(new MoveDownCommand());
     }
 }
 void Ai::moveAwayFromPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    if (actor->getPosition().x < playerPos.x)
+    if (actor->GetPosition().x < playerPos.x)
     {
         this->commands.push_back(new MoveLeftCommand());
     }
-    else if (actor->getPosition().x > playerPos.x )
+    else if (actor->GetPosition().x > playerPos.x )
     {
         this->commands.push_back(new MoveRightCommand());
     }
-    if (actor->getPosition().z < playerPos.z )
+    if (actor->GetPosition().z < playerPos.z )
     {
         this->commands.push_back(new MoveDownCommand());
     }
-    else if (actor->getPosition().z > playerPos.z)
+    else if (actor->GetPosition().z > playerPos.z)
     {
         this->commands.push_back(new MoveUpCommand());
     }
@@ -156,8 +157,8 @@ void Ai::separateActors(std::vector<Enemy*>& actors)
     {
         for (int a = 1; a < actors.size() && a != i; a++)
         {
-            DirectX::XMFLOAT3 pos1 = actors.at(i)->getPosition();
-            DirectX::XMFLOAT3 pos2 = actors.at(a)->getPosition();
+            DirectX::XMFLOAT3 pos1 = actors.at(i)->GetPosition();
+            DirectX::XMFLOAT3 pos2 = actors.at(a)->GetPosition();
 
             float d = distanceBetween(pos1, pos2);
             if (d <= 0.001f)
@@ -204,11 +205,11 @@ void Ai::seperate(Enemy* actor1, Enemy* actor2, float amplitude, DirectX::XMFLOA
 {
     dir.x *= amplitude;
     dir.z *= amplitude;
-    actor1->move(dir);
+    actor1->Move(dir);
 
     dir.x *= -1.0f;
     dir.z *= -1.0f;
-    actor2->move(dir);
+    actor2->Move(dir);
 }
 
 int Ai::getNrOfActions() const

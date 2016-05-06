@@ -15,7 +15,7 @@ public:
 
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);
 	void Shutdown();
-    virtual void fire();
+    virtual void Fire();
 };
 
 #endif

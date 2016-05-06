@@ -105,21 +105,29 @@ void D3DHandler::ClearDepthAndRTVViews()
 		);
 }
 
-void D3DHandler::SetDepth(const bool &desired)
+void D3DHandler::SetDepth(const int &desired) //1 = enable, 2 = disable, 3 = enable -write
 {
-	if (desired == true)
+	if (desired == 1)
 	{
 		this->gDeviceContext->OMSetDepthStencilState(this->enableDepth, 1);
 	}
-	else
+	else if(desired == 2)
 	{
 		this->gDeviceContext->OMSetDepthStencilState(this->disableDepth, 1);
 	}
+	else if (desired == 3) {
+		this->gDeviceContext->OMSetDepthStencilState(this->particleDepth, 1);
+	}
 }
 
-void D3DHandler::SetRenderTargetView()
+void D3DHandler::SetRenderTargetView(ID3D11DepthStencilView* depthView)
 {
-	this->gDeviceContext->OMSetRenderTargets(1, &this->backBufferRTV, this->mDepthStencilView);
+	if (depthView) {
+		this->gDeviceContext->OMSetRenderTargets(1, &this->backBufferRTV, depthView);
+	}
+	else {
+		this->gDeviceContext->OMSetRenderTargets(1, &this->backBufferRTV, this->mDepthStencilView);
+	}
 }
 
 void D3DHandler::PresentScene()
@@ -363,6 +371,15 @@ void D3DHandler::CreateStencilStates() throw(...)
 	enableDepth.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	resultHelper = this->gDevice->CreateDepthStencilState(&enableDepth, &this->enableDepth);
+	if (FAILED(resultHelper))
+	{
+		throw("failed to create the 'enable Depth' stencil state");
+	}
+
+	//enabled but no new write
+	enableDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO; // disables writes to the depth buffer
+
+	resultHelper = this->gDevice->CreateDepthStencilState(&enableDepth, &this->particleDepth);
 	if (FAILED(resultHelper))
 	{
 		throw("failed to create the 'enable Depth' stencil state");

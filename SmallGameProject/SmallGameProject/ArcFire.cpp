@@ -16,12 +16,12 @@ float ArcFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMF
 {
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
-		float x = (playerPos.x - enemy->getPosition().x);
-		float z = (playerPos.z - enemy->getPosition().z);
+		float x = (playerPos.x - enemy->GetPosition().x);
+		float z = (playerPos.z - enemy->GetPosition().z);
 
-		enemy->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+		enemy->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
 
-		entitySubject->notify(enemy, Events::UNIQUE_FIRE::ARCFIRE, this->arc, this->nrOfProjectiles);
+		entitySubject->Notify(enemy, Events::UNIQUE_FIRE::ARCFIRE, this->arc, this->nrOfProjectiles);
 
 		this->cdCounter = 0;
 		this->chargesLeft--;
