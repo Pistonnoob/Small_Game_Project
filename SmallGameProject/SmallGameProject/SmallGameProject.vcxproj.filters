@@ -238,7 +238,7 @@
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="EmitterHolder.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -417,7 +417,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EmitterHolder.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
