@@ -16,6 +16,7 @@ EmitterPlayerSpawn::~EmitterPlayerSpawn()
 
 void EmitterPlayerSpawn::ShutdownSpecific()
 {
+	this->currentParticleCnt = 0;
 	while (this->root)
 	{
 		ParticleContainer* nextContainer = this->root->next;
@@ -54,7 +55,7 @@ bool EmitterPlayerSpawn::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCo
 
 
 	//Emitt new particles
-	this->EmitParticles(dT);
+	this->EmittParticles(dT);
 
 	//Update the particles
 	this->UpdateParticles(dT);
@@ -196,7 +197,7 @@ bool EmitterPlayerSpawn::InitializeBuffers(ID3D11Device * device)
 	return true;
 }
 
-void EmitterPlayerSpawn::EmitParticles(float dT)
+void EmitterPlayerSpawn::EmittParticles(float dT)
 {
 	bool emitParticle, found;
 	float positionX, positionY, positionZ, velocity, red, green, blue;
@@ -247,7 +248,7 @@ void EmitterPlayerSpawn::EmitParticles(float dT)
 
 			//If the root was empty, set it as the root
 			if (node == nullptr)
-				node = toInsert;
+				this->root = toInsert;
 			else
 			{
 				//While the node is further from the camera than the node toInsert
@@ -308,13 +309,15 @@ void EmitterPlayerSpawn::KillParticles()
 			//If root
 			if (node == this->root)
 			{
-				this->root = nullptr;
+				this->root = node->next;
 				delete node;
+				node = this->root;
 			}
 			else
 			{
-				last->next = node->next;;
+				last->next = node->next;
 				delete node;
+				node = last;
 			}
 			this->currentParticleCnt--;
 		}

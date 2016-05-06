@@ -4,6 +4,7 @@
 #include "Algorithm.h"
 #include "Texture.h"
 #include "EmitterPrototype.h"
+#include "EmitterPlayerSpawn.h"
 #include "GraphicHandler.h"
 #include "CameraHandler.h"
 
@@ -12,23 +13,9 @@ class ParticleHandler :
 {
 private:
 	std::vector<ParticleEmitter*> emitters;
-	struct Particle {
-		float x, y, z, scale;
-		float r, g, b, rotation;
-	};
-	struct VertexType {
-		DirectX::XMFLOAT4 position;
-		DirectX::XMFLOAT4 color;
-	};
-	ID3D11Buffer* vertexBuffer;
-	ID3D11Buffer* indexBuffer;
 
 	Texture myTextures;
 
-	Particle particles[5];
-	VertexType vertices[5];
-
-	DirectX::XMMATRIX world;
 public:
 	ParticleHandler();
 	virtual ~ParticleHandler();
@@ -47,7 +34,6 @@ public:
 	int CreateEmitterLissajous(ID3D11ShaderResourceView* texture, int widthConstant, int heightConstant, int xLobes, int yLobes);
 	int CreateEmitterHypotrochoid(ID3D11ShaderResourceView* texture, int circleRadius, int containedCircleRadius, int pointOffset);
 private:	//Functions
-	int RenderBuffers(ID3D11DeviceContext* deviceContext);
 };
 
 #endif

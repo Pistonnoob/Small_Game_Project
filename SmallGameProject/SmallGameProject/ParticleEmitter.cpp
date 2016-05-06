@@ -80,6 +80,11 @@ void ParticleEmitter::SetCameraPos(DirectX::XMFLOAT4 cameraPos)
 	this->cameraPos = DirectX::XMFLOAT3(cameraPos.x, cameraPos.y, cameraPos.z);
 }
 
+void ParticleEmitter::GetWorld(DirectX::XMMATRIX& storeIn)
+{
+	storeIn = this->world;
+}
+
 
 
 bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)

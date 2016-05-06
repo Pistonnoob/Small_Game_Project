@@ -12,6 +12,7 @@ EmitterPrototype::EmitterPrototype()
 	this->maxParticles = 0;
 	this->accumulatedTime = 0.0f;
 	this->vertexCount = this->indexCount = 0;
+	this->world = DirectX::XMMatrixIdentity();
 
 	this->vertexBuffer = this->indexBuffer = nullptr;
 

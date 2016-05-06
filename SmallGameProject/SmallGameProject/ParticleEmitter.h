@@ -38,6 +38,8 @@ public:
 	void SetCameraPos(DirectX::XMFLOAT3 cameraPos);
 	void SetCameraPos(DirectX::XMFLOAT4 cameraPos);
 
+	void GetWorld(DirectX::XMMATRIX& storeIn);
+
 	bool Update(float dT, ID3D11DeviceContext* deviceContext);
 	bool distanceToCamera(float x, float y, float z);
 	virtual bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext) = 0;
