@@ -235,6 +235,9 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
 
+	XMFLOAT3 playerPos = this->player.GetPosition();
+	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+
 	/*this->camPosX += deltaTime / 100000;
 
 	if (this->camPosX > 30) {
