@@ -95,11 +95,14 @@ bool EmitterPlayerSpawn::InitializeEmitter()
 	this->particleVelocity = 1.0f;
 
 	this->particleSize = 0.2f;
-	this->particlesPerSecond = 4.0f;
+	this->particlesPerSecond = 10.0f;
 	this->maxParticles = 100;
+	//this->root = vector<Particle>(this->maxParticles);
+	this->root.reserve(this->maxParticles);
 
 	this->currentParticleCnt = 0.0f;
 
+	this->particleTimeLimit = 8.0f;
 	this->accumulatedTime = 0.0f;
 
 	return true;
@@ -231,20 +234,29 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 			toInsert.g = green;
 			toInsert.b = blue;
 			toInsert.uCoord = 0.25f;
-			//toInsert.time = timeIndex * particleThresshold;
-			toInsert.time = 0.0f;
-			toInsert.timeCap = 5.0f;
+			toInsert.time = timeIndex * (1 / this->particlesPerSecond);
+			toInsert.timeCap = this->particleTimeLimit;
 			toInsert.velocity = velocity;
 			toInsert.active = true;
 
-			int index = 0;
-			for (auto node : this->root)
+			//If empty root
+			if (this->root.size() == 0)
 			{
-				if (toInsert < node)
+				this->root.push_back(toInsert);
+			}
+			else
+			{
+				//Find the appropriate possition and insert the particle there
+				int index = 0;
+				for (auto node : this->root)
 				{
-					this->root.insert(index, toInsert);
+					if (toInsert < node)
+					{
+						break;
+					}
+					index++;
 				}
-				index++;
+				this->root.insert(this->root.begin() + index, toInsert);
 			}
 
 			this->currentParticleCnt++;
@@ -257,27 +269,49 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 
 void EmitterPlayerSpawn::UpdateParticles(float dT)
 {
-	for(auto node : this->root)
-	{
-		node.time += dT / (1000000);
-		//node.y = node.y - (node.velocity * dT / 1000);
-		float x = 0, y = 0;
-		float period = 8.0f, min = 0, max = 4.0f;
-		float time = node.time * node.velocity;
-		float width = 40;
+	//float size = 1.0f;
+	//float x = 0, y = 0;
+	//float period = 8.0f, min = 0, max = 4.0f;
+	//float time = 0.0f;
+	//float width = 40;
+	//int particleCnt = this->currentParticleCnt;
+	//for (std::vector<Particle>::iterator node = this->root.begin(); node != this->root.end(); node++)
+	//{
+	//	x = y = 0;
+	//	(*node).time += dT / (1000000);
+	//	//node.y = node.y - (node.velocity * dT / 1000);
+	//	time = (*node).time * (*node).velocity;
 
-		float size = node.time;
+	//	size = (*node).time;
 
-		Algorithm::GetEllipse(x, y, time, size, size);
+	//	Algorithm::GetEllipse(x, y, time, size, size);
 
-		node.x = x;
-		node.z = y;
-	}
+	//	(*node).x = x;
+	//	(*node).z = y;
+	//}
+	//Version 2. Possible future experimental parallel version
+	Particle_Update up(dT / 1000000);
+	float deltaTime = up.dT;
+	//std::for_each(this->root.begin(), this->root.end(), up);
+	std::transform(this->root.begin(), this->root.end(), this->root.begin(), up);
+	////The parallel version. Wants to be compiled using cl.exe "/EHsc" without the ""
+	//parallel_for_each(this->root.begin(), this->root.end(), up);
 }
 
 void EmitterPlayerSpawn::KillParticles()
 {
-	
+	//for (std::vector<Particle>::iterator node = this->root.begin(); node != this->root.end(); node++)
+	//{
+	//	//If active node, check if it should be deactivated
+	//	//if((*node).active)
+	//	//	(*node).active = (*node).time < (*node).timeCap;
+	//	//Remove deactivated node
+	//	if ((*node).time >= (*node).timeCap)
+	//		this->root.erase(node);
+	//}
+	//this->root.erase(std::remove_if(root.begin(), root.end(), my_predicate), root.end());
+	this->root.erase(std::remove_if(this->root.begin(), this->root.end(), [](Particle p) { p.active = p.time < p.timeCap; return !p.active;}), this->root.end());
+	this->currentParticleCnt = this->root.size();
 }
 
 bool EmitterPlayerSpawn::UpdateBuffers(ID3D11DeviceContext * deviceContext)
