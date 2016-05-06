@@ -71,7 +71,7 @@ void StageState::Shutdown()
 	}
 	this->levels.clear();
 
-	//Release your m_AI
+	//Releas eyour m_AI
 
 	GameState::Shutdown();
 }
@@ -119,8 +119,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Colour thy armies in the name of the racist overlord Axel!
 		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
         this->m_ball.SetColor(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-
-
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
