@@ -243,11 +243,11 @@
     <ClCompile Include="EmitterHolder.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
-    <ClCompile Include="EmitterPlayerSpawn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>Source Files\Observers\ParticleHandler\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterPlayerSpawn.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +466,7 @@
     <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="ShadowMapVertexShader.hlsl" />
     <FxCompile Include="ShadowMapVertexShader.hlsl" />
     <FxCompile Include="ShadowMapVertexShader.hlsl" />
   </ItemGroup>

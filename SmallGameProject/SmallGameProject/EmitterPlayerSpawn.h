@@ -2,6 +2,7 @@
 #define EMITTERPLAYERSPAWN
 #include "ParticleEmitter.h"
 #include "Particle.h"
+#include <vector>
 #include <algorithm>
 class EmitterPlayerSpawn :
 	public ParticleEmitter
@@ -23,14 +24,9 @@ private:
 		}
 	};
 
-	struct ParticleContainer {
-		Particle me;
-		ParticleContainer* next;
-	};
-
 
 	struct sort_by_Y {
-		bool operator()(const Particle &left, const Particle &right) {
+		bool operator()(const Particle &left, const Particle &right)const {
 			return left.y < right.y;
 		}
 	};
@@ -39,8 +35,7 @@ private:
 
 	float particleVelocity;
 	float particleSize, particlesPerSecond;
-
-	ParticleContainer* root;
+	std::vector<Particle> root;
 public:
 	EmitterPlayerSpawn();
 	virtual ~EmitterPlayerSpawn();

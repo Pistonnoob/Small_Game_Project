@@ -17,12 +17,7 @@ EmitterPlayerSpawn::~EmitterPlayerSpawn()
 void EmitterPlayerSpawn::ShutdownSpecific()
 {
 	this->currentParticleCnt = 0;
-	while (this->root)
-	{
-		ParticleContainer* nextContainer = this->root->next;
-		delete this->root;
-		this->root = nextContainer;
-	}
+	this->root.clear();
 }
 
 bool EmitterPlayerSpawn::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
@@ -102,8 +97,6 @@ bool EmitterPlayerSpawn::InitializeEmitter()
 	this->particleSize = 0.2f;
 	this->particlesPerSecond = 4.0f;
 	this->maxParticles = 100;
-
-	this->root = nullptr;
 
 	this->currentParticleCnt = 0.0f;
 
@@ -228,41 +221,30 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 
 			found = false;
 
-			ParticleContainer* node = this->root;
-			ParticleContainer* toInsert = new ParticleContainer();
+			Particle toInsert = Particle();
 			// Define the particle that we want to insert into our particle list
-			toInsert->me.x = positionX;
-			toInsert->me.y = positionY;
-			toInsert->me.z = positionZ;
-			toInsert->me.scale = this->particleSize;
-			toInsert->me.r = red;
-			toInsert->me.g = green;
-			toInsert->me.b = blue;
-			toInsert->me.uCoord = 0.25f;
-			//toInsert->me.time = timeIndex * particleThresshold;
-			toInsert->me.time = 0.0f;
-			toInsert->me.timeCap = 5.0f;
-			toInsert->me.velocity = velocity;
-			toInsert->me.active = true;
-			toInsert->next = nullptr;
+			toInsert.x = positionX;
+			toInsert.y = positionY;
+			toInsert.z = positionZ;
+			toInsert.scale = this->particleSize;
+			toInsert.r = red;
+			toInsert.g = green;
+			toInsert.b = blue;
+			toInsert.uCoord = 0.25f;
+			//toInsert.time = timeIndex * particleThresshold;
+			toInsert.time = 0.0f;
+			toInsert.timeCap = 5.0f;
+			toInsert.velocity = velocity;
+			toInsert.active = true;
 
-			//If the root was empty, set it as the root
-			if (this->root == nullptr)
-				this->root = toInsert;
-			else if (toInsert < this->root)
+			int index = 0;
+			for (auto node : this->root)
 			{
-				toInsert->next = this->root;
-				this->root = toInsert;
-			}
-			else
-			{
-				//While the node is further from the camera than the node toInsert
-				while (node->next != nullptr && node->next < toInsert)
+				if (toInsert < node)
 				{
-					node = node->next;
+					this->root.insert(index, toInsert);
 				}
-				toInsert->next = node->next;
-				node->next = toInsert;
+				index++;
 			}
 
 			this->currentParticleCnt++;
@@ -275,60 +257,27 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 
 void EmitterPlayerSpawn::UpdateParticles(float dT)
 {
-	ParticleContainer* node = this->root;
-	while (node)
+	for(auto node : this->root)
 	{
-		node->me.time += dT / (1000000);
-		//node->me.y = node->me.y - (node->me.velocity * dT / 1000);
+		node.time += dT / (1000000);
+		//node.y = node.y - (node.velocity * dT / 1000);
 		float x = 0, y = 0;
 		float period = 8.0f, min = 0, max = 4.0f;
-		float time = node->me.time * node->me.velocity;
+		float time = node.time * node.velocity;
 		float width = 40;
 
-		float size = node->me.time;
+		float size = node.time;
 
 		Algorithm::GetEllipse(x, y, time, size, size);
 
-
-		node->me.x = x;
-		node->me.z = y;
-
-		node = node->next;
+		node.x = x;
+		node.z = y;
 	}
 }
 
 void EmitterPlayerSpawn::KillParticles()
 {
-	ParticleContainer* node = this->root;
-	ParticleContainer* last = this->root;
-	if (this->root != nullptr)
-	{
-		while (node != nullptr)
-		{
-			//Apply deactivation logic
-			node->me.active = node->me.time < node->me.timeCap;
-			last = node;
-			//Check if not active
-			if (!node->me.active)
-			{
-				//If root
-				if (node == this->root)
-				{
-					this->root = this->root->next;
-					delete node;
-					node = this->root;
-				}
-				else
-				{
-					last->next = node->next;
-					delete node;
-					node = last;
-				}
-				this->currentParticleCnt--;
-			}
-			node = node->next;
-		}
-	}
+	
 }
 
 bool EmitterPlayerSpawn::UpdateBuffers(ID3D11DeviceContext * deviceContext)
@@ -339,22 +288,15 @@ bool EmitterPlayerSpawn::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 
 	// Initialize vertex array to zeros at first.
 	memset(this->vertices, 0, (sizeof(VertexType) * this->vertexCount));
-
-	ParticleContainer* node = this->root;
-
-	for (int i = 0; i < this->currentParticleCnt; i++)
+	int index = 0;
+	for (auto node : this->root)
 	{
 		//If the next node doesn't exist, return false. Our particle cnt is wrong
-		if (!node)
-		{
-			return false;
-		}
-		this->vertices[i].position = DirectX::XMFLOAT4(node->me.x, node->me.y, node->me.z, node->me.scale);
-		this->vertices[i].color = DirectX::XMFLOAT4(node->me.r, node->me.g, node->me.b, node->me.uCoord);
-		//Get to next node
-		node = node->next;
+		this->vertices[index].position = DirectX::XMFLOAT4(node.x, node.y, node.z, node.scale);
+		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.uCoord);
+		index++;
 	}
-
+		
 	// Lock the vertex buffer.
 	result = deviceContext->Map(this->vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
