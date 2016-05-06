@@ -14,8 +14,8 @@
 
 struct ToSpawn
 {
+    int spawnIndex;
 	Type type;
-	int amount;
 };
 struct Wave
 {

@@ -142,11 +142,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->currentWave = 0;
 		this->timeToNextWave = this->levels.at(currentLevel).wave.at(currentWave).time;
 
-		//test boss
-		//Boss* boss = new Boss(0, 10);
-		//boss->Initialize(&this->m_car, &this->enemySubject, true, 1);
-		//this->enemies.push_back(boss);
-
 		//Arm thy armies!
         SpawnWave(this->currentLevel, this->currentWave);
 	}
@@ -317,29 +312,24 @@ void StageState::ReadFile(string fileName)
 				getline(myFile, line);
 				for (int i = 0; i < nrOfSpawnPoints; i++)
 				{
-					spawnTemp.amount = 0;
+                    spawnTemp.spawnIndex = 0;
 					spawnTemp.type = Type::NONE;
 					if (line.at(1) == '}')
 					{
 					}
 					else if (line.at(0) == '{')
 					{
-						//get enemy type
-						size_t start = 1;
-						size_t end = line.find("*");
-						enemyType = line.substr(start, end - 1);
-						spawnTemp.type = ConvertToEnemyType(enemyType);
-
-						//get nr of enemies to spawn
-						size_t start2 = end + 1;
-						size_t end2 = line.find("}");
-						nrOfEnemies = line.substr(start2, end2 - 1);
-						nrOfEnemies.pop_back();
-						std::stringstream ss2(nrOfEnemies);
-						ss2 >> spawnTemp.amount;
-
+                        for (int a = 1; a < line.size(); a++)
+                        {
+                            if (line.at(a) != ' ' && line.at(a) != '}')
+                            {
+                                spawnTemp.spawnIndex = i;
+                                enemyType = line.at(a);
+                                spawnTemp.type = ConvertToEnemyType(enemyType);
+                                waveTemp.toSpawn.push_back(spawnTemp);
+                            }
+                        }
 					}
-					waveTemp.toSpawn.push_back(spawnTemp);
 
 
 					getline(myFile, line);
@@ -383,16 +373,14 @@ void StageState::SpawnWave(int levelIndex, int waveIndex)
 	//      |->toSpawn
 	//           |->type
 	//			 |->amnount
-	for (int i = 0; i < this->spawnPoints.size(); i++)
-	{
-		Type type = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).type;
-		int amount = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).amount;
-		for (int t = 0; t < amount; t++)
-		{
-			SpawnEnemy(type, i);
-		}
 
-	}
+    int size = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.size();
+    for (int i = 0; i < size; i++)
+    {
+        Type type = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).type;
+        int point = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).spawnIndex;
+        SpawnEnemy(type, point);
+    }
 }
 void StageState::SpawnEnemy(Type type, int pointIndex)
 {
