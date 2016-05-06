@@ -11,7 +11,8 @@ ProjectileHandler::~ProjectileHandler()
 bool ProjectileHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	bool result = true;
-	result = this->m_ball.Initialize(device, deviceContext, "sphere1");
+	//result = this->m_ball.Initialize(device, deviceContext, "sphere1");
+    result = this->m_ball.Initialize(device, deviceContext, "box");
 
 	return result;
 }

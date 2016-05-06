@@ -66,10 +66,12 @@ public:
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
-    virtual void readFile(string fileName);
-    virtual void spawnWave(int levelIndex, int waveIndex);
-	virtual void spawnEnemy(Type type, int pointIndex);
-	virtual Type convertToEnemyType(string type);
+    virtual void ReadFile(string fileName);
+    virtual void HandleWaveSpawning(float deltaTime);
+    virtual void SpawnWave(int levelIndex, int waveIndex);
+	virtual void SpawnEnemy(Type type, int pointIndex);
+    virtual void RemoveDeadEnemies();
+	virtual Type ConvertToEnemyType(string type);
 
 private:	//Functions
 

@@ -136,7 +136,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);
 
-        readFile("Stage1.txt");
+        ReadFile("Stage1.txt");
 
 		this->currentLevel = 0;
 		this->currentWave = 0;
@@ -148,7 +148,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//this->enemies.push_back(boss);
 
 		//Arm thy armies!
-        spawnWave(this->currentLevel, this->currentWave);
+        SpawnWave(this->currentLevel, this->currentWave);
 	}
 
 
@@ -164,7 +164,10 @@ int StageState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_C))
 	{
-
+        for (int i = 0; i < this->enemies.size(); i++)
+        {
+            this->enemies.at(i)->setIsAlive(false);
+        }
 	}
 
 	return result;
@@ -175,25 +178,10 @@ int StageState::Update(float deltaTime)
 	int result = 1;
 	float newDT = deltaTime / 1000000;
 	
-	this->timeToNextWave -= newDT;
-	if (this->timeToNextWave <= 0)
-	{
-		if (this->currentLevel < this->levels.size())
-		{
-			this->currentWave++;
-			if (this->currentWave >= this->levels.at(this->currentLevel).wave.size())
-			{
-				this->currentWave = 0;
-				this->currentLevel++;
-			}
-			if (this->currentLevel < this->levels.size())
-			{
-				this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
-				spawnWave(this->currentLevel, this->currentWave);
-			}
-		}
-	}
+    HandleWaveSpawning(newDT);
 
+    RemoveDeadEnemies();
+ 
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), newDT);
     this->enemyPjHandler.update(newDT);
 
@@ -267,7 +255,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	return result;
 }
 
-void StageState::readFile(string fileName)
+void StageState::ReadFile(string fileName)
 {
     string line;
     ifstream myFile(fileName);
@@ -339,7 +327,7 @@ void StageState::readFile(string fileName)
 						size_t start = 1;
 						size_t end = line.find("*");
 						enemyType = line.substr(start, end - 1);
-						spawnTemp.type = convertToEnemyType(enemyType);
+						spawnTemp.type = ConvertToEnemyType(enemyType);
 
 						//get nr of enemies to spawn
 						size_t start2 = end + 1;
@@ -364,7 +352,29 @@ void StageState::readFile(string fileName)
     }
 }
 
-void StageState::spawnWave(int levelIndex, int waveIndex)
+void StageState::HandleWaveSpawning(float deltaTime)
+{
+    this->timeToNextWave -= deltaTime;
+    if (this->timeToNextWave <= 0)
+    {
+        if (this->currentLevel < this->levels.size())
+        {
+            this->currentWave++;
+            if (this->currentWave >= this->levels.at(this->currentLevel).wave.size())
+            {
+                this->currentWave = 0;
+                this->currentLevel++;
+            }
+            if (this->currentLevel < this->levels.size())
+            {
+                this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
+                SpawnWave(this->currentLevel, this->currentWave);
+            }
+        }
+    }
+}
+
+void StageState::SpawnWave(int levelIndex, int waveIndex)
 {
 	//level
 	// |->wave
@@ -378,12 +388,12 @@ void StageState::spawnWave(int levelIndex, int waveIndex)
 		int amount = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).amount;
 		for (int t = 0; t < amount; t++)
 		{
-			spawnEnemy(type, i);
+			SpawnEnemy(type, i);
 		}
 
 	}
 }
-void StageState::spawnEnemy(Type type, int pointIndex)
+void StageState::SpawnEnemy(Type type, int pointIndex)
 {
 	int x = this->spawnPoints.at(pointIndex).x;
 	int z = this->spawnPoints.at(pointIndex).z;
@@ -408,7 +418,21 @@ void StageState::spawnEnemy(Type type, int pointIndex)
 		break;
 	}
 }
-Type StageState::convertToEnemyType(string type)
+void StageState::RemoveDeadEnemies()
+{
+    for (int i = 0; i < this->enemies.size(); i++)
+    {
+        if (!this->enemies.at(i)->getIsAlive())
+        {
+            this->enemies.at(i)->Shutdown();
+            delete this->enemies.at(i);
+            this->enemies.erase(this->enemies.begin() + i);
+            i--;
+
+        }
+    }
+}
+Type StageState::ConvertToEnemyType(string type)
 {
 	if (type == "B")
 	{
