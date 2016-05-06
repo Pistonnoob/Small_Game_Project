@@ -185,7 +185,7 @@ int StageState::Update(float deltaTime)
 		}
 	}
 
-	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
+	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
 	/*this->camPosX += deltaTime / 100000;
 

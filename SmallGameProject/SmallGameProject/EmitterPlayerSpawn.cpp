@@ -100,8 +100,8 @@ bool EmitterPlayerSpawn::InitializeEmitter()
 	this->particleVelocity = 1.0f;
 
 	this->particleSize = 0.1f;
-	this->particlesPerSecond = 10.0f;
-	this->maxParticles = 10;
+	this->particlesPerSecond = 4.0f;
+	this->maxParticles = 100;
 
 	this->root = nullptr;
 
@@ -252,11 +252,11 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 			else
 			{
 				//While the node is further from the camera than the node toInsert
-				while (node && node < toInsert)
+				/*while (node && node < toInsert)
 				{
 					last = node;
 					node = node->next;
-				}
+				}*/
 				last->next = toInsert;
 				toInsert->next = node;
 			}

@@ -64,7 +64,7 @@ bool EmitterPrototype::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 
 
 	//Emitt new particles
-	this->EmitParticles(dT);
+	this->EmittParticles(dT);
 
 	//Update the particles
 	this->UpdateParticles(dT);
@@ -232,7 +232,7 @@ bool EmitterPrototype::InitializeBuffers(ID3D11Device * device)
 	return true;
 }
 
-void EmitterPrototype::EmitParticles(float dT)
+void EmitterPrototype::EmittParticles(float dT)
 {
 	bool emitParticle, found;
 	float positionX, positionY, positionZ, velocity, red, green, blue;
