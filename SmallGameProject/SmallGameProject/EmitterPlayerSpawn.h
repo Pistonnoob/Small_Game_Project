@@ -7,16 +7,40 @@ class EmitterPlayerSpawn :
 	public ParticleEmitter
 {
 private:
-	struct by_cameraPos {
-		bool operator()(const Particle &left, const Particle &right) {
-			return left.cameraDistance > right.cameraDistance;
+	struct Particle {
+		//Variables
+		float x, y, z, scale;
+		float r, g, b, uCoord;
+		float velocity;
+		//Not the true distance but close enough
+		float timeCap;
+		float time;
+		bool active;
+
+		bool operator<(const Particle& that)const {
+			//Sort in reverse order distance from camera > being optimal
+			return this->y < that.y;
 		}
 	};
+
+	struct ParticleContainer {
+		Particle me;
+		ParticleContainer* next;
+	};
+
+
+	struct sort_by_Y {
+		bool operator()(const Particle &left, const Particle &right) {
+			return left.y < right.y;
+		}
+	};
+
+	
 
 	float particleVelocity;
 	float particleSize, particlesPerSecond;
 
-	Particle* particles;
+	ParticleContainer* root;
 public:
 	EmitterPlayerSpawn();
 	virtual ~EmitterPlayerSpawn();
