@@ -28,6 +28,9 @@ public:
 	bool Initialize(Model* model, bool isSphere);	
 	void Shutdown(bool isEnemy = false);
 
+	virtual void HandleInput();
+	virtual void Update();
+
     Model* GetModel();
     BoundingVolume* GetBV();
     DirectX::XMFLOAT3 GetPosition();

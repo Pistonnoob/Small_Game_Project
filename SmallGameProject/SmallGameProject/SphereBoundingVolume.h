@@ -8,7 +8,7 @@ class SphereBoundingVolume : public BoundingVolume {
 
 private:
 	DirectX::XMFLOAT3 center;
-	int radius;
+	float radius;
 
 	void GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model);
 
@@ -21,6 +21,7 @@ public:
 	DirectX::XMFLOAT3 getCenter();
 	bool SphereIntesectionTest(SphereBoundingVolume* otherSphere);
 	bool BoxIntersectionTest(BoxBoundingVolume* box);
+	void UpdateBoundingVolume(DirectX::XMMATRIX modelWorldMatrix);
 };
 
 

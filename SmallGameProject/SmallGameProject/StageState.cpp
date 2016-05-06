@@ -156,7 +156,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 			return false;
 		}
 
-		DirectX::XMFLOAT3 a = this->player.GetPosition();
 		int i = 0;
 	}
 
@@ -171,18 +170,6 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyDown(DIK_ESCAPE))
 		this->exitStage = true;
 
-	if (input->isKeyDown(DIK_W)) {
-		this->player.moveUp();
-	}
-	if (input->isKeyDown(DIK_S)) {
-		this->player.moveDown();
-	}
-	if (input->isKeyDown(DIK_D)) {
-		this->player.moveRight();
-	}
-	if (input->isKeyDown(DIK_A)) {
-		this->player.moveLeft();
-	}
 
 	return result;
 }
@@ -211,26 +198,12 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
-	/*this->camPosX += deltaTime / 100000;
-	
-	if (this->camPosX > 30) {
-		this->camPosX = -30.0f;
-		this->camPosZ = 0.0f;
-		this->inc = true;
-	}
-	if (this->camPosX > 0) {
-		this->inc = false;
-	}
-	if (this->inc && this->camPosZ > -30.0f) {
-		this->camPosZ -= deltaTime / 100000;
-	}
-	else if(!this->inc && this->camPosZ < 0.0f) {
-		this->camPosZ += deltaTime / 100000;
+	for (int i = 0; i < this->enemies.size(); i++) {
 
+		if (this->player.GetBV()->Intersect(this->enemies.at(i)->GetBV())) {
+			int j = 0;
+		}
 	}
-
-	this->myCamera.SetCameraPos(DirectX::XMFLOAT3(this->camPosX, 4.0f, this->camPosZ));
-	this->myCamera.UpdateCamera();*/
 
 	return result;
 }

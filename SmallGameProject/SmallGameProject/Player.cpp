@@ -2,8 +2,8 @@
 
 Player::Player() : Actor()
 {
-	this->posX = 0.f;
-	this->posZ = 0.f;
+	this->posX = 20.f;
+	this->posZ = 20.f;
 	this->playerHealth = 100;
 	this->playerMovmentSpeed = 10;
 	this->playerDamage = 1;
@@ -69,8 +69,28 @@ void Player::Shutdown()
 	}
 }
 
+void Player::HandleInput(InputHandler * input)
+{
+	if (input->isKeyDown(DIK_W)) {
+		this->moveUp();
+	}
+	if (input->isKeyDown(DIK_S)) {
+		this->moveDown();
+	}
+	if (input->isKeyDown(DIK_D)) {
+		this->moveRight();
+	}
+	if (input->isKeyDown(DIK_A)) {
+		this->moveLeft();
+	}
+
+}
+
 void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH)
 {
+
+	this->HandleInput(input);
+
 	DirectX::XMMATRIX playerWorldMatrix;
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
 
@@ -82,11 +102,12 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	//Set the model matrix
 	this->entityModel->SetWorldMatrix(playerWorldMatrix);
 
-
-	//give the player model its new 
-	
-
+	//Rotate the player
 	this->rotatePlayerTowardsMouse(input->getMousePos(), gHandler, cameraH);
+
+	//Update the bounding box pos and rotation
+	this->entityModel->GetWorldMatrix(playerWorldMatrix);
+	this->entityBV->UpdateBoundingVolume(playerWorldMatrix);
 
 	//weapon matrix
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
@@ -95,6 +116,7 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	weaponWorldMatrix = offset * weaponWorldMatrix;
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
+	
 }
 
 Weapon * Player::GetWeapon()

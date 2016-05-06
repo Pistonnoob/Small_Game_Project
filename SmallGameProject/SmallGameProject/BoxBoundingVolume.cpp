@@ -289,3 +289,19 @@ bool BoxBoundingVolume::Overlap(DirectX::XMVECTOR axis, DirectX::XMVECTOR Vec1, 
 
 	return false;
 }
+
+void BoxBoundingVolume::UpdateBoundingVolume(DirectX::XMMATRIX modelWorldMatrix)
+{
+	this->axisX = DirectX::XMVector3TransformCoord(this->axisX, modelWorldMatrix);
+	this->axisY = DirectX::XMVector3TransformCoord(this->axisY, modelWorldMatrix);
+	this->axisZ = DirectX::XMVector3TransformCoord(this->axisZ, modelWorldMatrix);
+
+	for (int i = 0; i < 6; i++) {
+		this->allAxises[i] = DirectX::XMVector3TransformCoord(this->allAxises[i], modelWorldMatrix);
+	}
+	
+	for (int i = 0; i < 8; i++) {
+		this->vertices[i] = DirectX::XMVector3TransformCoord(this->vertices[i], modelWorldMatrix);
+	}
+
+}
