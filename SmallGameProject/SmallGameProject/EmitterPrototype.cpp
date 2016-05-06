@@ -239,7 +239,7 @@ void EmitterPrototype::EmittParticles(float dT)
 	int index, i, j;
 
 	// Check if it is time to emit a new particle or not.
-	float particleThresshold = (1000.0f / this->particlesPerSecond);
+	float particleThresshold = (1000000.0f / this->particlesPerSecond);
 	float timeOverflow = dT;
 	while (this->accumulatedTime > particleThresshold)
 	{
@@ -315,7 +315,7 @@ void EmitterPrototype::EmittParticles(float dT)
 			this->particles[index].active = true;
 			this->particles[index].scale = 0.4f;
 			this->particles[index].uCoord = 0.25f;
-			this->particles[index].time = this->accumulatedTime;
+			this->particles[index].time = 0.0f;
 
 			this->currentParticleCnt++;
 		}
@@ -335,11 +335,11 @@ void EmitterPrototype::UpdateParticles(float dT)
 	float size = 1.0f / 3.0f;
 	for (int i = 0; i<this->currentParticleCnt; i++)
 	{
-		this->particles[i].time += dT / (1000);
+		this->particles[i].time += dT / (1000000);
 		//this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 		float x = 0, y = 0;
 		float period = 8.0f, min = 0, max = 4.0f;
-		float time = this->particles[i].time * this->particles[i].velocity / 800;
+		float time = this->particles[i].time * this->particles[i].velocity;
 		float width = 40;
 		//Algorithm::GetSawtoothWave(x, y, this->particles[i].time, period, min, max);
 		//Algorithm::GetEllipse(x, y, time, 8, 8);

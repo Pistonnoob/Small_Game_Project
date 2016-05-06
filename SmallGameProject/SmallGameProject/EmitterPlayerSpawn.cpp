@@ -99,7 +99,7 @@ bool EmitterPlayerSpawn::InitializeEmitter()
 {
 	this->particleVelocity = 1.0f;
 
-	this->particleSize = 0.1f;
+	this->particleSize = 0.2f;
 	this->particlesPerSecond = 4.0f;
 	this->maxParticles = 100;
 
@@ -204,10 +204,10 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 	int index, i, j;
 
 	// Check if it is time to emit a new particle or not.
-	float particleThresshold = (1000.0f / this->particlesPerSecond);
+	float particleThresshold = (1000000.0f / this->particlesPerSecond);
 	float timeOverflow = dT;
 	int timeIndex = 0;
-	while (this->accumulatedTime > particleThresshold)
+ 	while (this->accumulatedTime > particleThresshold)
 	{
 		this->accumulatedTime = this->accumulatedTime - particleThresshold;
 
@@ -225,11 +225,10 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 
 			// Now since the particles need to be rendered from back to front for blending we have to sort the particle array.
 			// We will sort using Z depth so we need to find where in the list the particle should be inserted.
-			index = this->currentParticleCnt;
+
 			found = false;
-			
+
 			ParticleContainer* node = this->root;
-			ParticleContainer* last = node;
 			ParticleContainer* toInsert = new ParticleContainer();
 			// Define the particle that we want to insert into our particle list
 			toInsert->me.x = positionX;
@@ -240,25 +239,30 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 			toInsert->me.g = green;
 			toInsert->me.b = blue;
 			toInsert->me.uCoord = 0.25f;
-			toInsert->me.time = timeIndex * particleThresshold;
-			toInsert->me.timeCap = 1.0f;
+			//toInsert->me.time = timeIndex * particleThresshold;
+			toInsert->me.time = 0.0f;
+			toInsert->me.timeCap = 5.0f;
 			toInsert->me.velocity = velocity;
 			toInsert->me.active = true;
 			toInsert->next = nullptr;
 
 			//If the root was empty, set it as the root
-			if (node == nullptr)
+			if (this->root == nullptr)
 				this->root = toInsert;
+			else if (toInsert < this->root)
+			{
+				toInsert->next = this->root;
+				this->root = toInsert;
+			}
 			else
 			{
 				//While the node is further from the camera than the node toInsert
-				/*while (node && node < toInsert)
+				while (node->next != nullptr && node->next < toInsert)
 				{
-					last = node;
 					node = node->next;
-				}*/
-				last->next = toInsert;
-				toInsert->next = node;
+				}
+				toInsert->next = node->next;
+				node->next = toInsert;
 			}
 
 			this->currentParticleCnt++;
@@ -274,7 +278,7 @@ void EmitterPlayerSpawn::UpdateParticles(float dT)
 	ParticleContainer* node = this->root;
 	while (node)
 	{
-		node->me.time += dT / (1000);
+		node->me.time += dT / (1000000);
 		//node->me.y = node->me.y - (node->me.velocity * dT / 1000);
 		float x = 0, y = 0;
 		float period = 8.0f, min = 0, max = 4.0f;
@@ -297,32 +301,33 @@ void EmitterPlayerSpawn::KillParticles()
 {
 	ParticleContainer* node = this->root;
 	ParticleContainer* last = this->root;
-
-	while (node)
+	if (this->root != nullptr)
 	{
-		//Apply deactivation logic
-		node->me.active = node->me.time < node->me.timeCap;
-
-		//Check if not active
-		if (!node->me.active)
+		while (node != nullptr)
 		{
-			//If root
-			if (node == this->root)
+			//Apply deactivation logic
+			node->me.active = node->me.time < node->me.timeCap;
+			last = node;
+			//Check if not active
+			if (!node->me.active)
 			{
-				this->root = node->next;
-				delete node;
-				node = this->root;
+				//If root
+				if (node == this->root)
+				{
+					this->root = this->root->next;
+					delete node;
+					node = this->root;
+				}
+				else
+				{
+					last->next = node->next;
+					delete node;
+					node = last;
+				}
+				this->currentParticleCnt--;
 			}
-			else
-			{
-				last->next = node->next;
-				delete node;
-				node = last;
-			}
-			this->currentParticleCnt--;
+			node = node->next;
 		}
-		last = node;
-		node = node->next;
 	}
 }
 
