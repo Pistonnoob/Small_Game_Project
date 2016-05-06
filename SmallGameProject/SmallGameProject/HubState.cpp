@@ -78,7 +78,7 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 		light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(-30.0f, 1.0f, 30.0f, 1.0f);
 		this->pointLights.push_back(light);
 
 		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
