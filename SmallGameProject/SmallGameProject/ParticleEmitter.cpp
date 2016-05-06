@@ -4,6 +4,16 @@
 
 ParticleEmitter::ParticleEmitter()
 {
+	this->accumulatedTime = 0.0f;
+	this->cameraPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	this->currentParticleCnt = 0;
+	this->maxParticles = 0;
+	this->texture = nullptr;
+	this->world = DirectX::XMMatrixIdentity();
+
+
+	this->indexCount = this->vertexCount = 0;
+	this->indexBuffer = this->vertexBuffer = nullptr;
 }
 
 

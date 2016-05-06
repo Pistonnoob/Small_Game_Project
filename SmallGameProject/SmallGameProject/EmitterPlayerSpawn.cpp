@@ -2,14 +2,11 @@
 
 
 
-EmitterPlayerSpawn::EmitterPlayerSpawn()
+EmitterPlayerSpawn::EmitterPlayerSpawn() :
+	ParticleEmitter()
 {
-	this->accumulatedTime = 0.0f;
-	this->maxParticles = 0;
-	this->currentParticleCnt = 0;
-	this->vertexCount = this->indexCount = 0;
-
-	this->vertexBuffer = this->indexBuffer = nullptr;
+	this->particleVelocity = 0.0f;
+	this->particleSize = this->particlesPerSecond = 0.0f;
 }
 
 
@@ -19,6 +16,11 @@ EmitterPlayerSpawn::~EmitterPlayerSpawn()
 
 void EmitterPlayerSpawn::ShutdownSpecific()
 {
+	if (this->particles)
+	{
+		delete[] this->particles;
+		this->particles = nullptr;
+	}
 }
 
 bool EmitterPlayerSpawn::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
