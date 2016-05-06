@@ -205,11 +205,10 @@ void EmitterPlayerSpawn::EmitParticles(float dT)
 	// Check if it is time to emit a new particle or not.
 	float particleThresshold = (1000.0f / this->particlesPerSecond);
 	float timeOverflow = dT;
+	int timeIndex = 0;
 	while (this->accumulatedTime > particleThresshold)
 	{
 		this->accumulatedTime = this->accumulatedTime - particleThresshold;
-		timeOverflow = timeOverflow - particleThresshold;
-
 
 		// If there are particles to emit then emit one per frame.
 		if (this->currentParticleCnt < this->maxParticles)
@@ -230,7 +229,7 @@ void EmitterPlayerSpawn::EmitParticles(float dT)
 			
 			ParticleContainer* node = this->root;
 			ParticleContainer* last = node;
-			ParticleContainer* toInsert;
+			ParticleContainer* toInsert = new ParticleContainer();
 			// Define the particle that we want to insert into our particle list
 			toInsert->me.x = positionX;
 			toInsert->me.y = positionY;
@@ -240,7 +239,7 @@ void EmitterPlayerSpawn::EmitParticles(float dT)
 			toInsert->me.g = green;
 			toInsert->me.b = blue;
 			toInsert->me.uCoord = 0.25f;
-			toInsert->me.time = 0.0f;
+			toInsert->me.time = timeIndex * particleThresshold;
 			toInsert->me.timeCap = 1.0f;
 			toInsert->me.velocity = velocity;
 			toInsert->me.active = true;
@@ -263,7 +262,7 @@ void EmitterPlayerSpawn::EmitParticles(float dT)
 
 			this->currentParticleCnt++;
 		}
-
+		timeIndex++;
 	}
 
 	return;
