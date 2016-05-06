@@ -85,6 +85,12 @@ DirectX::XMFLOAT3 Entity::GetPosition()
     return pos;
 }
 
+void Entity::SetPosition(float newPosX, float newPosZ)
+{
+	this->posX = newPosX;
+	this->posZ = newPosZ;
+}
+
 
 
 

@@ -31,7 +31,7 @@ public:
     Model* GetModel();
     BoundingVolume* GetBV();
     DirectX::XMFLOAT3 GetPosition();
-
+	void SetPosition(float newPosX, float newPosZ);
 };
 
 #endif

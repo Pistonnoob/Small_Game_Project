@@ -121,7 +121,7 @@ int MenuState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHan
 		case MenuOption::START_GAME:
 		{
 			//Create a stage state and push it to the stack
-			StageState* newStage = new StageState();
+			HubState* newStage = new HubState();
 			newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
 			newStage->SetManualClearing(false);
 			this->m_GSH->PushState(newStage);

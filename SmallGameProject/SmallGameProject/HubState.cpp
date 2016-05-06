@@ -104,7 +104,7 @@ int HubState::HandleInput(InputHandler * input)
 {
 	int result = 1;
 
-	if (input->isKeyDown(DIK_ESCAPE))
+	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
 	if (input->isKeyDown(DIK_W)) {
@@ -132,6 +132,15 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 	XMFLOAT3 playerPos = this->player.GetPosition();
 	
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
+
+	if ((playerPos.x < -28.0f && playerPos.x > -32.0f) && (playerPos.z < 32.0f && playerPos.z > 28.0f)) {
+		this->player.SetPosition(0.0f, 0.0f);
+		this->player.Update(input, gHandler, &this->myCamera);
+		StageState* newStage = new StageState();
+		newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
+		newStage->SetManualClearing(false);
+		this->m_GSH->PushState(newStage);
+	}
 
 	if (this->exitStage)
 	{

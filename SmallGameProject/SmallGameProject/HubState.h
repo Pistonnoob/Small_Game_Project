@@ -4,6 +4,7 @@
 #include "ParticleHandler.h"
 #include "Player.h"
 #include "Algorithm.h"
+#include "StageState.h"
 
 class HubState :
 	public GameState

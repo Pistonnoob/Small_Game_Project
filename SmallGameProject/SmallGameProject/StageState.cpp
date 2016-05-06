@@ -190,7 +190,7 @@ int StageState::HandleInput(InputHandler * input)
 {
 	int result = 1;
 
-	if (input->isKeyDown(DIK_ESCAPE))
+	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
 	if (input->isKeyDown(DIK_W)) {
