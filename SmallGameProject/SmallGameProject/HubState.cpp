@@ -10,6 +10,8 @@ HubState::HubState()
 	this->myParticleHandler = ParticleHandler();
 
 	this->m_ground = Model();
+	this->portal1 = Model();
+
 	this->player = Player();
 
 	this->playerPos = DirectX::XMFLOAT3(0, 0, 0);
@@ -26,6 +28,7 @@ void HubState::Shutdown()
 {
 	//Release the models
 	this->m_ground.Shutdown();
+	this->portal1.Shutdown();
 
 	this->myParticleHandler.Shutdown();
 
@@ -60,12 +63,18 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
-		this->m_ground = Model();
-
 		result = this->m_ground.Initialize(device, deviceContext, "testMap");
 		if (!result) {
 			return false;
 		}
+
+		result = this->portal1.Initialize(device, deviceContext, "portal");
+		if (!result) {
+			return false;
+		}
+
+		DirectX::XMMATRIX worldMatrix = XMMatrixTranslation(-30.0f, 0.0f, 30.0f);
+		this->portal1.SetWorldMatrix(worldMatrix);
 
 		PointLight light;
 		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -133,7 +142,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 	
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
-	if ((playerPos.x < -28.0f && playerPos.x > -32.0f) && (playerPos.z < 32.0f && playerPos.z > 28.0f)) {
+	if ((playerPos.x < -29.0f && playerPos.x > -31.0f) && (playerPos.z < 31.0f && playerPos.z > 29.0f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera);
 		StageState* newStage = new StageState();
@@ -171,7 +180,7 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
-
+	gHandler->DeferredRender(&this->portal1, &this->myCamera);
 	//shadowMap
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);

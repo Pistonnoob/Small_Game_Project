@@ -13,6 +13,7 @@ private:	//Variables
 	CameraHandler myCamera;
 
 	Model m_ground;
+	Model portal1;
 
 	Player player;
 	ParticleHandler myParticleHandler;
