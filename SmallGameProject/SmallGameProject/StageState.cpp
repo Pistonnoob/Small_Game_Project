@@ -215,9 +215,10 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	this->player.Update(input, gHandler, &this->myCamera);
 
+	XMFLOAT3 playerPos = this->player.GetPosition();
 	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
-	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0, 0.0f, -20.0f));
-
+	this->m_AI.updateActors(this->enemies, playerPos);
+	XMFLOAT3 enemyPos = this->enemies.at(0)->GetPosition();
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
 	if (this->exitStage)
@@ -234,9 +235,8 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	}
 
 	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
-
-	XMFLOAT3 playerPos = this->player.GetPosition();
 	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+	this->pointLights.at(2).Position = XMFLOAT4(enemyPos.x, 1.0f, enemyPos.z, 1.0f);
 
 	/*this->camPosX += deltaTime / 100000;
 
