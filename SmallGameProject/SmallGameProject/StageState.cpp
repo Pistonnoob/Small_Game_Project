@@ -99,7 +99,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Form thy armies from the clay!
 		this->m_car = Model();
 		this->m_ball = Model();
-		bool modelResult = this->m_car.Initialize(device, this->m_deviceContext, "carSLS3");
+		bool modelResult = this->m_car.Initialize(device, this->m_deviceContext, "projectile");
 		if (!modelResult) {
 			return false;
 		}
@@ -256,7 +256,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->LightRender(this->myCamera.GetCameraPos());
 
-	this->myParticleHandler.Render(gHandler, &this->myCamera);
+	//this->myParticleHandler.Render(gHandler, &this->myCamera);
 
 	return result;
 }

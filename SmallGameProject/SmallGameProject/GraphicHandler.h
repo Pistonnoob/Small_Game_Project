@@ -81,6 +81,7 @@ public:
 
 	void SetDirectionalLight(DirectionalLight light);
 	void AddPointLight(PointLight light);
+	void UpdatePointLight(int index, PointLight newLight);
 	void RemovePointLight(int index);
 	void RemoveAllPointLights();
 };

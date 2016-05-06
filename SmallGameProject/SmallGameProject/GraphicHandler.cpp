@@ -393,6 +393,15 @@ void GraphicHandler::AddPointLight(PointLight light)
 	this->pointLights.push_back(light);
 }
 
+void GraphicHandler::UpdatePointLight(int index, PointLight newLight)
+{
+	if (index <= this->pointLights.size()) {
+		return;
+	}
+
+	this->pointLights.at(index) = newLight;
+}
+
 void GraphicHandler::RemovePointLight(int index)
 {
 	if (index >= this->pointLights.size()) {
