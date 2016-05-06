@@ -51,11 +51,11 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		victory = this->myTextures.Initialize(device, deviceContext, skinOfMyFallenEnemies);
 
 		PointLight light;
-		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-		light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-		light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
-		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
+		light.Diffuse = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 0.0f, -8.0f, 1.0f);
+		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.09f, 0.032f);
 		this->pointLights.push_back(light);
 
 	}
