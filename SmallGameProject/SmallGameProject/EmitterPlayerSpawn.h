@@ -32,6 +32,7 @@ private:
 		Particle operator()(Particle node) {
 			float x = 0, y = 0;
 			node.time += dT;
+			Algorithm::GetEllipse(x, y, node.time * node.velocity, node.time / 2, node.time / 2);
 			node.x = x;
 			node.z = y;
 			return node;
