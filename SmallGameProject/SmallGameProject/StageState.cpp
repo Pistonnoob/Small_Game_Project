@@ -50,7 +50,13 @@ void StageState::Shutdown()
     delete this->ability2;
     delete this->ability3;
 
+	this->test->Shutdown();
+	delete this->test;
+	this->test = nullptr;
+
+
 	//Release your m_AI
+
 
 	GameState::Shutdown();
 }
