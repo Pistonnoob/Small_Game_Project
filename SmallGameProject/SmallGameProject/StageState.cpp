@@ -145,8 +145,8 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
 
 		DirectX::XMMATRIX worldMatrix;
-		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-		this->m_ground.SetWorldMatrix(worldMatrix);
+		/*worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
+		this->m_ground.SetWorldMatrix(worldMatrix);*/
 		worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
 		worldMatrix *= DirectX::XMMatrixTranslation(0.0f, -3.5f, 2.0f);
 		this->m_car.SetWorldMatrix(worldMatrix);

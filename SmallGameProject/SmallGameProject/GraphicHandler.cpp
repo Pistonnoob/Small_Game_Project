@@ -132,9 +132,9 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 
 	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->textTransparencyBlendState);
 
-	this->dirLight.Diffuse = DirectX::XMFLOAT4(0.32f * 2, 0.32f * 2, 0.47f * 2, 1.0f);
-	this->dirLight.Ambient = DirectX::XMFLOAT4(0.32f * 2, 0.32f * 2, 0.47f * 2, 1.0f);
-	this->dirLight.Specular = DirectX::XMFLOAT4(0.32f * 2, 0.32f * 2, 0.47f * 2, 1.0f);
+	this->dirLight.Diffuse = DirectX::XMFLOAT4(0.32f, 0.32f, 0.47f, 1.0f);
+	this->dirLight.Ambient = DirectX::XMFLOAT4(0.32f, 0.32f, 0.47f , 1.0f);
+	this->dirLight.Specular = DirectX::XMFLOAT4(0.32f, 0.32f, 0.47f, 1.0f);
 	this->dirLight.Direction = DirectX::XMFLOAT4(-0.5f, -0.5f, -0.5f, 0.0f);
 
 	PointLight light;
@@ -142,7 +142,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
-	light.Attenuation = DirectX::XMFLOAT4(50.0f, 0.5f, 0.09f, 0.032f);
+	light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
 	this->AddPointLight(light);
 
 	light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
