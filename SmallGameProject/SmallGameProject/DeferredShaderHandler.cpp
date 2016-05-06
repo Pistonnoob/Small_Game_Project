@@ -446,6 +446,7 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 
 	//Set the constant buffer in vertex and pixel shader with updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
+	deviceContext->GSSetConstantBuffers(0, 0, nullptr);
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
 	if (params->diffTexture) {

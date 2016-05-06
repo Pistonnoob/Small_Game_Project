@@ -76,7 +76,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 	{
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
-		float zoomIn = 1.0f / 4.0f;
+		float zoomIn = 1.0f / 6.0f;
 
 		/*this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));*/
@@ -138,11 +138,11 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//sanctuary from the oblivion below!
 		this->m_ground = Model();
 
-		result = this->m_ground.Initialize(device, deviceContext, "ground");
+		result = this->m_ground.Initialize(device, deviceContext, "testMap");
 		if (!result) {
 			return false;
 		}
-		this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
+		//this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
 
 		DirectX::XMMATRIX worldMatrix;
 		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);

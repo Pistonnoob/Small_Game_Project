@@ -135,10 +135,10 @@ float4 main(PSInput input) : SV_TARGET
 	float4 specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
 	outputColor = saturate(((diffColor.rgba * Diffuse[0]) + (specular.rgba * Specular[0])) * lightIntensity);
-	outputAmbient = saturate((ambientColor.rgba * Ambient[0]));
+	outputAmbient = ((ambientColor.rgba * Ambient[0]));
 
 	for (int i = 1; i <= activeLights; i++) {
-		outputAmbient += ambientColor.rgba * Ambient[i];
+		outputAmbient += saturate(ambientColor.rgba * Ambient[i]);
 		//Create the normalized vector from position to light source
 		outVec = Position[i].xyz - (worldPos).xyz;
 		float distToLight = length(outVec);
@@ -153,7 +153,7 @@ float4 main(PSInput input) : SV_TARGET
 			//Calculate the specular part
 			specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
-			lightIntensity = dot(normal, outVec);
+			lightIntensity = saturate(dot(normal, outVec));
 			if (lightIntensity < 0) {
 				lightIntensity = 0;
 			}
