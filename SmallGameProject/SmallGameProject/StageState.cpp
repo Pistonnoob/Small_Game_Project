@@ -151,6 +151,26 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		worldMatrix *= DirectX::XMMatrixTranslation(0.0f, -3.5f, 2.0f);
 		this->m_car.SetWorldMatrix(worldMatrix);
 
+
+		PointLight light;
+		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
+		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
+		this->pointLights.push_back(light);
+
+		light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
+		this->pointLights.push_back(light);
+
+		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
+		this->pointLights.push_back(light);
 	}
 
 
@@ -254,7 +274,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);
 	}
 
-	gHandler->LightRender(this->myCamera.GetCameraPos());
+	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	//this->myParticleHandler.Render(gHandler, &this->myCamera);
 

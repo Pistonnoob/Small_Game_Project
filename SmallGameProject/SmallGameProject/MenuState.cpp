@@ -49,7 +49,18 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		this->myTextures = Texture();
 		std::string skinOfMyFallenEnemies = "MenuSelected.mtl";
 		victory = this->myTextures.Initialize(device, deviceContext, skinOfMyFallenEnemies);
+
+		PointLight light;
+		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
+		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
+		this->pointLights.push_back(light);
+
 	}
+
+	
 	return result;
 }
 
@@ -137,7 +148,7 @@ int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->DeferredRender(&this->m_model, &this->myCamera);
 
-	gHandler->LightRender(this->myCamera.GetCameraPos());
+	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	return result;
 }

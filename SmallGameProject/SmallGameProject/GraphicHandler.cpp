@@ -137,26 +137,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	this->dirLight.Specular = DirectX::XMFLOAT4(0.32f, 0.32f, 0.47f, 1.0f);
 	this->dirLight.Direction = DirectX::XMFLOAT4(-0.5f, -0.5f, -0.5f, 0.0f);
 
-	PointLight light;
-	light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
-	light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
-	this->AddPointLight(light);
-
-	light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
-	this->AddPointLight(light);
-
-	light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
-	this->AddPointLight(light);
-
 	//creating the light matrises
 	fieldOfView = (float)DirectX::XM_PI / 2.0f;
 
@@ -212,7 +192,7 @@ void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 	return;
 }
 
-void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
+void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos, std::vector<PointLight> pointLights)
 {
 	if (this->activeRTV != 2) {
 		this->SetLightRTV();
@@ -230,7 +210,7 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 	shaderParams->camPos = camPos;
 
 	shaderParams->dirLight = this->dirLight;
-	shaderParams->pointLights = this->pointLights;
+	shaderParams->pointLights = pointLights;
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());
 	this->lightShaderH->Render(this->engine->GetDeviceContext(), 6, shaderParams);
@@ -386,37 +366,6 @@ bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX
 void GraphicHandler::SetDirectionalLight(DirectionalLight light)
 {
 	this->dirLight = light;
-}
-
-void GraphicHandler::AddPointLight(PointLight light)
-{
-	this->pointLights.push_back(light);
-}
-
-void GraphicHandler::UpdatePointLight(int index, PointLight newLight)
-{
-	if (index <= this->pointLights.size()) {
-		return;
-	}
-
-	this->pointLights.at(index) = newLight;
-}
-
-void GraphicHandler::RemovePointLight(int index)
-{
-	if (index >= this->pointLights.size()) {
-		return;
-	}
-
-	for (int i = index; i < this->pointLights.size() - 1; i++) {
-		this->pointLights.at(i) = this->pointLights.at(i + 1);
-	}
-	this->pointLights.pop_back();
-}
-
-void GraphicHandler::RemoveAllPointLights()
-{
-	this->pointLights.clear();
 }
 
 void GraphicHandler::ClearRTVs()
