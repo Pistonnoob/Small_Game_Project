@@ -323,10 +323,26 @@ void StageState::ReadFile(string fileName)
                         {
                             if (line.at(a) != ' ' && line.at(a) != '}')
                             {
-                                spawnTemp.spawnIndex = i;
-                                enemyType = line.at(a);
-                                spawnTemp.type = ConvertToEnemyType(enemyType);
-                                waveTemp.toSpawn.push_back(spawnTemp);
+                                string bossCheck = line.substr(a, a + 3);
+                                if (bossCheck.at(bossCheck.size() - 1) == '}')
+                                {
+                                    bossCheck.pop_back();
+                                }
+                                if (bossCheck == "BOSS")
+                                {
+                                    spawnTemp.spawnIndex = i;
+                                    spawnTemp.type = ConvertToEnemyType(bossCheck);
+                                    waveTemp.toSpawn.push_back(spawnTemp);
+                                    a += 3;
+                                }
+                                else
+                                {
+                                    spawnTemp.spawnIndex = i;
+                                    enemyType = line.at(a);
+                                    spawnTemp.type = ConvertToEnemyType(enemyType);
+                                    waveTemp.toSpawn.push_back(spawnTemp);
+                                }
+
                             }
                         }
 					}
