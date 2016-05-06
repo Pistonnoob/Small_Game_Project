@@ -3,6 +3,9 @@
 Entity::Entity() {
 	this->entityModel = nullptr;
 	this->entityBV = nullptr;
+
+	this->posX = 0.0f;
+	this->posZ = 0.0f;
 }
 
 Entity::~Entity()

@@ -10,6 +10,7 @@
 #include "Weapon.h"
 #include "Player.h"
 #include "GameData.h"
+#include "PowerUp.h"
 
 
 struct Wave
@@ -29,7 +30,9 @@ private:	//Variables
 	CameraHandler myCamera;
     ProjectileHandler enemyPjHandler;
 
-	
+	PowerUp spreadPower;
+	EntitySubject powerUpSubject;
+
 	Model m_car;
     Model m_ball;
 	Model m_ground;

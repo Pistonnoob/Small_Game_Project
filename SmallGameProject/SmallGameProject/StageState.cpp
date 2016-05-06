@@ -26,6 +26,9 @@ StageState::StageState()
 	
 	this->hero = new Player();
 	this->exitStage = false;
+
+	this->spreadPower = PowerUp();
+	this->powerUpSubject = EntitySubject();
 }
 
 
@@ -65,6 +68,8 @@ void StageState::Shutdown()
     delete this->ability2;
     delete this->ability3;
 	//Release your m_AI
+
+	this->spreadPower.Shutdown();
 
 	GameState::Shutdown();
 }
@@ -142,6 +147,10 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		ReverseFire* temp3 = new ReverseFire();
 		temp3->Initialize(3.14f / 2, 15, 100, 50, 1, 50);
 		this->ability3 = temp3;
+
+		//ze powerups
+		this->spreadPower.Initialize(device, deviceContext, "sphere1", true, &this->powerUpSubject);
+		this->spreadPower.getModel()->SetColor(XMFLOAT3(0, 0, 255));
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -264,6 +273,17 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
     this->enemyPjHandler.render(gHandler, &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
+
+	//renderPowerups
+ 	pos = this->spreadPower.getPosition();
+	pos.x += 15;
+	pos.z += 15;
+
+	worldMatrix = DirectX::XMMatrixTranslation(pos.x, 0.f, pos.z);
+	this->spreadPower.getModel()->SetWorldMatrix(worldMatrix);
+
+	//render that shiet
+	gHandler->DeferredRender(this->spreadPower.getModel(), &this->myCamera);
 
 	//shadowMap
 	gHandler->SetShadowRTV();

@@ -102,6 +102,7 @@ void GameData::onNotify(Entity * entity, Events::PICKUP evnt)
 
 
 	//resulterar till:
+
 	ptr->setPowerUp(Modifiers::POWERUPS::SPREAD);
 }
 
