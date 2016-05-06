@@ -1,0 +1,27 @@
+newmtl Circle
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd circle.tga
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Diamond
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd diamond.tga
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Star
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd star.tga
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00

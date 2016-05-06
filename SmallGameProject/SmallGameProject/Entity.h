@@ -29,8 +29,9 @@ public:
 	void Shutdown(bool isEnemy = false);
 
     Model* GetModel();
+    BoundingVolume* GetBV();
     DirectX::XMFLOAT3 GetPosition();
-	const BoundingVolume* GetBoundingVolume();
+
 };
 
 #endif

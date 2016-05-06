@@ -77,6 +77,8 @@ int StartState::Render(GraphicHandler * gHandler, HWND hwnd)
 	int result = 0;
 
 	gHandler->DeferredRender(&this->startModel, &this->camera);
+
+	gHandler->LightRender(this->camera.GetCameraPos());
 	
 	return result;
 }

@@ -11,7 +11,7 @@ private:
 public:
 	Observer();
 	virtual ~Observer();
-	virtual void onNotify(const Entity* entity, Events::ENTITY evnt) = 0;
+	virtual void OnNotify(const Entity* entity, Events::ENTITY evnt) = 0;
 };
 
 #endif

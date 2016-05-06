@@ -1,6 +1,7 @@
 #ifndef STAGESTATE_H
 #define STAGESTATE_H
 #include "GameState.h"
+#include "ParticleHandler.h"
 #include "Ai.h"
 #include "Player.h"
 #include "Projectile.h"
@@ -19,8 +20,10 @@ private:	//Variables
 
 	Ai m_AI;
 	vector<Enemy*> enemies;
+
 	Player player;
-    vector<Projectile*> projectiles;
+	ParticleHandler myParticleHandler;
+	vector<Projectile*> projectiles;
 
     float t;
 
@@ -32,6 +35,9 @@ private:	//Variables
 
 	bool exitStage;
 
+	float camPosX;
+	float camPosZ;
+	bool inc;
 public:
 	StageState();
 	virtual ~StageState();

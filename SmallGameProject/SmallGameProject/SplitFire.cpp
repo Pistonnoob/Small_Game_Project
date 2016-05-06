@@ -33,7 +33,9 @@ void SplitFire::update(std::vector<Projectile*>& projectiles, Model* projectileM
         int size = projectiles.size();
         for (int i = 0; i < size; i++)
         {
+
             DirectX::XMFLOAT3 pos = projectiles.at(i)->GetPosition();
+
             DirectX::XMFLOAT3 dir = projectiles.at(i)->getMoveDir();
             DirectX::XMVECTOR dirVec = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
 

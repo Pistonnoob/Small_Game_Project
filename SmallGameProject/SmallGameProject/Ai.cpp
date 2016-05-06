@@ -71,6 +71,7 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 }
 void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos)
 {
+
     if (distanceBetween(actor->GetPosition(), playerPos) > 0.5f)
     {
         moveToPlayer(actor, playerPos);

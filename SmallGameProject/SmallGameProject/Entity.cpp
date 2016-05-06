@@ -71,7 +71,10 @@ Model* Entity::GetModel()
     return this->entityModel;
 }
 
-
+BoundingVolume* Entity::GetBV()
+{
+    return this->entityBV;
+}
 
 DirectX::XMFLOAT3 Entity::GetPosition()
 {
@@ -82,10 +85,6 @@ DirectX::XMFLOAT3 Entity::GetPosition()
     return pos;
 }
 
-const BoundingVolume * Entity::GetBoundingVolume()
-{
-	return this->entityBV;
-}
 
 
 
