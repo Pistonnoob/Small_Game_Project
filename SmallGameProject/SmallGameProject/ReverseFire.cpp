@@ -11,18 +11,20 @@ void ReverseFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int
 	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
 
 }
-float ReverseFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
+float ReverseFire::Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
 {
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
 		this->isActivated = true;
-		this->timers.push_back(this->triggerDelay);
-		float x = (playerPos.x - enemy->getPosition().x);
-		float z = (playerPos.z - enemy->getPosition().z);
 
-		enemy->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+		float x = (playerPos.x - enemy->GetPosition().x) * 0.01f;
+		float z = (playerPos.z - enemy->GetPosition().z) * 0.01f;
 
-		entitySubject->notify(enemy, Events::UNIQUE_FIRE::REVERSERBULLETS, this->arc, this->nrOfProjectiles, this->triggerDelay);
+		enemy->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
+
+
+		entitySubject->Notify(enemy, Events::UNIQUE_FIRE::REVERSERBULLETS, this->arc, this->nrOfProjectiles, this->triggerDelay);
+
 
 		this->cdCounter = 0;
 		this->chargesLeft--;
@@ -31,16 +33,8 @@ float ReverseFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX:
 	}
 	return -1;
 }
-void ReverseFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
+void ReverseFire::Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {
-	Ability::update(enemy, entitySubject, deltaTime);
-	/*for (int i = 0; i < this->timers.size(); i++)
-	{
-		this->timers.at(i) -= REFRESH_RATE * deltaTime;
-		if (this->timers.at(i) <= 0.0f)
-		{
-			entitySubject->notify(enemy, Events::ABILITY_TRIGGER::REVERSER_PROJECTILES, 0.0f, 0);
-			this->timers.erase(this->timers.begin() + i);
-		}
-	}*/
+	Ability::Update(enemy, entitySubject, deltaTime);
+
 }

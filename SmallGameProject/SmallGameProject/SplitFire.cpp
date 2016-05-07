@@ -13,17 +13,19 @@ void SplitFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int a
 	this->splitArc = splitArc;
 
 }
-float SplitFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
+float SplitFire::Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
 {
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
 		this->isActivated = true;
-		float x = (playerPos.x - enemy->getPosition().x);
-		float z = (playerPos.z - enemy->getPosition().z);
 
-		enemy->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+		float x = (playerPos.x - enemy->GetPosition().x);
+		float z = (playerPos.z - enemy->GetPosition().z);
 
-		entitySubject->notify(enemy, Events::UNIQUE_FIRE::SPLITFIRE, this->arc, this->nrOfProjectiles, this->triggerDelay, this->splitArc, this->projectilesOnSplit);
+		enemy->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
+
+		entitySubject->Notify(enemy, Events::UNIQUE_FIRE::SPLITFIRE, this->arc, this->nrOfProjectiles, this->triggerDelay, this->splitArc, this->projectilesOnSplit);
+
 
 		this->cdCounter = 0;
 		this->chargesLeft--;
@@ -33,18 +35,8 @@ float SplitFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::X
 	return -1;
 
 }
-void SplitFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
+void SplitFire::Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {
-	Ability::update(enemy, entitySubject, deltaTime);
-
-	/*for (int i = 0; i < this->timers.size(); i++)
-	{
-		this->timers.at(i) -= REFRESH_RATE * deltaTime;
-		if (this->timers.at(i) <= 0.0f)
-		{
-			entitySubject->notify(enemy, Events::ABILITY_TRIGGER::SPLITFIRE_ON_PROJECTILES, this->splitArc, this->projectilesOnSplit);
-			this->timers.erase(this->timers.begin() + i);
-		}
-	}*/
+	Ability::Update(enemy, entitySubject, deltaTime);
 
 }

@@ -15,9 +15,9 @@ public:
 
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);
 	void Shutdown();
-	virtual bool chargeExplosion(float deltaTime);
+	virtual bool ChargeExplosion(float deltaTime);
 
-	virtual void fire(float deltaTime);
+	virtual void Fire(float deltaTime);
 
 };
 

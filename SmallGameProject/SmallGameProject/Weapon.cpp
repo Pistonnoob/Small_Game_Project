@@ -3,6 +3,7 @@
 //not so strong weapon
 Weapon::Weapon()
 {
+
 	this->weaponModel = new Model();
 
 	this->attackDamage = 1.0f;
@@ -53,23 +54,23 @@ Model * Weapon::GetModel()
 	return this->weaponModel;
 }
 
-float Weapon::getAttackDamageMod() const
+float Weapon::GetAttackDamageMod() const
 {
 	return this->attackDamage;
 }
 
-float Weapon::getAttackSpeedMod() const
+float Weapon::GetAttackSpeedMod() const
 {
 	return this->attackSpeed;
 }
 
-float Weapon::getPlayerSpeedMod() const
+float Weapon::GetPlayerSpeedMod() const
 {
 	return this->playerSpeed;
 }
 
-void Weapon::shootWeapon(Entity * entity)
+void Weapon::ShootWeapon(Entity * entity)
 {
 	//player powerups
-	entity->getEntitySubject()->notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14, 40);
+	entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14, 40);
 }

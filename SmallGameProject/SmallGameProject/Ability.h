@@ -30,11 +30,11 @@ public:
 	Ability();
 	virtual~Ability();
 	virtual void Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay);
-	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos) = 0;
-	virtual void update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
+	virtual float Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos) = 0;
+	virtual void Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
 
-	virtual float getCooldown();
-	virtual float getCDCounter();
+	virtual float GetCooldown();
+	virtual float GetCDCounter();
 
 
 

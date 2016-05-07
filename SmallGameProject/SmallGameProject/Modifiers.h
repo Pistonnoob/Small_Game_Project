@@ -15,8 +15,9 @@ namespace Modifiers
 	//not yet implemented
 	enum POWERUPS
 	{
-		SPREAD_INCREASE,				//0
-		PENETRATION						//1 if you know what I mean
+		SPREAD,							//0
+		PENETRATION,					//1 if you know what I mean
+		WEAVE
 	};
 
 	int const static nrOfPowerUps = 2;

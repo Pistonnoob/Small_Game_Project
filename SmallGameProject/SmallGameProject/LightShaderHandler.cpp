@@ -108,8 +108,9 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 
 
 	//Fill the description of the dynamic matrix constant buffer that is in the vertex shader
+	ZeroMemory(&matrixBufferDesc, sizeof(matrixBufferDesc));
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(LightConstantBuffer);
+	matrixBufferDesc.ByteWidth = sizeof(LightMatrixBuffer);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	matrixBufferDesc.MiscFlags = 0;
@@ -118,7 +119,23 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
 	hresult = device->CreateBuffer(&matrixBufferDesc, NULL, &this->matrixBuffer);
 	if (FAILED(hresult)) {
-		MessageBox(*hwnd, L"device->CreateBuffer", L"Error", MB_OK);
+		MessageBox(*hwnd, L"device->CreateBufferM", L"Error", MB_OK);
+		return false;
+	}
+
+	ZeroMemory(&matrixBufferDesc, sizeof(matrixBufferDesc));
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDesc.ByteWidth = sizeof(LightsCB);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDesc.MiscFlags = 0;
+	matrixBufferDesc.StructureByteStride = 0;
+
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	hresult = device->CreateBuffer(&matrixBufferDesc, NULL, &this->lightBuffer);
+	if (FAILED(hresult)) {
+		MessageBox(*hwnd, L"device->CreateBufferL", L"Error", MB_OK);
 		return false;
 	}
 
@@ -199,6 +216,11 @@ void LightShaderHandler::Shutdown()
 		this->matrixBuffer->Release();
 		this->matrixBuffer = nullptr;
 	}
+	//Release light constant buffer
+	if (this->lightBuffer) {
+		this->lightBuffer->Release();
+		this->lightBuffer = nullptr;
+	}
 	//Release layout
 	if (this->layout) {
 		this->layout->Release();
@@ -278,8 +300,8 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	LightConstantBuffer* dataPtr;
-	unsigned int bufferNumber;
+	LightMatrixBuffer* dataPtrM;
+	LightsCB* dataPtrL;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
 	params->worldMatrix = DirectX::XMMatrixTranspose(params->worldMatrix);
@@ -288,6 +310,7 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	params->lightViewMatrix = DirectX::XMMatrixTranspose(params->lightViewMatrix);
 	params->lightProjectionMatrix = DirectX::XMMatrixTranspose(params->lightProjectionMatrix);
 
+	ZeroMemory(&mappedResource, sizeof(mappedResource));
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(hresult)) {
@@ -295,29 +318,59 @@ bool LightShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	}
 
 	//Get pointer to the data
-	dataPtr = (LightConstantBuffer*)mappedResource.pData;
+	dataPtrM = (LightMatrixBuffer*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
-	dataPtr->world = params->worldMatrix;
-	dataPtr->view = params->viewMatrix;
-	dataPtr->projection = params->projectionMatrix;
-	dataPtr->lightView = params->lightViewMatrix;
-	dataPtr->lightProjection = params->lightProjectionMatrix;
 
-	dataPtr->lightPos = params->lightPos;
-	//dataPtr->lightPos = DirectX::XMFLOAT3(0, 5, 0);
-	
-	dataPtr->camPos = params->camPos;
+	dataPtrM->world = params->worldMatrix;
+	dataPtrM->view = params->viewMatrix;
+	dataPtrM->projection = params->projectionMatrix;
+	dataPtrM->lightView = params->lightViewMatrix;
+	dataPtrM->lightProjection = params->lightProjectionMatrix;
+
+	dataPtrM->camPos = params->camPos;
 
 	//Unmap the constant buffer to give the GPU access agin
 	deviceContext->Unmap(this->matrixBuffer, 0);
 
-	//Set constant buffer position in vertex shader
-	bufferNumber = 0;
+	ZeroMemory(&mappedResource, sizeof(mappedResource));
+	//Map the constant buffer so we can write to it (denies GPU access)
+	hresult = deviceContext->Map(this->lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(hresult)) {
+		return false;
+	}
 
+	//Get pointer to the data
+	dataPtrL = (LightsCB*)mappedResource.pData;
+
+	dataPtrL->Diffuse[0] = params->dirLight.Diffuse;
+	dataPtrL->Ambient[0] = params->dirLight.Ambient;
+	dataPtrL->Specular[0] = params->dirLight.Specular;
+	dataPtrL->Position[0] = params->dirLight.Direction;
+
+	dataPtrL->activeLights = params->pointLights.size();
+	for (int i = 1; i <= dataPtrL->activeLights; i++) {
+		PointLight currLight = params->pointLights.at(i-1);
+		dataPtrL->Diffuse[i] = currLight.Diffuse;
+		dataPtrL->Ambient[i] = currLight.Ambient;
+		dataPtrL->Specular[i] = currLight.Specular;
+		dataPtrL->Position[i] = currLight.Position;
+		dataPtrL->Attenuation[i-1] = currLight.Attenuation;
+	}
+
+	//Unmap the constant buffer to give the GPU access agin
+	deviceContext->Unmap(this->lightBuffer, 0);
+
+	//Set constant buffer position in vertex shader
+	ID3D11Buffer* pixelConstants[2];
+	pixelConstants[0] = this->matrixBuffer;
+	pixelConstants[1] = this->lightBuffer;
 	//Set the constant buffer in vertex and pixel shader with updated values
-	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
-	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
+	deviceContext->VSSetConstantBuffers(0, 1, &this->matrixBuffer);
+	deviceContext->PSSetConstantBuffers(0, 2, pixelConstants);
+	/*deviceContext->PSSetConstantBuffers(bufferNumber, 2, &this->matrixBuffer);
+	bufferNumber = 1;
+	deviceContext->PSSetConstantBuffers(1, 2, &this->lightBuffer);*/
 
 	if (params->deferredTextures) {
 		//Set shader texture resource for pixel shader

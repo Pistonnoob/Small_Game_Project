@@ -21,7 +21,7 @@ void Ability::Initialize(float arc, int nrOfProjectiles, float cooldown, int att
 	this->triggerDelay = triggerDelay;
 
 }
-void Ability::update(Enemy * enemy, EntitySubject * entitySubject, float deltaTime)
+void Ability::Update(Enemy * enemy, EntitySubject * entitySubject, float deltaTime)
 {
 	if (this->chargesLeft < this->maxCharges)
 	{
@@ -38,12 +38,12 @@ void Ability::update(Enemy * enemy, EntitySubject * entitySubject, float deltaTi
 	}
 }
 
-float Ability::getCooldown()
+float Ability::GetCooldown()
 {
 	return this->cooldown;
 }
 
-float Ability::getCDCounter()
+float Ability::GetCDCounter()
 {
 	return this->cdCounter;
 }

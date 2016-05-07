@@ -20,12 +20,8 @@ protected:
     float posZ;
     EntitySubject* entitySubject;
     Type myType;
-    
-private:
-	
 	Model* entityModel;
 	BoundingVolume* entityBV;
-
 public:
 	Entity();	//Entitys without BoundingVolume
 	virtual~Entity();
@@ -36,16 +32,17 @@ public:
 	// Secoundary initialize for instancing
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);	
 	virtual void Shutdown(bool isEnemy = false);
-    void addObservers(Observer* observer);
-	virtual DirectX::XMFLOAT3 getAimDir();
+    void AddObservers(Observer* observer);
+	virtual DirectX::XMFLOAT3 GetAimDir();
 
-	EntitySubject* getEntitySubject() const;
+	EntitySubject* GetEntitySubject() const;
 
-    Type getType();
+    Type GetType();
 
-    Model* getModel();
-    BoundingVolume* getBV();
-    DirectX::XMFLOAT3 getPosition();
+    Model* GetModel();
+    BoundingVolume* GetBV();
+    DirectX::XMFLOAT3 GetPosition();
+
 };
 
 #endif

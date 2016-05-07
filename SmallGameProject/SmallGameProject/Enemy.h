@@ -20,15 +20,14 @@ public:
 	virtual bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere) = 0;
 	virtual void Shutdown() = 0;
 	
-
-    virtual void moveRight(float deltaTime);
-    virtual void moveLeft(float deltaTime);
-    virtual void moveUp(float deltaTime);
-    virtual void moveDown(float deltaTime);
-    virtual void fire(float deltaTime);
-    virtual void move(DirectX::XMFLOAT3 moveVec) ;
-    virtual bool getIsAlive();
-    virtual void setIsAlive(bool newIsAlive);
+    virtual void MoveRight(float deltaTime);
+    virtual void MoveLeft(float deltaTime);
+    virtual void MoveUp(float deltaTime);
+    virtual void MoveDown(float deltaTime);
+    virtual void Fire(float deltaTime);
+    virtual void Move(DirectX::XMFLOAT3 moveVec) ;
+	virtual bool GetIsAlive();
+	virtual void SetIsAlive(bool newIsAlive);
 
 };
 

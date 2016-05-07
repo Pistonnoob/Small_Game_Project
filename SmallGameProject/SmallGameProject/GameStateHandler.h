@@ -22,7 +22,7 @@ public:
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 
 	int HandleInput(InputHandler* input);
-	int Update(float deltaTime);
+	int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);
 	int Render(GraphicHandler* gHandler, HWND hwnd);
 
 	void PushState(GameState* gameState);

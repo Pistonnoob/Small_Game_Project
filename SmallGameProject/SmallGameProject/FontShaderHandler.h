@@ -25,7 +25,6 @@ private:
 	ID3D11InputLayout* layout;
 	ID3D11Buffer* matrixBuffer;
 	ID3D11SamplerState* samplerState;
-	ID3D11BlendState* transparencyBlendState;
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFilename);
 

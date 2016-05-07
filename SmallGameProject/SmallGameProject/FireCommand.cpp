@@ -2,5 +2,7 @@
 
 void FireCommand::execute(Actor& actor, float deltaTime)
 {
-    actor.fire(deltaTime);
+
+    actor.Fire(deltaTime);
+
 }

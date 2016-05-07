@@ -2,5 +2,5 @@
 
 void MoveDownCommand::execute(Actor& actor, float deltaTime)
 {
-    actor.moveDown(deltaTime);
+    actor.MoveDown(deltaTime);
 }

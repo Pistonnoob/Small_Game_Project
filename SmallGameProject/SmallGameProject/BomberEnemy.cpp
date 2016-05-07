@@ -24,7 +24,7 @@ void BomberEnemy::Shutdown()
 	Entity::Shutdown(true);
 }
 
-bool BomberEnemy::chargeExplosion(float deltaTime)
+bool BomberEnemy::ChargeExplosion(float deltaTime)
 {
 	bool canExplode = false;
 	if (this->attackCD > -1)
@@ -38,11 +38,11 @@ bool BomberEnemy::chargeExplosion(float deltaTime)
 	return canExplode;
 }
 
-void BomberEnemy::fire(float deltaTime)
+void BomberEnemy::Fire(float deltaTime)
 {
 	if (this->attackCD > EXPLOSION_DELAY)
 	{
-		this->entitySubject->notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14f * 2, 20);
+		this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14f * 2, 20);
         this->isAlive = false;
 		this->attackCD = -1;
 	}

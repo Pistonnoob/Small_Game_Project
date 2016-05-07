@@ -3,5 +3,5 @@
 
 void MoveLeftCommand::execute(Actor& actor, float deltaTime)
 {
-    actor.moveLeft(deltaTime);
+    actor.MoveLeft(deltaTime);
 }

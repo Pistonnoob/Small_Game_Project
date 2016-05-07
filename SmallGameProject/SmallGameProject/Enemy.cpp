@@ -9,27 +9,28 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::moveRight(float deltaTime)
+
+void Enemy::MoveRight(float deltaTime)
 {
     this->posX += MOVEMENT_SPEED * deltaTime;
 }
-void Enemy::moveLeft(float deltaTime)
+void Enemy::MoveLeft(float deltaTime)
 {
     this->posX -= MOVEMENT_SPEED * deltaTime;
 }
-void Enemy::moveUp(float deltaTime)
+void Enemy::MoveUp(float deltaTime)
 {
     this->posZ += MOVEMENT_SPEED * deltaTime;
 }
-void Enemy::moveDown(float deltaTime)
+void Enemy::MoveDown(float deltaTime)
 {
 	this->posZ -= MOVEMENT_SPEED * deltaTime;
 }
-void Enemy::fire(float deltaTime)
+void Enemy::Fire(float deltaTime)
 {
     if (this->attackCD > BASE_ATTACK_DELAY)
     {
-        this->entitySubject->notify(this, Events::ENTITY::Fire);
+        this->entitySubject->Notify(this, Events::ENTITY::Fire);
         this->attackCD = 0;
     }
     else
@@ -37,22 +38,22 @@ void Enemy::fire(float deltaTime)
         this->attackCD += deltaTime;
     }
 }
-void Enemy::move(DirectX::XMFLOAT3 moveVec)
+void Enemy::Move(DirectX::XMFLOAT3 moveVec)
 {
     this->posX += moveVec.x;
     this->posZ += moveVec.z;
 }
 
-bool Enemy::getIsAlive()
+bool Enemy::GetIsAlive()
 {
     return this->isAlive;
 }
 
-void Enemy::setIsAlive(bool newIsAlive)
+void Enemy::SetIsAlive(bool newIsAlive)
 {
     this->isAlive = newIsAlive;
     if (newIsAlive == false)
     {
-        this->entitySubject->notify(this, Events::ENTITY::DEAD);
+        this->entitySubject->Notify(this, Events::ENTITY::DEAD);
     }
 }

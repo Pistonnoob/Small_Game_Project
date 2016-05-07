@@ -57,7 +57,7 @@ int StartState::HandleInput(InputHandler * input)
 	return result;
 }
 
-int StartState::Update(float deltaTime)
+int StartState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
 	if (this->startGame)
@@ -77,6 +77,8 @@ int StartState::Render(GraphicHandler * gHandler, HWND hwnd)
 	int result = 0;
 
 	gHandler->DeferredRender(&this->startModel, &this->camera);
+
+	gHandler->LightRender(this->camera.GetCameraPos());
 	
 	return result;
 }

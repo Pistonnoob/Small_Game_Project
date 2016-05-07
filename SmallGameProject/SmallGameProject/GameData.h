@@ -7,6 +7,8 @@
 #include "Modifiers.h"
 #include "Weapon.h"
 #include <vector> 
+#include "Player.h"
+#include "GameState.h"
 
 class GameData : public Observer
 {
@@ -15,10 +17,6 @@ private:
 	static GameData* single;
 
 	GameData(GameData const&);
-			//Only GameData will create itself
-
-								//Data
-								//Character
 	int playerHighScore;
 	int playerHealth;
 	int playerMovmentSpeed;
@@ -32,23 +30,27 @@ private:
 	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
 public:
 	virtual ~GameData();
-	static GameData* getInstance();
 
-	void shutdown();
+	static GameData* GetInstance();
 
-	void onNotify(const Entity* entity, Events::ENTITY evnt);
-	void onNotify(const Entity* entity, Events::ACHIEVEMENT achi);
+	void Shutdown();
+	void Update(float deltaTime);
 
-	void onNotify(Entity* entity, Events::ENTITY evnt);
-	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
-	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay);
-	void onNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit);
-	void onNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::ENTITY evnt);
+	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay);
+	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit);
+	void OnNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::PICKUP evnt);
+
+	void OnNotify(const Entity* entity, Events::ACHIEVEMENT achi);
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
 
-	Weapon* getWeapon(int weaponEnum);
+	void Render(GraphicHandler * gHandler, CameraHandler* camera);
+
+	Weapon* GetWeapon(int weaponEnum);
 };
 
 #endif

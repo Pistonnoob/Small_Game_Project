@@ -13,8 +13,8 @@ public:
 	ArcFire();
 	virtual~ArcFire();
 	virtual void Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay);
-	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
-	virtual void update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
+	virtual float Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
 
 
 
@@ -31,8 +31,8 @@ public:
 	SplitFire();
 	virtual~SplitFire();
 	virtual void Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay, int projectilesOnSplit, float splitArc);
-	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
-	virtual void update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
+	virtual float Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
 
 };
 
@@ -46,8 +46,8 @@ public:
 	ReverseFire();
 	virtual~ReverseFire();
 	virtual void Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay);
-	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
-	virtual void update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
+	virtual float Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime);
 
 };
 

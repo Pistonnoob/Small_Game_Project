@@ -1,7 +1,8 @@
 #ifndef POWERUP_H
 #define POWERUP_H
+#include "Entity.h"
 
-class PowerUp
+class PowerUp : public Entity
 {
 private:
 	float timeLeft;
@@ -10,8 +11,8 @@ public:
 	virtual ~PowerUp();
 
 	float getTimeLeft() const;
+	void setTimePowerup(float timeActive);
 
-	void startPowerup(float timeActive);
 	bool Update(float dt);
 };
 

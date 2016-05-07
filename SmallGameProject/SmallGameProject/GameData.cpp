@@ -35,7 +35,7 @@ GameData::~GameData()
 	
 }
 
-GameData* GameData::getInstance()
+GameData* GameData::GetInstance()
 {
 	if (!isInstatiated) 
 	{
@@ -46,7 +46,7 @@ GameData* GameData::getInstance()
 	return single;
 }
 
-void GameData::shutdown()
+void GameData::Shutdown()
 {
 	
 	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
@@ -59,7 +59,12 @@ void GameData::shutdown()
 	single = nullptr;
 }
 
-void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
+void GameData::Update(float deltaTime)
+{
+
+}
+
+void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
 	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
@@ -69,7 +74,7 @@ void GameData::onNotify(Entity* entity, Events::ENTITY evnt)
 	return;
 }
 
-void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
+void GameData::OnNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 {
 	if (achi == Events::ACHIEVEMENT::WEAPON_UNLOCK)
 	{
@@ -77,20 +82,34 @@ void GameData::onNotify(const Entity * entity, Events::ACHIEVEMENT achi)
 	}
 }
 
-void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
+void GameData::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
 }
 
-void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
+void GameData::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
 {
 }
 
-void GameData::onNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
+void GameData::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
 {
 }
 
-void GameData::onNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+void GameData::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
 {
+}
+
+void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
+{
+	Player* ptr = nullptr;
+
+	ptr = dynamic_cast<Player*>(entity);
+
+	//här behöver avgöras vad som tas upp upp
+
+
+	//resulterar till:
+
+	ptr->SetPowerUp(Modifiers::POWERUPS::SPREAD);
 }
 
 bool GameData::SavePlayerData(std::string filename)
@@ -114,6 +133,7 @@ bool GameData::SavePlayerData(std::string filename)
 	}
 	return true;
 }
+
 bool GameData::LoadPlayerData(std::string filename)
 {
 	std::ifstream loadFile;
@@ -138,7 +158,12 @@ bool GameData::LoadPlayerData(std::string filename)
 	return true;
 }
 
-Weapon * GameData::getWeapon(int weaponEnum)
+void GameData::Render(GraphicHandler * gHandler, CameraHandler * camera)
+{
+	system("pause");
+}
+
+Weapon * GameData::GetWeapon(int weaponEnum)
 {
 	return &weaponArsenal[0];
 }

@@ -12,16 +12,16 @@ void ArcFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int att
 	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
 
 }
-float ArcFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
+float ArcFire::Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
 {
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
-		float x = (playerPos.x - enemy->getPosition().x);
-		float z = (playerPos.z - enemy->getPosition().z);
+		float x = (playerPos.x - enemy->GetPosition().x);
+		float z = (playerPos.z - enemy->GetPosition().z);
 
-		enemy->setAimDir(DirectX::XMFLOAT3(x, 0, z));
+		enemy->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
 
-		entitySubject->notify(enemy, Events::UNIQUE_FIRE::ARCFIRE, this->arc, this->nrOfProjectiles);
+		entitySubject->Notify(enemy, Events::UNIQUE_FIRE::ARCFIRE, this->arc, this->nrOfProjectiles);
 
 		this->cdCounter = 0;
 		this->chargesLeft--;
@@ -32,8 +32,8 @@ float ArcFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMF
 	return -1;
 
 }
-void ArcFire::update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
+void ArcFire::Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {
-	Ability::update(enemy, entitySubject, deltaTime);
+	Ability::Update(enemy, entitySubject, deltaTime);
 
 }

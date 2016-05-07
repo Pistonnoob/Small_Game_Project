@@ -28,11 +28,12 @@ public:
 
 	Model* GetModel();
 
-	float getAttackDamageMod() const;
-	float getAttackSpeedMod() const;
-	float getPlayerSpeedMod() const;
 
-	void shootWeapon(Entity* entity);
+	float GetAttackDamageMod() const;
+	float GetAttackSpeedMod() const;
+	float GetPlayerSpeedMod() const;
+
+	void ShootWeapon(Entity* entity);
 };
 
 

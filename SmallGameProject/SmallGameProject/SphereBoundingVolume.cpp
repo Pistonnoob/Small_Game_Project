@@ -78,7 +78,6 @@ void SphereBoundingVolume::GenerateBounds(Model* model)
 	DirectX::XMStoreFloat3(&minVert, minV);
 	DirectX::XMStoreFloat3(&maxVert, maxV);
 
-
 	DirectX::XMFLOAT3 distanceToMid = DirectX::XMFLOAT3(abs(maxVert.x - minVert.x) / 2, abs(maxVert.y - minVert.y) / 2, abs(maxVert.z - minVert.z) / 2);	//Calculate offset to add to the min vertex to find the midle vertex
 
 	DirectX::XMFLOAT3 midleVert = DirectX::XMFLOAT3(minVert.x + distanceToMid.x, minVert.y + distanceToMid.y, minVert.z + distanceToMid.z);	//Calculate the midle Vertex

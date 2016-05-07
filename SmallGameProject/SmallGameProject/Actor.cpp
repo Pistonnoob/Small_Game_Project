@@ -8,11 +8,11 @@ Actor::Actor() : Entity()
 Actor::~Actor()
 {
 }
-void Actor::setAimDir(DirectX::XMFLOAT3 newDir)
+void Actor::SetAimDir(DirectX::XMFLOAT3 newDir)
 {
     this->aimDir = newDir;
 }
-DirectX::XMFLOAT3 Actor::getAimDir()
+DirectX::XMFLOAT3 Actor::GetAimDir()
 {
     return this->aimDir;
 }

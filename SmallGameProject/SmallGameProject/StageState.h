@@ -1,7 +1,9 @@
 #ifndef STAGESTATE_H
 #define STAGESTATE_H
 #include "GameState.h"
+#include "ParticleHandler.h"
 #include "Ai.h"
+#include "Player.h"
 #include "Projectile.h"
 #include "Abilities.h"
 #include "Algorithm.h"
@@ -10,6 +12,8 @@
 #include "Weapon.h"
 #include "Player.h"
 #include "Boss.h"
+#include "GameData.h"
+#include "PowerUp.h"
 
 
 struct ToSpawn
@@ -32,8 +36,11 @@ class StageState :
 private:	//Variables
 	CameraHandler myCamera;
     ProjectileHandler enemyPjHandler;
+	DirectX::XMFLOAT3 playerPos;
 
-	
+	PowerUp spreadPower;
+	EntitySubject powerUpSubject;
+
 	Model m_car;
     Model m_ball;
 	Model m_ground;
@@ -41,9 +48,10 @@ private:	//Variables
     EntitySubject enemySubject;
 
 	//player variables
-	EntitySubject* playerSubject;
-	ProjectileHandler playerPjHandler;
-	Player* hero;
+	
+	EntitySubject playerSubject;
+	ProjectileHandler playerProjectile;
+	Player player;
 	
 	Ai m_AI;
 	vector<Enemy*> enemies;
@@ -54,8 +62,15 @@ private:	//Variables
     vector<Level> levels;
 	vector<DirectX::XMFLOAT3> spawnPoints;
 
+	
+	ParticleHandler myParticleHandler;
+
+    float t;
 	bool exitStage;
 
+	float camPosX;
+	float camPosZ;
+	bool inc;
 public:
 	StageState();
 	virtual ~StageState();
@@ -64,7 +79,7 @@ public:
 	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
 
 	virtual int HandleInput(InputHandler* input);
-	virtual int Update(float deltaTime);
+	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
     virtual void ReadFile(string fileName);
     virtual void HandleWaveSpawning(float deltaTime);

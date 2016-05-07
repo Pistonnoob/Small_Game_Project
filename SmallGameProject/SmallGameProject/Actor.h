@@ -12,14 +12,16 @@ public:
     Actor();
     virtual~Actor();
 
-    virtual void moveRight(float deltaTime) = 0;
-    virtual void moveLeft(float deltaTime) = 0;
-    virtual void moveUp(float deltaTime) = 0;
-    virtual void moveDown(float deltaTime) = 0;
-    virtual void fire(float deltaTime) = 0;
-    virtual void move(DirectX::XMFLOAT3 moveVec) = 0;
-    virtual void setAimDir(DirectX::XMFLOAT3 newDir);
-    virtual DirectX::XMFLOAT3 getAimDir();
+
+    virtual void MoveRight(float deltaTime) = 0;
+    virtual void MoveLeft(float deltaTime) = 0;
+    virtual void MoveUp(float deltaTime) = 0;
+    virtual void MoveDown(float deltaTime) = 0;
+	virtual void Fire(float deltaTime) = 0;
+    virtual void Move(DirectX::XMFLOAT3 moveVec) = 0;
+
+    virtual void SetAimDir(DirectX::XMFLOAT3 newDir);
+    virtual DirectX::XMFLOAT3 GetAimDir();
 
 };
 

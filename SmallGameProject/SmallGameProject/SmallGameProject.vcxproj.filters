@@ -61,6 +61,12 @@
     <Filter Include="Header Files\Libraries">
       <UniqueIdentifier>{55a88415-2a2d-495e-b914-81eef98eb3fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Observers\ParticleHandler">
+      <UniqueIdentifier>{7e806ecd-2082-4354-9967-ef7515cbb75e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Observers\ParticleHandler">
+      <UniqueIdentifier>{56c0aaa9-8d43-4d7e-bd3d-583c23592928}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Abilities">
       <UniqueIdentifier>{7c7bf8c4-4755-4023-b095-62086d02a1db}</UniqueIdentifier>
     </Filter>
@@ -156,9 +162,6 @@
     <ClCompile Include="ProjectileHandler.cpp">
       <Filter>Source Files\Observers</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleHandler.cpp">
-      <Filter>Source Files\Observers</Filter>
-    </ClCompile>
     <ClCompile Include="AudioHandler.cpp">
       <Filter>Source Files\Observers</Filter>
     </ClCompile>
@@ -215,6 +218,21 @@
     </ClCompile>
     <ClCompile Include="StageState.cpp">
       <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleHandler.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterPrototype.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
     <ClCompile Include="ArcFire.cpp">
       <Filter>Source Files\Abilities</Filter>
@@ -314,9 +332,6 @@
     <ClInclude Include="ProjectileHandler.h">
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleHandler.h">
-      <Filter>Header Files\Observers</Filter>
-    </ClInclude>
     <ClInclude Include="AudioHandler.h">
       <Filter>Header Files\Observers</Filter>
     </ClInclude>
@@ -353,6 +368,9 @@
     <ClInclude Include="MenuState.h">
       <Filter>Header Files\GameStates</Filter>
     </ClInclude>
+    <ClInclude Include="TestState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="gameStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -388,6 +406,24 @@
     </ClInclude>
     <ClInclude Include="ShaderStructLibrary.h">
       <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleHandler.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterPrototype.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="LightStructs.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ability.h">
       <Filter>Header Files\Abilities</Filter>
@@ -434,6 +470,15 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="FontPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGeometryShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

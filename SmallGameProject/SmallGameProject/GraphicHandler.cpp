@@ -3,6 +3,12 @@
 GraphicHandler::GraphicHandler()
 {
 	this->engine = nullptr;
+	this->deferredShaderH = nullptr;
+	this->lightShaderH = nullptr;
+	this->particleShaderH = nullptr;
+	this->screenQuad = nullptr;
+	this->textH = nullptr;
+	this->activeRTV = 0;
 }
 
 GraphicHandler::~GraphicHandler()
@@ -13,6 +19,8 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 {
 	std::string errorMessage;
 	bool result;
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 
 	//Create the Direct3D handler
 	this->engine = new D3DHandler;
@@ -43,6 +51,15 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 		return false;
 	}
 	result = this->lightShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount() + 1);
+	if (!result) {
+		return false;
+	}
+
+	this->particleShaderH = new ParticleShaderHandler;
+	if (!this->particleShaderH) {
+		return false;
+	}
+	result = this->particleShaderH->Initialize(this->engine->GetDevice(), hwnd);
 	if (!result) {
 		return false;
 	}
@@ -83,25 +100,87 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	//Create an orthographic projection matrix for 2D rendering
 	this->orthographicMatrix = DirectX::XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 	
-	
+	this->baseViewMatrix = baseViewMatrix;
+
+	D3D11_RENDER_TARGET_BLEND_DESC rtbd;
+	ZeroMemory(&rtbd, sizeof(rtbd));
+	rtbd.BlendEnable = true;
+	rtbd.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	rtbd.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.BlendOp = D3D11_BLEND_OP_ADD;
+	rtbd.SrcBlendAlpha = D3D11_BLEND_ONE;
+	rtbd.DestBlendAlpha = D3D11_BLEND_ONE;
+	rtbd.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	rtbd.RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
+
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.RenderTarget[0] = rtbd;
+
+	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->transparencyBlendState);
+
+	rtbd.BlendEnable = false;
+	blendDesc.RenderTarget[0] = rtbd;
+
+	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->disableTransparencyBlendState);
+
+	rtbd.BlendEnable = true;
+	rtbd.SrcBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.DestBlend = D3D11_BLEND_SRC_ALPHA;
+	rtbd.SrcBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+	rtbd.DestBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0] = rtbd;
+
+	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->textTransparencyBlendState);
+
+	this->dirLight.Diffuse = DirectX::XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	this->dirLight.Ambient = DirectX::XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	this->dirLight.Specular = DirectX::XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	this->dirLight.Direction = DirectX::XMFLOAT4(-0.5f, -0.5f, -0.5f, 0.0f);
+
+	PointLight light;
+	light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	light.Position = DirectX::XMFLOAT4(0.0f, 2.0f, -4.0f, 1.0f);
+	light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.09f, 0.032f);
+	this->AddPointLight(light);
+
+	light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	light.Position = DirectX::XMFLOAT4(-5.0f, 2.0f, 2.0f, 1.0f);
+	this->AddPointLight(light);
+
+	light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	light.Position = DirectX::XMFLOAT4(5.0f, 2.0f, 2.0f, 1.0f);
+	this->AddPointLight(light);
 
 	//creating the light matrises
 	fieldOfView = (float)DirectX::XM_PI / 2.0f;
 
-	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 1.0f);
-	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(10.0f, 10.0f, 0.0f, 1.0f);
-	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(50.0f, 50.0f, 50.0f, 1.0f);
+	DirectX::XMVECTOR lightUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 
 	this->lightPos = DirectX::XMFLOAT4(10.0f, 10.0f, 0.0f, 1.0f);
 
-	this->lightView= DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
+	this->lightView= DirectX::XMMatrixLookAtLH(lightPos, lookAt, lightUp);
+	//this->lightPerspective = DirectX::XMMatrixOrthographicLH(1024.0f, 1024.0f, SCREEN_NEAR, SCREEN_DEPTH);
 	this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
-	
+
 	return true;
 }
 
 void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 {
+	if (this->activeRTV != 0) {
+		this->SetDeferredRTVs();
+		this->activeRTV = 0;
+	}
 	DeferredShaderParameters* params = new DeferredShaderParameters;
 
 	params->camPos = camera->GetCameraPos();
@@ -135,35 +214,61 @@ void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 	return;
 }
 
-void GraphicHandler::LightRender(LightShaderParameters* shaderParams)
+void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 {
-	
+	if (this->activeRTV != 2) {
+		this->SetLightRTV();
+		this->activeRTV = 2;
+	}
+	LightShaderParameters* shaderParams = new LightShaderParameters;
 	shaderParams->worldMatrix = DirectX::XMMatrixIdentity();
+	shaderParams->viewMatrix = this->baseViewMatrix;
 	shaderParams->projectionMatrix = this->orthographicMatrix;
-
-	/*
-	lights View Matrix need sto be sent to as a buffer to the renderLight renderpass
-	*/
-	//hard coded atm
 
 	shaderParams->lightViewMatrix = this->lightView;
 	shaderParams->lightProjectionMatrix = this->lightPerspective;
-	
-	shaderParams->lightPos = this->lightPos;
 
 	shaderParams->deferredTextures = this->deferredShaderH->GetShaderResourceViews();
 	shaderParams->shadowTexture = this->shadowShaderH->getShadowMapSRW();
+
+	shaderParams->camPos = camPos;
+
+	shaderParams->dirLight = this->dirLight;
+	shaderParams->pointLights = this->pointLights;
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());
 	this->lightShaderH->Render(this->engine->GetDeviceContext(), 6, shaderParams);
 
 	this->lightShaderH->ResetPSShaderResources(this->engine->GetDeviceContext());
 
+	delete shaderParams;
+
 	return;
+}
+
+void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera, int amountOfParticles)
+{
+	if (this->activeRTV != 3) {
+		this->SetParticleRTV();
+		this->activeRTV = 3;
+	}
+	DirectX::XMMATRIX viewMatrix;
+	camera->GetViewMatrix(viewMatrix);
+
+	shaderParams->viewMatrix = viewMatrix;
+	shaderParams->camPos = camera->GetCameraPos();
+	shaderParams->projectionMatrix = this->perspectiveMatrix;
+
+	this->particleShaderH->Render(this->engine->GetDeviceContext(), amountOfParticles, 0, shaderParams);
 }
 
 void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 {
+	if (this->activeRTV != 1) {
+		this->SetShadowRTV();
+		this->activeRTV = 1;
+	}
+
 	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
 	shadowShaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	
@@ -197,9 +302,9 @@ void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 	delete shadowShaderParams;
 }
 
-
 void GraphicHandler::TextRender()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->textTransparencyBlendState, NULL, 0xffffffff);
 	this->textH->Render(this->engine->GetDeviceContext(), this->orthographicMatrix);
 }
 
@@ -210,6 +315,12 @@ void GraphicHandler::Shutdown()
 		this->screenQuad->Shutdown();
 		delete this->screenQuad;
 		this->screenQuad = nullptr;
+	}
+
+	//Release tranparencystate
+	if (this->transparencyBlendState) {
+		this->transparencyBlendState->Release();
+		this->transparencyBlendState = nullptr;
 	}
 
 	//Delete the textHandler
@@ -231,6 +342,13 @@ void GraphicHandler::Shutdown()
 		this->lightShaderH->Shutdown();
 		delete this->lightShaderH;
 		this->lightShaderH = nullptr;
+	}
+
+	//Delete the ParticleShaderHandler object
+	if (this->particleShaderH) {
+		this->particleShaderH->Shutdown();
+		delete this->particleShaderH;
+		this->particleShaderH = nullptr;
 	}
 
 	//delete shadowShaderHander object
@@ -265,9 +383,56 @@ int GraphicHandler::CreateTextHolder(int maxLength)
 	return this->textH->CreateSentence(this->engine->GetDevice(), maxLength);
 }
 
-bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color)
+bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color, float size)
 {
-	return this->textH->UpdateSentence(this->engine->GetDeviceContext(), id, text, posX, posY, color);
+	return this->textH->UpdateSentence(this->engine->GetDeviceContext(), id, text, posX, posY, color, size);
+}
+
+void GraphicHandler::SetDirectionalLight(DirectionalLight light)
+{
+	this->dirLight = light;
+}
+
+void GraphicHandler::AddPointLight(PointLight light)
+{
+	this->pointLights.push_back(light);
+}
+
+void GraphicHandler::RemovePointLight(int index)
+{
+	if (index >= this->pointLights.size()) {
+		return;
+	}
+
+	for (int i = index; i < this->pointLights.size() - 1; i++) {
+		this->pointLights.at(i) = this->pointLights.at(i + 1);
+	}
+	this->pointLights.pop_back();
+}
+
+void GraphicHandler::RemoveAllPointLights()
+{
+	this->pointLights.clear();
+}
+
+DirectX::XMMATRIX GraphicHandler::GetPerspectiveMatrix()
+{
+	return this->perspectiveMatrix;
+}
+
+DirectX::XMMATRIX GraphicHandler::GetOrthograpicMatrix()
+{
+	return this->orthographicMatrix;
+}
+
+int GraphicHandler::GetScreenWidth()
+{
+	return this->screenWidth;
+}
+
+int GraphicHandler::GetScreenHeight()
+{
+	return this->screenHeight;
 }
 
 void GraphicHandler::ClearRTVs()
@@ -279,17 +444,25 @@ void GraphicHandler::ClearRTVs()
 
 void GraphicHandler::SetDeferredRTVs()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->disableTransparencyBlendState, NULL, 0xffffffff);
 	this->engine->SetViewport();
-	this->engine->GetDeviceContext()->OMSetBlendState(0, 0, 0xffffffff);
 	this->deferredShaderH->SetDeferredRenderTargets(this->engine->GetDeviceContext());
-	this->engine->SetDepth(true);
+	this->engine->SetDepth(1);
 }
 
 void GraphicHandler::SetLightRTV()
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->disableTransparencyBlendState, NULL, 0xffffffff);
 	this->engine->SetViewport();
 	this->engine->SetRenderTargetView();
-	this->engine->SetDepth(false);
+	this->engine->SetDepth(2);
+}
+
+void GraphicHandler::SetParticleRTV()
+{
+	this->engine->GetDeviceContext()->OMSetBlendState(this->transparencyBlendState, NULL, 0xffffffff);
+	this->engine->SetRenderTargetView(this->deferredShaderH->GetDepthView());
+	this->engine->SetDepth(3);
 }
 
 void GraphicHandler::SetShadowRTV()

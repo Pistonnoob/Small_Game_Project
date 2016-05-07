@@ -82,14 +82,14 @@ void Boss::update(DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
 	for (int i = 0; i < this->abilities.size(); i++)
 	{
-		this->abilities.at(i)->update(this, this->getEntitySubject(), deltaTime);
+		this->abilities.at(i)->Update(this, this->GetEntitySubject(), deltaTime);
 
 	}
 	this->attackDelay -= deltaTime;
 	int counter = 0;
 	while (counter < this->abilities.size() && this->attackDelay <= 0)
 	{
-		float result = this->abilities.at(this->abilityUsed)->activate(this, this->getEntitySubject(), playerPos);
+		float result = this->abilities.at(this->abilityUsed)->Activate(this, this->GetEntitySubject(), playerPos);
 		this->abilityUsed++;
 		if (result == -1)
 		{

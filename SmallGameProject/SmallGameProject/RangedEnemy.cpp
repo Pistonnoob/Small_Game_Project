@@ -23,11 +23,12 @@ void RangedEnemy::Shutdown()
 	Entity::Shutdown(true);
 }
 
-void RangedEnemy::fire(float deltaTime)
+
+void RangedEnemy::Fire(float deltaTime)
 {
     if (this->attackCD > R_ATTACK_DELAY)
     {
-        this->entitySubject->notify(this, Events::ENTITY::Fire);
+        this->entitySubject->Notify(this, Events::ENTITY::Fire);
         this->attackCD = 0;
     }
     else

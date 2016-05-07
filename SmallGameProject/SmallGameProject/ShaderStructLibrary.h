@@ -3,6 +3,9 @@
 
 #include <d3d11.h>
 #include <directxmath.h>
+#include <vector>
+
+#include "LightStructs.h"
 
 struct DeferredShaderParameters {
 	DirectX::XMMATRIX worldMatrix;
@@ -27,7 +30,19 @@ struct LightShaderParameters {
 	ID3D11ShaderResourceView** deferredTextures;
 	ID3D11ShaderResourceView* shadowTexture;
 
-	DirectX::XMFLOAT4 lightPos;
+	DirectX::XMFLOAT4 camPos;
+
+	DirectionalLight dirLight;
+	std::vector<PointLight> pointLights;
+};
+
+struct ParticleShaderParameters {
+	DirectX::XMMATRIX worldMatrix;
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX projectionMatrix;
+
+	ID3D11ShaderResourceView* diffTexture;
+
 	DirectX::XMFLOAT4 camPos;
 };
 

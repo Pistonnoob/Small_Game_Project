@@ -8,10 +8,13 @@
 #include <fstream>
 
 #include "ShaderStructLibrary.h"
+#include "LightStructs.h"
+
+const int MAX_LIGHTS = 10;
 
 class LightShaderHandler {
 private:
-	struct LightConstantBuffer
+	struct LightMatrixBuffer
 	{
 		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX view;
@@ -22,11 +25,24 @@ private:
 		DirectX::XMFLOAT4 camPos;
 		DirectX::XMFLOAT4 lightPos;
 	};
+	struct LightsCB
+	{
+		DirectX::XMFLOAT4 Ambient[MAX_LIGHTS];
+		DirectX::XMFLOAT4 Diffuse[MAX_LIGHTS];
+		DirectX::XMFLOAT4 Specular[MAX_LIGHTS];
+
+		DirectX::XMFLOAT4 Position[MAX_LIGHTS];
+		DirectX::XMFLOAT4 Attenuation[MAX_LIGHTS - 1];
+
+		UINT activeLights;
+		float padding[3];
+	};
 
 	ID3D11VertexShader* vertexShader;
 	ID3D11PixelShader* pixelShader;
 	ID3D11InputLayout* layout;
 	ID3D11Buffer* matrixBuffer;
+	ID3D11Buffer* lightBuffer;
 	ID3D11SamplerState* samplerState;
 	ID3D11SamplerState* shadowSamplerState;
 	ID3D11ShaderResourceView** nullResource;

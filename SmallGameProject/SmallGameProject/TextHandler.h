@@ -64,7 +64,7 @@ public:
 	void Shutdown();
 	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX orthoMatrix);
 	int CreateSentence(ID3D11Device* device, int maxLength);
-	bool UpdateSentence(ID3D11DeviceContext* deviceContext, int id, const std::string& text, int newPosX, int newPosY, const DirectX::XMFLOAT3& color);
+	bool UpdateSentence(ID3D11DeviceContext* deviceContext, int id, const std::string& text, int newPosX, int newPosY, const DirectX::XMFLOAT3& color, float size);
 };
 
 
