@@ -96,16 +96,14 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
 		this->pointLights.push_back(light);
+		
+		this->playerSubject = EntitySubject();
+		this->playerSubject.AddObserver(GameData::GetInstance());
 
 		result = this->player.Initialize(device, deviceContext, "sphere1", "carSLS3", true, &this->playerSubject);
 		if (!result) {
 			return false;
 		}
-		this->playerSubject = EntitySubject();
-		this->playerSubject.AddObserver(GameData::GetInstance());
-
-		DirectX::XMFLOAT3 a = this->player.GetPosition();
-		int i = 0;
 	}
 
 

@@ -245,7 +245,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
-	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
 	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 	this->pointLights.at(2).Position = XMFLOAT4(enemyPos.x, 1.0f, enemyPos.z, 1.0f);
 
