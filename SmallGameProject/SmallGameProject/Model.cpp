@@ -71,7 +71,7 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 			return false;
 		}
 
-		for (int i = 0; i < this->materialNames.size(); i++) {
+ 		for (int i = 0; i < this->materialNames.size(); i++) {
 			this->materialIndices.push_back(this->texture->GetMaterialIndexFromName(this->materialNames.at(i)));
 		}
 	}
@@ -92,7 +92,7 @@ bool Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext,
 	vertexData.SysMemSlicePitch = 0;
 
 	//Create the vertex buffer
-	hresult = device->CreateBuffer(&vertexBufferDesc, &vertexData, &this->vertexBuffer);
+ 	hresult = device->CreateBuffer(&vertexBufferDesc, &vertexData, &this->vertexBuffer);
 	if (FAILED(hresult)) {
 		return false;
 	}

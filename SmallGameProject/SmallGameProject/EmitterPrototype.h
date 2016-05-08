@@ -22,6 +22,12 @@ private:
 	//	}
 	//};
 
+	struct by_cameraPos {
+		bool operator()(const Particle &left, const Particle &right) {
+			return left.cameraDistance > right.cameraDistance;
+		}
+	};
+
 
 	float particleDeviationX, particleDeviationY, particleDeviationZ, particleVelocityVariation;
 	float particleVelocity;

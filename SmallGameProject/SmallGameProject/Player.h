@@ -6,6 +6,9 @@
 #include "GraphicHandler.h"
 #include "InputHandler.h"
 #include <fstream>
+#include "PowerUp.h"
+#include <vector>
+#include "Modifiers.h"
 
 class Player : public Actor {
 
@@ -16,6 +19,8 @@ private:
 	int playerDamage;
 	int playerHighScore;
 
+	std::vector<PowerUp>powerups;
+
 	Weapon* playerWeapon;
 
 public:
@@ -23,20 +28,29 @@ public:
 	~Player();
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string playerModelFilename,
-		std::string weaponModelFilename, bool isSphere);
-	void Shutdown();
+		std::string weaponModelFile, bool isSphere, EntitySubject* entitySub);
 	
+	void Shutdown();
+
 	void HandleInput( InputHandler* input);
+	Weapon* GetPlayerWeapon();
+	void PowerPickup(const int &POWER_ENUM);
+
+	void SetPowerUp(Modifiers::POWERUPS powerUp);
 	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH);
 
 	Weapon* GetWeapon();
 
-	virtual void moveRight();
-	virtual void moveLeft();
-	virtual void moveUp();
-	virtual void moveDown();
-	virtual void move(DirectX::XMFLOAT3 moveVec);
-	void rotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
+	virtual void MoveRight();
+	virtual void MoveLeft();
+	virtual void MoveUp();
+	virtual void MoveDown();
+	virtual void Move(DirectX::XMFLOAT3 moveVec);
+
+	virtual void Fire(const float &deltaT);
+	virtual void Fire();
+	
+	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
 };
 
 #endif

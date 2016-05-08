@@ -1,6 +1,5 @@
 cbuffer LightConstantBuffer
 {
-	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
 	matrix lightViewMatrix;
@@ -30,10 +29,8 @@ PSInput main(VSInput input)
 	input.position.w = 1.0f;
 
 	//Multiply the position with world-, view- and projectionmatrix
-	//Save the world-pos of the vertex
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.position = mul(viewMatrix, input.position);
+	output.position = mul(projectionMatrix, output.position);
 
 	//Store the uv for output
 	output.tex = input.tex;

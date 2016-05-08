@@ -16,8 +16,11 @@ EntitySubject::~EntitySubject()
 	}
 	this->observers.clear();
 }
-
-void EntitySubject::notify(const Entity* entity, Events::ENTITY evnt)
+void EntitySubject::ShutDown()
+{
+    this->observers.clear();
+}
+void EntitySubject::Notify(Entity* entity, Events::ENTITY evnt)
 {
 	//Send the event to all the observers
 	std::set<Observer*>::iterator it;										//Create the iterator
@@ -27,14 +30,50 @@ void EntitySubject::notify(const Entity* entity, Events::ENTITY evnt)
 		Observer* e = *it;													//Create a pointer and set it to the object the iterator is pointing to
 		e->OnNotify(entity, evnt);											//Notify
 	}
+
+}
+void EntitySubject::Notify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
+{
+    //Send the event to all the observers
+    std::set<Observer*>::iterator it;										//Create the iterator
+
+    for (it = this->observers.begin(); it != this->observers.end(); it++) {	//Iterate
+
+        Observer* e = *it;													//Create a pointer and set it to the object the iterator is pointing to
+        e->OnNotify(entity, evnt, arc, nrOfBullets);						//Notify
+    }
 }
 
-void EntitySubject::addObserver(Observer* observer)
+void EntitySubject::Notify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+{
+	//Send the event to all the observers
+	std::set<Observer*>::iterator it;										//Create the iterator
+
+	for (it = this->observers.begin(); it != this->observers.end(); it++) {	//Iterate
+
+		Observer* e = *it;													//Create a pointer and set it to the object the iterator is pointing to
+		e->OnNotify(entity, evnt, arc, nrOfBullets);						//Notify
+	}
+}
+
+void EntitySubject::Notify(Entity* entity, Events::PICKUP evnt)
+{
+	//Send the event to all the observers
+	std::set<Observer*>::iterator it;										//Create the iterator
+
+	for (it = this->observers.begin(); it != this->observers.end(); it++) {	//Iterate
+
+		Observer* e = *it;													//Create a pointer and set it to the object the iterator is pointing to
+		e->OnNotify(entity, evnt);						//Notify
+	}
+}
+
+void EntitySubject::AddObserver(Observer* observer)
 {
 	this->observers.insert(observer);
 }
 
-void EntitySubject::removeObserver(Observer* observer)
+void EntitySubject::RemoveObserver(Observer* observer)
 {
 	this->observers.erase(observer);
 }

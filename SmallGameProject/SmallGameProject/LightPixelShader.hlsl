@@ -9,10 +9,10 @@ Texture2D worldPosTexture: register(t4);
 Texture2D shadowMapTexture: register(t5);
 
 SamplerState pointSampler : register(s0);
+SamplerState shadowSampler : register(s1);
 
 cbuffer LightMatrixBuffer : register(b0)
 {
-	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
 	matrix lightViewMatrix;
@@ -62,7 +62,6 @@ float4 main(PSInput input) : SV_TARGET
 	//float4 lightPos = (10.0f, 10.0f, 0.0f, 1.0f);
 
 	// Set the bias value for fixing the floating point precision issues.
-
 	float bias = 0.00002f;
 
 	//Sample the diffuse texture from deferred render
@@ -83,8 +82,8 @@ float4 main(PSInput input) : SV_TARGET
 	float3 outVec = normalize(-Position[0]);
 
 	//Move the position to projection space for the light
-	positionLight = mul(worldPos, lightViewMatrix);
-	positionLight = mul(positionLight, lightProjectionMatrix);
+	positionLight = mul(lightViewMatrix, worldPos);
+	positionLight = mul(lightProjectionMatrix, positionLight);
 
 	//calculate the projected texture coordinate
 	shadowUV.x = (positionLight.x / positionLight.w) * 0.5f + 0.5f;
@@ -105,7 +104,7 @@ float4 main(PSInput input) : SV_TARGET
 		lightDepthValue = positionLight.z / positionLight.w;
 
 		//sample the shadowmap
-		depthValue = shadowMapTexture.Sample(pointSampler, shadowUV).r;
+		depthValue = shadowMapTexture.Sample(shadowSampler, shadowUV).r;
 
 		// Subtract the bias from the lightDepthValue.
 		lightDepthValue = lightDepthValue - bias;
@@ -138,7 +137,7 @@ float4 main(PSInput input) : SV_TARGET
 	outputAmbient = ((ambientColor.rgba * Ambient[0]));
 
 	for (int i = 1; i <= activeLights; i++) {
-		outputAmbient += saturate((ambientColor.rgba * Ambient[i]));
+		outputAmbient += saturate(ambientColor.rgba * Ambient[i]);
 		//Create the normalized vector from position to light source
 		outVec = Position[i].xyz - (worldPos).xyz;
 		float distToLight = length(outVec);
@@ -153,7 +152,7 @@ float4 main(PSInput input) : SV_TARGET
 			//Calculate the specular part
 			specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
-			lightIntensity = dot(normal, outVec);
+			lightIntensity = saturate(dot(normal, outVec));
 			if (lightIntensity < 0) {
 				lightIntensity = 0;
 			}
@@ -162,7 +161,7 @@ float4 main(PSInput input) : SV_TARGET
 			float lumen = (1.0f / atten);
 			lightIntensity = lightIntensity * lumen;
 
-			outputColor += saturate(((diffColor.rgba * Diffuse[i]) + (specular.rgba * Specular[i])) * lightIntensity);
+			outputColor += ((diffColor.rgba * Diffuse[i]) + (specular.rgba * Specular[i])) * lightIntensity;
 		}
 	}
 	outputAmbient = saturate(outputAmbient) * SCENE_AMBIENT;

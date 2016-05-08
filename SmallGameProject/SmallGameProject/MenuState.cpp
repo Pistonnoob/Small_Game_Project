@@ -49,7 +49,18 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		this->myTextures = Texture();
 		std::string skinOfMyFallenEnemies = "MenuSelected.mtl";
 		victory = this->myTextures.Initialize(device, deviceContext, skinOfMyFallenEnemies);
+
+		PointLight light;
+		light.Diffuse = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 0.0f, -8.0f, 1.0f);
+		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.09f, 0.032f);
+		this->pointLights.push_back(light);
+
 	}
+
+	
 	return result;
 }
 
@@ -110,7 +121,7 @@ int MenuState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHan
 		case MenuOption::START_GAME:
 		{
 			//Create a stage state and push it to the stack
-			StageState* newStage = new StageState();
+			HubState* newStage = new HubState();
 			newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
 			newStage->SetManualClearing(false);
 			this->m_GSH->PushState(newStage);
@@ -137,7 +148,7 @@ int MenuState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->DeferredRender(&this->m_model, &this->myCamera);
 
-	gHandler->LightRender(this->myCamera.GetCameraPos());
+	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	return result;
 }

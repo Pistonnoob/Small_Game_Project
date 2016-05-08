@@ -237,6 +237,18 @@
     <ClCompile Include="SplitFire.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="HubState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerUp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FireCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Ability.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -353,9 +365,6 @@
     <ClInclude Include="TestState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gameStruct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ShadowShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
     </ClInclude>
@@ -415,6 +424,18 @@
     </ClInclude>
     <ClInclude Include="EventLib.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HubState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Modifiers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FireCommand.h">
+      <Filter>Header Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

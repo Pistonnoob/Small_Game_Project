@@ -138,7 +138,7 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	delete[] indices;
 }
 
-void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
+void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 {
 	switch (evnt)
 	{
@@ -153,6 +153,18 @@ void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
 	default:
 		break;
 	}
+}
+
+void ParticleHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
+{
+}
+
+void ParticleHandler::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+{
+}
+
+void ParticleHandler::OnNotify(Entity * entity, Events::PICKUP evnt)
+{
 }
 
 int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
@@ -186,7 +198,12 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 		this->emitters.at(0)->SortParticles();
 		this->emitters.at(0)->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
 		parameters.worldMatrix = this->world;
-		parameters.diffTexture = this->myTextures.GetTexture(1);
+		parameters.diffTexture = this->myTextures.GetTexture(0);
+
+		if (!parameters.diffTexture)
+		{
+			result = false;
+		}
 
 		gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	}

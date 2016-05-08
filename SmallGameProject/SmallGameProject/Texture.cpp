@@ -145,9 +145,9 @@ bool Texture::LoadMTL(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 				this->materials.at(nrOfMaterials).textureIndex = 0;
 				this->materials.at(nrOfMaterials).hasNormMap = false;
 				this->materials.at(nrOfMaterials).normMapIndex = 0;
-				this->materials.at(nrOfMaterials).diffColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-				this->materials.at(nrOfMaterials).ambientColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-				this->materials.at(nrOfMaterials).specColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+				this->materials.at(nrOfMaterials).diffColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+				this->materials.at(nrOfMaterials).ambientColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+				this->materials.at(nrOfMaterials).specColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 				nrOfMaterials++;
 			}
 			else if (line.at(0) == 'K') {
@@ -396,9 +396,9 @@ Texture::Material Texture::GetMaterial(int materialIndex)
 	}
 	Material defaultMaterial; //If no material found, return a default one
 	defaultMaterial.name = "Not found";
-	defaultMaterial.diffColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-	defaultMaterial.ambientColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-	defaultMaterial.specColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	defaultMaterial.diffColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	defaultMaterial.ambientColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	defaultMaterial.specColor = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	defaultMaterial.hasTexture = false;
 	defaultMaterial.textureIndex = -1;
 	defaultMaterial.hasNormMap = false;

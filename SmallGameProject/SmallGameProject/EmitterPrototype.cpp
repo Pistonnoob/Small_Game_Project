@@ -62,18 +62,8 @@ bool EmitterPrototype::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 	this->KillParticles();
 
 
-	float particleThresshold = (1000.0f / this->particlesPerSecond);
-	/*if (this->accumulatedTime > particleThresshold)
-	{
-	this->accumulatedTime = this->accumulatedTime - particleThresshold;
-	}*/
-	while (this->accumulatedTime > particleThresshold)
-	{
-		this->accumulatedTime = this->accumulatedTime - particleThresshold;
-
-		//Emitt new particles
-		this->EmitParticles(dT);
-	}
+	//Emitt new particles
+	this->EmitParticles(dT);
 
 	//Update the particles
 	this->UpdateParticles(dT);
@@ -114,22 +104,14 @@ bool EmitterPrototype::SortParticles()
 	for (int i = 0; i < this->currentParticleCnt; i++)
 	{
 		float cameraDistance = pow(this->particles[i].x - cameraPos.x, 2) + pow(this->particles[i].y - cameraPos.y, 2) + pow(this->particles[i].z - this->cameraPos.z, 2);
+		//float cameraDistance = this->particles[i].y;
 		//To get the real distance
 		//cameraDistance = sqrt(cameraDistance);
 		this->particles[i].cameraDistance = cameraDistance;
 	}
 	//Sort all our particles
-	std::sort(this->particles, this->particles + this->currentParticleCnt);
-	/*for (int i = 1; i < this->currentParticleCnt; i++)
-	{
-		if (this->particles[i].cameraDistance > this->particles[i - 1].cameraDistance)
-		{
-			bool somethingWentWrong = true;
-		}
+	std::sort(this->particles, this->particles + this->currentParticleCnt, by_cameraPos());
 
-	}*/
-	//std::sort(0, this->currentParticleCnt, this->particles[0]);
-	//std::sort(this->particles[0], this->particles[this->currentParticleCnt]);
 	return true;
 }
 
@@ -144,8 +126,8 @@ bool EmitterPrototype::InitializeEmitter()
 	this->particleVelocityVariation = 2.0f;
 
 	this->particleSize = 0.2f;
-	this->particlesPerSecond = 5.0f;
-	this->maxParticles = 40;
+	this->particlesPerSecond = 4.0f;
+	this->maxParticles = 100;
 
 	this->particles = new Particle[this->maxParticles];
 	if (!this->particles)
@@ -255,84 +237,88 @@ void EmitterPrototype::EmitParticles(float dT)
 	float positionX, positionY, positionZ, velocity, red, green, blue;
 	int index, i, j;
 
-
-
-	// Set emit particle to false for now.
-	emitParticle = true;
-
 	// Check if it is time to emit a new particle or not.
-
-
-	// If there are particles to emit then emit one per frame.
-	if ((emitParticle == true) && (this->currentParticleCnt < (this->maxParticles /*- 1*/)))
+	float particleThresshold = (1000.0f / this->particlesPerSecond);
+	float timeOverflow = dT;
+	while (this->accumulatedTime > particleThresshold)
 	{
+		this->accumulatedTime = this->accumulatedTime - particleThresshold;
+		timeOverflow = timeOverflow - particleThresshold;
+		
 
-		// Now generate the randomized particle properties.
-		positionX = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationX;
-		positionY = 20.0f + (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
-		positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationZ;
-		positionX = 0.0f;
-		positionY = 10.0f;
-		positionZ = 0.0f;
-		velocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * particleVelocityVariation;
-		/*positionY = 20.0f;
-		positionZ = 0.0f;
-		velocity = particleVelocity;*/
-		red = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		green = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		blue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
-		red = 0.0f;
-		green = 0.0f;
-		blue = 1.0f;
-
-		// Now since the particles need to be rendered from back to front for blending we have to sort the particle array.
-		// We will sort using Z depth so we need to find where in the list the particle should be inserted.
-		index = this->currentParticleCnt;
-		found = false;
-		while (!found && index < this->maxParticles)
+		// If there are particles to emit then emit one per frame.
+		if (this->currentParticleCnt < (this->maxParticles /*- 1*/))
 		{
-			if ((this->particles[index].active == false))
-				found = true;
-			else
-				index++;
+
+			// Now generate the randomized particle properties.
+			positionX = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationX;
+			positionY = 20.0f + (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationY;
+			positionZ = (((float)rand() - (float)rand()) / RAND_MAX) * particleDeviationZ;
+			positionX = 0.0f;
+			positionY = 10.0f;
+			positionZ = 0.0f;
+			velocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * particleVelocityVariation;
+			/*positionY = 20.0f;
+			positionZ = 0.0f;
+			velocity = particleVelocity;*/
+			red = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+			green = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+			blue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
+			red = 0.0f;
+			green = 0.0f;
+			blue = 1.0f;
+
+			// Now since the particles need to be rendered from back to front for blending we have to sort the particle array.
+			// We will sort using Z depth so we need to find where in the list the particle should be inserted.
+			index = this->currentParticleCnt;
+			found = false;
+			while (!found && index < this->maxParticles)
+			{
+				if ((this->particles[index].active == false))
+					found = true;
+				else
+					index++;
+			}
+
+			// Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle.
+			i = this->currentParticleCnt;
+			j = i - 1;
+
+			/*while (i != index)
+			{
+				this->particles[i].x = this->particles[j].x;
+				this->particles[i].y = this->particles[j].y;
+				this->particles[i].z = this->particles[j].z;
+				this->particles[i].r = this->particles[j].r;
+				this->particles[i].g = this->particles[j].g;
+				this->particles[i].b = this->particles[j].b;
+				this->particles[i].velocity = this->particles[j].velocity;
+				this->particles[i].active = this->particles[j].active;
+				this->particles[i].scale = this->particles[j].scale;
+				this->particles[i].rotation = this->particles[j].rotation;
+				i--;
+				j--;
+			}*/
+
+			//Because we will sort the array every time we render we will just set
+			//the data at the palce we find
+
+			// Now insert it into the particle array in the correct depth order.
+			this->particles[index].x = positionX;
+			this->particles[index].y = positionY;
+			this->particles[index].z = positionZ;
+			this->particles[index].r = red;
+			this->particles[index].g = green;
+			this->particles[index].b = blue;
+			this->particles[index].velocity = velocity;
+			this->particles[index].active = true;
+			this->particles[index].scale = 1.0f;
+			this->particles[index].uCoord = 0.25f;
+			this->particles[index].time = this->accumulatedTime;
+
+			this->currentParticleCnt++;
 		}
 
-		// Now that we know the location to insert into we need to copy the array over by one position from the index to make room for the new particle.
-		i = this->currentParticleCnt;
-		j = i - 1;
-
-		/*while (i != index)
-		{
-			this->particles[i].x = this->particles[j].x;
-			this->particles[i].y = this->particles[j].y;
-			this->particles[i].z = this->particles[j].z;
-			this->particles[i].r = this->particles[j].r;
-			this->particles[i].g = this->particles[j].g;
-			this->particles[i].b = this->particles[j].b;
-			this->particles[i].velocity = this->particles[j].velocity;
-			this->particles[i].active = this->particles[j].active;
-			this->particles[i].scale = this->particles[j].scale;
-			this->particles[i].rotation = this->particles[j].rotation;
-			i--;
-			j--;
-		}*/
-
-		//Because we will sort the array every time we render we will just set
-		//the data at the palce we find
-
-		// Now insert it into the particle array in the correct depth order.
-		this->particles[index].x = positionX;
-		this->particles[index].y = positionY;
-		this->particles[index].z = positionZ;
-		this->particles[index].r = red;
-		this->particles[index].g = green;
-		this->particles[index].b = blue;
-		this->particles[index].velocity = velocity;
-		this->particles[index].active = true;
-		this->particles[index].scale = 2.0f;
-		this->particles[index].rotation = 0.0f;
-
-		this->currentParticleCnt++;
 	}
 
 	return;
@@ -350,13 +336,14 @@ void EmitterPrototype::UpdateParticles(float dT)
 		this->particles[i].time += dT / (500);
 		//this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 		float x = 0, y = 0;
-		float period = 2.0f, min = -6.0f, max = 8.0f;
+		float period = 8.0f, min = 0, max = 4.0f;
 		float time = this->particles[i].time;
+		float width = 40;
 		//Algorithm::GetSawtoothWave(x, y, this->particles[i].time, period, min, max);
-		//Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
-		Algorithm::GetHypotrochoid(x, y, time, 6, 2, 4);
+		Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
+		//Algorithm::GetTriangleWave(x, y, time, period, min, max);
 		this->particles[i].x = x;
-		this->particles[i].y = y;
+		this->particles[i].z = y;
 	}
 
 	return;
@@ -405,7 +392,7 @@ bool EmitterPrototype::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 	for (int i = 0; i < this->currentParticleCnt; i++)
 	{
 		this->vertices[i].position = DirectX::XMFLOAT4(this->particles[i].x, this->particles[i].y, this->particles[i].z, this->particles[i].scale);
-		this->vertices[i].color = DirectX::XMFLOAT4(this->particles[i].r, this->particles[i].g, this->particles[i].b, this->particles[i].rotation);
+		this->vertices[i].color = DirectX::XMFLOAT4(this->particles[i].r, this->particles[i].g, this->particles[i].b, this->particles[i].uCoord);
 
 	}
 

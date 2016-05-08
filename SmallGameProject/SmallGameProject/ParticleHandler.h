@@ -12,14 +12,17 @@ class ParticleHandler :
 {
 private:
 	std::vector<ParticleEmitter*> emitters;
-	struct Particle {
+	struct Particle 
+	{
 		float x, y, z, scale;
 		float r, g, b, rotation;
 	};
-	struct VertexType {
+	struct VertexType 
+	{
 		DirectX::XMFLOAT4 position;
 		DirectX::XMFLOAT4 color;
 	};
+
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 
@@ -35,7 +38,11 @@ public:
 	void Shutdown();
 
 	void Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
-	virtual void OnNotify(const Entity* entity, Events::ENTITY evnt);
+	virtual void OnNotify(Entity* entity, Events::ENTITY evnt);
+
+	virtual void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	virtual void OnNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	virtual void OnNotify(Entity* entity, Events::PICKUP evnt);
 
 	int Update(float dT, ID3D11DeviceContext* deviceContext);
 

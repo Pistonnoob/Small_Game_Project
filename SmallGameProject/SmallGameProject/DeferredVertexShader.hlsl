@@ -39,15 +39,15 @@ GSInput main(VSInput input)
 
 	//Multiply the position with world-, view- and projectionmatrix
 	//Save the world-pos of the vertex
-	output.position = output.worldPos = mul(output.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.position = output.worldPos = mul(worldMatrix, output.position);
+	output.position = mul(viewMatrix, output.position);
+	output.position = mul(projectionMatrix, output.position);
 
 	//Store the color for output
 	output.tex = input.tex;
 
 	//Multiply normal with world matrix and normalize
-	output.normal = normalize(mul(input.normal, worldMatrix));
+	output.normal = normalize(mul(worldMatrix, input.normal));
 
 	//Get the unit vector from point to camera
 	output.viewDir = normalize(cameraPos.xyz - output.worldPos.xyz);

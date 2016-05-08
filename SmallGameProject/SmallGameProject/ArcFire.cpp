@@ -1,27 +1,39 @@
 #include "Abilities.h"
 #include "Algorithm.h"
 
-ArcFire::ArcFire()
+ArcFire::ArcFire() : Ability()
 {
-    this->isActivated = false;
 }
 ArcFire::~ArcFire()
 {
 }
-void ArcFire::activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles)
+void ArcFire::Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay)
 {
-    DirectX::XMMATRIX rotate = DirectX::XMMatrixRotationY(-angle / 2);
-    DirectX::XMVECTOR dirVec = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
-    dirVec = DirectX::XMVector3Transform(dirVec, rotate);
-
-    float x = DirectX::XMVectorGetX(dirVec);
-    float y = DirectX::XMVectorGetY(dirVec);
-    float z = DirectX::XMVectorGetZ(dirVec);
-
-    shootProjetiles(projectiles, projectileModel, pos, DirectX::XMFLOAT3(x, y, z), angle, nrOfProjectiles);
+	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
 
 }
-void ArcFire::update(std::vector<Projectile*>& projectiles, Model* projectileModel)
+float ArcFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
 {
+	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
+	{
+		float x = (playerPos.x - enemy->GetPosition().x);
+		float z = (playerPos.z - enemy->GetPosition().z);
+
+		enemy->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
+
+		entitySubject->Notify(enemy, Events::UNIQUE_FIRE::ARCFIRE, this->arc, this->nrOfProjectiles);
+
+		this->cdCounter = 0;
+		this->chargesLeft--;
+
+		return this->attackDelay;
+
+	}
+	return 0;
+
+}
+void ArcFire::update(Enemy* enemy, EntitySubject* entitySubject)
+{
+	Ability::update(enemy, entitySubject);
 
 }

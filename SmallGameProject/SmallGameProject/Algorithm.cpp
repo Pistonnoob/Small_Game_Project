@@ -124,7 +124,7 @@ void Algorithm::GetSawtoothWave(float & x, float & y, float t, float period, flo
 void Algorithm::GetTriangleWave(float & x, float & y, float t, float period, float min, float max)
 {
 	x = t;
-	y = abs(x - int(x / period) * period - max) + min;
+	y = abs(x - int(x / period) *  period - max) + min;
 }
 
 void Algorithm::GetSquareWave(float & x, float & y, float t, float period, float min, float max)
