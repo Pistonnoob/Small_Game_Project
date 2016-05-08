@@ -22,7 +22,7 @@ void PowerUp::setTimePowerup(float timeActive)
 
 bool PowerUp::Update(float dt)
 {
-	float convTime = dt;
+	float convTime = dt / 1000000;
 	bool activePow = true;
 	//dt är förgången tid per frame
 	this->timeLeft -= convTime;
