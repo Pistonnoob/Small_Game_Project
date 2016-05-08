@@ -99,21 +99,21 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 void Player::HandleInput(InputHandler * input)
 {
 	if (input->isKeyDown(DIK_W)) {
-		this->MoveUp();
+		this->MoveUp(0.00001f);
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->MoveDown();
+		this->MoveDown(0.00001f);
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->MoveRight();
+		this->MoveRight(0.00001f);
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->MoveLeft();
+		this->MoveLeft(0.00001f);
 	}
 
 }
 
-void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH)
+void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime)
 {
 
 	this->HandleInput(input);
@@ -142,7 +142,12 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	weaponWorldMatrix = offset * weaponWorldMatrix;
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
-	
+
+	//update powerups
+	for (auto Powerups = this->powerups.begin(); Powerups != this->powerups.end(); Powerups++)
+	{
+		(Powerups)->Update(deltaTime);
+	}	
 }
 
 Weapon * Player::GetWeapon()
@@ -150,28 +155,32 @@ Weapon * Player::GetWeapon()
 	return this->playerWeapon;
 }
 
-void Player::MoveRight()
+
+void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
 		this->posX += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveLeft()
+
+void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
 		this->posX -= (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveUp()
+
+void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
 		this->posZ += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveDown()
+
+void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
 		this->posZ -= (0.05f * this->playerMovmentSpeed);
@@ -184,21 +193,50 @@ void Player::Move(DirectX::XMFLOAT3 moveVec)
 	this->posZ += moveVec.z;
 }
 
-void Player::Fire(const float &deltaT)
+void Player::Fire(float deltaT)
 {
+	/*
 	this->SetAimDir(DirectX::XMFLOAT3(0, 0, 1));
 
 	if (this->powerups.at(0).Update(deltaT) == true)
 	{
 		playerWeapon->ShootWeapon(this);
 	}
+	*/
+
+	PowerUp* powerUpPtr = nullptr;
+	int size = this->powerups.size();
+
+	DirectX::XMStoreFloat3(&this->aimDir, this->forwardDir);
+	this->aimDir.y = 0.0f;
+
+	for (int i = 0; i < size; i++)
+	{
+		powerUpPtr = &this->powerups.at(i);
+		if (powerUpPtr->getTimeLeft() > 0.0f)
+		{
+			playerWeapon->ShootWeapon(this);
+		}
+	}
 }
 
 void Player::Fire()
 {
-	//this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
-
-	//playerWeapon->shootWeapon(this);
+	/*
+	PowerUp* powerUpPtr = nullptr;
+	int size = this->powerups.size();
+	
+	DirectX::XMStoreFloat3(&this->aimDir,this->forwardDir);
+	
+	for (int i = 0; i < size; i++)
+	{
+		powerUpPtr = &this->powerups.at(i);
+		if (powerUpPtr->getTimeLeft() > 0.0f)
+		{
+			playerWeapon->ShootWeapon(this);
+		}
+	}
+	*/
 }
 
 void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)
