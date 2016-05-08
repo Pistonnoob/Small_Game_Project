@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include <Windows.h>
+#include <chrono>
 #include "GameStateHandler.h"
 #include "GraphicHandler.h"
 #include "InputHandler.h"
