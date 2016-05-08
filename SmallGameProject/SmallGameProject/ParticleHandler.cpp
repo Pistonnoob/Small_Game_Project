@@ -67,6 +67,10 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::BOMBER_MOVING:
 		break;
 	case Events::BOMBER_DEAD:
+	{
+		newEmitter = new EmitterExplosion();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+	}
 		break;
 	case Events::RANGED_CREATED:
 	{
@@ -131,14 +135,8 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 {
 	int result = 0;
 
-	//this->RenderBuffers(gHandler->GetDeviceContext());
-
 	ParticleShaderParameters parameters;
 
-	/*for (auto emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
-	{
-		int amount
-	}*/
 	if (this->emitters.size())
 	{
 		int amountOfParticles = 0;
@@ -162,5 +160,11 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 void ParticleHandler::KillEmitters()
 {
-	this->emitters.erase(std::remove_if(this->emitters.begin(), this->emitters.end(), [](ParticleEmitter* emitter) {return emitter->IsCompleted(); }), this->emitters.end());
+	/*for (std::vector<ParticleEmitter*>::iterator emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
+	{
+		if ((*emitter)->IsCompleted())
+			(*emitter)->Shutdown();
+	}*/
+
+	this->emitters.erase(std::remove_if(this->emitters.begin(), this->emitters.end(), Emitter_Removal_Predicate()), this->emitters.end());
 }

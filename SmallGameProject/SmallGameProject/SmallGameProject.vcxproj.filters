@@ -265,7 +265,7 @@
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="EmitterExplosion.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

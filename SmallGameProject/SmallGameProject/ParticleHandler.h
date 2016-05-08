@@ -6,6 +6,7 @@
 #include "EmitterPrototype.h"
 #include "EmitterPlayerSpawn.h"
 #include "EmitterEnemySpawn.h"
+#include "EmitterExplosion.h"
 #include "GraphicHandler.h"
 #include "CameraHandler.h"
 
@@ -17,6 +18,17 @@ private:
 
 	Texture myTextures;
 	ID3D11Device* device;
+
+	struct Emitter_Removal_Predicate {
+		bool operator()(ParticleEmitter* emitter) {
+			if (emitter->IsCompleted())
+			{
+				emitter->Shutdown();
+				return true;
+			}
+		}
+	};
+
 public:
 	ParticleHandler();
 	virtual ~ParticleHandler();
