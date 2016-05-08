@@ -40,12 +40,13 @@ bool EmitterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceVie
 bool EmitterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceContext)
 {
 	bool result = false;
+	this->accumulatedTime += dT / 1000000;
 
 	//Release old particles
 	this->KillParticles();
 
 	//Update the particles
-	this->UpdateParticles(dT);
+	this->UpdateParticles(this->accumulatedTime);
 
 	//Update the dynamic vertex buffer with the new position of each particle
 	result = this->UpdateBuffers(deviceContext);
@@ -92,6 +93,7 @@ bool EmitterExplosion::InitializeEmitter()
 	this->particles = vector<Particle>(this->maxParticles);
 	this->currentParticleCnt = 0.0f;
 	this->particleTimeLimit = 1.0f;
+	this->emitterTime = 1.0f;
 	this->accumulatedTime = 0.0f;
 
 	float positionX, positionY, positionZ, dX, dZ, red, green, blue;
@@ -228,29 +230,8 @@ bool EmitterExplosion::InitializeBuffers(ID3D11Device * device)
 
 void EmitterExplosion::UpdateParticles(float dT)
 {
-	//float size = 1.0f;
-	//float x = 0, y = 0;
-	//float period = 8.0f, min = 0, max = 4.0f;
-	//float time = 0.0f;
-	//float width = 40;
-	//int particleCnt = this->currentParticleCnt;
-	//for (std::vector<Particle>::iterator node = this->particles.begin(); node != this->particles.end(); node++)
-	//{
-	//	x = y = 0;
-	//	(*node).time += dT / (1000000);
-	//	//node.y = node.y - (node.velocity * dT / 1000);
-	//	time = (*node).time * (*node).velocity;
-
-	//	size = (*node).time;
-
-	//	Algorithm::GetEllipse(x, y, time, size, size);
-
-	//	(*node).x = x;
-	//	(*node).z = y;
-	//}
 	//Version 2. Possible future experimental parallel version
-	Particle_Update up(dT / 1000000);
-	float deltaTime = up.dT;
+	Particle_Update up(dT);
 	//std::for_each(this->particles.begin(), this->particles.end(), up);
 	std::transform(this->particles.begin(), this->particles.end(), this->particles.begin(), up);
 	////The parallel version. Wants to be compiled using cl.exe "/EHsc" without the ""
