@@ -123,7 +123,7 @@ int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
 	{
 		(*emitter)->Update(dT, deviceContext);
 	}
-
+	this->KillEmitters();
 	return result;
 }
 
@@ -158,4 +158,9 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 
 	return result;
+}
+
+void ParticleHandler::KillEmitters()
+{
+	this->emitters.erase(std::remove_if(this->emitters.begin(), this->emitters.end(), [](ParticleEmitter* emitter) {return emitter->IsCompleted(); }), this->emitters.end());
 }

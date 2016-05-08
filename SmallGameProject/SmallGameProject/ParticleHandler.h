@@ -33,6 +33,7 @@ public:
 
 	int Render(GraphicHandler* gHandler, CameraHandler* camera);
 private:	//Functions
+	void KillEmitters();
 };
 
 #endif
