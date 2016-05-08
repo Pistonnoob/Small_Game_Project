@@ -104,9 +104,8 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		if (!result) {
 			return false;
 		}
-		
-	}
 
+	}
 
 	return result;
 }
