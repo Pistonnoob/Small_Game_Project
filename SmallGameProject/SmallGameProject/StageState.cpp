@@ -257,10 +257,15 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
-	for (int i = 0; i < this->enemies.size(); i++) {
+	if (this->enemyPjHandler.IntersectionTest(&this->player)) {
+		int j = 0;
+		this->exitStage = true;
+	}
 
-		if (this->player.GetBV()->Intersect(this->enemies.at(i)->GetBV())) {
-			int j = 0;
+	for (auto enemy : this->enemies) {
+
+		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
+ 			int j = 0;
 		}
 	}
 
