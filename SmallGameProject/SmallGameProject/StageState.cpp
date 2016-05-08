@@ -109,7 +109,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		
 
 		//the player will rise
- 		this->player.Initialize(device, deviceContext, "sphere1","ogreFullG", false, &this->playerSubject);
+ 		this->player.Initialize(device, deviceContext, "sphere1","projectile", true, &this->playerSubject);
 		this->playerProjectile.Initialize(device, this->m_deviceContext);
 		
 		//Form thy armies from the clay!
@@ -234,10 +234,15 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	}
 
 
-	for (int i = 0; i < this->enemies.size(); i++) {
+	if (this->enemyPjHandler.IntersectionTest(&this->player)) {
+		int j = 0;
+		this->exitStage = true;
+	}
 
-		if (this->player.GetBV()->Intersect(this->enemies.at(i)->GetBV())) {
-			int j = 0;
+	for (auto enemy : this->enemies) {
+
+		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
+ 			int j = 0;
 		}
 	}
 
