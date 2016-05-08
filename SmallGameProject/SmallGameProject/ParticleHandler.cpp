@@ -58,18 +58,27 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::PLAYER_DEAD:
 		break;
 	case Events::BOMBER_CREATED:
+	{
+
+	}
 		break;
 	case Events::BOMBER_MOVING:
 		break;
 	case Events::BOMBER_DEAD:
 		break;
 	case Events::RANGED_CREATED:
+	{
+
+	}
 		break;
 	case Events::RANGED_MOVING:
 		break;
 	case Events::RANGED_DEAD:
 		break;
 	case Events::MELEE_CREATED:
+	{
+
+	}
 		break;
 	case Events::MELEE_MOVING:
 		break;
