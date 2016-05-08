@@ -153,6 +153,7 @@
     <ClCompile Include="ArcFire.cpp" />
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="BomberEnemy.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
     <ClCompile Include="BoxBoundingVolume.cpp" />
     <ClCompile Include="CameraHandler.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Algorithm.h" />
     <ClInclude Include="AudioHandler.h" />
     <ClInclude Include="BomberEnemy.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="BoxBoundingVolume.h" />
     <ClInclude Include="CameraHandler.h" />

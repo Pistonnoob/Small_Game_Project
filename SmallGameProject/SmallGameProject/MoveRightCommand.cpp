@@ -1,7 +1,7 @@
 #include "MoveRightCommand.h"
 
 
-void MoveRightCommand::execute(Actor& actor)
+void MoveRightCommand::execute(Actor& actor, float deltaTime)
 {
-    actor.MoveRight();
+    actor.MoveRight(deltaTime);
 }

@@ -5,6 +5,7 @@ MeleeEnemy::MeleeEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::MELEEE;
+    this->isAlive = true;
 }
 
 MeleeEnemy::~MeleeEnemy()
@@ -20,4 +21,17 @@ bool MeleeEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool is
 void MeleeEnemy::Shutdown()
 {
 	Entity::Shutdown(true);
+}
+
+void MeleeEnemy::Fire(float deltaTime)
+{
+	if (this->attackCD > M_ATTACK_DELAY)
+	{
+		this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 5);
+		this->attackCD = 0;
+	}
+	else
+	{
+		this->attackCD += deltaTime;
+	}
 }

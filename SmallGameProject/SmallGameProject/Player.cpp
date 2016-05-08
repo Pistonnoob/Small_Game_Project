@@ -99,16 +99,16 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 void Player::HandleInput(InputHandler * input)
 {
 	if (input->isKeyDown(DIK_W)) {
-		this->MoveUp();
+		this->MoveUp(0.00001f);
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->MoveDown();
+		this->MoveDown(0.00001f);
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->MoveRight();
+		this->MoveRight(0.00001f);
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->MoveLeft();
+		this->MoveLeft(0.00001f);
 	}
 
 }
@@ -150,28 +150,32 @@ Weapon * Player::GetWeapon()
 	return this->playerWeapon;
 }
 
-void Player::MoveRight()
+
+void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
 		this->posX += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveLeft()
+
+void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
 		this->posX -= (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveUp()
+
+void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
 		this->posZ += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveDown()
+
+void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
 		this->posZ -= (0.05f * this->playerMovmentSpeed);
@@ -184,7 +188,7 @@ void Player::Move(DirectX::XMFLOAT3 moveVec)
 	this->posZ += moveVec.z;
 }
 
-void Player::Fire(const float &deltaT)
+void Player::Fire(float deltaT)
 {
 	this->SetAimDir(DirectX::XMFLOAT3(0, 0, 1));
 
