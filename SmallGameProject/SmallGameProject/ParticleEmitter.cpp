@@ -46,7 +46,6 @@ bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView
 	this->vertexBuffer = nullptr;
 	this->indexBuffer = nullptr;
 	this->vertexCount = this->indexCount = 0;
-	this->maxParticles = 5000;
 	this->currentParticleCnt = 0;
 	this->accumulatedTime = 0.0f;
 	this->cameraPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);

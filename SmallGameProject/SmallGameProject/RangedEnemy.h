@@ -3,7 +3,7 @@
 
 #include "Enemy.h"
 
-static int ATTACK_DELAY = 50;
+static float R_ATTACK_DELAY = 0.5f;
 
 class RangedEnemy : public Enemy {
 
@@ -15,7 +15,8 @@ public:
 
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);
 	void Shutdown();
-    virtual void Fire();
+
+    virtual void Fire(float deltaTime);
 };
 
 #endif

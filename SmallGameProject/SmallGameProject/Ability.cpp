@@ -10,26 +10,25 @@ Ability::Ability()
 Ability::~Ability()
 {
 }
-void Ability::Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay)
+void Ability::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay)
 {
 	this->arc = arc;
 	this->nrOfProjectiles = nrOfProjectiles;
 	this->cooldown = cooldown;
 	this->attackDelay = attackDelay;
 	this->maxCharges = maxCharges;
+	this->chargesLeft = maxCharges;
 	this->triggerDelay = triggerDelay;
-	if (this->cooldown < this->triggerDelay)
-	{
-		this->cooldown = this->triggerDelay + 1;
-	}
 
 }
-void Ability::update(Enemy * enemy, EntitySubject * entitySubject)
+void Ability::Update(Enemy * enemy, EntitySubject * entitySubject, float deltaTime)
 {
-	if (this->isActivated == true || this->chargesLeft < this->maxCharges)
+	if (this->chargesLeft < this->maxCharges)
 	{
-		this->cdCounter++;
-		this->chargesRefresh++;
+		//this->cdCounter += REFRESH_RATE * deltaTime;
+		//this->chargesRefresh += REFRESH_RATE * deltaTime;
+		this->cdCounter += deltaTime;
+		this->chargesRefresh += deltaTime;
 	}
 
 	if (this->chargesRefresh > this->cooldown && this->chargesLeft < this->maxCharges)
@@ -37,4 +36,14 @@ void Ability::update(Enemy * enemy, EntitySubject * entitySubject)
 		this->chargesRefresh = 0;
 		this->chargesLeft++;
 	}
+}
+
+float Ability::GetCooldown()
+{
+	return this->cooldown;
+}
+
+float Ability::GetCDCounter()
+{
+	return this->cdCounter;
 }

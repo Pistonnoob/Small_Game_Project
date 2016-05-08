@@ -20,13 +20,10 @@ void SphereBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX:
 	DirectX::XMFLOAT3 maxVert = DirectX::XMFLOAT3(-D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX);
 	DirectX::XMFLOAT3 minVert = DirectX::XMFLOAT3(D3D11_FLOAT32_MAX, D3D11_FLOAT32_MAX, D3D11_FLOAT32_MAX);
 	const std::vector<DirectX::XMFLOAT3>* vertPos = model->getVertexPositions();
-	DirectX::XMMATRIX modelWorldMatrix;
-	model->GetWorldMatrix(modelWorldMatrix);
 
 	for (int i = 0; i < vertCount; i++) {
-		
+
 		vertVec = DirectX::XMLoadFloat3(&vertPos->at(i));
-		vertVec = DirectX::XMVector3TransformCoord(vertVec, modelWorldMatrix);
 		XMStoreFloat3(&vertFloat, vertVec);
 
 		if (vertFloat.x > maxVert.x) {
@@ -71,19 +68,17 @@ void SphereBoundingVolume::GenerateBounds(Model* model)
 	maxV = DirectX::XMLoadFloat3(&maxVert);
 
 	//Move the vertices to world space
-	minV = DirectX::XMVector2TransformCoord(minV, world);
-	maxV = DirectX::XMVector2TransformCoord(maxV, world);
+	//minV = DirectX::XMVector3TransformCoord(minV, world);
+	//maxV = DirectX::XMVector3TransformCoord(maxV, world);
 
 	//Move back to a float3 for easier use
 	DirectX::XMStoreFloat3(&minVert, minV);
 	DirectX::XMStoreFloat3(&maxVert, maxV);
-
-	DirectX::XMFLOAT3 distanceToMid = DirectX::XMFLOAT3(abs(maxVert.x - minVert.x) / 2, abs(maxVert.y - minVert.y) / 2, abs(maxVert.z - minVert.z) / 2);	//Calculate offset to add to the min vertex to find the midle vertex
-
-	DirectX::XMFLOAT3 midleVert = DirectX::XMFLOAT3(minVert.x + distanceToMid.x, minVert.y + distanceToMid.y, minVert.z + distanceToMid.z);	//Calculate the midle Vertex
+	 
+	DirectX::XMFLOAT3 midleVert = DirectX::XMFLOAT3(minVert.x + ((maxVert.x - minVert.x) / 2), minVert.y + ((maxVert.y - minVert.y) / 2), minVert.z + ((maxVert.z - minVert.z) / 2));	//Calculate the midle Vertex
 
 	this->center = DirectX::XMFLOAT3(midleVert);	//Set the bounding spheres midle to the center of the modle
-	this->radius = sqrt(pow((distanceToMid.x), 2) + pow((distanceToMid.y), 2) + pow((distanceToMid.z), 2));	//Set the radius of the sphere to the distance from the midle to the minimum vertex
+	this->radius = abs(midleVert.x - minVert.x);	//Set the radius of the sphere to the distance from the midle to the minimum vertex
 
 }
 
@@ -122,9 +117,9 @@ bool SphereBoundingVolume::SphereIntesectionTest(SphereBoundingVolume* otherSphe
 {
 	bool result = false;
 	//The distance betwen the two centers
-	int distance = sqrt(pow((this->center.x - otherSphere->center.x), 2) + pow((this->center.y - otherSphere->center.y), 2) + pow((this->center.z - otherSphere->center.z), 2));
+	float distance = sqrt(pow((this->center.x - otherSphere->center.x), 2) + pow((this->center.y - otherSphere->center.y), 2) + pow((this->center.z - otherSphere->center.z), 2));
 
-	if (this->radius + otherSphere->radius <= distance) {
+	if (distance <= this->radius + otherSphere->radius) {
 		result = true;
 	}
 
@@ -181,4 +176,11 @@ bool SphereBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* box)
 	allAxises = nullptr;
 
 	return result;
+}
+
+void SphereBoundingVolume::UpdateBoundingVolume(DirectX::XMMATRIX modelWorldMatrix)
+{
+	DirectX::XMVECTOR pos = DirectX::XMVectorSet(0, 1, 0, 1);	// local pos of model and 1 in y
+	pos = DirectX::XMVector3TransformCoord(pos, modelWorldMatrix);
+	DirectX::XMStoreFloat3(&this->center, pos);
 }

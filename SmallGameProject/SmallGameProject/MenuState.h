@@ -2,7 +2,7 @@
 #define MENUSTATE_H
 #include "GameState.h"
 #include "Model.h"
-#include "StageState.h"
+#include "HubState.h"
 
 enum MenuOption {
 	START_GAME,

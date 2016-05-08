@@ -16,7 +16,6 @@ class LightShaderHandler {
 private:
 	struct LightMatrixBuffer
 	{
-		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX projection;
 		DirectX::XMMATRIX lightView;

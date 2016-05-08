@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -153,6 +153,7 @@
     <ClCompile Include="ArcFire.cpp" />
     <ClCompile Include="AudioHandler.cpp" />
     <ClCompile Include="BomberEnemy.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
     <ClCompile Include="BoxBoundingVolume.cpp" />
     <ClCompile Include="CameraHandler.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateHandler.cpp" />
     <ClCompile Include="GraphicHandler.cpp" />
+    <ClCompile Include="HubState.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LightShaderHandler.cpp" />
     <ClCompile Include="main.cpp" />
@@ -212,6 +214,7 @@
     <ClInclude Include="Algorithm.h" />
     <ClInclude Include="AudioHandler.h" />
     <ClInclude Include="BomberEnemy.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="BoxBoundingVolume.h" />
     <ClInclude Include="CameraHandler.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateHandler.h" />
+    <ClInclude Include="HubState.h" />
     <ClInclude Include="LightStructs.h" />
     <ClInclude Include="GraphicHandler.h" />
     <ClInclude Include="InputHandler.h" />
@@ -339,22 +343,6 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="ParticleVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowMapVertexShader.hlsl">
-	<ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-	</FxCompile>
-    <FxCompile Include="ShadowMapVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

@@ -31,6 +31,9 @@ bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 		this->entityBV = new BoxBoundingVolume();
 		this->entityBV->GenerateBounds(this->entityModel);
 	}
+	DirectX::XMMATRIX modelWorldMatrix;
+	this->entityModel->GetWorldMatrix(modelWorldMatrix);
+	this->entityBV->UpdateBoundingVolume(modelWorldMatrix);
 
 	return true;
 }
@@ -90,6 +93,14 @@ Type Entity::GetType()
     return this->myType;
 }
 
+void Entity::HandleInput()
+{
+}
+
+void Entity::Update()
+{
+}
+
 Model* Entity::GetModel()
 {
     return this->entityModel;
@@ -107,6 +118,12 @@ DirectX::XMFLOAT3 Entity::GetPosition()
     pos.y = 0;
     pos.z = this->posZ;
     return pos;
+}
+
+void Entity::SetPosition(float newPosX, float newPosZ)
+{
+	this->posX = newPosX;
+	this->posZ = newPosZ;
 }
 
 

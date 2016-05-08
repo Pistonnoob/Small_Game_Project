@@ -21,7 +21,6 @@ struct DeferredShaderParameters {
 };
 
 struct LightShaderParameters {
-	DirectX::XMMATRIX worldMatrix;
 	DirectX::XMMATRIX viewMatrix;
 	DirectX::XMMATRIX projectionMatrix;
 	DirectX::XMMATRIX lightViewMatrix;

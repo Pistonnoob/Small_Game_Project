@@ -39,6 +39,7 @@ public:
 	const DirectX::XMFLOAT3 getCenter();
 	DirectX::XMVECTOR Project(DirectX::XMVECTOR axis);
 	bool Overlap(DirectX::XMVECTOR axis, DirectX::XMVECTOR Vec1, DirectX::XMVECTOR Vec2);
+	void UpdateBoundingVolume(DirectX::XMMATRIX modelWorldMatrix);
 };
 
 

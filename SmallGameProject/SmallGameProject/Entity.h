@@ -5,6 +5,7 @@
 #include "EntitySubject.h"
 #include "Model.h"
 enum Type {
+	NONE,
     MELEEE,
     RANGED,
     BOMBER,
@@ -38,10 +39,13 @@ public:
 
     Type GetType();
 
+	virtual void HandleInput();
+	virtual void Update();
+
     Model* GetModel();
     BoundingVolume* GetBV();
     DirectX::XMFLOAT3 GetPosition();
-
+	void SetPosition(float newPosX, float newPosZ);
 };
 
 #endif

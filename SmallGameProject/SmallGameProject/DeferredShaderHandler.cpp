@@ -407,9 +407,9 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	params->worldMatrix = XMMatrixTranspose(params->worldMatrix);
+	/*params->worldMatrix = XMMatrixTranspose(params->worldMatrix);
 	params->viewMatrix = XMMatrixTranspose(params->viewMatrix);
-	params->projectionMatrix = XMMatrixTranspose(params->projectionMatrix);
+	params->projectionMatrix = XMMatrixTranspose(params->projectionMatrix);*/
 
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -446,6 +446,7 @@ bool DeferredShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceConte
 
 	//Set the constant buffer in vertex and pixel shader with updated values
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
+	deviceContext->GSSetConstantBuffers(0, 0, nullptr);
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
 	if (params->diffTexture) {

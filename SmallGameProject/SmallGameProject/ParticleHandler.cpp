@@ -163,6 +163,14 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, fl
 {
 }
 
+void ParticleHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
+{
+}
+
+void ParticleHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
+{
+}
+
 void ParticleHandler::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
 }
@@ -198,7 +206,12 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 		this->emitters.at(0)->SortParticles();
 		this->emitters.at(0)->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
 		parameters.worldMatrix = this->world;
-		parameters.diffTexture = this->myTextures.GetTexture(1);
+		parameters.diffTexture = this->myTextures.GetTexture(0);
+
+		if (!parameters.diffTexture)
+		{
+			result = false;
+		}
 
 		gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	}

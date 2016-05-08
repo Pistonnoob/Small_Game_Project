@@ -8,8 +8,7 @@ class FireCommand : public Command {
 private:
     DirectX::XMFLOAT3 dir;
 public:
-    FireCommand(DirectX::XMFLOAT3 dir);
-    virtual void execute(Actor& actor);
+    virtual void execute(Actor& actor, float deltaTime);
 
 };
 

@@ -223,9 +223,9 @@ bool FontShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
-	worldMatrix = XMMatrixTranspose(worldMatrix);
+	/*worldMatrix = XMMatrixTranspose(worldMatrix);
 	viewMatrix = XMMatrixTranspose(viewMatrix);
-	projectionMatrix = XMMatrixTranspose(projectionMatrix);
+	projectionMatrix = XMMatrixTranspose(projectionMatrix);*/
 
 	//Map the constant buffer so we can write to it (denies GPU access)
 	hresult = deviceContext->Map(this->matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

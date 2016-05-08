@@ -1,6 +1,6 @@
 #include"MoveDownCommand.h"
 
-void MoveDownCommand::execute(Actor& actor)
+void MoveDownCommand::execute(Actor& actor, float deltaTime)
 {
-    actor.MoveDown();
+    actor.MoveDown(deltaTime);
 }
