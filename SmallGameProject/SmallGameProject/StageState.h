@@ -38,7 +38,7 @@ private:	//Variables
     ProjectileHandler enemyPjHandler;
 
 	PowerUp spreadPower;
-	EntitySubject powerUpSubject;
+	EntitySubject powerUpSubject; 
 
 	Model m_car;
     Model m_ball;

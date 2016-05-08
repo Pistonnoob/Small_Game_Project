@@ -224,14 +224,28 @@ void Player::Fire(float deltaT)
 
 	this->aimDir.y = 0.0f;
 
+
+
 	for (int i = 0; i < size; i++)
 	{
 		powerUpPtr = &this->powerups.at(i);
 		if (powerUpPtr->getTimeLeft() > 0.0f)
 		{
-			playerWeapon->ShootWeapon(this);
+			switch (i)
+			{
+			case 0:
+				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::ARCFIRE);
+				break;
+			case 1:
+				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::REVERSERBULLETS);
+				break;
+			case 2:
+				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::SPLITFIRE);
+				break;
+			}
 		}
 	}
+	this->playerWeapon->ShootWeapon(this);
 }
 
 void Player::Fire()
