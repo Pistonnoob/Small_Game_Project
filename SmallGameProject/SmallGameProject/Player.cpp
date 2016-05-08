@@ -96,8 +96,28 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 	this->powerups.at(powerUp).setTimePowerup(10);
 }
 
+void Player::HandleInput(InputHandler * input)
+{
+	if (input->isKeyDown(DIK_W)) {
+		this->MoveUp();
+	}
+	if (input->isKeyDown(DIK_S)) {
+		this->MoveDown();
+	}
+	if (input->isKeyDown(DIK_D)) {
+		this->MoveRight();
+	}
+	if (input->isKeyDown(DIK_A)) {
+		this->MoveLeft();
+	}
+
+}
+
 void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH)
 {
+
+	this->HandleInput(input);
+
 	DirectX::XMMATRIX playerWorldMatrix;
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
 
@@ -109,11 +129,11 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	//Set the model matrix
 	this->entityModel->SetWorldMatrix(playerWorldMatrix);
 
-
-	//give the player model its new 
-	
-
 	this->RotatePlayerTowardsMouse(input->getMousePos(), gHandler, cameraH);
+
+	//Update the bounding box pos and rotation
+	this->entityModel->GetWorldMatrix(playerWorldMatrix);
+	this->entityBV->UpdateBoundingVolume(playerWorldMatrix);
 
 	//weapon matrix
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
@@ -122,6 +142,7 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	weaponWorldMatrix = offset * weaponWorldMatrix;
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
+	
 }
 
 Weapon * Player::GetWeapon()

@@ -100,12 +100,11 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		this->playerSubject = EntitySubject();
 		this->playerSubject.AddObserver(GameData::GetInstance());
 
-		result = this->player.Initialize(device, deviceContext, "sphere1", "carSLS3", true, &this->playerSubject);
+		result = this->player.Initialize(device, deviceContext, "sphere1", "ogreFullG", true, &this->playerSubject);
 		if (!result) {
 			return false;
 		}
 	}
-
 
 	return result;
 }
@@ -117,26 +116,13 @@ int HubState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
-	if (input->isKeyDown(DIK_W)) {
-		this->player.MoveUp();
-	}
-	if (input->isKeyDown(DIK_S)) {
-		this->player.MoveDown();
-	}
-	if (input->isKeyDown(DIK_D)) {
-		this->player.MoveRight();
-	}
-	if (input->isKeyDown(DIK_A)) {
-		this->player.MoveLeft();
-	}
-
 	return result;
 }
 
 int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
-
+	
 	this->player.Update(input, gHandler, &this->myCamera);
 
 	XMFLOAT3 playerPos = this->player.GetPosition();

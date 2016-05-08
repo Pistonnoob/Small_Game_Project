@@ -31,6 +31,8 @@ public:
 		std::string weaponModelFile, bool isSphere, EntitySubject* entitySub);
 	
 	void Shutdown();
+
+	void HandleInput( InputHandler* input);
 	Weapon* GetPlayerWeapon();
 	void PowerPickup(const int &POWER_ENUM);
 

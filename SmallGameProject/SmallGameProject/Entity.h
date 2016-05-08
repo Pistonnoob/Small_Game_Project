@@ -38,6 +38,9 @@ public:
 
     Type GetType();
 
+	virtual void HandleInput();
+	virtual void Update();
+
     Model* GetModel();
     BoundingVolume* GetBV();
     DirectX::XMFLOAT3 GetPosition();

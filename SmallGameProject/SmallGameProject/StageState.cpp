@@ -180,6 +180,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (!result) {
 			return false;
 		}
+
 	}
 
 
@@ -199,18 +200,6 @@ int StageState::HandleInput(InputHandler * input)
 		Entity* ptr = &this->player;
 		this->player.GetEntitySubject()->Notify(ptr, Events::PICKUP::POWERUP_PICKUP);
 	}
-	if (input->isKeyDown(DIK_W)) {
-		this->player.MoveUp();
-	}
-	if (input->isKeyDown(DIK_S)) {
-		this->player.MoveDown();
-	}
-	if (input->isKeyDown(DIK_D)) {
-		this->player.MoveRight();
-	}
-	if (input->isKeyDown(DIK_A)) {
-		this->player.MoveLeft();
-	}
 
 	return result;
 }
@@ -222,7 +211,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
     this->enemyPjHandler.Update(deltaTime);
 	
-
 	this->playerProjectile.Update(deltaTime);
 	this->player.Update(input, gHandler, &this->myCamera);
 
@@ -242,6 +230,13 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		{
 			//The state wasn't a nullptr, meaning it didn't have automatic clearing on
 			//Something went somewhat wrong here eh?
+		}
+	}
+
+	for (int i = 0; i < this->enemies.size(); i++) {
+
+		if (this->player.GetBV()->Intersect(this->enemies.at(i)->GetBV())) {
+			int j = 0;
 		}
 	}
 
