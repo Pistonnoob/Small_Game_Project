@@ -43,14 +43,15 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 
 void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 {
+	ParticleEmitter* newEmitter = nullptr;
 	switch (evnt)
 	{
 	case Events::CREATED:
 		break;
 	case Events::PLAYER_CREATED:
 	{
-		EmitterPlayerSpawn* tEmitter = new EmitterPlayerSpawn();
-		tEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter = new EmitterPlayerSpawn();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
 	}
 		break;
 	case Events::PLAYER_MOVING:
@@ -59,7 +60,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::BOMBER_CREATED:
 	{
-
+		newEmitter = new EmitterEnemySpawn();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
 	}
 		break;
 	case Events::BOMBER_MOVING:
@@ -68,7 +70,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::RANGED_CREATED:
 	{
-
+		newEmitter = new EmitterEnemySpawn();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
 	}
 		break;
 	case Events::RANGED_MOVING:
@@ -77,7 +80,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::MELEE_CREATED:
 	{
-
+		newEmitter = new EmitterEnemySpawn();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
 	}
 		break;
 	case Events::MELEE_MOVING:
@@ -93,7 +97,10 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	default:
 		break;
 	}
-
+	if (newEmitter)
+	{
+		this->emitters.push_back(newEmitter);
+	}
 }
 
 void ParticleHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
