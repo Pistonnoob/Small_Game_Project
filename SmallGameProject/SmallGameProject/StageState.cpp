@@ -180,7 +180,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(15.0f, 1.0f, 15.0f, 1.0f);
 		this->pointLights.push_back(light);
 
 		if (!result) {
@@ -270,9 +270,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	}
 
 	XMFLOAT3 playerPos = this->player.GetPosition();
-	XMFLOAT3 enemyPos = this->enemies.at(0)->GetPosition();
 	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
-	this->pointLights.at(2).Position = XMFLOAT4(enemyPos.x, 1.0f, enemyPos.z, 1.0f);
 
 	return result;
 }
