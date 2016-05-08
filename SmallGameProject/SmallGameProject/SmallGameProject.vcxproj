@@ -160,6 +160,7 @@
     <ClCompile Include="D3DHandler.cpp" />
     <ClCompile Include="DeferredShaderHandler.cpp" />
     <ClCompile Include="EmitterEnemySpawn.cpp" />
+    <ClCompile Include="EmitterExplosion.cpp" />
     <ClCompile Include="EmitterHolder.cpp" />
     <ClCompile Include="EmitterPlayerSpawn.cpp" />
     <ClCompile Include="EmitterPrototype.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="D3DHandler.h" />
     <ClInclude Include="DeferredShaderHandler.h" />
     <ClInclude Include="EmitterEnemySpawn.h" />
+    <ClInclude Include="EmitterExplosion.h" />
     <ClInclude Include="EmitterHolder.h" />
     <ClInclude Include="EmitterPlayerSpawn.h" />
     <ClInclude Include="EmitterPrototype.h" />
