@@ -41,15 +41,17 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	this->emitters.push_back(newEmitter);
 }
 
-void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
+void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 {
 	switch (evnt)
 	{
 	case Events::CREATED:
 		break;
 	case Events::PLAYER_CREATED:
+	{
 		EmitterPlayerSpawn* tEmitter = new EmitterPlayerSpawn();
 		tEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+	}
 		break;
 	case Events::PLAYER_MOVING:
 		break;
