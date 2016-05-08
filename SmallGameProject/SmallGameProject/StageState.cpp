@@ -231,7 +231,7 @@ int StageState::HandleInput(InputHandler * input)
 		this->player.MoveLeft(0.01f);
 
 	}
-	if (input->isKeyDown(DIK_F))
+	if (input->isKeyPressed(DIK_F))
 	{
 		this->player.Fire(0.0);
 	}
@@ -258,7 +258,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
     RemoveDeadEnemies();
  
-	//this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
+	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
     this->enemyPjHandler.Update(newDT);
 
 	this->playerProjectile.Update(newDT);

@@ -2,8 +2,8 @@
 
 Player::Player() : Actor()
 {
-	this->posX = 20.f;
-	this->posZ = 20.f;
+	this->posX = 0.f;
+	this->posZ = 0.f;
 	this->playerHealth = 100;
 	this->playerMovmentSpeed = 10;
 	this->playerDamage = 1;
