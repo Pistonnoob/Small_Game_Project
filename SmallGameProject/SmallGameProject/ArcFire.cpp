@@ -7,12 +7,12 @@ ArcFire::ArcFire() : Ability()
 ArcFire::~ArcFire()
 {
 }
-void ArcFire::Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay)
+void ArcFire::Initialize(float arc, int nrOfProjectiles, float cooldown, int attackDelay, int maxCharges, float triggerDelay)
 {
 	Ability::Initialize(arc, nrOfProjectiles, cooldown, attackDelay, maxCharges, triggerDelay);
 
 }
-float ArcFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
+float ArcFire::Activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos)
 {
 	if (this->cdCounter >= this->cooldown || this->chargesLeft > 0)
 	{
@@ -29,11 +29,11 @@ float ArcFire::activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMF
 		return this->attackDelay;
 
 	}
-	return 0;
+	return -1;
 
 }
-void ArcFire::update(Enemy* enemy, EntitySubject* entitySubject)
+void ArcFire::Update(Enemy* enemy, EntitySubject* entitySubject, float deltaTime)
 {
-	Ability::update(enemy, entitySubject);
+	Ability::Update(enemy, entitySubject, deltaTime);
 
 }

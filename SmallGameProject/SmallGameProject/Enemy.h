@@ -3,14 +3,16 @@
 
 #include "Actor.h"
 
-static int BASE_ATTACK_DELAY = 50;
+static float BASE_ATTACK_DELAY = 0.5f;
+static float MOVEMENT_SPEED = 10.0f;
 
 
 
 class Enemy : public Actor {
 
 protected:
-    int attackCD;
+    float attackCD;
+    bool isAlive;
 public:
     Enemy();
     virtual~Enemy();
@@ -18,13 +20,14 @@ public:
 	virtual bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere) = 0;
 	virtual void Shutdown() = 0;
 	
-
-    virtual void MoveRight();
-    virtual void MoveLeft();
-    virtual void MoveUp();
-    virtual void MoveDown();
-    virtual void Fire();
+    virtual void MoveRight(float deltaTime);
+    virtual void MoveLeft(float deltaTime);
+    virtual void MoveUp(float deltaTime);
+    virtual void MoveDown(float deltaTime);
+    virtual void Fire(float deltaTime);
     virtual void Move(DirectX::XMFLOAT3 moveVec) ;
+	virtual bool GetIsAlive();
+	virtual void SetIsAlive(bool newIsAlive);
 
 };
 

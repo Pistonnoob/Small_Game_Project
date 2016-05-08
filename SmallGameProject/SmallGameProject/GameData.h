@@ -38,11 +38,12 @@ public:
 
 	void OnNotify(Entity* entity, Events::ENTITY evnt);
 	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay);
+	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit);
 	void OnNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
 	void OnNotify(Entity* entity, Events::PICKUP evnt);
 
 	void OnNotify(const Entity* entity, Events::ACHIEVEMENT achi);
-
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);

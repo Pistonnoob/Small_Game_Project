@@ -96,27 +96,37 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 	this->powerups.at(powerUp).setTimePowerup(10);
 }
 
-void Player::HandleInput(InputHandler * input)
+void Player::HandleInput(InputHandler * input, float dTime)
 {
 	if (input->isKeyDown(DIK_W)) {
-		this->MoveUp();
+		this->MoveUp(0.00001f * dTime);
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->MoveDown();
+		this->MoveDown(0.00001f * dTime);
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->MoveRight();
+		this->MoveRight(0.00001f * dTime);
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->MoveLeft();
+		this->MoveLeft(0.00001f * dTime);
 	}
 
+	if (input->isKeyPressed(DIK_C))
+	{
+		//how do I update this shiet
+		this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
+	}
+
+	if (input->isKeyPressed(DIK_F))
+	{
+		this->Fire(0.0);
+	}
 }
 
-void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH)
+void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime)
 {
 
-	this->HandleInput(input);
+	this->HandleInput(input, deltaTime);
 
 	DirectX::XMMATRIX playerWorldMatrix;
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
@@ -138,11 +148,16 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	//weapon matrix
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
 	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
-	offset = DirectX::XMMatrixTranslation(5, 4, 0);
+	offset = DirectX::XMMatrixTranslation(2.5f, 1.0f, 0.0f);
 	weaponWorldMatrix = offset * weaponWorldMatrix;
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
-	
+
+	//update powerups
+	for (auto Powerups = this->powerups.begin(); Powerups != this->powerups.end(); Powerups++)
+	{
+		(Powerups)->Update(deltaTime);
+	}	
 }
 
 Weapon * Player::GetWeapon()
@@ -150,28 +165,32 @@ Weapon * Player::GetWeapon()
 	return this->playerWeapon;
 }
 
-void Player::MoveRight()
+
+void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
 		this->posX += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveLeft()
+
+void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
 		this->posX -= (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveUp()
+
+void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
 		this->posZ += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::MoveDown()
+
+void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
 		this->posZ -= (0.05f * this->playerMovmentSpeed);
@@ -184,21 +203,54 @@ void Player::Move(DirectX::XMFLOAT3 moveVec)
 	this->posZ += moveVec.z;
 }
 
-void Player::Fire(const float &deltaT)
+void Player::Fire(float deltaT)
 {
+	/*
 	this->SetAimDir(DirectX::XMFLOAT3(0, 0, 1));
 
 	if (this->powerups.at(0).Update(deltaT) == true)
 	{
 		playerWeapon->ShootWeapon(this);
 	}
+	*/
+
+	PowerUp* powerUpPtr = nullptr;
+	int size = this->powerups.size();
+
+	DirectX::XMStoreFloat3(&this->aimDir, this->forwardDir);
+
+	this->aimDir.x = DirectX::XMVectorGetX(this->forwardDir);
+	this->aimDir.z = DirectX::XMVectorGetY(this->forwardDir);
+
+	this->aimDir.y = 0.0f;
+
+	for (int i = 0; i < size; i++)
+	{
+		powerUpPtr = &this->powerups.at(i);
+		if (powerUpPtr->getTimeLeft() > 0.0f)
+		{
+			playerWeapon->ShootWeapon(this);
+		}
+	}
 }
 
 void Player::Fire()
 {
-	//this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
-
-	//playerWeapon->shootWeapon(this);
+	/*
+	PowerUp* powerUpPtr = nullptr;
+	int size = this->powerups.size();
+	
+	DirectX::XMStoreFloat3(&this->aimDir,this->forwardDir);
+	
+	for (int i = 0; i < size; i++)
+	{
+		powerUpPtr = &this->powerups.at(i);
+		if (powerUpPtr->getTimeLeft() > 0.0f)
+		{
+			playerWeapon->ShootWeapon(this);
+		}
+	}
+	*/
 }
 
 void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)
@@ -246,6 +298,7 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 
 	//Move the pos to a vector
 	DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet( mouseX, mouseY , 1, 1);
+	//DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet(mouseX, 0, mouseY, 1);
 	
 	//Direction vector
 	XMVECTOR dirVec = XMVector2Normalize(mousePosV - playerPos);

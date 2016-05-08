@@ -9,7 +9,7 @@ private:
 
 public:
     virtual ~Command() {}
-    virtual void execute(Actor& actor) = 0;
+    virtual void execute(Actor& actor, float deltaTime) = 0;
 
 };
 
