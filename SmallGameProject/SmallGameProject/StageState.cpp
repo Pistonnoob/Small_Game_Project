@@ -120,7 +120,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		
 
 		//the player will rise
- 		this->player.Initialize(device, deviceContext, "sphere1","ogreFullG", false, &this->playerSubject);
+ 		this->player.Initialize(device, deviceContext, "sphere1","projectile", true, &this->playerSubject);
 		this->playerProjectile.Initialize(device, this->m_deviceContext);
 		
 		//Form thy armies from the clay!
@@ -238,7 +238,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
     this->enemyPjHandler.Update(newDT);
 
 	this->playerProjectile.Update(newDT);
-	this->player.Update(input, gHandler, &this->myCamera, newDT);
+	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
 //>>>>>>> beforeMemLeak
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
@@ -257,11 +257,15 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
+	if (this->enemyPjHandler.IntersectionTest(&this->player)) {
+		int j = 0;
+		this->exitStage = true;
+	}
 
-	for (int i = 0; i < this->enemies.size(); i++) {
+	for (auto enemy : this->enemies) {
 
-		if (this->player.GetBV()->Intersect(this->enemies.at(i)->GetBV())) {
-			int j = 0;
+		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
+ 			int j = 0;
 		}
 	}
 
@@ -319,6 +323,11 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
+		pos = this->enemies.at(i)->GetPosition();
+
+		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		this->m_car.SetWorldMatrix(worldMatrix);
+
 		gHandler->ShadowRender(this->enemies[i]->GetModel(), &this->myCamera);
 	}
 
