@@ -2,7 +2,8 @@
 
 
 
-EmitterPrototype::EmitterPrototype()
+EmitterPrototype::EmitterPrototype() : 
+	ParticleEmitter()
 {
 	this->particleDeviationX = this->particleDeviationY = this->particleDeviationZ = 0.0f;
 	this->particleVelocity = 0.0f;
@@ -11,6 +12,7 @@ EmitterPrototype::EmitterPrototype()
 	this->currentParticleCnt = 0;
 	this->maxParticles = 0;
 	this->accumulatedTime = 0.0f;
+	this->emitterTime = 10.0f;
 	this->vertexCount = this->indexCount = 0;
 	this->world = DirectX::XMMatrixIdentity();
 

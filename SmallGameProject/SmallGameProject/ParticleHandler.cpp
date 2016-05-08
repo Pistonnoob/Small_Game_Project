@@ -36,7 +36,7 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	std::string theNightSky = "Particles.mtl";
 	bool victory = this->myTextures.Initialize(device, deviceContext, theNightSky);
 
-	EmitterPlayerSpawn* newEmitter = new EmitterPlayerSpawn();
+	EmitterExplosion* newEmitter = new EmitterExplosion();
 	newEmitter->Initialize(device, this->myTextures.GetTexture(0));
 	this->emitters.push_back(newEmitter);
 }
@@ -160,11 +160,5 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 void ParticleHandler::KillEmitters()
 {
-	/*for (std::vector<ParticleEmitter*>::iterator emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
-	{
-		if ((*emitter)->IsCompleted())
-			(*emitter)->Shutdown();
-	}*/
-
 	this->emitters.erase(std::remove_if(this->emitters.begin(), this->emitters.end(), Emitter_Removal_Predicate()), this->emitters.end());
 }

@@ -40,7 +40,7 @@ bool EmitterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceVie
 bool EmitterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceContext)
 {
 	bool result = false;
-	this->accumulatedTime += dT / 1000000;
+	this->accumulatedTime /= 1000000;
 
 	//Release old particles
 	this->KillParticles();
@@ -89,10 +89,12 @@ bool EmitterExplosion::InitializeEmitter()
 	this->height = 6.0f;
 	this->particleSize = 0.4f;
 	this->maxParticles = 100;
+	this->isCompleted = false;
 	//this->particles.reserve(this->maxParticles);
 	this->particles = vector<Particle>(this->maxParticles);
 	this->currentParticleCnt = 0.0f;
 	this->particleTimeLimit = 1.0f;
+	this->emitterTime = 2.0f;
 	this->emitterTime = 1.0f;
 	this->accumulatedTime = 0.0f;
 
@@ -116,7 +118,7 @@ bool EmitterExplosion::InitializeEmitter()
 		float eachRotation = fullCircle / this->maxParticles;
 		float myRotation = this->currentParticleCnt * eachRotation;
 
-		//Define the normalized velocity
+		//Define the velocity
 		Algorithm::GetCircle(dX, dZ, myRotation);
 		//And apply the velocity each will have
 		dX *= this->velocity;

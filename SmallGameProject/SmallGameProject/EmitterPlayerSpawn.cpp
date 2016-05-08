@@ -103,6 +103,7 @@ bool EmitterPlayerSpawn::InitializeEmitter()
 	this->currentParticleCnt = 0.0f;
 
 	this->particleTimeLimit = 8.0f;
+	this->emitterTime = 10.0f;
 	this->accumulatedTime = 0.0f;
 
 	return true;

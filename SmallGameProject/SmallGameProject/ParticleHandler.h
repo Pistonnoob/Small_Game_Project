@@ -21,11 +21,20 @@ private:
 
 	struct Emitter_Removal_Predicate {
 		bool operator()(ParticleEmitter* emitter) {
-			if (emitter->IsCompleted())
+			bool result = false;
+			if (emitter)
 			{
-				emitter->Shutdown();
-				return true;
+				if (emitter->IsCompleted())
+				{
+					emitter->Shutdown();
+					delete emitter;
+					emitter = nullptr;
+					result = true;
+				}
 			}
+			else
+				result = true;
+			return result;
 		}
 	};
 
