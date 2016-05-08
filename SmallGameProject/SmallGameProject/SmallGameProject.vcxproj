@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ability.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Ai.cpp" />
     <ClCompile Include="Algorithm.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntitySubject.cpp" />
+    <ClCompile Include="FireCommand.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontShaderHandler.cpp" />
     <ClCompile Include="GameData.cpp" />
@@ -185,6 +187,7 @@
     <ClCompile Include="ParticleHandler.cpp" />
     <ClCompile Include="ParticleShaderHandler.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ProjectileHandler.cpp" />
     <ClCompile Include="RangedEnemy.cpp" />
@@ -221,6 +224,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntitySubject.h" />
     <ClInclude Include="EventLib.h" />
+    <ClInclude Include="FireCommand.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontShaderHandler.h" />
     <ClInclude Include="GameData.h" />
@@ -234,6 +238,7 @@
     <ClInclude Include="MeleeEnemy.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Modifiers.h" />
     <ClInclude Include="MoveDownCommand.h" />
     <ClInclude Include="MoveLeftCommand.h" />
     <ClInclude Include="MoveRightCommand.h" />
@@ -245,6 +250,7 @@
     <ClInclude Include="ParticleHandler.h" />
     <ClInclude Include="ParticleShaderHandler.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ProjectileHandler.h" />
     <ClInclude Include="RangedEnemy.h" />
@@ -335,22 +341,6 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="ParticleVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowMapVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="ShadowMapVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

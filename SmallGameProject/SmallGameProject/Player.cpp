@@ -20,16 +20,25 @@ Player::~Player()
 }
 
 bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string playerModelFilename,
-	std::string weaponModelFilename, bool isSphere)
+	std::string weaponModelFile, bool isSphere, EntitySubject* entitySub)
 {
-	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere)) {
+	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere, entitySub)) {
+		return false;
+	}
+	this->playerWeapon = new Weapon();
+	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
 		return false;
 	}
 
-	this->playerWeapon = new Weapon();
-	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFilename)) {
-		return false;
-	}
+
+	PowerUp spread = PowerUp();
+	PowerUp penetration = PowerUp();
+	PowerUp weave = PowerUp();
+
+
+	this->powerups.push_back(spread);
+	this->powerups.push_back(penetration);
+	this->powerups.push_back(weave);
 
 	//Rotation matrix
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(0);
@@ -38,6 +47,7 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	//Set the world matrix to a defualt state
 	DirectX::XMMATRIX playerWorldMatrix;
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
+	
 		
 	//Initial offset
 	DirectX::XMMATRIX offset = DirectX::XMMatrixTranslation(this->posX, 0, this->posZ);
@@ -60,13 +70,30 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 
 void Player::Shutdown()
 {
-	Entity::Shutdown();
-
 	if (this->playerWeapon) {
 		this->playerWeapon->ShutDown();
 		delete this->playerWeapon;
 		this->playerWeapon = nullptr;
 	}
+	for (int i = 0; i < this->powerups.size(); i++)
+	{
+		this->powerups.at(i).Shutdown();
+	} 
+	Entity::Shutdown(false);
+}
+
+Weapon * Player::GetPlayerWeapon()
+{
+	return this->playerWeapon;
+}
+
+void Player::PowerPickup(const int & POWER_ENUM)
+{
+}
+
+void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
+{
+	this->powerups.at(powerUp).setTimePowerup(10);
 }
 
 void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH)
@@ -86,7 +113,7 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	//give the player model its new 
 	
 
-	this->rotatePlayerTowardsMouse(input->getMousePos(), gHandler, cameraH);
+	this->RotatePlayerTowardsMouse(input->getMousePos(), gHandler, cameraH);
 
 	//weapon matrix
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
@@ -102,41 +129,58 @@ Weapon * Player::GetWeapon()
 	return this->playerWeapon;
 }
 
-void Player::moveRight()
+void Player::MoveRight()
 {
 	if (this->posX < 42.0f) {
 		this->posX += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::moveLeft()
+void Player::MoveLeft()
 {
 	if (this->posX > -42.0f) {
 		this->posX -= (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::moveUp()
+void Player::MoveUp()
 {
 	if (this->posZ < 42.0f) {
 		this->posZ += (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::moveDown()
+void Player::MoveDown()
 {
 	if (this->posZ > -42.0f) {
 		this->posZ -= (0.05f * this->playerMovmentSpeed);
 	}
 }
 
-void Player::move(DirectX::XMFLOAT3 moveVec)
+void Player::Move(DirectX::XMFLOAT3 moveVec)
 {
 	this->posX += moveVec.x;
 	this->posZ += moveVec.z;
 }
 
-void Player::rotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)
+void Player::Fire(const float &deltaT)
+{
+	this->SetAimDir(DirectX::XMFLOAT3(0, 0, 1));
+
+	if (this->powerups.at(0).Update(deltaT) == true)
+	{
+		playerWeapon->ShootWeapon(this);
+	}
+}
+
+void Player::Fire()
+{
+	//this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
+
+	//playerWeapon->shootWeapon(this);
+}
+
+void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)
 {
 	// The angle is calculated in Normal Device Space
 

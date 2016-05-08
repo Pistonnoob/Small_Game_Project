@@ -2,5 +2,5 @@
 
 void MoveUpCommand::execute(Actor& actor)
 {
-    actor.moveUp();
+    actor.MoveUp();
 }

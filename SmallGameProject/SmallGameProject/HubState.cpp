@@ -33,6 +33,7 @@ void HubState::Shutdown()
 	this->myParticleHandler.Shutdown();
 
 	this->player.Shutdown();
+	this->playerSubject.ShutDown();
 
 	GameState::Shutdown();
 }
@@ -96,10 +97,12 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
 		this->pointLights.push_back(light);
 
-		result = this->player.Initialize(device, deviceContext, "sphere1", "carSLS3", true);
+		result = this->player.Initialize(device, deviceContext, "sphere1", "carSLS3", true, &this->playerSubject);
 		if (!result) {
 			return false;
 		}
+		this->playerSubject = EntitySubject();
+		this->playerSubject.AddObserver(GameData::GetInstance());
 
 		DirectX::XMFLOAT3 a = this->player.GetPosition();
 		int i = 0;
@@ -117,16 +120,16 @@ int HubState::HandleInput(InputHandler * input)
 		this->exitStage = true;
 
 	if (input->isKeyDown(DIK_W)) {
-		this->player.moveUp();
+		this->player.MoveUp();
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->player.moveDown();
+		this->player.MoveDown();
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->player.moveRight();
+		this->player.MoveRight();
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->player.moveLeft();
+		this->player.MoveLeft();
 	}
 
 	return result;

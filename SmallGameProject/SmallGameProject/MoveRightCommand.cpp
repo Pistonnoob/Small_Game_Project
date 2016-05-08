@@ -3,5 +3,5 @@
 
 void MoveRightCommand::execute(Actor& actor)
 {
-    actor.moveRight();
+    actor.MoveRight();
 }

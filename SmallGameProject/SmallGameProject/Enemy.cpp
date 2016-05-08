@@ -9,23 +9,35 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::moveRight()
+void Enemy::MoveRight()
 {
     this->posX += 0.05f;
 }
-void Enemy::moveLeft()
+void Enemy::MoveLeft()
 {
     this->posX -= 0.05f;
 }
-void Enemy::moveUp()
+void Enemy::MoveUp()
 {
     this->posZ += 0.05f;
 }
-void Enemy::moveDown()
+void Enemy::MoveDown()
 {
     this->posZ -= 0.05f;
 }
-void Enemy::move(DirectX::XMFLOAT3 moveVec)
+void Enemy::Fire()
+{
+    if (this->attackCD > BASE_ATTACK_DELAY)
+    {
+        this->entitySubject->Notify(this, Events::ENTITY::Fire);
+        this->attackCD = 0;
+    }
+    else
+    {
+        this->attackCD++;
+    }
+}
+void Enemy::Move(DirectX::XMFLOAT3 moveVec)
 {
     this->posX += moveVec.x;
     this->posZ += moveVec.z;

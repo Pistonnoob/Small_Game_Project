@@ -3,7 +3,9 @@
 Entity::Entity() {
 	this->entityModel = nullptr;
 	this->entityBV = nullptr;
-	this->entitySubject = EntitySubject();
+
+	this->posX = 0.0f;
+	this->posZ = 0.0f;
 }
 
 Entity::~Entity()
@@ -11,9 +13,9 @@ Entity::~Entity()
 
 }
 
-bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename, bool isSphere)
+bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string objFilename, bool isSphere, EntitySubject* entitySub)
 {
-	//If we fail to initialize the model
+	this->entitySubject = entitySub;
 	this->entityModel = new Model();
 	if (!this->entityModel->Initialize(device, deviceContext, objFilename))
 	{
@@ -33,8 +35,10 @@ bool Entity::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	return true;
 }
 
-bool Entity::Initialize(Model * model, bool isSphere)
+bool Entity::Initialize(Model * model, EntitySubject* entitySubject, bool isSphere)
 {
+    this->entitySubject = entitySubject;
+
 	this->entityModel = model;
 
 	//Generate the Bounding volume
@@ -52,18 +56,38 @@ bool Entity::Initialize(Model * model, bool isSphere)
 }
 
 void Entity::Shutdown(bool isEnemy)
-{
-	if (this->entityModel && !isEnemy) {
+ {
+	if (this->entityModel && !isEnemy) 
+	{
 		this->entityModel->Shutdown();
 		delete this->entityModel;
 		this->entityModel = nullptr;
 	}
 
-	if (this->entityBV) {
+	if (this->entityBV) 
+	{
 		delete this->entityBV;
 	}
 	this->entityBV = nullptr;
+}
+void Entity::AddObservers(Observer * observer)
+{
+    this->entitySubject->AddObserver(observer);
+}
 
+DirectX::XMFLOAT3 Entity::GetAimDir()
+{
+	return DirectX::XMFLOAT3(0, 0, 0);
+}
+
+EntitySubject * Entity::GetEntitySubject() const
+{
+	return this->entitySubject;
+}
+
+Type Entity::GetType()
+{
+    return this->myType;
 }
 
 Model* Entity::GetModel()

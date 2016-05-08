@@ -16,6 +16,7 @@ private:	//Variables
 	Model portal1;
 
 	Player player;
+	EntitySubject playerSubject;
 	ParticleHandler myParticleHandler;
 
 	float t;
