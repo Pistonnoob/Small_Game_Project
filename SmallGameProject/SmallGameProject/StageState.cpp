@@ -238,7 +238,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
     this->enemyPjHandler.Update(newDT);
 
 	this->playerProjectile.Update(newDT);
-	this->player.Update(input, gHandler, &this->myCamera, newDT);
+	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
 //>>>>>>> beforeMemLeak
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);

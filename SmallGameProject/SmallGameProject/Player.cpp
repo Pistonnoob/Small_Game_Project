@@ -5,7 +5,7 @@ Player::Player() : Actor()
 	this->posX = 0.f;
 	this->posZ = 0.f;
 	this->playerHealth = 100;
-	this->playerMovmentSpeed = 10;
+	this->playerMovmentSpeed = 1;
 	this->playerDamage = 1;
 	this->playerHighScore = 0;
 	
@@ -99,16 +99,16 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 void Player::HandleInput(InputHandler * input, float dTime)
 {
 	if (input->isKeyDown(DIK_W)) {
-		this->MoveUp(0.00001f * dTime);
+		this->MoveUp(dTime);
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->MoveDown(0.00001f * dTime);
+		this->MoveDown(dTime);
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->MoveRight(0.00001f * dTime);
+		this->MoveRight(dTime);
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->MoveLeft(0.00001f * dTime);
+		this->MoveLeft(dTime);
 	}
 
 	if (input->isKeyPressed(DIK_C))
@@ -169,7 +169,7 @@ Weapon * Player::GetWeapon()
 void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
-		this->posX += (0.05f * this->playerMovmentSpeed);
+		this->posX += (0.00005f * deltaTime * this->playerMovmentSpeed);
 	}
 }
 
@@ -177,7 +177,7 @@ void Player::MoveRight(float deltaTime)
 void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
-		this->posX -= (0.05f * this->playerMovmentSpeed);
+		this->posX -= (0.00005f * deltaTime * this->playerMovmentSpeed);
 	}
 }
 
@@ -185,7 +185,7 @@ void Player::MoveLeft(float deltaTime)
 void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
-		this->posZ += (0.05f * this->playerMovmentSpeed);
+		this->posZ += (0.00005f * deltaTime * this->playerMovmentSpeed);
 	}
 }
 
@@ -193,7 +193,7 @@ void Player::MoveUp(float deltaTime)
 void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
-		this->posZ -= (0.05f * this->playerMovmentSpeed);
+		this->posZ -= (0.00005f * deltaTime  * this->playerMovmentSpeed);
 	}
 }
 
