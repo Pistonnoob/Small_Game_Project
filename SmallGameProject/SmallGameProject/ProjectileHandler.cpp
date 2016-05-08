@@ -37,7 +37,7 @@ void ProjectileHandler::Update(float deltaTime)
 		Projectile* temp = this->projectiles.at(i);
 		temp->update(deltaTime);
         DirectX::XMFLOAT3 pos = temp->GetPosition();
-        if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
+        if (pos.x < -44.0f || pos.x > 44.0f || pos.z < -44.0f || pos.z > 44.0f)
         {
             //Projectile* temp = this->projectiles.at(i);
             temp->Shutdown();

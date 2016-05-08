@@ -96,27 +96,37 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 	this->powerups.at(powerUp).setTimePowerup(10);
 }
 
-void Player::HandleInput(InputHandler * input)
+void Player::HandleInput(InputHandler * input, float dTime)
 {
 	if (input->isKeyDown(DIK_W)) {
-		this->MoveUp(0.00001f);
+		this->MoveUp(0.00001f * dTime);
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->MoveDown(0.00001f);
+		this->MoveDown(0.00001f * dTime);
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->MoveRight(0.00001f);
+		this->MoveRight(0.00001f * dTime);
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->MoveLeft(0.00001f);
+		this->MoveLeft(0.00001f * dTime);
 	}
 
+	if (input->isKeyPressed(DIK_C))
+	{
+		//how do I update this shiet
+		this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
+	}
+
+	if (input->isKeyPressed(DIK_F))
+	{
+		this->Fire(0.0);
+	}
 }
 
 void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime)
 {
 
-	this->HandleInput(input);
+	this->HandleInput(input, deltaTime);
 
 	DirectX::XMMATRIX playerWorldMatrix;
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);

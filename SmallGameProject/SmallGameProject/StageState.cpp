@@ -212,30 +212,6 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
-	if (input->isKeyPressed(DIK_C))
-	{
-	    //how do I update this shiet
-		Entity* ptr = &this->player;
-		this->player.GetEntitySubject()->Notify(ptr, Events::PICKUP::POWERUP_PICKUP);
-	}
-	if (input->isKeyDown(DIK_W)) {
-		this->player.MoveUp(0.01f);
-	}
-	if (input->isKeyDown(DIK_S)) {
-		this->player.MoveDown(0.01f);
-	}
-	if (input->isKeyDown(DIK_D)) {
-		this->player.MoveRight(0.01f);
-	}
-	if (input->isKeyDown(DIK_A)) {
-		this->player.MoveLeft(0.01f);
-
-	}
-	if (input->isKeyPressed(DIK_F))
-	{
-		this->player.Fire(0.0);
-	}
-
 	return result;
 }
 

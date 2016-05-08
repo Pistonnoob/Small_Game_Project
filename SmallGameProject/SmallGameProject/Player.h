@@ -33,7 +33,7 @@ public:
 	
 	void Shutdown();
 
-	void HandleInput( InputHandler* input);
+	void HandleInput( InputHandler* input, float dTime);
 	Weapon* GetPlayerWeapon();
 	void PowerPickup(const int &POWER_ENUM);
 
