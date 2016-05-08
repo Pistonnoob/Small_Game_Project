@@ -208,6 +208,10 @@ void Player::Fire(float deltaT)
 	int size = this->powerups.size();
 
 	DirectX::XMStoreFloat3(&this->aimDir, this->forwardDir);
+
+	this->aimDir.x = DirectX::XMVectorGetX(this->forwardDir);
+	this->aimDir.z = DirectX::XMVectorGetY(this->forwardDir);
+
 	this->aimDir.y = 0.0f;
 
 	for (int i = 0; i < size; i++)
@@ -284,6 +288,7 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 
 	//Move the pos to a vector
 	DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet( mouseX, mouseY , 1, 1);
+	//DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet(mouseX, 0, mouseY, 1);
 	
 	//Direction vector
 	XMVECTOR dirVec = XMVector2Normalize(mousePosV - playerPos);
