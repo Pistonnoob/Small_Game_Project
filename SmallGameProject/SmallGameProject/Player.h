@@ -35,7 +35,7 @@ public:
 	void PowerPickup(const int &POWER_ENUM);
 
 	void SetPowerUp(Modifiers::POWERUPS powerUp);
-	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH);
+	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime);
 
 	Weapon* GetWeapon();
 
@@ -47,7 +47,7 @@ public:
 
 	virtual void Fire(const float &deltaT);
 	virtual void Fire();
-	
+
 	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
 };
 

@@ -99,7 +99,6 @@ void ProjectileHandler::OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float
 	switch (evnt)
 	{
 	case(Events::UNIQUE_FIRE::ARCFIRE) :
-
 		FireInArc(entity->GetPosition(), entity->GetAimDir(), arc, nrOfBullets);
 
 		break;

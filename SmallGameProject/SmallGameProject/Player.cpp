@@ -96,7 +96,7 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 	this->powerups.at(powerUp).setTimePowerup(10);
 }
 
-void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH)
+void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime)
 {
 	DirectX::XMMATRIX playerWorldMatrix;
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
@@ -122,6 +122,13 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	weaponWorldMatrix = offset * weaponWorldMatrix;
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
+
+	//update powerups
+	for (auto Powerups = this->powerups.begin(); Powerups != this->powerups.end(); Powerups++)
+	{
+		(Powerups)->Update(deltaTime);
+	}
+	
 }
 
 Weapon * Player::GetWeapon()
@@ -167,9 +174,19 @@ void Player::Fire(const float &deltaT)
 
 void Player::Fire()
 {
-	//this->setAimDir(DirectX::XMFLOAT3(0, 0, 1));
-
-	//playerWeapon->shootWeapon(this);
+	PowerUp* powerUpPtr = nullptr;
+	int size = this->powerups.size();
+	
+	DirectX::XMStoreFloat3(&this->aimDir,this->forwardDir);
+	
+	for (int i = 0; i < size; i++)
+	{
+		powerUpPtr = &this->powerups.at(i);
+		if (powerUpPtr->getTimeLeft() > 0.0f)
+		{
+			playerWeapon->ShootWeapon(this);
+		}
+	}
 }
 
 void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)
