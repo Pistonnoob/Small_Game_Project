@@ -249,6 +249,9 @@
     <ClCompile Include="EmitterPlayerSpawn.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
+    <ClCompile Include="EmitterEnemySpawn.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -419,16 +422,19 @@
     <ClInclude Include="Abilities.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="EventLib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EmitterHolder.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Header Files\Observers\ParticleHandler\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="EventLib.h">
+      <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
     <ClInclude Include="EmitterPlayerSpawn.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterEnemySpawn.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
   </ItemGroup>
@@ -466,7 +472,6 @@
     <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ShadowMapVertexShader.hlsl" />
     <FxCompile Include="ShadowMapVertexShader.hlsl" />
     <FxCompile Include="ShadowMapVertexShader.hlsl" />
     <FxCompile Include="ShadowMapVertexShader.hlsl" />

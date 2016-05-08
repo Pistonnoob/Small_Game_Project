@@ -1,5 +1,8 @@
 #include "ParticleHandler.h"
-
+#include "Player.h"
+#include "MeleeEnemy.h"
+#include "RangedEnemy.h"
+#include "BomberEnemy.h"
 
 
 ParticleHandler::ParticleHandler()
@@ -44,6 +47,32 @@ void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
 	{
 	case Events::CREATED:
 		break;
+	case Events::PLAYER_CREATED:
+		EmitterPlayerSpawn* tEmitter = new EmitterPlayerSpawn();
+		tEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		break;
+	case Events::PLAYER_MOVING:
+		break;
+	case Events::PLAYER_DEAD:
+		break;
+	case Events::BOMBER_CREATED:
+		break;
+	case Events::BOMBER_MOVING:
+		break;
+	case Events::BOMBER_DEAD:
+		break;
+	case Events::RANGED_CREATED:
+		break;
+	case Events::RANGED_MOVING:
+		break;
+	case Events::RANGED_DEAD:
+		break;
+	case Events::MELEE_CREATED:
+		break;
+	case Events::MELEE_MOVING:
+		break;
+	case Events::MELEE_DEAD:
+		break;
 	case Events::IDLE:
 		break;
 	case Events::MOVING:
@@ -53,6 +82,7 @@ void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
 	default:
 		break;
 	}
+
 }
 
 int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)

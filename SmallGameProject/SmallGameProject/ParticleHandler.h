@@ -15,7 +15,7 @@ private:
 	std::vector<ParticleEmitter*> emitters;
 
 	Texture myTextures;
-
+	ID3D11Device* device;
 public:
 	ParticleHandler();
 	virtual ~ParticleHandler();
