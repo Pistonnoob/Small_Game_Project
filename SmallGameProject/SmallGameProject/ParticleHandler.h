@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "EmitterPrototype.h"
 #include "EmitterPlayerSpawn.h"
+#include "EmitterEnemySpawn.h"
 #include "GraphicHandler.h"
 #include "CameraHandler.h"
 
@@ -31,12 +32,6 @@ public:
 	int Update(float dT, ID3D11DeviceContext* deviceContext);
 
 	int Render(GraphicHandler* gHandler, CameraHandler* camera);
-
-	int CreateEmitterParabola(ID3D11ShaderResourceView* texture);
-	int CreateEmitterCircle(ID3D11ShaderResourceView* texture);
-	int CreateEmitterEllipse(ID3D11ShaderResourceView* texture, int widthConstant, int heightConstant);
-	int CreateEmitterLissajous(ID3D11ShaderResourceView* texture, int widthConstant, int heightConstant, int xLobes, int yLobes);
-	int CreateEmitterHypotrochoid(ID3D11ShaderResourceView* texture, int circleRadius, int containedCircleRadius, int pointOffset);
 private:	//Functions
 };
 
