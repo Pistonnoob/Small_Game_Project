@@ -109,7 +109,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		
 
 		//the player will rise
- 		this->player.Initialize(device, deviceContext, "sphere1","ogreFullG", false, &this->playerSubject);
+ 		this->player.Initialize(device, deviceContext, "sphere1","projectile", true, &this->playerSubject);
 		this->playerProjectile.Initialize(device, this->m_deviceContext);
 		
 		//Form thy armies from the clay!

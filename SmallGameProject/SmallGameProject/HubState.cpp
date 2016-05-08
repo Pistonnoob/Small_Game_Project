@@ -100,7 +100,7 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		this->playerSubject = EntitySubject();
 		this->playerSubject.AddObserver(GameData::GetInstance());
 
-		result = this->player.Initialize(device, deviceContext, "sphere1", "ogreFullG", true, &this->playerSubject);
+		result = this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, &this->playerSubject);
 		if (!result) {
 			return false;
 		}
