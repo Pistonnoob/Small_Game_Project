@@ -4,17 +4,19 @@
 #include "Observer.h"
 #include <string>
 #include <fstream>
+#include "Modifiers.h"
+#include "Weapon.h"
+#include <vector> 
+#include "Player.h"
+#include "GameState.h"
 
-class GameData : public Observer {
-
+class GameData : public Observer
+{
 private:
 	static bool isInstatiated;	//Check flag
 	static GameData* single;
 
-	GameData();					//Only GameData will create itself
-
-	//Data
-	//Character
+	GameData(GameData const&);
 	int playerHighScore;
 	int playerHealth;
 	int playerMovmentSpeed;
@@ -23,18 +25,31 @@ private:
 	//Achivement Related
 	int enemiesKilled;
 
+	//weapom related
+	std::vector<Weapon>weaponArsenal;
+	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
 public:
-	
 	virtual ~GameData();
-	static GameData* getInstance();
-	void OnNotify(const Entity* entity, Events::ENTITY evnt);
+
+	static GameData* GetInstance();
+
+	void Shutdown();
+	void Update(float deltaTime);
+
+	void OnNotify(Entity* entity, Events::ENTITY evnt);
+	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	void OnNotify(Entity* entity, Events::PICKUP evnt);
+
+	void OnNotify(const Entity* entity, Events::ACHIEVEMENT achi);
+
 
 	bool SavePlayerData(std::string filename);
 	bool LoadPlayerData(std::string filename);
 
-};
+	void Render(GraphicHandler * gHandler, CameraHandler* camera);
 
-bool GameData::isInstatiated = false;
-GameData* GameData::single = nullptr;
+	Weapon* GetWeapon(int weaponEnum);
+};
 
 #endif

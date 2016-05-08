@@ -38,7 +38,7 @@ bool GameStateHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* dev
 	StartState* startState = new StartState();
 	startState->Initialize(device, deviceContext, this);
 	this->m_gameStates.push_back(startState);
-	return result;
+	return true;
 }
 
 int GameStateHandler::HandleInput(InputHandler * input)
@@ -51,7 +51,7 @@ int GameStateHandler::HandleInput(InputHandler * input)
 	return result;
 }
 
-int GameStateHandler::Update(float deltaTime)
+int GameStateHandler::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 0;
 	//Firstly pop the states that wanted to be cleared
@@ -67,7 +67,7 @@ int GameStateHandler::Update(float deltaTime)
 	if (this->m_gameStates.size())
 	{
 		//Update the active state
-		result = m_gameStates.back()->Update(deltaTime);
+		result = m_gameStates.back()->Update(deltaTime, input, gHandler);
 	}
 	return result;
 }

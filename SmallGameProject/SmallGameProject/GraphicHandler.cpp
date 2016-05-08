@@ -19,6 +19,8 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 {
 	std::string errorMessage;
 	bool result;
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 
 	//Create the Direct3D handler
 	this->engine = new D3DHandler;
@@ -61,6 +63,7 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 	if (!result) {
 		return false;
 	}
+
 	//here is were I put in the shadowShader
 	this->shadowShaderH = new ShadowShaderHandler;
 	if (this->shadowShaderH == false)
@@ -68,7 +71,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 		return false;
 	}
 	this->shadowShaderH->Initialize(this->engine->GetDevice(), hwnd, this->deferredShaderH->GetBufferCount(), screenWidth, screenHeight);
-
 
 	this->screenQuad = new ScreenQuad;
 	if (!this->screenQuad) {
@@ -132,42 +134,20 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 
 	this->engine->GetDevice()->CreateBlendState(&blendDesc, &this->textTransparencyBlendState);
 
-	this->dirLight.Diffuse = DirectX::XMFLOAT4(0.32f * 2, 0.32f * 2, 0.47f * 2, 1.0f);
-	this->dirLight.Ambient = DirectX::XMFLOAT4(0.32f * 2, 0.32f * 2, 0.47f * 2, 1.0f);
-	this->dirLight.Specular = DirectX::XMFLOAT4(0.32f * 2, 0.32f * 2, 0.47f * 2, 1.0f);
+	this->dirLight.Diffuse = DirectX::XMFLOAT4(0.32f, 0.32f, 0.47f, 1.0f);
+	this->dirLight.Ambient = DirectX::XMFLOAT4(0.32f, 0.32f, 0.47f , 1.0f);
+	this->dirLight.Specular = DirectX::XMFLOAT4(0.32f, 0.32f, 0.47f, 1.0f);
 	this->dirLight.Direction = DirectX::XMFLOAT4(-0.5f, -0.5f, -0.5f, 0.0f);
-
-	PointLight light;
-	light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
-	light.Attenuation = DirectX::XMFLOAT4(50.0f, 0.5f, 0.09f, 0.032f);
-	this->AddPointLight(light);
-
-	light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
-	this->AddPointLight(light);
-
-	light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
-	this->AddPointLight(light);
 
 	//creating the light matrises
 	fieldOfView = (float)DirectX::XM_PI / 2.0f;
 
 	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(10.0f, 10.0f, 10.0f, 1.0f);
+	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(32.0f, 32.0f, 32.0f, 1.0f);
 	DirectX::XMVECTOR lightUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 
-	this->lightPos = DirectX::XMFLOAT4(10.0f, 10.0f, 0.0f, 1.0f);
-
 	this->lightView = DirectX::XMMatrixLookAtLH(lightPos, lookAt, lightUp);
-	this->lightPerspective = DirectX::XMMatrixOrthographicLH(32.0f, 32.0f, SCREEN_NEAR, SCREEN_DEPTH);
+	this->lightPerspective = DirectX::XMMatrixOrthographicLH(128.0f, 128.0f, SCREEN_NEAR, SCREEN_DEPTH);
 	//this->lightPerspective = DirectX::XMMatrixPerspectiveFovLH(fieldOfView, 1.0f, SCREEN_NEAR, SCREEN_DEPTH);
 
 	return true;
@@ -212,7 +192,7 @@ void GraphicHandler::DeferredRender(Model* model, CameraHandler* camera)
 	return;
 }
 
-void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
+void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos, std::vector<PointLight> pointLights)
 {
 	if (this->activeRTV != 2) {
 		this->SetLightRTV();
@@ -221,6 +201,7 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 	LightShaderParameters* shaderParams = new LightShaderParameters;
 	shaderParams->viewMatrix = this->baseViewMatrix;
 	shaderParams->projectionMatrix = this->orthographicMatrix;
+
 	shaderParams->lightViewMatrix = this->lightView;
 	shaderParams->lightProjectionMatrix = this->lightPerspective;
 
@@ -230,7 +211,7 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 	shaderParams->camPos = camPos;
 
 	shaderParams->dirLight = this->dirLight;
-	shaderParams->pointLights = this->pointLights;
+	shaderParams->pointLights = pointLights;
 
 	this->screenQuad->Render(this->engine->GetDeviceContext());
 	this->lightShaderH->Render(this->engine->GetDeviceContext(), 6, shaderParams);
@@ -241,7 +222,6 @@ void GraphicHandler::LightRender(DirectX::XMFLOAT4 camPos)
 
 	return;
 }
-
 
 void GraphicHandler::ParticleRender(ParticleShaderParameters * shaderParams, CameraHandler* camera, int amountOfParticles)
 {
@@ -265,6 +245,7 @@ void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 		this->SetShadowRTV();
 		this->activeRTV = 1;
 	}
+
 	ShadowShaderParameters* shadowShaderParams = new ShadowShaderParameters;
 	shadowShaderParams->worldMatrix = DirectX::XMMatrixIdentity();
 	
@@ -346,6 +327,7 @@ void GraphicHandler::Shutdown()
 		delete this->particleShaderH;
 		this->particleShaderH = nullptr;
 	}
+
 	//delete shadowShaderHander object
 	if (this->shadowShaderH) {
 		this->shadowShaderH->Shutdown();
@@ -388,26 +370,24 @@ void GraphicHandler::SetDirectionalLight(DirectionalLight light)
 	this->dirLight = light;
 }
 
-void GraphicHandler::AddPointLight(PointLight light)
+DirectX::XMMATRIX GraphicHandler::GetPerspectiveMatrix()
 {
-	this->pointLights.push_back(light);
+	return this->perspectiveMatrix;
 }
 
-void GraphicHandler::RemovePointLight(int index)
+DirectX::XMMATRIX GraphicHandler::GetOrthograpicMatrix()
 {
-	if (index >= this->pointLights.size()) {
-		return;
-	}
-
-	for (int i = index; i < this->pointLights.size() - 1; i++) {
-		this->pointLights.at(i) = this->pointLights.at(i + 1);
-	}
-	this->pointLights.pop_back();
+	return this->orthographicMatrix;
 }
 
-void GraphicHandler::RemoveAllPointLights()
+int GraphicHandler::GetScreenWidth()
 {
-	this->pointLights.clear();
+	return this->screenWidth;
+}
+
+int GraphicHandler::GetScreenHeight()
+{
+	return this->screenHeight;
 }
 
 void GraphicHandler::ClearRTVs()

@@ -8,14 +8,13 @@ class ArcFire : public Ability
 private:
 
 protected:
-    bool isActivated;
-
 
 public:
-    ArcFire();
-    virtual~ArcFire();
-    virtual void activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles);
-    virtual void update(std::vector<Projectile*>& projectiles, Model* projectileModel);
+	ArcFire();
+	virtual~ArcFire();
+	virtual void Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay);
+	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 
 
@@ -24,24 +23,31 @@ public:
 class SplitFire : public Ability
 {
 private:
-    int counter;
+
+protected:
+	int projectilesOnSplit;
+	float splitArc;
 public:
-    SplitFire();
-    virtual~SplitFire();
-    virtual void activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles);
-    virtual void update(std::vector<Projectile*>& projectiles, Model* projectileModel);
+	SplitFire();
+	virtual~SplitFire();
+	virtual void Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay, int projectilesOnSplit, float splitArc);
+	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 };
 
 class ReverseFire : public Ability
 {
 private:
-    int counter;
+
+protected:
+
 public:
-    ReverseFire();
-    virtual~ReverseFire();
-    virtual void activate(std::vector<Projectile*>& projectiles, Model* projectileModel, DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, float angle, int nrOfProjectiles);
-    virtual void update(std::vector<Projectile*>& projectiles, Model* projectileModel);
+	ReverseFire();
+	virtual~ReverseFire();
+	virtual void Initialize(float arc, int nrOfProjectiles, int cooldown, int attackDelay, int maxCharges, int triggerDelay);
+	virtual float activate(Enemy* enemy, EntitySubject* entitySubject, DirectX::XMFLOAT3 playerPos);
+	virtual void update(Enemy* enemy, EntitySubject* entitySubject);
 
 };
 

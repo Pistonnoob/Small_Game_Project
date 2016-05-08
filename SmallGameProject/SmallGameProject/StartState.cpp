@@ -42,7 +42,17 @@ int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 		worldMatrix = DirectX::XMMatrixRotationX(DirectX::XM_PI / 2) * worldMatrix;
 		modelResult = this->camera.Initialize();
 		this->startModel.SetWorldMatrix(worldMatrix);
+
+		PointLight light;
+		light.Diffuse = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 0.0f, -4.0f, 1.0f);
+		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.09f, 0.032f);
+		this->pointLights.push_back(light);
 	}
+
+	
 
 	return result;
 }
@@ -57,7 +67,7 @@ int StartState::HandleInput(InputHandler * input)
 	return result;
 }
 
-int StartState::Update(float deltaTime)
+int StartState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
 	if (this->startGame)
@@ -78,7 +88,7 @@ int StartState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->DeferredRender(&this->startModel, &this->camera);
 
-	gHandler->LightRender(this->camera.GetCameraPos());
+	gHandler->LightRender(this->camera.GetCameraPos(), this->pointLights);
 	
 	return result;
 }

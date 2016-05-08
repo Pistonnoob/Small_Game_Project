@@ -85,6 +85,18 @@ void ParticleHandler::OnNotify(const Entity * entity, Events::ENTITY evnt)
 
 }
 
+void ParticleHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
+{
+}
+
+void ParticleHandler::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
+{
+}
+
+void ParticleHandler::OnNotify(Entity * entity, Events::PICKUP evnt)
+{
+}
+
 int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
 {
 	int result = 0;

@@ -12,6 +12,7 @@ protected:
 	bool manualClearing;
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
+	std::vector<PointLight> pointLights;
 public:
 
 	GameState();	//This will initialize the GSH pointer to NULL
@@ -27,7 +28,7 @@ public:
 	void SetManualClearing(bool myCase);
 
 	virtual int HandleInput(InputHandler* input) = 0;
-	virtual int Update(float deltaTime) = 0;
+	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler) = 0;
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd) = 0;
 	
 };

@@ -1,55 +1,76 @@
 #include "Weapon.h"
 
+//not so strong weapon
 Weapon::Weapon()
 {
-	this->weapondModel = new Model();
 
-	for (int i = 0; i < this->nrOfModifiers; i++) {
-		this->modifyers[i] = 1.f;
-	}
+	this->weaponModel = new Model();
+
+	this->attackDamage = 1.0f;
+	this->playerSpeed = 1.0f;
+	this->attackSpeed = 1.0f;
 }
 
-Weapon::Weapon(float Hp, float MS, float Dmg)
+//if you want to change the base-Stats
+Weapon::Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed)
 {
-	this->weapondModel = new Model();
+	this->weaponModel = new Model();
 
-	// Assign each invidual modifier
-	this->modifyers[0] = Hp;
-	this->modifyers[1] = MS;
-	this->modifyers[2] = Dmg;
-
+	this->attackDamage = attackDamage;
+	this->playerSpeed = playerSpeed;
+	this->attackSpeed = attackSpeed;
 }
 
 Weapon::~Weapon()
 {
-
 }
 
 bool Weapon::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename)
 {
-	return this->weapondModel->Initialize(device, deviceContext, objFilename);
+	bool result = true;
+
+	result = this->weaponModel->Initialize(device, deviceContext, objFilename);
+
+	//setting the starting values
+	this->attackDamage = 10.0f;
+	this->attackSpeed = 10.0f;
+	this->playerSpeed = 10.0f;
+
+	return result;
 }
 
 void Weapon::ShutDown()
 {
-	if (this->weapondModel) {
-		this->weapondModel->Shutdown();
-		delete this->weapondModel;
-		this->weapondModel = nullptr;
+	if (this->weaponModel) 
+	{
+		this->weaponModel->Shutdown();
+		delete this->weaponModel;
+		this->weaponModel = nullptr;
 	}
 }
 
-const Model * Weapon::GetModel()
+Model * Weapon::GetModel()
 {
-	return this->weapondModel;
+	return this->weaponModel;
 }
 
-const int Weapon::GetNrOFModifiers()
+float Weapon::GetAttackDamageMod() const
 {
-	return this->nrOfModifiers;
+	return this->attackDamage;
 }
 
-const float * Weapon::GetModifiers()
+float Weapon::GetAttackSpeedMod() const
 {
-	return this->modifyers;
+	return this->attackSpeed;
+}
+
+float Weapon::GetPlayerSpeedMod() const
+{
+	return this->playerSpeed;
+}
+
+void Weapon::ShootWeapon(Entity * entity)
+{
+	//player powerups
+	entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14, 40);
 }

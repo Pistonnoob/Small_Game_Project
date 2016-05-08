@@ -1,6 +1,7 @@
 #include "StageState.h"
 #include "GameStateHandler.h"
 #include "MyMathLib.h"
+#include "Weapon.h"
 
 
 
@@ -13,10 +14,22 @@ StageState::StageState()
 	this->m_ball = Model();
 	this->m_ground = Model();
 	this->m_AI = Ai();
+	this->player = Player();
 
-	this->playerPos = DirectX::XMFLOAT3(0, 0, 0);
+	this->enemySubject = EntitySubject();
+    this->enemyPjHandler = ProjectileHandler();
+	this->enemySubject.AddObserver(&this->enemyPjHandler);
 
+	this->playerSubject = EntitySubject();
+	this->playerProjectile = ProjectileHandler();
+
+	this->playerSubject.AddObserver(&this->playerProjectile);
+	this->playerSubject.AddObserver(GameData::GetInstance());
+	
 	this->exitStage = false;
+
+	this->spreadPower = PowerUp();
+	this->powerUpSubject = EntitySubject();
 
 	this->camPosX = -30.0f;
 	this->camPosZ = 0.0f;
@@ -35,6 +48,14 @@ void StageState::Shutdown()
 	this->m_ball.Shutdown();
 	this->m_ground.Shutdown();
 
+    this->enemyPjHandler.ShutDown();
+    this->enemySubject.ShutDown();
+
+	this->playerSubject.ShutDown();
+	this->playerProjectile.ShutDown();
+	
+	this->player.Shutdown();
+
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
@@ -43,27 +64,14 @@ void StageState::Shutdown()
 		delete enemyTemp;
 	}
 	this->enemies.clear();
-	for (int i = 0; i < this->projectiles.size(); i++)
-	{
-		Projectile* temp = this->projectiles.at(i);
-		temp->Shutdown();
-		delete temp;
-	}
-	this->projectiles.clear();
-
-	if (this->ability1)
-		delete this->ability1;
-	if (this->ability2)
-		delete this->ability2;
-	if (this->ability3)
-		delete this->ability3;
 
 	this->myParticleHandler.Shutdown();
-
-	//Release your m_AI
+	this->powerUpSubject.ShutDown();
+	this->spreadPower.Shutdown();
 
 	GameState::Shutdown();
 }
+
 
 int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
 {
@@ -72,18 +80,21 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 	//Arm thy father
 	result = this->InitializeBase(GSH, device, deviceContext);
+
 	if (result)
 	{
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
-		float zoomIn = 1.0f / 4.0f;
+		float zoomIn = 1.0f / 6.0f;
 
 		/*this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));*/
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
+
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 20.0f / zoomIn, -7.0f / zoomIn));
 		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 6.0f, -50.0f));
 
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
 			result = 1;
@@ -95,61 +106,81 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
+        this->enemyPjHandler.Initialize(device, this->m_deviceContext);
+		
 
+		//the player will rise
+ 		this->player.Initialize(device, deviceContext, "sphere1","projectile", true, &this->playerSubject);
+		this->playerProjectile.Initialize(device, this->m_deviceContext);
+		
 		//Form thy armies from the clay!
 		this->m_car = Model();
 		this->m_ball = Model();
-		bool modelResult = this->m_car.Initialize(device, this->m_deviceContext, "carSLS3");
+
+		bool modelResult = this->m_ball.Initialize(device, this->m_deviceContext, "projectile");
 		if (!modelResult) {
 			return false;
 		}
-		modelResult = this->m_ball.Initialize(device, this->m_deviceContext, "sphere1");
+		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere1");
 		if (!modelResult) {
 			return false;
 		}
 
-		//Colour thy armies in the name of the racist overlord Axel!
-		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-		this->m_ball.SetColor(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-
-		//Arm thy armies!
-		//creates the enemies must call setModel function to give enemies models
-		this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
-
-		//this->enemies.push_back(new MeleeEnemy(0.0f, 0.0f));
-		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
 		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
-		// 
-		//this->enemies.push_back(new RangedEnemy(0.0f, 0.0f));
-		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+		//this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
+		 
+		this->enemies.push_back(new RangedEnemy(0.0f, 20.0f));
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
 		//this->enemies.push_back(new BomberEnemy(0.0f, 0.0f));
-		//      this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, true);
+        //this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &enemySubject, true);
 
-		this->ability1 = new ArcFire();
-		this->ability2 = new SplitFire();
-		this->ability3 = new ReverseFire();
-
+		//ze powerups
+		this->spreadPower.Initialize(device, deviceContext, "sphere1", true, &this->powerUpSubject);
+		this->spreadPower.GetModel()->SetColor(XMFLOAT3(0, 0, 255));
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
 		this->m_ground = Model();
 
-		result = this->m_ground.Initialize(device, deviceContext, "ground");
+		result = this->m_ground.Initialize(device, deviceContext, "testMap");
 		if (!result) {
 			return false;
 		}
-		this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
+		//this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
 
 		DirectX::XMMATRIX worldMatrix;
-		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-		this->m_ground.SetWorldMatrix(worldMatrix);
+		/*worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
+		this->m_ground.SetWorldMatrix(worldMatrix);*/
 		worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
 		worldMatrix *= DirectX::XMMatrixTranslation(0.0f, -3.5f, 2.0f);
 		this->m_car.SetWorldMatrix(worldMatrix);
+
+		PointLight light;
+		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
+		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
+		this->pointLights.push_back(light);
+
+		light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
+		this->pointLights.push_back(light);
+
+		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
+		this->pointLights.push_back(light);
+
+		if (!result) {
+			return false;
+		}
 
 	}
 
@@ -164,13 +195,31 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
+	if (input->isKeyPressed(DIK_1))
+	{
+	    //how do I update this shiet
+		Entity* ptr = &this->player;
+		this->player.GetEntitySubject()->Notify(ptr, Events::PICKUP::POWERUP_PICKUP);
+	}
 
 	return result;
 }
 
-int StageState::Update(float deltaTime)
+int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
 	int result = 1;
+	//sends the enemies vector to the m_AI for updating playerPos is the temporary pos that the enemies will go to
+	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0));
+    this->enemyPjHandler.Update(deltaTime);
+	
+	this->playerProjectile.Update(deltaTime);
+	this->player.Update(input, gHandler, &this->myCamera);
+
+	XMFLOAT3 playerPos = this->player.GetPosition();
+	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
+	this->m_AI.updateActors(this->enemies, playerPos);
+	XMFLOAT3 enemyPos = this->enemies.at(0)->GetPosition();
+	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
 	if (this->exitStage)
 	{
@@ -185,28 +234,15 @@ int StageState::Update(float deltaTime)
 		}
 	}
 
-	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
+	for (int i = 0; i < this->enemies.size(); i++) {
 
-	/*this->camPosX += deltaTime / 100000;
-
-	if (this->camPosX > 30) {
-	this->camPosX = -30.0f;
-	this->camPosZ = 0.0f;
-	this->inc = true;
-	}
-	if (this->camPosX > 0) {
-	this->inc = false;
-	}
-	if (this->inc && this->camPosZ > -30.0f) {
-	this->camPosZ -= deltaTime / 100000;
-	}
-	else if(!this->inc && this->camPosZ < 0.0f) {
-	this->camPosZ += deltaTime / 100000;
-
+		if (this->player.GetBV()->Intersect(this->enemies.at(i)->GetBV())) {
+			int j = 0;
+		}
 	}
 
-	this->myCamera.SetCameraPos(DirectX::XMFLOAT3(this->camPosX, 4.0f, this->camPosZ));
-	this->myCamera.UpdateCamera();*/
+	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+	this->pointLights.at(2).Position = XMFLOAT4(enemyPos.x, 1.0f, enemyPos.z, 1.0f);
 
 	return result;
 }
@@ -214,49 +250,127 @@ int StageState::Update(float deltaTime)
 int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
+    XMFLOAT3 pos;
+    DirectX::XMMATRIX worldMatrix;
 
 	//Render models
+
+	//Player and weapon render
+	gHandler->DeferredRender(this->player.GetModel(), &this->myCamera);
+	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		XMFLOAT3 pos = this->enemies.at(i)->getPosition();
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		pos = this->enemies.at(i)->GetPosition();
+		
+		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
-		gHandler->DeferredRender(this->enemies.at(i)->getModel(), &this->myCamera);
+
+		gHandler->DeferredRender(this->enemies.at(i)->GetModel(), &this->myCamera);
+
 	}
-	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
 
-	//Set deferred render targets
+	//render shots
+	this->playerProjectile.Render(gHandler, &this->myCamera);
 
-	for (int i = 0; i < this->projectiles.size(); i++)
-	{
-		XMFLOAT3 pos = this->projectiles.at(i)->getPosition();
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_ball.SetWorldMatrix(worldMatrix);
-
-		gHandler->DeferredRender(this->projectiles.at(i)->getModel(), &this->myCamera);
-	}
-	XMFLOAT3 pos;
-	DirectX::XMMATRIX worldMatrix;
-	/*pos = this->test->getPosition();
-	worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-	this->m_ball.SetWorldMatrix(worldMatrix);
-
-	gHandler->DeferredRender(this->test->getModel(), &this->myCamera);*/
-
-	//this->graphicH->DeferredRender(this->m_car, this->cameraH);
+    this->enemyPjHandler.Render(gHandler, &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
 
-	//shadowMap
+
+	//renderPowerups
+ 	pos = this->spreadPower.GetPosition();
+
+	pos.x += 15;
+	pos.z += 15;
+
+	worldMatrix = DirectX::XMMatrixTranslation(pos.x, 0.f, pos.z);
+	this->spreadPower.GetModel()->SetWorldMatrix(worldMatrix);
+
+	//render that shiet
+	gHandler->DeferredRender(this->spreadPower.GetModel(), &this->myCamera);
+
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		gHandler->ShadowRender(this->enemies[i]->getModel(), &this->myCamera);
+		gHandler->ShadowRender(this->enemies[i]->GetModel(), &this->myCamera);
 	}
 
-	gHandler->LightRender(this->myCamera.GetCameraPos());
+	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
+	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+
+	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
 	return result;
+}
+
+void StageState::ReadFile()
+{
+    string line;
+    ifstream myFile("Stage Spawn Pattern.txt");
+
+    if (myFile.is_open())
+    {
+        getline(myFile, line);
+        while (line.at(0) != ' ')
+        {
+            Level waveTemp;
+            //getline(myFile, line);
+            string waveLenght = "";
+            string enemyType = "";
+            string nrOfEnemies = "";
+
+
+            if (line.at(0) == 't')
+            {
+                size_t start = 1;
+                size_t end = line.find("}");
+                waveLenght = line.substr(start, end - 1);
+            }
+            std::stringstream ss(waveLenght);
+            ss >> waveTemp.time;
+            this->waves.push_back(waveTemp);
+
+            getline(myFile, line);
+            for (int i = 0; i < 4; i++)
+            {
+                Wave temp;
+                if (line.at(1) == '}')
+                {
+                    enemyType = "";
+                    nrOfEnemies = "00";
+                }
+                else if (line.at(0) == '{')
+                {
+                    size_t start = 1;
+                    size_t end = line.find("*");
+                    enemyType = line.substr(start, end - 1);
+
+                    size_t start2 = end + 1;
+                    size_t end2 = line.find("}");
+                    nrOfEnemies = line.substr(start2, end2 - 1);
+                }
+
+
+                temp.type = enemyType;
+
+                nrOfEnemies.pop_back();
+                std::stringstream ss2(nrOfEnemies);
+                ss2 >> temp.amount;
+                getline(myFile, line);
+
+                //this->wave.push_back(temp);
+                this->waves.at(this->waves.size() - 1).toSpawn.push_back(temp);
+            }
+
+        }
+
+    }
+}
+
+void StageState::SpawnWave()
+{
+
 }

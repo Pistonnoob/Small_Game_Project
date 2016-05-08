@@ -62,7 +62,7 @@ float4 main(PSInput input) : SV_TARGET
 	//float4 lightPos = (10.0f, 10.0f, 0.0f, 1.0f);
 
 	// Set the bias value for fixing the floating point precision issues.
-	float bias = 0.00005f;
+	float bias = 0.00002f;
 
 	//Sample the diffuse texture from deferred render
 	diffColor = diffTexture.Sample(pointSampler, textCoords);
@@ -78,7 +78,6 @@ float4 main(PSInput input) : SV_TARGET
 	
 	//Sample the texture with positions in world space from deferred render
 	worldPos = worldPosTexture.Sample(pointSampler, textCoords);
-
 
 	float3 outVec = normalize(-Position[0]);
 
@@ -135,10 +134,10 @@ float4 main(PSInput input) : SV_TARGET
 	float4 specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
 	outputColor = saturate(((diffColor.rgba * Diffuse[0]) + (specular.rgba * Specular[0])) * lightIntensity);
-	outputAmbient = saturate((ambientColor.rgba * Ambient[0]));
+	outputAmbient = ((ambientColor.rgba * Ambient[0]));
 
 	for (int i = 1; i <= activeLights; i++) {
-		outputAmbient += ambientColor.rgba * Ambient[i];
+		outputAmbient += saturate(ambientColor.rgba * Ambient[i]);
 		//Create the normalized vector from position to light source
 		outVec = Position[i].xyz - (worldPos).xyz;
 		float distToLight = length(outVec);
@@ -153,7 +152,7 @@ float4 main(PSInput input) : SV_TARGET
 			//Calculate the specular part
 			specular = float4(specColor.rgb * lightSpecular * max(pow(specIntesity, shineFactor), 0.0f), 1.0f);
 
-			lightIntensity = dot(normal, outVec);
+			lightIntensity = saturate(dot(normal, outVec));
 			if (lightIntensity < 0) {
 				lightIntensity = 0;
 			}

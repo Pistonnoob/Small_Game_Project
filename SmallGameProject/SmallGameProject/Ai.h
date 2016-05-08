@@ -5,6 +5,7 @@
 #include "MoveRightCommand.h"
 #include "MoveDownCommand.h"
 #include "MoveUpCommand.h"
+#include "FireCommand.h"
 #include "BomberEnemy.h"
 #include "MeleeEnemy.h"
 #include "RangedEnemy.h"
@@ -14,8 +15,8 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
-static int RANGED_MIN_DESIRED_DISTANCE = 200;
-static int RANGED_MAX_DESIRED_DISTANCE = 250;
+static int RANGED_MIN_DESIRED_DISTANCE = 100;
+static int RANGED_MAX_DESIRED_DISTANCE = 500;
 
 static int MELEE_MIN_DESIRED_DISTANCE = 11;
 static int MELEE_MAX_DESIRED_DISTANCE = 15;

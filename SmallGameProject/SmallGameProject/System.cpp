@@ -6,11 +6,12 @@ System::System()
 	this->graphicH = nullptr;
 	this->inputH = nullptr;
 	this->cameraH = nullptr;
+	this->gameData = nullptr;
 }
 
 System::~System()
 {
-	this->Shutdown();
+
 }
 
 bool System::Initialize()
@@ -51,7 +52,10 @@ bool System::Initialize()
 	//Initialize the GameStateHandler
 	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
 
-	this->testRot = 0;
+	//initialize the gameData singleton
+  	this->gameData = GameData::GetInstance();
+
+   	this->testRot = 0;
 
 	return true;
 }
@@ -130,7 +134,11 @@ void System::Shutdown()
 		delete this->gameSH;
 		this->gameSH = nullptr;
 	}
-
+	//shutdown the gameData
+	if (this->gameData)
+	{
+		this->gameData->Shutdown();
+	}
 	//Shutdown the window
 	ShutdownWindow();
 }
@@ -249,6 +257,8 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	start = std::chrono::system_clock::now();
 	bool result = true;
 	this->inputH->Update();
 
@@ -258,20 +268,23 @@ bool System::Update(float dTime)
 
 	this->gameSH->HandleInput(this->inputH);
 
-	int runGame = this->gameSH->Update(dTime);
+	int runGame = this->gameSH->Update(dTime, this->inputH, this->graphicH);
 	if (runGame < 1)
 		result = false;
-
+	
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
-	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 2.0f);
+	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 1.0f);
 
 	//Update models world matrices
 	this->testRot += dTime / 1000000;
     this->testRot = 3.14;
 
     DirectX::XMFLOAT3 cameraPos = DirectX::XMFLOAT3(this->cameraH->GetCameraPos().x, this->cameraH->GetCameraPos().y, this->cameraH->GetCameraPos().z);
-    
+
+	end = std::chrono::system_clock::now();
+	std::chrono::duration<double> elaspedTime = end - start;
+	start = std::chrono::system_clock::now();
 
 	//Clear the render target views
 	this->graphicH->ClearRTVs();
@@ -282,6 +295,10 @@ bool System::Update(float dTime)
 	this->graphicH->TextRender();
 
 	this->graphicH->PresentScene();
+
+	end = std::chrono::system_clock::now();
+
+	std::chrono::duration<double> elaspedTimeRender = end - start;
 
 	return result;
 }

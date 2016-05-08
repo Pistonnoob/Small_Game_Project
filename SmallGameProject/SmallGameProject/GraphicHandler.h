@@ -39,7 +39,6 @@ protected:
 	DirectX::XMMATRIX baseViewMatrix;
 
 	DirectionalLight dirLight;
-	std::vector<PointLight> pointLights;
 
 	int activeRTV;
 
@@ -53,6 +52,7 @@ private:
 	DirectX::XMMATRIX lightView;
 
 	DirectX::XMFLOAT4 lightPos;
+
 public:
 	GraphicHandler();
 	virtual ~GraphicHandler();
@@ -61,8 +61,7 @@ public:
 	
 	void DeferredRender(Model* model, CameraHandler* camera);
 
-	
-	void LightRender(DirectX::XMFLOAT4 camPos);
+	void LightRender(DirectX::XMFLOAT4 camPos, std::vector<PointLight> pointLights);
 	void ParticleRender(ParticleShaderParameters* shaderParams, CameraHandler* camera, int amountOfParticles);
 	void ShadowRender(Model* model, CameraHandler* camera);
 
@@ -77,12 +76,16 @@ public:
 	ID3D11DeviceContext* GetDeviceContext();
 
 	int CreateTextHolder(int maxLength);
+
 	bool UpdateTextHolder(int id, const std::string& text, int posX, int posY, const DirectX::XMFLOAT3& color, float size);
 
 	void SetDirectionalLight(DirectionalLight light);
-	void AddPointLight(PointLight light);
-	void RemovePointLight(int index);
-	void RemoveAllPointLights();
+
+	DirectX::XMMATRIX GetPerspectiveMatrix();
+	DirectX::XMMATRIX GetOrthograpicMatrix();
+
+	int GetScreenWidth();
+	int GetScreenHeight();
 };
 
 #endif

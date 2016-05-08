@@ -2,11 +2,13 @@
 #define SYSTEM_H
 
 #include <Windows.h>
+#include <chrono>
 #include "GameStateHandler.h"
 #include "GraphicHandler.h"
 #include "InputHandler.h"
 #include "Model.h"
 #include "CameraHandler.h"
+#include "GameData.h"
 
 const bool FULL_SCREEN = false;
 
@@ -21,6 +23,9 @@ private:
 	GraphicHandler* graphicH;
 	InputHandler* inputH;
 	CameraHandler* cameraH;
+
+	//gameData singelton, keeps track of all the game progression
+	GameData* gameData;
 
 	void InitWindow(int& screenWidth, int& screenHeight);
 	void ShutdownWindow();

@@ -2,29 +2,40 @@
 #define WEAPON_H
 
 #include "Model.h"
+#include "Modifiers.h"
+#include <string>
+#include "Entity.h"
+
 
 class Weapon {
 
 private:
-	Model* weapondModel;
+	std::string name;
 
-	
-	static const int nrOfModifiers = 3;
-	//Health, MovmentSpeed, Damage
-	float modifyers[nrOfModifiers];
+	float attackDamage;
+	float playerSpeed;
+	float attackSpeed;
 
+	Model* weaponModel;
 public:
 	Weapon();
-	Weapon(float Hp, float MS, float Dmg);
+	Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed);
+
 	~Weapon();
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string objFilename);
-	void ShutDown();
+	virtual void ShutDown();
 
-	const Model* GetModel();
-	const int GetNrOFModifiers();
-	const float* GetModifiers();
+	Model* GetModel();
 
+
+	float GetAttackDamageMod() const;
+	float GetAttackSpeedMod() const;
+	float GetPlayerSpeedMod() const;
+
+	void ShootWeapon(Entity* entity);
 };
+
+
 
 #endif
