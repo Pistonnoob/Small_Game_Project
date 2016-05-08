@@ -14,6 +14,7 @@ protected:	//Variables
 
 	DirectX::XMMATRIX world;
 	float accumulatedTime;
+	float emitterTime;
 
 	int currentParticleCnt;
 	int maxParticles;
@@ -27,6 +28,7 @@ protected:	//Variables
 	DirectX::XMFLOAT3 cameraPos;
 
 	VertexType* vertices;
+	bool isCompleted;
 public:
 	ParticleEmitter();
 	virtual ~ParticleEmitter();
@@ -46,6 +48,7 @@ public:
 	virtual void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles) = 0;
 	virtual bool SortParticles() = 0;
 
+	virtual bool IsCompleted();
 protected:	//Functions
 	virtual bool InitializeBuffers(ID3D11Device* device);
 

@@ -5,11 +5,13 @@
 ParticleEmitter::ParticleEmitter()
 {
 	this->accumulatedTime = 0.0f;
+	this->emitterTime = 1.0f;
 	this->cameraPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	this->currentParticleCnt = 0;
 	this->maxParticles = 0;
 	this->texture = nullptr;
 	this->world = DirectX::XMMatrixIdentity();
+	this->isCompleted = false;
 
 
 	this->indexCount = this->vertexCount = 0;
@@ -91,12 +93,18 @@ bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)
 {
 	// Increment the frame time.
 	this->accumulatedTime += dT;
+	this->emitterTime -= dT / 1000000;
 	return this->UpdateSpecific(dT, deviceContext);
 }
 
 bool ParticleEmitter::distanceToCamera(float x, float y, float z)
 {
 	return false;
+}
+
+bool ParticleEmitter::IsCompleted()
+{
+	return this->isCompleted || this->emitterTime <= 0;
 }
 
 bool ParticleEmitter::InitializeBuffers(ID3D11Device * device)
