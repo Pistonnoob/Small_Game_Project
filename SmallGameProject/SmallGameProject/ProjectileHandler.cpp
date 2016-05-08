@@ -34,14 +34,15 @@ void ProjectileHandler::Update(float deltaTime)
 {
 	for (int i = 0; i < this->projectiles.size(); i++)
 	{
-        this->projectiles.at(i)->update(deltaTime);
-        DirectX::XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
+		Projectile* temp = this->projectiles.at(i);
+		temp->update(deltaTime);
+        DirectX::XMFLOAT3 pos = temp->GetPosition();
         if (pos.x < -100 || pos.x > 100 || pos.z < -100 || pos.z > 100)
         {
-            Projectile* temp = this->projectiles.at(i);
+            //Projectile* temp = this->projectiles.at(i);
             temp->Shutdown();
             delete temp;
-            this->projectiles.at(i) = nullptr;
+            //this->projectiles.at(i) = nullptr;
             this->projectiles.erase(projectiles.begin() + i);
             i--;
 			for (int a = 0; a < this->eventsToTrack.size(); a++)

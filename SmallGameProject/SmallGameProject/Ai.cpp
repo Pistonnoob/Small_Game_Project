@@ -71,7 +71,7 @@ void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos, float del
     {
         moveToPlayer(actor, playerPos);
     }
-	if (distance < 10.0f)
+	if (distance < 250.0f)
 	{
 		bool canExlpode = actor->ChargeExplosion(deltaTime);
 		if (canExlpode == true)

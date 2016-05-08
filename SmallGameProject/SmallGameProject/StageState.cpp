@@ -198,16 +198,16 @@ int StageState::HandleInput(InputHandler * input)
 		this->player.GetEntitySubject()->Notify(ptr, Events::PICKUP::POWERUP_PICKUP);
 	}
 	if (input->isKeyDown(DIK_W)) {
-		this->player.MoveUp(0.5f);
+		this->player.MoveUp(0.01f);
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->player.MoveDown(0.5f);
+		this->player.MoveDown(0.01f);
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->player.MoveRight(0.5f);
+		this->player.MoveRight(0.01f);
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->player.MoveLeft(0.5f);
+		this->player.MoveLeft(0.01f);
 
 	}
 
@@ -224,7 +224,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
     RemoveDeadEnemies();
  
-	this->m_AI.updateActors(this->enemies, DirectX::XMFLOAT3(0,0,0), newDT);
+	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
     this->enemyPjHandler.Update(newDT);
 
 	this->playerProjectile.Update(deltaTime);
@@ -526,8 +526,12 @@ Type StageState::ConvertToEnemyType(string type)
 	{
 		return Type::MELEEE;
 	}
-	else
+	else if(type == "BOSS")
 	{
 		return Type::BOSS;
+	}
+	else
+	{
+		return Type::NONE;
 	}
 }
