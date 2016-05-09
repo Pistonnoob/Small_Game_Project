@@ -145,6 +145,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//ze powerups
 		this->spreadPower.Initialize(device, deviceContext, "sphere1", true, &this->powerUpSubject);
 		this->spreadPower.GetModel()->SetColor(XMFLOAT3(0, 0, 255));
+		this->spreadPower.SetPosition(20, 20);
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -242,7 +243,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 //>>>>>>> beforeMemLeak
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
-
+	this->spreadPower.Update(deltaTime);
 
 	if (this->exitStage)
 	{
@@ -267,6 +268,15 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
  			int j = 0;
 		}
+	}
+
+	if (spreadPower.GetBV()->Intersect(this->player.GetBV()))
+	{
+		//this->player.GetEntitySubject().Notify(this, Events::PICKUP::POWERUP_PICKUP);
+		EntitySubject* playeruSubu = nullptr;
+		playeruSubu = this->player.GetEntitySubject();
+
+		playeruSubu->Notify(static_cast<Entity*>(&this->player), Events::PICKUP::POWERUP_PICKUP);
 	}
 
 	XMFLOAT3 playerPos = this->player.GetPosition();

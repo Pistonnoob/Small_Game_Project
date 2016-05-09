@@ -13,7 +13,7 @@ public:
 	float getTimeLeft() const;
 	void setTimePowerup(float timeActive);
 
-	bool Update(float dt);
+	virtual bool Update(float dt);
 };
 
 #endif
