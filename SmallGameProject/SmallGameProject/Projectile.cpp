@@ -1,11 +1,12 @@
 #include "Projectile.h"
 
-Projectile::Projectile() : Entity()
+Projectile::Projectile(unsigned int damage) : Entity()
 {
     this->posX = 0;
     this->posZ = 0;
     this->origin = DirectX::XMFLOAT3(0, 0, 0);
     this->moveDir = DirectX::XMFLOAT3(0, 0, 0);
+	this->damage = damage;
 }
 Projectile::~Projectile()
 {
@@ -49,4 +50,9 @@ DirectX::XMFLOAT3 Projectile::getPos()
 {
     DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(this->posX, 0, this->posZ);
     return pos;
+}
+
+unsigned int Projectile::GetDamage()
+{
+	return this->damage;
 }

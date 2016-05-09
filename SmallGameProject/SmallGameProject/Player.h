@@ -15,9 +15,7 @@ class Player : public Actor {
 private:
 	DirectX::XMVECTOR forwardDir;
 
-	int playerHealth;
 	int playerMovmentSpeed;
-	int playerDamage;
 	int playerHighScore;
 
 	std::vector<PowerUp>powerups;

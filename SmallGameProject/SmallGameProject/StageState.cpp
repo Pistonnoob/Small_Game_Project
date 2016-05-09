@@ -220,16 +220,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	int result = 1;
 
 	float newDT = deltaTime / 1000000;
-	
-/*<<<<<<< HEAD
-	this->playerProjectile.Update(deltaTime);
-	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
-	XMFLOAT3 playerPos = this->player.GetPosition();
-	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
-	this->m_AI.updateActors(this->enemies, playerPos);
-	XMFLOAT3 enemyPos = this->enemies.at(0)->GetPosition();
-=======*/
     HandleWaveSpawning(newDT);
 
     RemoveDeadEnemies();
@@ -240,7 +231,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->playerProjectile.Update(newDT);
 	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
-//>>>>>>> beforeMemLeak
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
 
@@ -257,22 +247,32 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
+	//Player - projectile intersection
 	if (this->enemyPjHandler.IntersectionTest(&this->player)) {
-		int j = 0;
-		this->exitStage = true;
+		
+		if (!this->player.IsAlive()) {
+			this->exitStage = true;
+		}
 	}
 
+	//Enemy - projectile intersection
+	for (auto enemy : this->enemies) {
+		if (this->playerProjectile.IntersectionTest(enemy)) {
+			int j = 0;
+		}
+	}
+	
+	//Enemy - Player intersection
 	for (auto enemy : this->enemies) {
 
 		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
- 			int j = 0;
+ 			int j = 0; 
 		}
 	}
 
 	XMFLOAT3 playerPos = this->player.GetPosition();
-	XMFLOAT3 enemyPos = this->enemies.at(0)->GetPosition();
 	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
-	this->pointLights.at(2).Position = XMFLOAT4(enemyPos.x, 1.0f, enemyPos.z, 1.0f);
+
 
 	return result;
 }
@@ -323,7 +323,6 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		pos = this->enemies.at(i)->GetPosition();
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
@@ -519,7 +518,7 @@ void StageState::RemoveDeadEnemies()
 {
     for (int i = 0; i < this->enemies.size(); i++)
     {
-        if (!this->enemies.at(i)->GetIsAlive())
+        if (!(this->enemies.at(i)->IsAlive()))
         {
             this->enemies.at(i)->Shutdown();
             delete this->enemies.at(i);
