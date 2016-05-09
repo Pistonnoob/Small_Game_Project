@@ -204,6 +204,7 @@
     <ClCompile Include="TestState.cpp" />
     <ClCompile Include="TextHandler.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +268,7 @@
     <ClInclude Include="TestState.h" />
     <ClInclude Include="TextHandler.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="UIElement.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>

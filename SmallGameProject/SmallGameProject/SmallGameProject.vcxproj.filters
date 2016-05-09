@@ -258,6 +258,9 @@
     <ClCompile Include="Boss.cpp">
       <Filter>Source Files\Entities\Actors\Boss</Filter>
     </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -449,6 +452,9 @@
     <ClInclude Include="Boss.h">
       <Filter>Header Files\Entities\Actors\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredVertexShader.hlsl">
@@ -464,9 +470,6 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="LightPixelShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowMapVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="FontVertexShader.hlsl">
