@@ -19,12 +19,14 @@ StageState::StageState()
 	this->enemySubject = EntitySubject();
     this->enemyPjHandler = ProjectileHandler();
 	this->enemySubject.AddObserver(&this->enemyPjHandler);
+	this->enemySubject.AddObserver(&this->myParticleHandler);
 
 	this->playerSubject = EntitySubject();
 	this->playerProjectile = ProjectileHandler();
 
 	this->playerSubject.AddObserver(&this->playerProjectile);
 	this->playerSubject.AddObserver(GameData::GetInstance());
+	this->playerSubject.AddObserver(&this->myParticleHandler);
 	
 	this->exitStage = false;
 
@@ -94,6 +96,10 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 	if (result)
 	{
+		//Pull down the visor of epic particle effects
+		//A visor is the moving part of a helmet, namely the part that protects the eyes
+		this->myParticleHandler.Initialize(device, deviceContext);
+
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
 		float zoomIn = 1.0f / 6.0f;
@@ -110,9 +116,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (cameraResult)
 			result = 1;
 
-		//Pull down the visor of epic particle effects
-		//A visor is the moving part of a helmet, namely the part that protects the eyes
-		this->myParticleHandler.Initialize(device, deviceContext);
+		
 
 		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();

@@ -25,6 +25,7 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere, entitySub)) {
 		return false;
 	}
+	this->entitySubject->Notify(this, Events::PLAYER_CREATED);
 	this->playerWeapon = new Weapon();
 	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
 		return false;
