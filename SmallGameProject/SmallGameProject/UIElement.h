@@ -33,7 +33,7 @@ public:
 	UIElement();
 	~UIElement();
 
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int posX, int posY, std::string& textureMtl, int nrOfTextures, bool clickAble);
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int posX, int posY, std::string textureMtl, int nrOfTextures, bool clickAble);
 	void Render(ID3D11DeviceContext* deviceContext);
 	void Shutdown();
 

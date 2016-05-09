@@ -56,8 +56,6 @@ int StartState::Initialize(GraphicHandler* gHandler, GameStateHandler* GSH)
 		this->pointLights.push_back(light);
 	}
 
-	
-
 	return result;
 }
 

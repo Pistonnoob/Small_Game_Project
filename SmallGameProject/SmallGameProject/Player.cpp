@@ -12,7 +12,6 @@ Player::Player() : Actor()
 	//Initiliaze the forward vecktor as 0,0,1
 	this->forwardDir = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0, 0, 1));
 	this->playerWeapon = nullptr;
-	this->uiHandler = UIHandler();
 }
 
 Player::~Player()
@@ -68,8 +67,6 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 
 	//give the player model its new 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
-
-	this->uiHandler.Initialize(graphicsH);
 
 	return true;
 }

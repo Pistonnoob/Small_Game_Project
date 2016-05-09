@@ -15,6 +15,7 @@ StageState::StageState()
 	this->m_ground = Model();
 	this->m_AI = Ai();
 	this->player = Player();
+	this->uiHandler = UIHandler();
 
 	this->enemySubject = EntitySubject();
     this->enemyPjHandler = ProjectileHandler();
@@ -31,9 +32,7 @@ StageState::StageState()
 	this->spreadPower = PowerUp();
 	this->powerUpSubject = EntitySubject();
 
-	this->camPosX = -30.0f;
-	this->camPosZ = 0.0f;
-	this->inc = true;
+	this->renderUI = false;
 }
 
 
@@ -55,6 +54,7 @@ void StageState::Shutdown()
 	this->playerProjectile.ShutDown();
 	
 	this->player.Shutdown();
+	this->uiHandler.Shutdown();
 
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
@@ -184,6 +184,10 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		light.Position = DirectX::XMFLOAT4(15.0f, 1.0f, 15.0f, 1.0f);
 		this->pointLights.push_back(light);
 
+		this->uiHandler.Initialize(gHandler);
+
+		this->uiHandler.AddElement(100, 100, 100, 100, "testUI.mtl", 1, false);
+
 		if (!result) {
 			return false;
 		}
@@ -202,7 +206,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
         SpawnWave(this->currentLevel, this->currentWave);
 	}
 
-
 	return result;
 }
 
@@ -212,6 +215,13 @@ int StageState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
+
+	if (input->isKeyPressed(DIK_U)) {
+		if (this->renderUI)
+			this->renderUI = false;
+		else
+			this->renderUI = true;
+	}
 
 	return result;
 }
@@ -337,6 +347,9 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
+
+	if (this->renderUI)
+		this->uiHandler.Render();
 
 	return result;
 }

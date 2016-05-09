@@ -63,9 +63,13 @@ void UIHandler::Shutdown()
 	for (auto element : this->elements) {
 		element.Shutdown();
 	}
+
+	this->UIShaderH.Shutdown();
+
+	this->device->Release();
 }
 
-int UIHandler::AddElement(int width, int height, int posX, int posY, std::string & textureMtl, int nrOfTextures, bool isButton)
+int UIHandler::AddElement(int width, int height, int posX, int posY, std::string textureMtl, int nrOfTextures, bool isButton)
 {
 	UIElement temp = UIElement();
 	bool result = temp.Initialize(this->device, this->deviceContext, width, height, posX, posY, textureMtl, nrOfTextures, isButton);

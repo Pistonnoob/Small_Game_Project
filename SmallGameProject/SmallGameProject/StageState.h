@@ -64,12 +64,12 @@ private:	//Variables
 	
 	ParticleHandler myParticleHandler;
 
+	UIHandler uiHandler;
+
     float t;
 	bool exitStage;
 
-	float camPosX;
-	float camPosZ;
-	bool inc;
+	bool renderUI;
 public:
 	StageState();
 	virtual ~StageState();

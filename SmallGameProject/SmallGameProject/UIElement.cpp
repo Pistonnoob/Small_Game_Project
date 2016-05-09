@@ -22,7 +22,7 @@ UIElement::~UIElement()
 {
 }
 
-bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int posX, int posY, std::string& textureMtl, int nrOfTextures, bool clickAble)
+bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int posX, int posY, std::string textureMtl, int nrOfTextures, bool clickAble)
 {
 	VertexSimple vertices[6];
 	unsigned long indices[6];
@@ -121,6 +121,14 @@ bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 		return false;
 	}
 
+	if (!this->texture.Initialize(device, deviceContext, textureMtl)) {
+		return false;
+	}
+
+	this->clickAble = clickAble;
+	this->nrOfTextures = nrOfTextures;
+	this->activeTexture = 0;
+
 	return true;
 }
 
@@ -158,6 +166,8 @@ void UIElement::Shutdown()
 		this->vertexBuffer->Release();
 		this->vertexBuffer = nullptr;
 	}
+
+	this->texture.Shutdown();
 
 	return;
 }

@@ -30,7 +30,7 @@ public:
 	void Render();
 	void Shutdown();
 
-	int AddElement(int width, int height, int posX, int posY, std::string& textureMtl, int nrOfTextures, bool isButton = false);
+	int AddElement(int width, int height, int posX, int posY, std::string textureMtl, int nrOfTextures, bool isButton = false);
 	int UpdateElement(int elementIndex, int posX = -1, int posY = -1, int textureIndex = -1);
 	int RemoveElement(int elementIndex);
 

@@ -25,8 +25,6 @@ private:
 
 	Weapon* playerWeapon;
 
-	UIHandler uiHandler;
-
 public:
 	Player();
 	~Player();

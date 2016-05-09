@@ -64,7 +64,6 @@ int MenuState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 	}
 
-	
 	return result;
 }
 
