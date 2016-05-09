@@ -1,9 +1,11 @@
 #include "PowerUp.h"
 
-PowerUp::PowerUp() : Entity()
+PowerUp::PowerUp(Events::UNIQUE_FIRE type) : Entity()
 {
 	this->posX = 0;
 	this->posZ = 0;
+
+	this->type = type;
 }
 
 PowerUp::~PowerUp()
@@ -11,37 +13,41 @@ PowerUp::~PowerUp()
 
 }
 
-float PowerUp::getTimeLeft() const
+float PowerUp::GetTimeLeft() const
 {
 	return this->timeLeft;
 }
 
-void PowerUp::setTimePowerup(float timeActive)
+void PowerUp::SetTimePowerup(float timeActive)
 {
 	this->timeLeft = timeActive;
 }
 
+Events::UNIQUE_FIRE PowerUp::GetType() const
+{
+	return this->type;
+}
+
 bool PowerUp::Update(float dt)
 {
-	/*
+	
 	//this->HandleInput(input, deltaTime);
 
-	DirectX::XMMATRIX playerWorldMatrix;
-	this->entityModel->GetWorldMatrix(playerWorldMatrix);
+	DirectX::XMMATRIX powerUpMatrix = DirectX::XMMATRIX();
+	this->entityModel->GetWorldMatrix(powerUpMatrix);
 
 	//Initial offset
 	DirectX::XMMATRIX offset = DirectX::XMMatrixTranslation(this->posX, 0, this->posZ);
 	//create the new world matrix
-	playerWorldMatrix = offset;
+	powerUpMatrix = offset;
 
 	//Set the model matrix
-	this->entityModel->SetWorldMatrix(playerWorldMatrix);
+	this->entityModel->SetWorldMatrix(powerUpMatrix);
 
 	//Update the bounding box pos and rotation
-	this->entityModel->GetWorldMatrix(playerWorldMatrix);
-	this->entityBV->UpdateBoundingVolume(playerWorldMatrix);
+	this->entityModel->GetWorldMatrix(powerUpMatrix);
+	this->entityBV->UpdateBoundingVolume(powerUpMatrix);
 
-	*/
 	float convTime = dt / 1000000;
 	bool activePow = true;
 	//dt är förgången tid per frame
@@ -51,6 +57,6 @@ bool PowerUp::Update(float dt)
 	{
 		activePow = false;
 	}
+
 	return activePow;
-	
 }

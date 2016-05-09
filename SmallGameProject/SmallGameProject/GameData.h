@@ -9,12 +9,14 @@
 #include <vector> 
 #include "Player.h"
 #include "GameState.h"
+#include <list>
 
 class GameData : public Observer
 {
 private:
 	static bool isInstatiated;	//Check flag
 	static GameData* single;
+	static int nrOfActivePowerups;
 
 	GameData(GameData const&);
 	int playerHighScore;
@@ -27,14 +29,22 @@ private:
 
 	//weapom related
 	std::vector<Weapon>weaponArsenal;
+	static std::list<PowerUp*>powerupArsenal;
+
 	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
 public:
 	virtual ~GameData();
 
 	static GameData* GetInstance();
+	static void SpawnRandomPowerup();
 
 	void Shutdown();
-	void Update(float deltaTime);
+	static void Update(float deltaTime);
+	static std::list<PowerUp*> getPowerup();
+
+	static void unlockPowerUp(Events::UNIQUE_FIRE newPower);
+
+	int static getNrOfActivePowerups();
 
 	void OnNotify(Entity* entity, Events::ENTITY evnt);
 	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);

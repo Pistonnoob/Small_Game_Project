@@ -9,6 +9,7 @@
 #include "PowerUp.h"
 #include <vector>
 #include "Modifiers.h"
+#include "GameData.h"
 
 class Player : public Actor {
 
@@ -20,7 +21,7 @@ private:
 	int playerDamage;
 	int playerHighScore;
 
-	std::vector<PowerUp>powerups;
+	//std::vector<PowerUp>powerups;
 
 	Weapon* playerWeapon;
 
@@ -37,7 +38,7 @@ public:
 	Weapon* GetPlayerWeapon();
 	void PowerPickup(const int &POWER_ENUM);
 
-	void SetPowerUp(Modifiers::POWERUPS powerUp);
+	//void SetPowerUp(Modifiers::POWERUPS powerUp);
 	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime);
 
 	Weapon* GetWeapon();
@@ -48,8 +49,8 @@ public:
 	virtual void MoveDown(float deltaTime);
 	virtual void Move(DirectX::XMFLOAT3 moveVec);
 
+	//virtual void Fire(float deltaT, PowerUp powerUp, Events::UNIQUE_FIRE shootType);
 	virtual void Fire(float deltaT);
-	virtual void Fire();
 
 	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
 };

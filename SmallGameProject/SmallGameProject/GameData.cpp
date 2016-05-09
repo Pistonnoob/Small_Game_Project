@@ -2,6 +2,10 @@
 
 bool GameData::isInstatiated = false;
 
+int GameData::nrOfActivePowerups = 0;
+
+std::list<PowerUp*> GameData::powerupArsenal = list<PowerUp*>();
+
 GameData* GameData::single = nullptr;
 
 GameData::GameData(GameData const &) : Observer()
@@ -19,6 +23,8 @@ GameData::GameData(GameData const &) : Observer()
 	weaponArsenal.push_back(Weapon(15, 10, 5));
 	//uzi
 	weaponArsenal.push_back(Weapon(5, 10, 15));
+
+	//initialize start powerup, this does in the stageState initialize
 
 	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
 		playerUnlockedWeapons[i] = false;
@@ -46,6 +52,11 @@ GameData* GameData::GetInstance()
 	return single;
 }
 
+void GameData::SpawnRandomPowerup()
+{
+	GameData::powerupArsenal.front()->SetTimePowerup(10);
+}
+
 void GameData::Shutdown()
 {
 	
@@ -57,11 +68,47 @@ void GameData::Shutdown()
 	isInstatiated = false;
 	delete single;
 	single = nullptr;
+
+	std::list<PowerUp*>::iterator iterator;
+
+	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
+	{
+		delete *iterator;
+	}
 }
 
 void GameData::Update(float deltaTime)
 {
+	std::list<PowerUp*>::iterator iterator;
+	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
+	{
 
+		(*iterator)->Update(deltaTime);
+	}
+
+}
+
+std::list<PowerUp*> GameData::getPowerup()
+{
+	std::list<PowerUp*>toReturn;
+	std::list<PowerUp*>::iterator iterator;
+
+	//iterate throwugh the list
+	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
+	{
+		toReturn.push_back((*iterator));
+	}
+	return toReturn;
+}
+
+void GameData::unlockPowerUp(Events::UNIQUE_FIRE newPower)
+{
+	powerupArsenal.push_back(new PowerUp(Events::UNIQUE_FIRE::ARCFIRE));
+}
+
+int GameData::getNrOfActivePowerups()
+{
+	return nrOfActivePowerups;
 }
 
 void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
@@ -100,16 +147,10 @@ void GameData::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc
 
 void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
-	Player* ptr = nullptr;
-
-	ptr = dynamic_cast<Player*>(entity);
-
-	//här behöver avgöras vad som tas upp upp
-
-
+	
+	//this->powerupArsenal.insert()
+	this->nrOfActivePowerups++;
 	//resulterar till:
-
-	ptr->SetPowerUp(Modifiers::POWERUPS::SPREAD);
 }
 
 bool GameData::SavePlayerData(std::string filename)

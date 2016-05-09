@@ -6,12 +6,15 @@ class PowerUp : public Entity
 {
 private:
 	float timeLeft;
+	Events::UNIQUE_FIRE type;
 public:
-	PowerUp();
+	PowerUp(Events::UNIQUE_FIRE type);
 	virtual ~PowerUp();
 
-	float getTimeLeft() const;
-	void setTimePowerup(float timeActive);
+	float GetTimeLeft() const;
+	void SetTimePowerup(float timeActive);
+	Events::UNIQUE_FIRE GetType() const;
+
 
 	virtual bool Update(float dt);
 };

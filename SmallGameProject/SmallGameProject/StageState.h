@@ -37,7 +37,6 @@ private:	//Variables
 	CameraHandler myCamera;
     ProjectileHandler enemyPjHandler;
 
-	PowerUp spreadPower;
 	EntitySubject powerUpSubject; 
 
 	Model m_car;
@@ -59,11 +58,15 @@ private:	//Variables
 	int currentLevel;
 	int currentWave;
     vector<Level> levels;
+
 	vector<DirectX::XMFLOAT3> spawnPoints;
+	vector<DirectX::XMFLOAT3> spawnPointsPowerUp;
+
 
 	
 	ParticleHandler myParticleHandler;
 
+	float timeElapsed;
     float t;
 	bool exitStage;
 
