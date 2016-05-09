@@ -36,15 +36,25 @@ void ProjectileHandler::Update(float deltaTime)
 	{
 		Projectile* temp = this->projectiles.at(i);
 		temp->update(deltaTime);
-        DirectX::XMFLOAT3 pos = temp->GetPosition();
-        if (pos.x < -44.0f || pos.x > 44.0f || pos.z < -44.0f || pos.z > 44.0f)
-        {
-            //Projectile* temp = this->projectiles.at(i);
-            temp->Shutdown();
-            delete temp;
-            //this->projectiles.at(i) = nullptr;
-            this->projectiles.erase(projectiles.begin() + i);
-            i--;
+
+		DirectX::XMMATRIX modelWorldMatrix;
+
+		//temp->GetModel()->GetWorldMatrix(modelWorldMatrix);
+		XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
+		modelWorldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		this->projectiles.at(i)->GetModel()->SetWorldMatrix(modelWorldMatrix);
+		
+		temp->GetBV()->UpdateBoundingVolume(modelWorldMatrix);
+
+		if (pos.x < -44.0f || pos.x > 44.0f || pos.z < -44.0f || pos.z > 44.0f)
+		{
+			//Projectile* temp = this->projectiles.at(i);
+			temp->Shutdown();
+			delete temp;
+			//this->projectiles.at(i) = nullptr;
+			this->projectiles.erase(projectiles.begin() + i);
+			i--;
+
 			for (int a = 0; a < this->eventsToTrack.size(); a++)
 			{
 				this->eventsToTrack.at(a).end--;
@@ -88,7 +98,12 @@ bool ProjectileHandler::IntersectionTest(Entity * entity)
 {
 	bool result = false;
 
-	//do intersection test shit
+	for (auto projectile : this->projectiles) {
+
+		if (entity->GetBV()->Intersect(projectile->GetBV())) {
+			result = true;
+		}
+	}
 
 	return result;
 }

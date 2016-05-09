@@ -53,7 +53,9 @@ bool Entity::Initialize(Model * model, EntitySubject* entitySubject, bool isSphe
 		this->entityBV = new BoxBoundingVolume();
 		this->entityBV->GenerateBounds(this->entityModel);
 	}
-
+	DirectX::XMMATRIX modelWorldMatrix;
+	this->entityModel->GetWorldMatrix(modelWorldMatrix);
+	this->entityBV->UpdateBoundingVolume(modelWorldMatrix);
 
 	return true;
 }

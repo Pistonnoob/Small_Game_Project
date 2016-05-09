@@ -21,6 +21,8 @@ void Ai::updateActors(std::vector<Enemy*>& actors, DirectX::XMFLOAT3 playerPos, 
 }
 void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
+	DirectX::XMMATRIX modelWorldMatrix;
+
 	if (actor->GetType() == Type::BOMBER)
 	{
 		BomberEnemy* bPtr = (BomberEnemy*)actor;
@@ -55,6 +57,8 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
         }
     }
 
+	actor->GetModel()->GetWorldMatrix(modelWorldMatrix);
+	actor->GetBV()->UpdateBoundingVolume(modelWorldMatrix);
 
     for (int i = 0; i < commands.size(); i++)
     {
