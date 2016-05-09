@@ -130,7 +130,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 	
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
-	if ((playerPos.x < -29.0f && playerPos.x > -31.0f) && (playerPos.z < 31.0f && playerPos.z > 29.0f)) {
+	if ((playerPos.x < -28.5f && playerPos.x > -31.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();

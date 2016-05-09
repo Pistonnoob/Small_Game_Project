@@ -131,7 +131,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (!modelResult) {
 			return false;
 		}
-		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere1");
+		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere2");
 		if (!modelResult) {
 			return false;
 		}
@@ -336,8 +336,9 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
 
-		gHandler->ShadowRender(this->enemies[i]->GetModel(), &this->myCamera);
+		gHandler->ShadowRender(&this->m_car, &this->myCamera);
 	}
+
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
