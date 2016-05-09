@@ -25,13 +25,13 @@ bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	bool result;
 
 	//Calculate the screen coordinates of the left side of the window
-	left = (float)((width / 2) * -1);
+	left = posX;
 
 	//Calculate the screen coordinates of the right side of the window
 	right = left + (float)width;
 
 	//Calculate the screen coordinates of the top of the window
-	top = (float)(height / 2);
+	top = posY;
 
 	//Calculate the screen coordinates of the bottom of the window
 	bottom = top - (float)height;

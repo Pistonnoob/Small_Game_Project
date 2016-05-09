@@ -4,6 +4,8 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+#include "Texture.h"
+
 class UIElement {
 private:
 	struct VertexSimple {
@@ -13,6 +15,14 @@ private:
 
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
+
+	Texture texture;
+
+	int width;
+	int height;
+	int posX;
+	int posY;
+	bool clickAble;
 public:
 	UIElement();
 	~UIElement();
