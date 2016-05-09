@@ -121,6 +121,14 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, fl
 {
 }
 
+void ParticleHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
+{
+}
+
+void ParticleHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
+{
+}
+
 void ParticleHandler::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
 }

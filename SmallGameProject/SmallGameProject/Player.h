@@ -37,19 +37,19 @@ public:
 	void PowerPickup(const int &POWER_ENUM);
 
 	void SetPowerUp(Modifiers::POWERUPS powerUp);
-	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH);
+	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime);
 
 	Weapon* GetWeapon();
 
-	virtual void MoveRight();
-	virtual void MoveLeft();
-	virtual void MoveUp();
-	virtual void MoveDown();
+	virtual void MoveRight(float deltaTime);
+	virtual void MoveLeft(float deltaTime);
+	virtual void MoveUp(float deltaTime);
+	virtual void MoveDown(float deltaTime);
 	virtual void Move(DirectX::XMFLOAT3 moveVec);
 
-	virtual void Fire(const float &deltaT);
+	virtual void Fire(float deltaT);
 	virtual void Fire();
-	
+
 	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
 };
 

@@ -48,6 +48,8 @@ public:
 	virtual void OnNotify(Entity* entity, Events::ENTITY evnt);
 	virtual void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);
 	virtual void OnNotify(Entity* entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets);
+	virtual void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay);
+	virtual void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit);
 	virtual void OnNotify(Entity* entity, Events::PICKUP evnt);
 
 	int Update(float dT, ID3D11DeviceContext* deviceContext);

@@ -101,6 +101,7 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		this->playerSubject.AddObserver(GameData::GetInstance());
 
 		result = this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, &this->playerSubject);
+
 		if (!result) {
 			return false;
 		}
@@ -123,7 +124,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 {
 	int result = 1;
 	
-	this->player.Update(input, gHandler, &this->myCamera);
+	this->player.Update(input, gHandler, &this->myCamera,deltaTime);
 
 	XMFLOAT3 playerPos = this->player.GetPosition();
 	
@@ -131,7 +132,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 
 	if ((playerPos.x < -29.0f && playerPos.x > -31.0f) && (playerPos.z < 31.0f && playerPos.z > 29.0f)) {
 		this->player.SetPosition(0.0f, 0.0f);
-		this->player.Update(input, gHandler, &this->myCamera);
+		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
 		newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
 		newStage->SetManualClearing(false);

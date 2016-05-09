@@ -5,6 +5,7 @@ RangedEnemy::RangedEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::RANGED;
+    this->isAlive = true;
 }
 
 RangedEnemy::~RangedEnemy()
@@ -22,15 +23,16 @@ void RangedEnemy::Shutdown()
 	Entity::Shutdown(true);
 }
 
-void RangedEnemy::Fire()
+
+void RangedEnemy::Fire(float deltaTime)
 {
-    if (this->attackCD > ATTACK_DELAY)
+    if (this->attackCD > R_ATTACK_DELAY)
     {
         this->entitySubject->Notify(this, Events::ENTITY::Fire);
         this->attackCD = 0;
     }
     else
     {
-        this->attackCD++;
+        this->attackCD += deltaTime;
     }
 }
