@@ -17,6 +17,8 @@ private:
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 
+	DirectX::XMMATRIX worldMatrix;
+
 	Texture texture;
 
 	int width;
@@ -24,6 +26,7 @@ private:
 	int posX;
 	int posY;
 	bool clickAble;
+	bool wasClicked;
 	int activeTexture;
 	int nrOfTextures;
 public:
@@ -34,8 +37,14 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);
 	void Shutdown();
 
-	bool IsClicked(DirectX::XMFLOAT2 mousePos);
+	void UpdateClicked(DirectX::XMFLOAT2 mousePos, int screenWidth, int screenHeight);
+	bool WasClicked();
+
 	void ChangeTexture(int textureIndex);
+	ID3D11ShaderResourceView* GetTexture();
+
+	void SetPosition(float posX, float posY);
+	DirectX::XMMATRIX GetWorldMatrix();
 };
 
 #endif

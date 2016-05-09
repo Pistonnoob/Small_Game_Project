@@ -4,6 +4,18 @@ UIElement::UIElement()
 {
 	this->vertexBuffer = nullptr;
 	this->indexBuffer = nullptr;
+	this->worldMatrix = DirectX::XMMatrixIdentity();
+
+	this->texture = Texture();
+
+	this->width = 0;
+	this->height = 0;
+	this->posX = 0;
+	this->posY = 0;
+	this->clickAble = false;
+	this->wasClicked = false;
+	this->activeTexture = -1;
+	this->nrOfTextures = 0;
 }
 
 UIElement::~UIElement()
@@ -24,17 +36,22 @@ bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	HRESULT hresult;
 	bool result;
 
+	this->width = float(width / 2);
+	this->height = float(height / 2);
+
+	this->SetPosition(posX, posY);
+
 	//Calculate the screen coordinates of the left side of the window
-	left = posX;
+	left = 0 - this->width;
 
 	//Calculate the screen coordinates of the right side of the window
-	right = left + (float)width;
+	right = 0 + this->width;
 
 	//Calculate the screen coordinates of the top of the window
-	top = posY;
+	top = 0 + this->height;
 
 	//Calculate the screen coordinates of the bottom of the window
-	bottom = top - (float)height;
+	bottom = 0 - this->height;
 
 	//Load the vertex array with data
 	//First triangle
@@ -145,9 +162,28 @@ void UIElement::Shutdown()
 	return;
 }
 
-bool UIElement::IsClicked(DirectX::XMFLOAT2 mousePos)
+void UIElement::UpdateClicked(DirectX::XMFLOAT2 mousePos, int screenWidth, int screenHeight)
 {
-	return ((mousePos.x > this->posX && mousePos.x < this->posX + this->width) && (mousePos.y > this->posY && mousePos.y < this->posY + this->height));
+	if (!this->clickAble) {
+		return;
+	}
+
+	float mouseX = mousePos.x - (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+	float mouseY = mousePos.y - (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+
+	if ((mouseX > this->posX - this->width && mouseX < this->posX + this->width) && (mouseY > this->posY - this->height && mouseY < this->posY + this->height)) {
+		this->wasClicked = true;
+	}
+}
+
+bool UIElement::WasClicked()
+{
+	if (this->wasClicked) {
+		this->wasClicked = false;
+		return true;
+	}
+
+	return false;
 }
 
 void UIElement::ChangeTexture(int textureIndex)
@@ -155,4 +191,22 @@ void UIElement::ChangeTexture(int textureIndex)
 	if (textureIndex < this->nrOfTextures) {
 		this->activeTexture = textureIndex;
 	}
+}
+
+ID3D11ShaderResourceView* UIElement::GetTexture()
+{
+	return this->texture.GetTexture(this->activeTexture);
+}
+
+void UIElement::SetPosition(float posX, float posY)
+{
+	this->posX = posX;
+	this->posY = posY;
+
+	this->worldMatrix = DirectX::XMMatrixTranslation(posX, posY, 0);
+}
+
+DirectX::XMMATRIX UIElement::GetWorldMatrix()
+{
+	return this->worldMatrix;
 }
