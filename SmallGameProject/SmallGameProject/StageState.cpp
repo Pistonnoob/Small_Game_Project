@@ -100,6 +100,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		/*this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));*/
+
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 20.0f / zoomIn, -7.0f / zoomIn));
 		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 6.0f, -50.0f));
 
@@ -120,7 +121,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		
 
 		//the player will rise
- 		this->player.Initialize(device, deviceContext, "sphere1","ogreFullG", false, &this->playerSubject);
+ 		this->player.Initialize(device, deviceContext, "sphere1","projectile", true, &this->playerSubject);
 		this->playerProjectile.Initialize(device, this->m_deviceContext);
 		
 		//Form thy armies from the clay!
@@ -280,7 +281,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			//Something went somewhat wrong here eh?
 		}
 	}
-
 
 	for (int i = 0; i < this->enemies.size(); i++) {
 

@@ -2,7 +2,8 @@
 
 
 
-EmitterPrototype::EmitterPrototype()
+EmitterPrototype::EmitterPrototype() : 
+	ParticleEmitter()
 {
 	this->particleDeviationX = this->particleDeviationY = this->particleDeviationZ = 0.0f;
 	this->particleVelocity = 0.0f;
@@ -11,7 +12,9 @@ EmitterPrototype::EmitterPrototype()
 	this->currentParticleCnt = 0;
 	this->maxParticles = 0;
 	this->accumulatedTime = 0.0f;
+	this->emitterTime = 10.0f;
 	this->vertexCount = this->indexCount = 0;
+	this->world = DirectX::XMMatrixIdentity();
 
 	this->vertexBuffer = this->indexBuffer = nullptr;
 
@@ -63,7 +66,7 @@ bool EmitterPrototype::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 
 
 	//Emitt new particles
-	this->EmitParticles(dT);
+	this->EmittParticles(dT);
 
 	//Update the particles
 	this->UpdateParticles(dT);
@@ -231,14 +234,14 @@ bool EmitterPrototype::InitializeBuffers(ID3D11Device * device)
 	return true;
 }
 
-void EmitterPrototype::EmitParticles(float dT)
+void EmitterPrototype::EmittParticles(float dT)
 {
 	bool emitParticle, found;
 	float positionX, positionY, positionZ, velocity, red, green, blue;
 	int index, i, j;
 
 	// Check if it is time to emit a new particle or not.
-	float particleThresshold = (1000.0f / this->particlesPerSecond);
+	float particleThresshold = (1000000.0f / this->particlesPerSecond);
 	float timeOverflow = dT;
 	while (this->accumulatedTime > particleThresshold)
 	{
@@ -312,9 +315,9 @@ void EmitterPrototype::EmitParticles(float dT)
 			this->particles[index].b = blue;
 			this->particles[index].velocity = velocity;
 			this->particles[index].active = true;
-			this->particles[index].scale = 1.0f;
+			this->particles[index].scale = 0.4f;
 			this->particles[index].uCoord = 0.25f;
-			this->particles[index].time = this->accumulatedTime;
+			this->particles[index].time = 0.0f;
 
 			this->currentParticleCnt++;
 		}
@@ -331,19 +334,21 @@ void EmitterPrototype::UpdateParticles(float dT)
 	{
 		this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 	}*/
+	float size = 1.0f / 3.0f;
 	for (int i = 0; i<this->currentParticleCnt; i++)
 	{
-		this->particles[i].time += dT / (500);
+		this->particles[i].time += dT / (1000000);
 		//this->particles[i].y = this->particles[i].y - (this->particles[i].velocity * dT / 1000);
 		float x = 0, y = 0;
 		float period = 8.0f, min = 0, max = 4.0f;
-		float time = this->particles[i].time;
+		float time = this->particles[i].time * this->particles[i].velocity;
 		float width = 40;
 		//Algorithm::GetSawtoothWave(x, y, this->particles[i].time, period, min, max);
-		Algorithm::GetEllipse(x, y, this->particles[i].time, 3, 3);
+		//Algorithm::GetEllipse(x, y, time, 8, 8);
+		Algorithm::GetHypotrochoid(x, y, time, 6, 2, 10);
 		//Algorithm::GetTriangleWave(x, y, time, period, min, max);
-		this->particles[i].x = x;
-		this->particles[i].z = y;
+		this->particles[i].x = x * size;
+		this->particles[i].z = y * size;
 	}
 
 	return;
