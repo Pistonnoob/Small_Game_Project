@@ -84,14 +84,16 @@ void StageState::Shutdown()
 }
 
 
-int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
+int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 {
 	int result = 0;
 	this->exitStage = false;
 
+	ID3D11Device* device = gHandler->GetDevice();
+	ID3D11DeviceContext* deviceContext = gHandler->GetDeviceContext();
+
 	//Arm thy father
 	result = this->InitializeBase(GSH, device, deviceContext);
-
 	if (result)
 	{
 		//Open thy eyes!
@@ -120,7 +122,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		
 
 		//the player will rise
- 		this->player.Initialize(device, deviceContext, "sphere1","projectile", true, &this->playerSubject);
+ 		this->player.Initialize(gHandler, "sphere1","projectile", true, &this->playerSubject);
 		this->playerProjectile.Initialize(device, this->m_deviceContext);
 		
 		//Form thy armies from the clay!
@@ -144,7 +146,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//ze powerups
 		this->spreadPower.Initialize(device, deviceContext, "sphere1", true, &this->powerUpSubject);
-		this->spreadPower.GetModel()->SetColor(XMFLOAT3(0, 0, 255));
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -269,8 +270,8 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
-	XMFLOAT3 playerPos = this->player.GetPosition();
-	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
+	this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 
 	return result;
 }
@@ -278,7 +279,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
-    XMFLOAT3 pos;
+	DirectX::XMFLOAT3 pos;
     DirectX::XMMATRIX worldMatrix;
 
 	//Render models
@@ -341,18 +342,18 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 }
 
 
-void StageState::ReadFile(string fileName)
+void StageState::ReadFile(std::string fileName)
 {
-    string line;
-    ifstream myFile(fileName);
+	std::string line;
+	std::ifstream myFile(fileName);
 
     if (myFile.is_open())
     {
 		int nrOfSpawnPoints = 0;
-        getline(myFile, line);
+		std::getline(myFile, line);
 
-		string xStr;
-		string zStr;
+		std::string xStr;
+		std::string zStr;
 		while(line.at(0) == 'p')
 		{
 			std::stringstream ss;
@@ -386,9 +387,9 @@ void StageState::ReadFile(string fileName)
 			{
 				Wave waveTemp;
 				ToSpawn spawnTemp;
-				string waveLenght = "";
-				string enemyType = "";
-				string nrOfEnemies = "";
+				std::string waveLenght = "";
+				std::string enemyType = "";
+				std::string nrOfEnemies = "";
 
 				//get wave lenght
 				size_t start = 1;
@@ -413,7 +414,7 @@ void StageState::ReadFile(string fileName)
                         {
                             if (line.at(a) != ' ' && line.at(a) != '}')
                             {
-                                string bossCheck = line.substr(a, a + 3);
+								std::string bossCheck = line.substr(a, a + 3);
                                 if (bossCheck.at(bossCheck.size() - 1) == '}')
                                 {
                                     bossCheck.pop_back();
@@ -528,7 +529,7 @@ void StageState::RemoveDeadEnemies()
         }
     }
 }
-Type StageState::ConvertToEnemyType(string type)
+Type StageState::ConvertToEnemyType(std::string type)
 {
 	if (type == "B")
 	{

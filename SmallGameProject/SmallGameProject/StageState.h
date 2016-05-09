@@ -24,11 +24,11 @@ struct ToSpawn
 struct Wave
 {
 	int time;
-	vector<ToSpawn> toSpawn;
+	std::vector<ToSpawn> toSpawn;
 };
 struct Level
 {
-    vector<Wave> wave;
+    std::vector<Wave> wave;
 };
 class StageState :
 	public GameState
@@ -53,13 +53,13 @@ private:	//Variables
 	Player player;
 	
 	Ai m_AI;
-	vector<Enemy*> enemies;
+	std::vector<Enemy*> enemies;
 
 	float timeToNextWave;
 	int currentLevel;
 	int currentWave;
-    vector<Level> levels;
-	vector<DirectX::XMFLOAT3> spawnPoints;
+	std::vector<Level> levels;
+	std::vector<DirectX::XMFLOAT3> spawnPoints;
 
 	
 	ParticleHandler myParticleHandler;
@@ -75,17 +75,17 @@ public:
 	virtual ~StageState();
 	virtual void Shutdown();
 
-	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
+	int Initialize(GraphicHandler* gHandler, GameStateHandler* GSH);
 
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
-    virtual void ReadFile(string fileName);
+    virtual void ReadFile(std::string fileName);
     virtual void HandleWaveSpawning(float deltaTime);
     virtual void SpawnWave(int levelIndex, int waveIndex);
 	virtual void SpawnEnemy(Type type, int pointIndex);
     virtual void RemoveDeadEnemies();
-	virtual Type ConvertToEnemyType(string type);
+	virtual Type ConvertToEnemyType(std::string type);
 
 private:	//Functions
 

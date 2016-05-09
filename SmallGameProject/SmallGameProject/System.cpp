@@ -50,7 +50,7 @@ bool System::Initialize()
 	//Create the GameStateHandler.
 	this->gameSH = new GameStateHandler();
 	//Initialize the GameStateHandler
-	this->gameSH->Initialize(this->graphicH->GetDevice(), this->graphicH->GetDeviceContext());
+	this->gameSH->Initialize(this->graphicH);
 
 	//initialize the gameData singleton
   	this->gameData = GameData::GetInstance();

@@ -261,6 +261,12 @@
     <ClCompile Include="UIElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UIHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIShaderHandler.cpp">
+      <Filter>Source Files\ShaderHandlers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -455,6 +461,12 @@
     <ClInclude Include="UIElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UIHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIShaderHandler.h">
+      <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredVertexShader.hlsl">
@@ -485,6 +497,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ParticlePixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="UIVertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="UIPixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -26,12 +26,16 @@ void StartState::Shutdown()
 	this->startModel.Shutdown();
 }
 
-int StartState::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH)
+int StartState::Initialize(GraphicHandler* gHandler, GameStateHandler* GSH)
 {
 	int result = 0;
 	this->startModel = Model();
 	this->manualClearing = false;
 	//Initialize the base class GameState
+
+	ID3D11Device* device = gHandler->GetDevice();
+	ID3D11DeviceContext* deviceContext = gHandler->GetDeviceContext();
+
 	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
 	{
@@ -75,7 +79,7 @@ int StartState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		this->startGame = false;
 		//Create the menu and push it
  		MenuState* menu = new MenuState();
-		menu->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
+		menu->Initialize(gHandler, this->m_GSH);
 		menu->SetManualClearing(false);
 		this->m_GSH->PushState(menu);
 	}
