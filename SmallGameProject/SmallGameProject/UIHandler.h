@@ -4,7 +4,9 @@
 #include <vector>
 
 #include "UIElement.h"
+#include "GraphicHandler.h"
 #include "InputHandler.h"
+#include "UIShaderHandler.h"
 
 class UIHandler
 {
@@ -15,11 +17,15 @@ private:
 	int screenHeight;
 
 	std::vector<UIElement> elements;
+	UIShaderHandler UIShaderH;
+
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX projectionMatrix;
 public:
 	UIHandler();
 	~UIHandler();
 
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight);
+	bool Initialize(GraphicHandler* graphicsH);
 	void HandleInput(InputHandler* inputH);
 	void Render();
 	void Shutdown();

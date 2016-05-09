@@ -168,12 +168,12 @@ void UIShaderHandler::Shutdown()
 
 
 bool UIShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix,
-	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, DirectX::XMFLOAT3 color)
+	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	bool result = false;
 
 	//Set shader parameters used for rendering
-	result = this->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, fontTexture, color);
+	result = this->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
 	if (!result) {
 		return false;
 	}
@@ -215,7 +215,7 @@ void UIShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* 
 }
 
 bool UIShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix,
-	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, DirectX::XMFLOAT3 color)
+	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -251,9 +251,9 @@ bool UIShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, Di
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
-	if (fontTexture) {
+	if (texture) {
 		//Set shader color texture resource for pixel shader
-		deviceContext->PSSetShaderResources(0, 1, &fontTexture);
+		deviceContext->PSSetShaderResources(0, 1, &texture);
 	}
 
 	return true;

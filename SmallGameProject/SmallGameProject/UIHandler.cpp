@@ -3,19 +3,32 @@
 UIHandler::UIHandler()
 {
 	this->elements = std::vector<UIElement>();
+	this->UIShaderH = UIShaderHandler();
 }
 
 UIHandler::~UIHandler()
 {
 }
 
-bool UIHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, int screenWidth, int screenHeight)
+bool UIHandler::Initialize(GraphicHandler* graphicsH)
 {
-	this->device = device;
-	this->deviceContext = deviceContext;
+	this->device = graphicsH->GetDevice();
+	this->deviceContext = graphicsH->GetDeviceContext();
 
-	this->screenWidth = screenWidth;
-	this->screenHeight = screenHeight;
+	this->screenWidth = graphicsH->GetScreenWidth();
+	this->screenHeight = graphicsH->GetScreenHeight();
+
+	DirectX::XMVECTOR lookAt = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0.0f, 0.0f, -20.0f, 1.0f);
+	DirectX::XMVECTOR camUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+
+	this->viewMatrix = DirectX::XMMatrixLookAtLH(camPos, lookAt, camUp);
+
+	this->projectionMatrix = graphicsH->GetOrthograpicMatrix();
+
+	if (!this->UIShaderH.Initialize(this->device)) {
+		return false;
+	}
 
 	return true;
 }
@@ -38,6 +51,11 @@ bool UIHandler::WasButtonPressed(int buttonID)
 
 void UIHandler::Render()
 {
+	for (auto element : this->elements) {
+		element.Render(this->deviceContext);
+
+		this->UIShaderH.Render(this->deviceContext, 6, element.GetWorldMatrix(), this->viewMatrix, this->projectionMatrix, element.GetTexture());
+	}
 }
 
 void UIHandler::Shutdown()
