@@ -167,8 +167,8 @@ void FontShaderHandler::Shutdown()
 }
 
 
-bool FontShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix,
-	XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, XMFLOAT3 color)
+bool FontShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix,
+	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, DirectX::XMFLOAT3 color)
 {
 	bool result = false;
 
@@ -187,7 +187,7 @@ void FontShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
-	ofstream fout;
+	std::ofstream fout;
 
 	//Get a pointer to the error message text buffer
 	compileErrors = (char*)errorMessage->GetBufferPointer();
@@ -214,8 +214,8 @@ void FontShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR
 	return;
 }
 
-bool FontShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix,
-	XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, XMFLOAT3 color)
+bool FontShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix,
+	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, DirectX::XMFLOAT3 color)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
