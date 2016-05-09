@@ -10,7 +10,7 @@ UIElement::~UIElement()
 {
 }
 
-bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int posX, int posY, char* textureFilename, bool clickAble)
+bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int posX, int posY, std::string& textureMtl, int nrOfTextures, bool clickAble)
 {
 	VertexSimple vertices[6];
 	unsigned long indices[6];
@@ -143,4 +143,16 @@ void UIElement::Shutdown()
 	}
 
 	return;
+}
+
+bool UIElement::IsClicked(DirectX::XMFLOAT2 mousePos)
+{
+	return ((mousePos.x > this->posX && mousePos.x < this->posX + this->width) && (mousePos.y > this->posY && mousePos.y < this->posY + this->height));
+}
+
+void UIElement::ChangeTexture(int textureIndex)
+{
+	if (textureIndex < this->nrOfTextures) {
+		this->activeTexture = textureIndex;
+	}
 }
