@@ -85,7 +85,7 @@ bool EmitterExplosion::SortParticles()
 
 bool EmitterExplosion::InitializeEmitter()
 {
-	this->velocity = 1.0f;
+	this->velocity = 3.0f;
 	this->height = 6.0f;
 	this->particleSize = 0.4f;
 	this->maxParticles = 100;
@@ -100,7 +100,8 @@ bool EmitterExplosion::InitializeEmitter()
 
 	float positionX, positionY, positionZ, dX, dZ, red, green, blue;
 	positionX = positionY = positionZ = dX = dZ = red = green = blue = 0.0f;
-	for (auto particle : this->particles)
+	/*for (auto particle : this->particles)*/
+	for (std::vector<Particle>::iterator particle = this->particles.begin(); particle != this->particles.end(); particle++)
 	{
 
 		// Now generate the randomized particle properties.
@@ -120,24 +121,28 @@ bool EmitterExplosion::InitializeEmitter()
 
 		//Define the velocity
 		Algorithm::GetCircle(dX, dZ, myRotation);
+		//Normalize. Currently turns explosion into a cube
+		/*float total = abs(dX) + abs(dZ);
+		dZ /= total;
+		dX /= total;*/
 		//And apply the velocity each will have
 		dX *= this->velocity;
 		dZ *= this->velocity;
 
 		//Define the particle data
-		particle.x = positionX;
-		particle.y = positionY;
-		particle.z = positionZ;
-		particle.scale = this->particleSize;
-		particle.r = red;
-		particle.g = green;
-		particle.b = blue;
-		particle.uCoord = 0.25f;
-		particle.time = 0.0f;
-		particle.timeCap = this->particleTimeLimit;
-		particle.dX = dX;
-		particle.dZ = dZ;
-		particle.active = true;
+		(*particle).x = positionX;
+		(*particle).y = positionY;
+		(*particle).z = positionZ;
+		(*particle).scale = this->particleSize;
+		(*particle).r = red;
+		(*particle).g = green;
+		(*particle).b = blue;
+		(*particle).uCoord = 0.25f;
+		(*particle).time = 0.0f;
+		(*particle).timeCap = this->particleTimeLimit;
+		(*particle).dX = dX;
+		(*particle).dZ = dZ;
+		(*particle).active = true;
 
 		this->currentParticleCnt++;
 	}

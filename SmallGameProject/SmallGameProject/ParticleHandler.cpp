@@ -36,9 +36,9 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	std::string theNightSky = "Particles.mtl";
 	bool victory = this->myTextures.Initialize(device, deviceContext, theNightSky);
 
-	EmitterExplosion* newEmitter = new EmitterExplosion();
+	/*EmitterExplosion* newEmitter = new EmitterExplosion();
 	newEmitter->Initialize(device, this->myTextures.GetTexture(0));
-	this->emitters.push_back(newEmitter);
+	this->emitters.push_back(newEmitter);*/
 }
 
 void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
@@ -81,6 +81,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::RANGED_MOVING:
 		break;
 	case Events::RANGED_DEAD:
+		newEmitter = new EmitterExplosion();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
 		break;
 	case Events::MELEE_CREATED:
 	{
@@ -91,12 +93,16 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::MELEE_MOVING:
 		break;
 	case Events::MELEE_DEAD:
+		newEmitter = new EmitterExplosion();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
 		break;
 	case Events::IDLE:
 		break;
 	case Events::MOVING:
 		break;
 	case Events::DEAD:
+		newEmitter = new EmitterExplosion();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
 		break;
 	default:
 		break;
@@ -125,7 +131,7 @@ int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
 
 	for (auto emitter = this->emitters.begin(); emitter != this->emitters.end(); emitter++)
 	{
-		(*emitter)->Update(dT, deviceContext);
+ 		(*emitter)->Update(dT, deviceContext);
 	}
 	this->KillEmitters();
 	return result;
