@@ -21,18 +21,14 @@ StageState::StageState()
     this->enemyPjHandler = ProjectileHandler();
 	this->enemySubject.AddObserver(&this->enemyPjHandler);
 
-	this->playerSubject = EntitySubject();
-	this->playerProjectile = ProjectileHandler();
+	this->playerSubject = nullptr;
+	this->playerProjectile = nullptr;
 
-	this->playerSubject.AddObserver(&this->playerProjectile);
-	this->playerSubject.AddObserver(GameData::GetInstance());
-	
 	this->exitStage = false;
-
-	this->powerUpSubject = EntitySubject();
 
 	this->camPosX = -30.0f;
 	this->camPosZ = 0.0f;
+
 	this->inc = true;
 }
 
@@ -51,8 +47,16 @@ void StageState::Shutdown()
     this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
 
-	this->playerSubject.ShutDown();
-	this->playerProjectile.ShutDown();
+	this->playerSubject->ShutDown();
+	this->playerProjectile->ShutDown();
+
+	delete this->playerSubject;
+	delete this->playerProjectile;
+
+	this->playerSubject = nullptr;
+	this->playerProjectile = nullptr;
+
+	GameData::ShutdownStageStateGD();
 	
 	this->player.Shutdown();
 
@@ -117,13 +121,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_AI = Ai();
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
-		
-
-		//the player will rise
- 		this->player.Initialize(device, deviceContext, "sphere1","projectile", true, &this->playerSubject);
-		this->playerProjectile.Initialize(device, this->m_deviceContext);
-		
-		GameData::unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
 
 		//Form thy armies from the clay!
 		this->m_car = Model();
@@ -141,8 +138,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Colour thy armies in the name of the racist overlord Axel!
 		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
         this->m_ball.SetColor(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-
-//>>>>>>> beforeMemLeak
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
@@ -185,7 +180,6 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 			return false;
 		}
 
-		//DirectX::XMFLOAT3 a = this->player.GetPosition();
 		int i = 0;
 
 
@@ -197,6 +191,20 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//Arm thy armies!
         SpawnWave(this->currentLevel, this->currentWave);
+
+		//powerupts and projectile handlers
+		this->playerSubject = new EntitySubject();
+		this->playerProjectile = new ProjectileHandler();
+
+		this->playerProjectile->Initialize(device, this->m_deviceContext);
+
+		this->playerSubject->AddObserver(this->playerProjectile);
+		this->playerSubject->AddObserver(GameData::GetInstance());
+
+		//the player will rise
+		this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
+
+		GameData::InitializeStageStateGD(device, deviceContext, this->playerSubject);
 	}
 
 
@@ -209,7 +217,8 @@ int StageState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
-
+	if (input->isKeyPressed(DIK_1))
+ 		this->playerSubject->Notify(&this->player, Events::PICKUP::POWERUP_PICKUP);
 	return result;
 }
 
@@ -218,16 +227,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	int result = 1;
 
 	float newDT = deltaTime / 1000000;
-	
-/*<<<<<<< HEAD
-	this->playerProjectile.Update(deltaTime);
-	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
-	XMFLOAT3 playerPos = this->player.GetPosition();
-	//sends the enemies vector to the m_AI for updating cameraPos is the temporary pos that the enemies will go to
-	this->m_AI.updateActors(this->enemies, playerPos);
-	XMFLOAT3 enemyPos = this->enemies.at(0)->GetPosition();
-=======*/
     HandleWaveSpawning(newDT);
 
     RemoveDeadEnemies();
@@ -235,7 +235,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
     this->enemyPjHandler.Update(newDT);
 
-	this->playerProjectile.Update(newDT);
+	this->playerProjectile->Update(newDT);
 	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
 //>>>>>>> beforeMemLeak
@@ -320,7 +320,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	}
 
 	//render shots
-	this->playerProjectile.Render(gHandler, &this->myCamera);
+	this->playerProjectile->Render(gHandler, &this->myCamera);
 
     this->enemyPjHandler.Render(gHandler, &this->myCamera);
 

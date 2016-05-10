@@ -79,11 +79,24 @@ void GameData::Shutdown()
 
 void GameData::Update(float deltaTime)
 {
+	float timeLeft = 0.0f;
+	bool expandedPowerup = true;
 	std::list<PowerUp*>::iterator iterator;
 	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
 	{
+		//only need to update the active powerups
+		timeLeft = (*iterator)->GetTimeLeft();
+		if (timeLeft > 0.0f)
+		{
+			expandedPowerup = (*iterator)->Update(deltaTime);
+			//if powerup update return false, the powerup has run out
+			if (!expandedPowerup);
+			{
+				nrOfActivePowerups--;
+			}
+		}
 
-		(*iterator)->Update(deltaTime);
+			
 	}
 
 }
@@ -96,19 +109,39 @@ std::list<PowerUp*> GameData::getPowerup()
 	//iterate throwugh the list
 	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
 	{
-		toReturn.push_back((*iterator));
+		//if the powerup is active
+		if(0.0f < (*iterator)->GetTimeLeft())
+			toReturn.push_back((*iterator));
 	}
 	return toReturn;
 }
 
 void GameData::unlockPowerUp(Events::UNIQUE_FIRE newPower)
 {
-	powerupArsenal.push_back(new PowerUp(Events::UNIQUE_FIRE::ARCFIRE));
+	powerupArsenal.push_back(new PowerUp(newPower));
 }
 
 int GameData::getNrOfActivePowerups()
 {
 	return nrOfActivePowerups;
+}
+
+void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject)
+{
+	unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
+	GameData::powerupArsenal.front()->Initialize(device, deviceContext,"ogreFullG", false, playerSubject);
+}
+
+void GameData::ShutdownStageStateGD()
+{
+	PowerUp* toRemove = nullptr;
+
+	toRemove = GameData::powerupArsenal.front();
+
+	toRemove->Shutdown();
+	delete toRemove;
+
+	GameData::powerupArsenal.pop_front();
 }
 
 void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
@@ -148,7 +181,8 @@ void GameData::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc
 void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
 	
-	//this->powerupArsenal.insert()
+	//flashy particles here
+	GameData::powerupArsenal.front()->SetTimePowerup(10.0f);
 	this->nrOfActivePowerups++;
 	//resulterar till:
 }

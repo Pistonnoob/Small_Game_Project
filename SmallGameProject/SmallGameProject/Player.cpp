@@ -193,22 +193,23 @@ void Player::Move(DirectX::XMFLOAT3 moveVec)
 
 void Player::Fire(float deltaT)
 {
-	/*
-	PowerUp* powerUpPtr = nullptr;
-	int size = this->powerups.size();
-
 	DirectX::XMStoreFloat3(&this->aimDir, this->forwardDir);
 
 	this->aimDir.x = DirectX::XMVectorGetX(this->forwardDir);
 	this->aimDir.z = DirectX::XMVectorGetY(this->forwardDir);
-
 	this->aimDir.y = 0.0f;
-    */
-	int nrOfPow = GameData::getNrOfActivePowerups();
-	if(nrOfPow)
-		this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::ARCFIRE);
 
-	this->playerWeapon->ShootWeapon(this);
+	if (GameData::getNrOfActivePowerups() != 0)
+	{
+		std::list<PowerUp*> activePows = GameData::getPowerup();
+		this->playerWeapon->ShootWeapon(this, activePows.front()->GetType());
+	}
+	
+	else
+	{
+		this->playerWeapon->ShootWeapon(this);
+	}
+	
 }
 
 void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)

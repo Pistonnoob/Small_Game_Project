@@ -9,6 +9,8 @@
 #include <vector> 
 #include "Player.h"
 #include "GameState.h"
+#include "EntitySubject.h"
+#include "ProjectileHandler.h"
 #include <list>
 
 class GameData : public Observer
@@ -45,6 +47,9 @@ public:
 	static void unlockPowerUp(Events::UNIQUE_FIRE newPower);
 
 	int static getNrOfActivePowerups();
+
+	static void InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject);
+	static void ShutdownStageStateGD();
 
 	void OnNotify(Entity* entity, Events::ENTITY evnt);
 	void OnNotify(Entity* entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets);

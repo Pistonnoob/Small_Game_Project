@@ -13,6 +13,11 @@ PowerUp::~PowerUp()
 
 }
 
+void PowerUp::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string powerUpModelFilename, bool isSphere, EntitySubject* entitySub)
+{
+	Entity::Initialize(device, deviceContext, powerUpModelFilename, isSphere, entitySub);
+}
+
 float PowerUp::GetTimeLeft() const
 {
 	return this->timeLeft;

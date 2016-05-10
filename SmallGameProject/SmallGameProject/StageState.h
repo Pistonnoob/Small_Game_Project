@@ -7,8 +7,6 @@
 #include "Projectile.h"
 #include "Abilities.h"
 #include "Algorithm.h"
-#include "EntitySubject.h"
-#include "ProjectileHandler.h"
 #include "Weapon.h"
 #include "Player.h"
 #include "Boss.h"
@@ -46,11 +44,11 @@ private:	//Variables
     EntitySubject enemySubject;
 
 	//player variables
-	
-	EntitySubject playerSubject;
-	ProjectileHandler playerProjectile;
 	Player player;
-	
+
+	EntitySubject* playerSubject = nullptr;
+	ProjectileHandler* playerProjectile = nullptr;
+
 	Ai m_AI;
 	vector<Enemy*> enemies;
 
