@@ -277,3 +277,13 @@ DirectX::XMFLOAT2 InputHandler::getMousePos()
 
 	return DirectX::XMFLOAT2(tempP.x, tempP.y);;
 }
+
+DirectX::XMFLOAT2 InputHandler::getMousePosInWindow()
+{
+	DirectX::XMFLOAT2 mousePos = this->getMousePos();
+	//Move the cords to the window
+	float mouseX = mousePos.x - (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+	float mouseY = mousePos.y - (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+
+	return DirectX::XMFLOAT2(mouseX, mouseY);
+}

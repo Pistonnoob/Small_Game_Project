@@ -81,6 +81,25 @@ int MenuState::HandleInput(InputHandler * input)
 	{
 		this->selected--;
 	}
+
+	if (!this->first) {
+		DirectX::XMFLOAT2 mousePos = input->getMousePosInWindow(); //Top left 220, 11; bottom right 580, 200
+
+		if (mousePos.x > 220 && mousePos.x < 580) {
+			if (mousePos.y > 10) {
+				if (mousePos.y < 200) {
+					this->selected = 0;
+				}
+				else if (mousePos.y < 390) {
+					this->selected = 1;
+				}
+				else if (mousePos.y < 580) {
+					this->selected = 2;
+				}
+			}
+		}
+	}
+
 	if (this->selected < 0)
 		this->selected = OPTION_COUNT - 1;
 	this->selected = this->selected % OPTION_COUNT;

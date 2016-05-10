@@ -45,7 +45,7 @@ public:
 	bool isKeyReleased(unsigned int key);
 
 	DirectX::XMFLOAT2 getMousePos();
-
+	DirectX::XMFLOAT2 getMousePosInWindow();
 };
 
 #endif
