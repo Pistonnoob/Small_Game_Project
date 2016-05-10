@@ -117,7 +117,7 @@ void Player::HandleInput(InputHandler * input, float dTime)
 		this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
 	}
 
-	if (input->isKeyPressed(DIK_SPACE))
+	if(input->isMouseKeyPressed(0))	//0 = left, 1 = right, 2 = scroll click, 3 = "Down button" on mouse
 	{
 		this->Fire(0.0);
 	}
