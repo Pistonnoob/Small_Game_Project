@@ -91,7 +91,7 @@ bool EmitterExplosion::InitializeEmitter()
 	this->maxParticles = 100;
 	this->isCompleted = false;
 	//this->particles.reserve(this->maxParticles);
-	this->particles = vector<Particle>(this->maxParticles);
+	this->particles = std::vector<Particle>(this->maxParticles);
 	this->currentParticleCnt = 0.0f;
 	this->particleTimeLimit = 1.0f;
 	this->emitterTime = 2.0f;

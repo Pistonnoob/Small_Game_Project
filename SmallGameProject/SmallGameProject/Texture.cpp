@@ -357,11 +357,11 @@ bool Texture::LoadMTL(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 void Texture::Shutdown()
 {
 	//Release the texture view resource
-	for (int i = 0; i < this->textureViews.size(); i++) {
-		if (this->textureViews.at(i) != nullptr)
+	for (auto textureView : this->textureViews) {
+		if (textureView != nullptr)
 		{
-			this->textureViews.at(i)->Release();
-			this->textureViews.at(i) = nullptr;
+			textureView->Release();
+			textureView = nullptr;
 		}
 	}
 	//Release the texture

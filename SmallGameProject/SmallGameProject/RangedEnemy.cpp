@@ -5,7 +5,8 @@ RangedEnemy::RangedEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::RANGED;
-    this->isAlive = true;
+	this->health = 50;
+	this->damage = 20;
 }
 
 RangedEnemy::~RangedEnemy()
@@ -22,6 +23,7 @@ bool RangedEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool i
 
 void RangedEnemy::Shutdown()
 {
+	this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
 	Entity::Shutdown(true);
 }
 

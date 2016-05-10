@@ -33,7 +33,7 @@ struct PSOutput
 	float4 worldPos : SV_Target4;
 };
 
-PSOutput main(PSInput input) : SV_TARGET
+PSOutput main(PSInput input)
 {
 	PSOutput output;
 

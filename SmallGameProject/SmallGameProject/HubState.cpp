@@ -38,10 +38,13 @@ void HubState::Shutdown()
 	GameState::Shutdown();
 }
 
-int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
+int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 {
 	int result = 0;
 	this->exitStage = false;
+
+	ID3D11Device* device = gHandler->GetDevice();
+	ID3D11DeviceContext* deviceContext = gHandler->GetDeviceContext();
 
 	//Arm thy father
 	result = this->InitializeBase(GSH, device, deviceContext);
@@ -74,7 +77,7 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 			return false;
 		}
 
-		DirectX::XMMATRIX worldMatrix = XMMatrixTranslation(-30.0f, 0.0f, 30.0f);
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(-30.0f, 0.0f, 30.0f);
 		this->portal1.SetWorldMatrix(worldMatrix);
 
 		PointLight light;
@@ -101,7 +104,7 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		this->playerSubject.AddObserver(GameData::GetInstance());
 		this->playerSubject.AddObserver(&this->myParticleHandler);
 
-		result = this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, &this->playerSubject);
+		result = this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
 
 		if (!result) {
 			return false;
@@ -127,15 +130,15 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 	
 	this->player.Update(input, gHandler, &this->myCamera,deltaTime);
 
-	XMFLOAT3 playerPos = this->player.GetPosition();
+	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
 	
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
-	if ((playerPos.x < -29.0f && playerPos.x > -31.0f) && (playerPos.z < 31.0f && playerPos.z > 29.0f)) {
+	if ((playerPos.x < -28.5f && playerPos.x > -31.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
-		newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
+		newStage->Initialize(gHandler, this->m_GSH);
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
@@ -154,7 +157,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 	}
 
 	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
-	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+	this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 
 	return result;
 }

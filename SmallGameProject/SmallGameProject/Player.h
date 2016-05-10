@@ -9,14 +9,14 @@
 #include "PowerUp.h"
 #include <vector>
 #include "Modifiers.h"
+#include "UIHandler.h"
 
 class Player : public Actor {
 
 private:
 	DirectX::XMVECTOR forwardDir;
-	int playerHealth;
+
 	int playerMovmentSpeed;
-	int playerDamage;
 	int playerHighScore;
 
 	std::vector<PowerUp>powerups;
@@ -27,12 +27,12 @@ public:
 	Player();
 	~Player();
 
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string playerModelFilename,
+	bool Initialize(GraphicHandler* graphicsH, std::string playerModelFilename,
 		std::string weaponModelFile, bool isSphere, EntitySubject* entitySub);
 	
 	void Shutdown();
 
-	void HandleInput( InputHandler* input);
+	void HandleInput( InputHandler* input, float dTime);
 	Weapon* GetPlayerWeapon();
 	void PowerPickup(const int &POWER_ENUM);
 

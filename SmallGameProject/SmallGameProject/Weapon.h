@@ -33,6 +33,7 @@ public:
 	float GetAttackSpeedMod() const;
 	float GetPlayerSpeedMod() const;
 
+	void ShootWeapon(Entity* entity, Events::UNIQUE_FIRE power);
 	void ShootWeapon(Entity* entity);
 };
 

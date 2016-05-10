@@ -25,13 +25,17 @@ void MenuState::Shutdown()
 	this->m_model.Shutdown();
 }
 
-int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
+int MenuState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 {
 	int result = 0;
 	this->first = true;
 	this->doOption = false;
 	this->selected = 0;
 	this->m_model = Model();
+
+	ID3D11Device* device = gHandler->GetDevice();
+	ID3D11DeviceContext* deviceContext = gHandler->GetDeviceContext();
+
 	//Initialize the base class GameState
 	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
@@ -55,13 +59,12 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 		light.Diffuse = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		light.Ambient = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(0.0f, 0.0f, -8.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 0.0f, -10.0f, 1.0f);
 		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.09f, 0.032f);
 		this->pointLights.push_back(light);
 
 	}
 
-	
 	return result;
 }
 
@@ -142,7 +145,7 @@ int MenuState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHan
 		{
 			//Create a stage state and push it to the stack
 			HubState* newStage = new HubState();
-			newStage->Initialize(this->m_device, this->m_deviceContext, this->m_GSH);
+			newStage->Initialize(gHandler, this->m_GSH);
 			newStage->SetManualClearing(false);
 			this->m_GSH->PushState(newStage);
 		}

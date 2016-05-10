@@ -5,7 +5,6 @@ Boss::Boss(float posX, float posZ)
 	this->posX = posX;
 	this->posZ = posZ;
 	this->abilityUsed = 0;
-    this->isAlive = true;
 }
 Boss::~Boss()
 {

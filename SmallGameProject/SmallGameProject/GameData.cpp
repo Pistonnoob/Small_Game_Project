@@ -67,9 +67,20 @@ void GameData::Update(float deltaTime)
 void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
-	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
-	//	this->enemiesKilled++;
-	//}
+	if (evnt == Events::ENTITY::BOMBER_DEAD) {
+		this->enemiesKilled++;
+		this->playerHighScore += SCORE_VALUE_BOMBER;
+	}
+
+	else if (evnt == Events::ENTITY::MELEE_DEAD) {
+		this->enemiesKilled++;
+		this->playerHighScore += SCORE_VALUE_MELEE;
+	}
+
+	else if (evnt == Events::ENTITY::RANGED_DEAD) {
+		this->enemiesKilled++;
+		this->playerHighScore += SCORE_VALUE_RANGED;
+	}
 
 	return;
 }

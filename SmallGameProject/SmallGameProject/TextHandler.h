@@ -3,7 +3,6 @@
 
 #include "Texture.h"
 #include "Font.h"
-#include "FontShaderHandler.h"
 
 class TextHandler {
 
@@ -47,12 +46,9 @@ private:
 	DirectX::XMMATRIX baseViewMatrix;
 	Font* font;
 	std::vector<Sentence*> sentences;
-	FontShaderHandler* fontShaderH;
 	int screenWidth;
 	int screenHeight;
 
-
-	void RenderSentence(ID3D11DeviceContext* deviceContext, int id);
 	void ReleaseSentences();
 
 public:
@@ -62,7 +58,8 @@ public:
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX baseViewMatrix, int screenWidth, int screenHeight);
 	void Shutdown();
-	void Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX orthoMatrix);
+	void RenderSentence(ID3D11DeviceContext* deviceContext, int id, int& indexCount, ID3D11ShaderResourceView*& texture, DirectX::XMFLOAT3& color);
+	int GetNrOfSentences();
 	int CreateSentence(ID3D11Device* device, int maxLength);
 	bool UpdateSentence(ID3D11DeviceContext* deviceContext, int id, const std::string& text, int newPosX, int newPosY, const DirectX::XMFLOAT3& color, float size);
 };

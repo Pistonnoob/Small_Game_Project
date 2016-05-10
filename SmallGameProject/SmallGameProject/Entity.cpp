@@ -6,6 +6,7 @@ Entity::Entity() {
 
 	this->posX = 0.0f;
 	this->posZ = 0.0f;
+
 }
 
 Entity::~Entity()
@@ -53,7 +54,9 @@ bool Entity::Initialize(Model * model, EntitySubject* entitySubject, bool isSphe
 		this->entityBV = new BoxBoundingVolume();
 		this->entityBV->GenerateBounds(this->entityModel);
 	}
-
+	DirectX::XMMATRIX modelWorldMatrix;
+	this->entityModel->GetWorldMatrix(modelWorldMatrix);
+	this->entityBV->UpdateBoundingVolume(modelWorldMatrix);
 
 	return true;
 }
@@ -126,7 +129,25 @@ void Entity::SetPosition(float newPosX, float newPosZ)
 	this->posZ = newPosZ;
 }
 
+unsigned int Entity::GetDamage()
+{
+	return this->damage;
+}
 
+void Entity::ApplyDamage(int dmg)
+{
+	this->health = this->health - dmg;
+	int i = 0;
+}
+
+bool Entity::IsAlive()
+{
+	if (this->health <= 0) {
+		return false;
+	}
+
+	return true;
+}
 
 
 

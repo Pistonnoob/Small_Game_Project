@@ -16,6 +16,7 @@ private:
 	IDirectInputDevice8* DIKeyboard;
 	IDirectInputDevice8* DIMouse;
 	DIMOUSESTATE DIMouseState;
+	DIMOUSESTATE OldDIMouseState;
 	unsigned char KeyboarState[256];
 	unsigned char OldKeyboardState[256];
 
@@ -43,6 +44,11 @@ public:
 	bool isKeyPressed(unsigned int key);
 	bool isKeyDown(unsigned int key);
 	bool isKeyReleased(unsigned int key);
+
+	//0 = left, 1 = right, 2 = scroll click, 3 = "Down button" on mouse
+	bool isMouseKeyPressed(unsigned int key);
+	bool isMouseKeyDown(unsigned int key);
+	bool isMouseKeyReleased(unsigned int key);
 
 	DirectX::XMFLOAT2 getMousePos();
 	DirectX::XMFLOAT2 getMousePosInWindow();

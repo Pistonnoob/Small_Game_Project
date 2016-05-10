@@ -5,7 +5,8 @@ BomberEnemy::BomberEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::BOMBER;
-    this->isAlive = true;
+	this->health = 100;
+	this->damage = 50;
 }
 
 BomberEnemy::~BomberEnemy()
@@ -22,6 +23,7 @@ bool BomberEnemy::Initialize(Model* model, EntitySubject* entitySubject, bool is
 
 void BomberEnemy::Shutdown()
 {
+	this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
 	Entity::Shutdown(true);
 }
 
@@ -45,7 +47,9 @@ void BomberEnemy::Fire(float deltaTime)
 	{
 		//this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14f * 2, 20);
 		this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
-        this->isAlive = false;
+
+		this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14f * 2, 20);
+        this->health = 0;	//set health to 0
 		this->attackCD = -1;
 	}
 	else if(this->attackCD > -1)

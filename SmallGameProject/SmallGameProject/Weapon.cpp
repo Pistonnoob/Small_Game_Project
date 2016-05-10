@@ -69,9 +69,18 @@ float Weapon::GetPlayerSpeedMod() const
 	return this->playerSpeed;
 }
 
-void Weapon::ShootWeapon(Entity * entity)
+void Weapon::ShootWeapon(Entity * entity, Events::UNIQUE_FIRE power)
 {
 	//player powerup
 
-	entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 10);
+	if (power == Events::UNIQUE_FIRE::ARCFIRE)
+	{
+		entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 10);
+	}
+	
+}
+
+void Weapon::ShootWeapon(Entity * entity)
+{
+	entity->GetEntitySubject()->Notify(entity, Events::ENTITY::Fire);
 }

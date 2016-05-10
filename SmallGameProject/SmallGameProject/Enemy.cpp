@@ -43,29 +43,3 @@ void Enemy::Move(DirectX::XMFLOAT3 moveVec)
     this->posX += moveVec.x;
     this->posZ += moveVec.z;
 }
-
-bool Enemy::GetIsAlive()
-{
-    return this->isAlive;
-}
-
-void Enemy::SetIsAlive(bool newIsAlive)
-{
-    this->isAlive = newIsAlive;
-    if (newIsAlive == false)
-    {
-		if (this->myType == Type::BOMBER)
-		{
-			this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
-		}
-		if (this->myType == Type::MELEEE)
-		{
-			this->entitySubject->Notify(this, Events::ENTITY::MELEE_DEAD);
-		}
-		if (this->myType == Type::RANGED)
-		{
-			this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
-		}
-        this->entitySubject->Notify(this, Events::ENTITY::DEAD);
-    }
-}
