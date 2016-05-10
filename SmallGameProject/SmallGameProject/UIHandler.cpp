@@ -82,8 +82,6 @@ void UIHandler::Shutdown()
 	}
 
 	this->textH.Shutdown();
-
-	this->device->Release();
 }
 
 int UIHandler::AddElement(int width, int height, int posX, int posY, std::string textureMtl, int nrOfTextures, bool isButton)

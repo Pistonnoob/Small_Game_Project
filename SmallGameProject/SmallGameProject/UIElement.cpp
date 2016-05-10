@@ -211,7 +211,7 @@ ID3D11ShaderResourceView* UIElement::GetTexture()
 void UIElement::SetPosition(float posX, float posY, int screenWidth, int screenHeight)
 {
 	this->posX = posX - (screenWidth / 2);
-	this->posY = posY + (screenHeight / 2);
+	this->posY = (posY - (screenHeight / 2)) * -1;
 
 	this->worldMatrix = DirectX::XMMatrixTranslation(this->posX, this->posY, 0);
 }
