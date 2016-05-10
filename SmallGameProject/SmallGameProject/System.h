@@ -23,6 +23,7 @@ private:
 	GraphicHandler* graphicH;
 	InputHandler* inputH;
 	CameraHandler* cameraH;
+	UIHandler uiHandler;
 
 	//gameData singelton, keeps track of all the game progression
 	GameData* gameData;

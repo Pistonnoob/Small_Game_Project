@@ -1,6 +1,6 @@
-#include "FontShaderHandler.h"
+#include "UIShaderHandler.h"
 
-FontShaderHandler::FontShaderHandler()
+UIShaderHandler::UIShaderHandler()
 {
 	this->vertexShader = nullptr;
 	this->pixelShader = nullptr;
@@ -9,11 +9,11 @@ FontShaderHandler::FontShaderHandler()
 	this->samplerState = nullptr;
 }
 
-FontShaderHandler::~FontShaderHandler()
+UIShaderHandler::~UIShaderHandler()
 {
 }
 
-bool FontShaderHandler::Initialize(ID3D11Device* device)
+bool UIShaderHandler::Initialize(ID3D11Device* device)
 {
 	HRESULT hresult;
 	ID3D10Blob* errorMessage;
@@ -29,8 +29,8 @@ bool FontShaderHandler::Initialize(ID3D11Device* device)
 	vertexShaderBuffer = nullptr;
 	pixelShaderBuffer = nullptr;
 
-	WCHAR* vsFilename = L"../SmallGameProject/FontVertexShader.hlsl";
-	WCHAR* psFilename = L"../SmallGameProject/FontPixelShader.hlsl";
+	WCHAR* vsFilename = L"../SmallGameProject/UIVertexShader.hlsl";
+	WCHAR* psFilename = L"../SmallGameProject/UIPixelShader.hlsl";
 
 	//Compile the vertex shader code
 	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
@@ -97,7 +97,7 @@ bool FontShaderHandler::Initialize(ID3D11Device* device)
 
 	//Fill the description of the dynamic matrix constant buffer that is in the vertex shader
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(FontConstantBuffer);
+	matrixBufferDesc.ByteWidth = sizeof(UIConstantBuffer);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	matrixBufferDesc.MiscFlags = 0;
@@ -131,12 +131,10 @@ bool FontShaderHandler::Initialize(ID3D11Device* device)
 		return false;
 	}
 
-	
-
 	return true;
 }
 
-void FontShaderHandler::Shutdown()
+void UIShaderHandler::Shutdown()
 {
 	//Release sampler state
 	if (this->samplerState) {
@@ -153,7 +151,6 @@ void FontShaderHandler::Shutdown()
 		this->layout->Release();
 		this->layout = nullptr;
 	}
-
 	//Release pixel shader
 	if (this->pixelShader) {
 		this->pixelShader->Release();
@@ -170,13 +167,13 @@ void FontShaderHandler::Shutdown()
 }
 
 
-bool FontShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix,
-	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, DirectX::XMFLOAT3 color)
+bool UIShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix,
+	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	bool result = false;
 
 	//Set shader parameters used for rendering
-	result = this->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, fontTexture, color);
+	result = this->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
 	if (!result) {
 		return false;
 	}
@@ -186,7 +183,7 @@ bool FontShaderHandler::Render(ID3D11DeviceContext* deviceContext, int indexCoun
 	return true;
 }
 
-void FontShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFilename)
+void UIShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -217,12 +214,12 @@ void FontShaderHandler::OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR
 	return;
 }
 
-bool FontShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix,
-	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* fontTexture, DirectX::XMFLOAT3 color)
+bool UIShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix,
+	DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	HRESULT hresult;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	FontConstantBuffer* dataPtr;
+	UIConstantBuffer* dataPtr;
 	unsigned int bufferNumber;
 
 	//Transpose each matrix to prepare for shaders (requirement in directx 11)
@@ -237,13 +234,12 @@ bool FontShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
 	}
 
 	//Get pointer to the data
-	dataPtr = (FontConstantBuffer*)mappedResource.pData;
+	dataPtr = (UIConstantBuffer*)mappedResource.pData;
 
 	//Copy the matrices to the constant buffer
 	dataPtr->world = worldMatrix;
 	dataPtr->view = viewMatrix;
 	dataPtr->projection = projectionMatrix;
-	dataPtr->color = color;
 
 	//Unmap the constant buffer to give the GPU access agin
 	deviceContext->Unmap(this->matrixBuffer, 0);
@@ -255,15 +251,15 @@ bool FontShaderHandler::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &this->matrixBuffer);
 
-	if (fontTexture) {
+	if (texture) {
 		//Set shader color texture resource for pixel shader
-		deviceContext->PSSetShaderResources(0, 1, &fontTexture);
+		deviceContext->PSSetShaderResources(0, 1, &texture);
 	}
 
 	return true;
 }
 
-void FontShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void UIShaderHandler::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	//Set the input layout for vertex
 	deviceContext->IASetInputLayout(this->layout);

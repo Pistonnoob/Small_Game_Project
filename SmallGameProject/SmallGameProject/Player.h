@@ -9,6 +9,7 @@
 #include "PowerUp.h"
 #include <vector>
 #include "Modifiers.h"
+#include "UIHandler.h"
 
 class Player : public Actor {
 
@@ -26,7 +27,7 @@ public:
 	Player();
 	~Player();
 
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string playerModelFilename,
+	bool Initialize(GraphicHandler* graphicsH, std::string playerModelFilename,
 		std::string weaponModelFile, bool isSphere, EntitySubject* entitySub);
 	
 	void Shutdown();

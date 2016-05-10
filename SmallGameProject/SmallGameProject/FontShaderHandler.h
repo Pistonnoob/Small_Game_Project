@@ -7,17 +7,14 @@
 #include <directxmath.h>
 #include <fstream>
 
-using namespace DirectX;
-using namespace std;
-
 class FontShaderHandler {
 private:
 	struct FontConstantBuffer
 	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX projection;
-		XMFLOAT3 color;
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
+		DirectX::XMMATRIX projection;
+		DirectX::XMFLOAT3 color;
 	};
 
 	ID3D11VertexShader* vertexShader;
@@ -28,18 +25,18 @@ private:
 
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 color);
 
-	void RenderShader(ID3D11DeviceContext*, int);
+	void RenderShader(ID3D11DeviceContext* deviceContext, int vertexCount);
 
 public:
 	FontShaderHandler();
 	~FontShaderHandler();
 
-	bool Initialize(ID3D11Device*);
+	bool Initialize(ID3D11Device* device);
 	void Shutdown();
 
-	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, DirectX::XMMATRIX worldMatrix, DirectX::XMMATRIX viewMatrix, DirectX::XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 color);
 };
 
 #endif

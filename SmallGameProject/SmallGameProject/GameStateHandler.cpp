@@ -32,11 +32,11 @@ void GameStateHandler::Shutdown()
 	}
 }
 
-bool GameStateHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+bool GameStateHandler::Initialize(GraphicHandler* gHandler)
 {
 	int result = 1;
 	StartState* startState = new StartState();
-	startState->Initialize(device, deviceContext, this);
+	startState->Initialize(gHandler, this);
 	this->m_gameStates.push_back(startState);
 	return true;
 }

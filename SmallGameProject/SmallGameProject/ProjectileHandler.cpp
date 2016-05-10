@@ -40,7 +40,7 @@ void ProjectileHandler::Update(float deltaTime)
 		DirectX::XMMATRIX modelWorldMatrix;
 
 		//temp->GetModel()->GetWorldMatrix(modelWorldMatrix);
-		XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
+		DirectX::XMFLOAT3 pos = this->projectiles.at(i)->GetPosition();
 		modelWorldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->projectiles.at(i)->GetModel()->SetWorldMatrix(modelWorldMatrix);
 		
@@ -75,7 +75,7 @@ void ProjectileHandler::Update(float deltaTime)
 }
 void ProjectileHandler::Render(GraphicHandler * gHandler, CameraHandler* camera)
 {
-	XMFLOAT3 pos;
+	DirectX::XMFLOAT3 pos;
 	DirectX::XMMATRIX worldMatrix;
     for (auto projectile : this->projectiles)
     {
@@ -121,8 +121,8 @@ void ProjectileHandler::OnNotify(Entity* entity, Events::ENTITY evnt)
 	{
 	case(Events::ENTITY::Fire) :
 
-		XMFLOAT3 dir = entity->GetAimDir();
-		XMFLOAT3 pos = entity->GetPosition();
+		DirectX::XMFLOAT3 dir = entity->GetAimDir();
+		DirectX::XMFLOAT3 pos = entity->GetPosition();
 
 		DirectX::XMVECTOR dirr = DirectX::XMVectorSet(dir.x, dir.y, dir.z, 0.0f);
 		dirr = DirectX::XMVector3Normalize(dirr);
