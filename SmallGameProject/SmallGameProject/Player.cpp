@@ -25,7 +25,7 @@ bool Player::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceConte
 	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere, entitySub)) {
 		return false;
 	}
-	this->entitySubject->Notify(this, Events::PLAYER_CREATED);
+	this->entitySubject->Notify(this, Events::ENTITY::PLAYER_CREATED);
 	this->playerWeapon = new Weapon();
 	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
 		return false;
@@ -100,16 +100,33 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 void Player::HandleInput(InputHandler * input)
 {
 	if (input->isKeyDown(DIK_W)) {
-		this->MoveUp(0.00001f);
+		this->MoveUp(0.01f);
 	}
 	if (input->isKeyDown(DIK_S)) {
-		this->MoveDown(0.00001f);
+		this->MoveDown(0.01f);
 	}
 	if (input->isKeyDown(DIK_D)) {
-		this->MoveRight(0.00001f);
+		this->MoveRight(0.01f);
 	}
 	if (input->isKeyDown(DIK_A)) {
-		this->MoveLeft(0.00001f);
+		this->MoveLeft(0.01f);
+	}
+
+	if (input->isKeyPressed(DIK_1))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
+	}
+	if (input->isKeyPressed(DIK_2))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::MELEE_CREATED);
+	}
+	if (input->isKeyPressed(DIK_3))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::RANGED_CREATED);
+	}
+	if (input->isKeyPressed(DIK_4))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
 	}
 
 }
@@ -160,7 +177,7 @@ Weapon * Player::GetWeapon()
 void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
-		this->posX += (0.05f * this->playerMovmentSpeed);
+		this->posX += (0.05f * this->playerMovmentSpeed) * deltaTime;
 	}
 }
 
@@ -168,7 +185,7 @@ void Player::MoveRight(float deltaTime)
 void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
-		this->posX -= (0.05f * this->playerMovmentSpeed);
+		this->posX -= (0.05f * this->playerMovmentSpeed) * deltaTime;
 	}
 }
 
@@ -176,7 +193,7 @@ void Player::MoveLeft(float deltaTime)
 void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
-		this->posZ += (0.05f * this->playerMovmentSpeed);
+		this->posZ += (0.05f * this->playerMovmentSpeed) * deltaTime;
 	}
 }
 
@@ -184,7 +201,7 @@ void Player::MoveUp(float deltaTime)
 void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
-		this->posZ -= (0.05f * this->playerMovmentSpeed);
+		this->posZ -= (0.05f * this->playerMovmentSpeed) * deltaTime;
 	}
 }
 

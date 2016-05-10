@@ -42,7 +42,8 @@ void BomberEnemy::Fire(float deltaTime)
 {
 	if (this->attackCD > EXPLOSION_DELAY)
 	{
-		this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14f * 2, 20);
+		//this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14f * 2, 20);
+		this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
         this->isAlive = false;
 		this->attackCD = -1;
 	}

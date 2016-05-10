@@ -19,14 +19,12 @@ StageState::StageState()
 	this->enemySubject = EntitySubject();
     this->enemyPjHandler = ProjectileHandler();
 	this->enemySubject.AddObserver(&this->enemyPjHandler);
-	this->enemySubject.AddObserver(&this->myParticleHandler);
 
 	this->playerSubject = EntitySubject();
 	this->playerProjectile = ProjectileHandler();
 
 	this->playerSubject.AddObserver(&this->playerProjectile);
 	this->playerSubject.AddObserver(GameData::GetInstance());
-	this->playerSubject.AddObserver(&this->myParticleHandler);
 	
 	this->exitStage = false;
 
@@ -99,6 +97,9 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		//Pull down the visor of epic particle effects
 		//A visor is the moving part of a helmet, namely the part that protects the eyes
 		this->myParticleHandler.Initialize(device, deviceContext);
+
+		this->enemySubject.AddObserver(&this->myParticleHandler);
+		this->playerSubject.AddObserver(&this->myParticleHandler);
 
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
@@ -270,7 +271,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->player.Update(input, gHandler, &this->myCamera, newDT);
 
 //>>>>>>> beforeMemLeak
-	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
+	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
 
 
 	if (this->exitStage)
@@ -294,7 +295,11 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	}
 
 	XMFLOAT3 playerPos = this->player.GetPosition();
-	XMFLOAT3 enemyPos = this->enemies.at(0)->GetPosition();
+	XMFLOAT3 enemyPos = DirectX::XMFLOAT3(100, 0, 100);
+	if (this->enemies.size() > 0)
+	{
+		enemyPos = this->enemies.at(0)->GetPosition();
+	}
 	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 	this->pointLights.at(2).Position = XMFLOAT4(enemyPos.x, 1.0f, enemyPos.z, 1.0f);
 

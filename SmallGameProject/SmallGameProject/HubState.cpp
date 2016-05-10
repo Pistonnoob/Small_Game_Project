@@ -99,6 +99,7 @@ int HubState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCont
 		
 		this->playerSubject = EntitySubject();
 		this->playerSubject.AddObserver(GameData::GetInstance());
+		this->playerSubject.AddObserver(&this->myParticleHandler);
 
 		result = this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, &this->playerSubject);
 

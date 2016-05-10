@@ -8,14 +8,4 @@ t5}
 {B}
 {B}
 {B}
-t5}
-{B R}
-{B R}
-{B R}
-{B R}
-t5}
-{B R M}
-{B R M}
-{B R M}
-{B R M}
 end
