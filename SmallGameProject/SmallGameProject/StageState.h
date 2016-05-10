@@ -70,6 +70,9 @@ private:	//Variables
 	float camPosX;
 	float camPosZ;
 	bool inc;
+
+	bool isCompleted;
+
 public:
 	StageState();
 	virtual ~StageState();
@@ -81,7 +84,7 @@ public:
 	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
     virtual void ReadFile(string fileName);
-    virtual void HandleWaveSpawning(float deltaTime);
+    virtual void HandleWaveSpawning(float deltaTime, bool& isCompleted);
     virtual void SpawnWave(int levelIndex, int waveIndex);
 	virtual void SpawnEnemy(Type type, int pointIndex);
     virtual void RemoveDeadEnemies();

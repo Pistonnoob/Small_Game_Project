@@ -34,6 +34,7 @@ StageState::StageState()
 	this->camPosX = -30.0f;
 	this->camPosZ = 0.0f;
 	this->inc = true;
+	this->isCompleted = false;
 }
 
 
@@ -229,10 +230,10 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	float newDT = deltaTime / 1000000;
 
-    HandleWaveSpawning(newDT);
+    HandleWaveSpawning(newDT, this->isCompleted);
 
     RemoveDeadEnemies();
- 
+
 	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
 	
     this->enemyPjHandler.Update(newDT);
@@ -280,6 +281,11 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
  			int j = 0; 
 		}
+	}
+
+	//Check if level is completed
+	if (this->isCompleted && this->enemies.size() == 0) {
+		this->exitStage = true;	//end stage for testing
 	}
 
 	XMFLOAT3 playerPos = this->player.GetPosition();
@@ -466,7 +472,7 @@ void StageState::ReadFile(string fileName)
     }
 }
 
-void StageState::HandleWaveSpawning(float deltaTime)
+void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
 {
     this->timeToNextWave -= deltaTime;
     if (this->timeToNextWave <= 0)
@@ -484,6 +490,10 @@ void StageState::HandleWaveSpawning(float deltaTime)
                 this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
                 SpawnWave(this->currentLevel, this->currentWave);
             }
+			else {
+				//If the Level has spawned all waves
+				isCompleted = true;
+			}
         }
     }
 }
