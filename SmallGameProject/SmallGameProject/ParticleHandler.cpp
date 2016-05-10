@@ -51,7 +51,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::PLAYER_CREATED:
 	{
 		newEmitter = new EmitterPlayerSpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 4.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::PLAYER_MOVING:
@@ -61,7 +62,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::BOMBER_CREATED:
 	{
 		newEmitter = new EmitterEnemySpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::BOMBER_MOVING:
@@ -69,32 +71,37 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::BOMBER_DEAD:
 	{
 		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::RANGED_CREATED:
 	{
 		newEmitter = new EmitterEnemySpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::RANGED_MOVING:
 		break;
 	case Events::RANGED_DEAD:
 		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 		break;
 	case Events::MELEE_CREATED:
 	{
 		newEmitter = new EmitterEnemySpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::MELEE_MOVING:
 		break;
 	case Events::MELEE_DEAD:
 		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 		break;
 	case Events::IDLE:
 		break;
@@ -102,7 +109,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::DEAD:
 		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 		break;
 	default:
 		break;

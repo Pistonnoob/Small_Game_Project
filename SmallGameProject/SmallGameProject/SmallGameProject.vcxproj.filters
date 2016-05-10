@@ -285,6 +285,9 @@
     <ClCompile Include="UIShaderHandler.cpp">
       <Filter>Source Files\ShaderHandlers</Filter>
     </ClCompile>
+    <ClCompile Include="EmitterClusterExplosion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -482,9 +485,6 @@
     <ClInclude Include="FireCommand.h">
       <Filter>Header Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="EmitterExplosion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Boss.h">
       <Filter>Header Files\Entities\Actors\Boss</Filter>
     </ClInclude>
@@ -496,6 +496,12 @@
     </ClInclude>
     <ClInclude Include="UIShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterExplosion.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterClusterExplosion.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -535,5 +541,6 @@
     <FxCompile Include="UIPixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="ShadowMapVertexShader.hlsl" />
   </ItemGroup>
 </Project>

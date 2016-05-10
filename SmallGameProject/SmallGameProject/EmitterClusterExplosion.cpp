@@ -1,29 +1,30 @@
-#include "EmitterExplosion.h"
+#include "EmitterClusterExplosion.h"
 
 
 
-EmitterExplosion::EmitterExplosion()
+EmitterClusterExplosion::EmitterClusterExplosion()
 {
 }
 
 
-EmitterExplosion::~EmitterExplosion()
+EmitterClusterExplosion::~EmitterClusterExplosion()
 {
 }
 
-void EmitterExplosion::ShutdownSpecific()
+
+void EmitterClusterExplosion::ShutdownSpecific()
 {
 	this->currentParticleCnt = 0;
 	this->particles.clear();
 }
 
-bool EmitterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
+bool EmitterClusterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
 {
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
 	this->world = DirectX::XMMatrixIdentity();
-	this->emitterTime = timeLimit;
+
 
 	//Initialize the emitter
 	result = this->InitializeEmitter();
@@ -38,7 +39,7 @@ bool EmitterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceVie
 	return true;
 }
 
-bool EmitterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceContext)
+bool EmitterClusterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceContext)
 {
 	bool result = false;
 	this->accumulatedTime /= 1000000;
@@ -57,7 +58,7 @@ bool EmitterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 	return true;
 }
 
-void EmitterExplosion::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters & emitterParameters, int & amountOfParticles)
+void EmitterClusterExplosion::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters & emitterParameters, int & amountOfParticles)
 {
 	//NOT IMPLEMENTED
 	this->RenderBuffers(deviceContext);
@@ -69,22 +70,22 @@ void EmitterExplosion::Render(ID3D11DeviceContext * deviceContext, ParticleShade
 	amountOfParticles = this->currentParticleCnt;
 }
 
-ID3D11ShaderResourceView * EmitterExplosion::GetTexture()
+ID3D11ShaderResourceView * EmitterClusterExplosion::GetTexture()
 {
 	return this->texture;
 }
 
-int EmitterExplosion::GetIndexCount()
+int EmitterClusterExplosion::GetIndexCount()
 {
 	return this->indexCount;
 }
 
-bool EmitterExplosion::SortParticles()
+bool EmitterClusterExplosion::SortParticles()
 {
 	return true;
 }
 
-bool EmitterExplosion::InitializeEmitter()
+bool EmitterClusterExplosion::InitializeEmitter()
 {
 	this->velocity = 3.0f;
 	this->height = 6.0f;
@@ -95,6 +96,8 @@ bool EmitterExplosion::InitializeEmitter()
 	this->particles = std::vector<Particle>(this->maxParticles);
 	this->currentParticleCnt = 0.0f;
 	this->particleTimeLimit = 1.0f;
+	this->emitterTime = 2.0f;
+	this->emitterTime = 1.0f;
 	this->accumulatedTime = 0.0f;
 
 	float positionX, positionY, positionZ, dX, dZ, red, green, blue;
@@ -149,7 +152,7 @@ bool EmitterExplosion::InitializeEmitter()
 	return true;
 }
 
-bool EmitterExplosion::InitializeBuffers(ID3D11Device * device)
+bool EmitterClusterExplosion::InitializeBuffers(ID3D11Device * device)
 {
 	unsigned long* indices;
 	int i;
@@ -234,7 +237,7 @@ bool EmitterExplosion::InitializeBuffers(ID3D11Device * device)
 	return true;
 }
 
-void EmitterExplosion::UpdateParticles(float dT)
+void EmitterClusterExplosion::UpdateParticles(float dT)
 {
 	//Version 2. Possible future experimental parallel version
 	Particle_Update up(dT);
@@ -244,18 +247,15 @@ void EmitterExplosion::UpdateParticles(float dT)
 	//parallel_for_each(this->particles.begin(), this->particles.end(), up);
 }
 
-void EmitterExplosion::KillParticles()
+void EmitterClusterExplosion::KillParticles()
 {
 	if (this->accumulatedTime >= this->particleTimeLimit)
 	{
 		this->particles.clear();
 	}
-	//this->particles.erase(std::remove_if(particles.begin(), particles.end(), my_predicate), particles.end());
-	//this->particles.erase(std::remove_if(this->particles.begin(), this->particles.end(), [](Particle p) { p.active = p.time < p.timeCap; return !p.active; }), this->particles.end());
-	//this->currentParticleCnt = this->particles.size();
 }
 
-bool EmitterExplosion::UpdateBuffers(ID3D11DeviceContext * deviceContext)
+bool EmitterClusterExplosion::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -292,7 +292,7 @@ bool EmitterExplosion::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 
 }
 
-void EmitterExplosion::RenderBuffers(ID3D11DeviceContext * deviceContext)
+void EmitterClusterExplosion::RenderBuffers(ID3D11DeviceContext * deviceContext)
 {
 	unsigned int stride;
 	unsigned int offset;

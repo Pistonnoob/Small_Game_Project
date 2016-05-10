@@ -20,13 +20,14 @@ void EmitterPlayerSpawn::ShutdownSpecific()
 	this->root.clear();
 }
 
-bool EmitterPlayerSpawn::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
+bool EmitterPlayerSpawn::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
 {
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
 	this->world = DirectX::XMMatrixIdentity();
-
+	this->emitterTime = timeLimit;
+	this->particleTimeLimit = timeLimit;
 
 	//Initialize the emitter
 	result = this->InitializeEmitter();
@@ -92,9 +93,12 @@ bool EmitterPlayerSpawn::SortParticles()
 
 bool EmitterPlayerSpawn::InitializeEmitter()
 {
-	this->particleVelocity = 1.0f;
+	//Particle Velocity
+	float totalDistance = Math::MATH_PI * 2 * 2;
+	float totalDistancePerSecond = totalDistance / this->emitterTime;
+	this->particleVelocity = totalDistancePerSecond;
 
-	this->particleSize = 0.2f;
+	this->particleSize = 0.4f;
 	this->particlesPerSecond = 10.0f;
 	this->maxParticles = 100;
 	//this->root = vector<Particle>(this->maxParticles);
@@ -102,8 +106,6 @@ bool EmitterPlayerSpawn::InitializeEmitter()
 
 	this->currentParticleCnt = 0.0f;
 
-	this->particleTimeLimit = 8.0f;
-	this->emitterTime = 10.0f;
 	this->accumulatedTime = 0.0f;
 
 	return true;

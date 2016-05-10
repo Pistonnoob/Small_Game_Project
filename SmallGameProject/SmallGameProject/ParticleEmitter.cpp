@@ -49,11 +49,14 @@ void ParticleEmitter::Shutdown()
 	this->ShutdownSpecific();
 }
 
-bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
+bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
 {
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
+	//Set the time limit for emitting particles
+	this->emitterTime = timeLimit;
+
 	this->world = DirectX::XMMatrixIdentity();
 	this->vertexBuffer = nullptr;
 	this->indexBuffer = nullptr;

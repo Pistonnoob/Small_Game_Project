@@ -36,13 +36,13 @@ void EmitterPrototype::ShutdownSpecific()
 	}
 }
 
-bool EmitterPrototype::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
+bool EmitterPrototype::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
 {
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
 	this->world = DirectX::XMMatrixIdentity();
-
+	this->emitterTime = timeLimit;
 
 	//Initialize the emitter
 	result = this->InitializeEmitter();

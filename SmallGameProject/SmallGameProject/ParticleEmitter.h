@@ -35,7 +35,7 @@ public:
 	virtual void Shutdown();
 	virtual void ShutdownSpecific() = 0;
 
-	virtual bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture);
+	virtual bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit = 2.0f);
 
 	void SetCameraPos(DirectX::XMFLOAT3 cameraPos);
 	void SetCameraPos(DirectX::XMFLOAT4 cameraPos);
