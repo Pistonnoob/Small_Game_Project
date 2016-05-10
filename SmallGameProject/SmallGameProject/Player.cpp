@@ -102,19 +102,6 @@ void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
 
 void Player::HandleInput(InputHandler * input, float dTime)
 {
-	if (input->isKeyDown(DIK_W)) {
-		this->MoveUp(0.01f);
-	}
-	if (input->isKeyDown(DIK_S)) {
-		this->MoveDown(0.01f);
-	}
-	if (input->isKeyDown(DIK_D)) {
-		this->MoveRight(0.01f);
-	}
-	if (input->isKeyDown(DIK_A)) {
-		this->MoveLeft(0.01f);
-	}
-
 	if (input->isKeyPressed(DIK_1))
 	{
 		this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
@@ -130,6 +117,9 @@ void Player::HandleInput(InputHandler * input, float dTime)
 	if (input->isKeyPressed(DIK_4))
 	{
 		this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
+		this->MoveUp(dTime);
+	}
+	if (input->isKeyDown(DIK_W)) {
 		this->MoveUp(dTime);
 	}
 	if (input->isKeyDown(DIK_S)) {
