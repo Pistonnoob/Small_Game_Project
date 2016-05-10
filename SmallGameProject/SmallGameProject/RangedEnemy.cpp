@@ -5,7 +5,8 @@ RangedEnemy::RangedEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::RANGED;
-    this->isAlive = true;
+	this->health = 50;
+	this->damage = 20;
 }
 
 RangedEnemy::~RangedEnemy()

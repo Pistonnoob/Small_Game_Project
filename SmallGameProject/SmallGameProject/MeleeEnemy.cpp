@@ -5,7 +5,8 @@ MeleeEnemy::MeleeEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::MELEEE;
-    this->isAlive = true;
+	this->health = 150;
+	this->damage = 10;
 }
 
 MeleeEnemy::~MeleeEnemy()

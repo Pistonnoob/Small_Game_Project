@@ -73,6 +73,12 @@
     <Filter Include="Source Files\Abilities">
       <UniqueIdentifier>{721d7e91-2060-40fc-a973-d0986671d514}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Observers\ParticleHandler\Particle">
+      <UniqueIdentifier>{c6bd3c32-933d-4118-82ff-7b6fe6a5cfb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Observers\ParticleHandler\Particle">
+      <UniqueIdentifier>{98f00964-34b6-4eae-b660-0ca91d943e04}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Entities\Actors\Boss">
       <UniqueIdentifier>{d36024ce-e9e7-4793-895e-bfa57661bedb}</UniqueIdentifier>
     </Filter>
@@ -231,9 +237,6 @@
     <ClCompile Include="EmitterPrototype.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>Source Files\Observers\ParticleHandler</Filter>
-    </ClCompile>
     <ClCompile Include="ArcFire.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
@@ -242,6 +245,18 @@
     </ClCompile>
     <ClCompile Include="SplitFire.cpp">
       <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterHolder.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files\Observers\ParticleHandler\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterPlayerSpawn.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterEnemySpawn.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
     <ClCompile Include="HubState.cpp">
       <Filter>Source Files\GameStates</Filter>
@@ -254,6 +269,9 @@
     </ClCompile>
     <ClCompile Include="Ability.cpp">
       <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterExplosion.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
     <ClCompile Include="Boss.cpp">
       <Filter>Source Files\Entities\Actors\Boss</Filter>
@@ -428,9 +446,6 @@
     <ClInclude Include="EmitterPrototype.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>Header Files\Observers\ParticleHandler</Filter>
-    </ClInclude>
     <ClInclude Include="LightStructs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -440,8 +455,20 @@
     <ClInclude Include="Abilities.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
+    <ClInclude Include="EmitterHolder.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files\Observers\ParticleHandler\Particle</Filter>
+    </ClInclude>
     <ClInclude Include="EventLib.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterPlayerSpawn.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterEnemySpawn.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
     <ClInclude Include="HubState.h">
       <Filter>Header Files\GameStates</Filter>
@@ -454,6 +481,9 @@
     </ClInclude>
     <ClInclude Include="FireCommand.h">
       <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterExplosion.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Boss.h">
       <Filter>Header Files\Entities\Actors\Boss</Filter>

@@ -43,6 +43,7 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 		Boss* bossPtr = (Boss*)actor;
 		updateBoss(bossPtr, playerPos, deltaTime);
 	}
+    this->updateActorAimDir(actor, playerPos);
     for (int i = 0; i < this->nrOfActions; i++)
     {
         if (commands.size() != 0)
@@ -56,9 +57,10 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 
         }
     }
+	DirectX::XMFLOAT3 pos = actor->GetPosition();
 
-	actor->GetModel()->GetWorldMatrix(modelWorldMatrix);
-	actor->GetBV()->UpdateBoundingVolume(modelWorldMatrix);
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+	actor->GetBV()->UpdateBoundingVolume(worldMatrix);
 
     for (int i = 0; i < commands.size(); i++)
     {
@@ -80,9 +82,7 @@ void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos, float del
 		bool canExlpode = actor->ChargeExplosion(deltaTime);
 		if (canExlpode == true)
 		{
-			float x = (playerPos.x - actor->GetPosition().x);
-			float z = (playerPos.z - actor->GetPosition().z);
-			actor->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
+
 			this->commands.push_back(new FireCommand());
 		}
 	}
@@ -101,9 +101,7 @@ void Ai::updateRange(RangedEnemy* actor, DirectX::XMFLOAT3 playerPos, float delt
     }
     if(distance < RANGED_MAX_DESIRED_DISTANCE)
     {
-        float x = (playerPos.x - actor->GetPosition().x);
-        float z = (playerPos.z - actor->GetPosition().z);
-		actor->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
+
         this->commands.push_back(new FireCommand());
     }
 }
@@ -120,9 +118,6 @@ void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos, float delta
     }
 	else
 	{
-		float x = (playerPos.x - actor->GetPosition().x);
-		float z = (playerPos.z - actor->GetPosition().z);
-		actor->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
 		this->commands.push_back(new FireCommand());
 	}
 }
@@ -239,6 +234,20 @@ void Ai::seperate(Enemy* actor1, Enemy* actor2, float amplitude, DirectX::XMFLOA
     dir.x *= -1.0f;
     dir.z *= -1.0f;
     actor2->Move(dir);
+}
+
+void Ai::updateActorAimDir(Enemy * actor, DirectX::XMFLOAT3 playerPos)
+{
+    float x = (playerPos.x - actor->GetPosition().x);
+    float z = (playerPos.z - actor->GetPosition().z);
+
+    DirectX::XMVECTOR vec = DirectX::XMVectorSet(x, 0, z, 0);
+    vec = DirectX::XMVector4Normalize(vec);
+
+    x = DirectX::XMVectorGetX(vec);
+    z = DirectX::XMVectorGetZ(vec);
+
+    actor->SetAimDir(DirectX::XMFLOAT3(x, 0, z));
 }
 
 int Ai::getNrOfActions() const

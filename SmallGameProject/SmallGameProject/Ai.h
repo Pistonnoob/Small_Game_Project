@@ -32,6 +32,8 @@ private:
     void moveAwayFromPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos);
     float distanceBetween(DirectX::XMFLOAT3 positon1, DirectX::XMFLOAT3 positon2);
     void seperate(Enemy* actor1, Enemy* actor2, float amplitude, DirectX::XMFLOAT3 dir);
+
+    void updateActorAimDir(Enemy* actor, DirectX::XMFLOAT3 playerPos);
 public:
     Ai();
     ~Ai();

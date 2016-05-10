@@ -5,7 +5,8 @@ BomberEnemy::BomberEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::BOMBER;
-    this->isAlive = true;
+	this->health = 100;
+	this->damage = 50;
 }
 
 BomberEnemy::~BomberEnemy()
@@ -43,7 +44,7 @@ void BomberEnemy::Fire(float deltaTime)
 	if (this->attackCD > EXPLOSION_DELAY)
 	{
 		this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14f * 2, 20);
-        this->isAlive = false;
+        this->health = 0;	//set health to 0
 		this->attackCD = -1;
 	}
 	else if(this->attackCD > -1)
