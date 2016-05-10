@@ -151,7 +151,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		//sanctuary from the oblivion below!
 		this->m_ground = Model();
 
-		result = this->m_ground.Initialize(device, deviceContext, "testMap");
+		result = this->m_ground.Initialize(device, deviceContext, "Stage1NoPlanet");
 		if (!result) {
 			return false;
 		}
