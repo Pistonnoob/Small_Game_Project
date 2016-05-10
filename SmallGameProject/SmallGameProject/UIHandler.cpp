@@ -1,9 +1,10 @@
 #include "UIHandler.h"
+#include "GraphicHandler.h"
 
 UIHandler::UIHandler()
 {
 	this->elements = std::vector<UIElement>();
-	this->UIShaderH = UIShaderHandler();
+	this->textH = TextHandler();
 }
 
 UIHandler::~UIHandler()
@@ -26,9 +27,11 @@ bool UIHandler::Initialize(GraphicHandler* graphicsH)
 
 	this->projectionMatrix = graphicsH->GetOrthograpicMatrix();
 
-	if (!this->UIShaderH.Initialize(this->device)) {
+	if(!this->textH.Initialize(this->device, this->deviceContext, this->viewMatrix, this->screenWidth, this->screenHeight)){
 		return false;
 	}
+
+	
 
 	return true;
 }
@@ -37,6 +40,29 @@ void UIHandler::HandleInput(InputHandler * inputH)
 {
 	for (auto button : this->elements) {
 		button.UpdateClicked(inputH->getMousePos(), this->screenWidth, this->screenHeight);
+	}
+}
+
+void UIHandler::RenderText(FontShaderHandler * fontShaderH)
+{
+	int indexCount;
+	ID3D11ShaderResourceView* texture = nullptr;
+	DirectX::XMFLOAT3 color;
+
+	int textsToRender = this->textH.GetNrOfSentences();
+	for (int i = 0; i < textsToRender; i++) {
+		this->textH.RenderSentence(this->deviceContext, i, indexCount, texture, color);
+
+		fontShaderH->Render(this->deviceContext, indexCount, DirectX::XMMatrixIdentity(), this->viewMatrix, this->projectionMatrix, texture, color);
+	}
+}
+
+void UIHandler::RenderElements(UIShaderHandler * uiShaderH)
+{
+	for (auto element : this->elements) {
+		element.Render(this->deviceContext);
+
+		uiShaderH->Render(this->deviceContext, 6, element.GetWorldMatrix(), this->viewMatrix, this->projectionMatrix, element.GetTexture());
 	}
 }
 
@@ -49,22 +75,13 @@ bool UIHandler::WasButtonPressed(int buttonID)
 	return false;
 }
 
-void UIHandler::Render()
-{
-	for (auto element : this->elements) {
-		element.Render(this->deviceContext);
-
-		this->UIShaderH.Render(this->deviceContext, 6, element.GetWorldMatrix(), this->viewMatrix, this->projectionMatrix, element.GetTexture());
-	}
-}
-
 void UIHandler::Shutdown()
 {
 	for (auto element : this->elements) {
 		element.Shutdown();
 	}
 
-	this->UIShaderH.Shutdown();
+	this->textH.Shutdown();
 
 	this->device->Release();
 }
@@ -72,7 +89,7 @@ void UIHandler::Shutdown()
 int UIHandler::AddElement(int width, int height, int posX, int posY, std::string textureMtl, int nrOfTextures, bool isButton)
 {
 	UIElement temp = UIElement();
-	bool result = temp.Initialize(this->device, this->deviceContext, width, height, posX, posY, textureMtl, nrOfTextures, isButton);
+	bool result = temp.Initialize(this->device, this->deviceContext, width, height, this->screenWidth, this->screenHeight, posX, posY, textureMtl, nrOfTextures, isButton);
 	if (!result) {
 		return -1;
 	}
@@ -87,7 +104,7 @@ int UIHandler::UpdateElement(int elementIndex, int posX, int posY, int textureIn
 		return -1;
 	}
 
-	this->elements.at(elementIndex).SetPosition(posX, posY);
+	this->elements.at(elementIndex).SetPosition(posX, posY, this->screenWidth, this->screenHeight);
 	this->elements.at(elementIndex).ChangeTexture(textureIndex);
 
 	return 1;
@@ -100,4 +117,14 @@ int UIHandler::RemoveElement(int elementIndex)
 	}
 
 	this->elements.erase(this->elements.begin() + elementIndex);
+}
+
+int UIHandler::CreateTextHolder(int maxLength)
+{
+	return this->textH.CreateSentence(this->device, maxLength);
+}
+
+bool UIHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color, float size)
+{
+	return this->textH.UpdateSentence(this->deviceContext, id, text, posX, posY, color, size);
 }

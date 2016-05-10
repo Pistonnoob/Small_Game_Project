@@ -22,7 +22,7 @@ UIElement::~UIElement()
 {
 }
 
-bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int posX, int posY, std::string textureMtl, int nrOfTextures, bool clickAble)
+bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int width, int height, int screenWidth, int screenHeight, int posX, int posY, std::string textureMtl, int nrOfTextures, bool clickAble)
 {
 	VertexSimple vertices[6];
 	unsigned long indices[6];
@@ -39,7 +39,7 @@ bool UIElement::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	this->width = float(width / 2);
 	this->height = float(height / 2);
 
-	this->SetPosition(posX, posY);
+	this->SetPosition(posX, posY, screenWidth, screenHeight);
 
 	//Calculate the screen coordinates of the left side of the window
 	left = 0 - this->width;
@@ -208,12 +208,12 @@ ID3D11ShaderResourceView* UIElement::GetTexture()
 	return this->texture.GetTexture(this->activeTexture);
 }
 
-void UIElement::SetPosition(float posX, float posY)
+void UIElement::SetPosition(float posX, float posY, int screenWidth, int screenHeight)
 {
-	this->posX = posX;
-	this->posY = posY;
+	this->posX = posX - (screenWidth / 2);
+	this->posY = posY + (screenHeight / 2);
 
-	this->worldMatrix = DirectX::XMMatrixTranslation(posX, posY, 0);
+	this->worldMatrix = DirectX::XMMatrixTranslation(this->posX, this->posY, 0);
 }
 
 DirectX::XMMATRIX UIElement::GetWorldMatrix()

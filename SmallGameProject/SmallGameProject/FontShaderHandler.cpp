@@ -131,6 +131,8 @@ bool FontShaderHandler::Initialize(ID3D11Device* device)
 		return false;
 	}
 
+	
+
 	return true;
 }
 
@@ -151,6 +153,7 @@ void FontShaderHandler::Shutdown()
 		this->layout->Release();
 		this->layout = nullptr;
 	}
+
 	//Release pixel shader
 	if (this->pixelShader) {
 		this->pixelShader->Release();

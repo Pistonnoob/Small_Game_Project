@@ -5,7 +5,6 @@ TextHandler::TextHandler()
 {
 	this->baseViewMatrix = DirectX::XMMatrixIdentity();
 	this->font = nullptr;
-	this->fontShaderH = nullptr;
 }
 
 TextHandler::TextHandler(const TextHandler& originalObj)
@@ -143,9 +142,14 @@ void TextHandler::ReleaseSentences()
 	return;
 }
 
-void TextHandler::RenderSentence(ID3D11DeviceContext* deviceContext, int id)
+void TextHandler::RenderSentence(ID3D11DeviceContext* deviceContext, int id, int& indexCount, ID3D11ShaderResourceView*& texture, DirectX::XMFLOAT3& color)
 {
 	Sentence* tempSentence = this->sentences.at(id);
+
+	indexCount = tempSentence->indexCount;
+	texture = this->font->GetTexture();
+	color = tempSentence->color;
+
 	unsigned int stride;
 	unsigned offset;
 
@@ -165,6 +169,11 @@ void TextHandler::RenderSentence(ID3D11DeviceContext* deviceContext, int id)
 	return;
 }
 
+int TextHandler::GetNrOfSentences()
+{
+	return this->sentences.size();
+}
+
 bool TextHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX baseViewMatrix, int screenWidth, int screenHeight)
 {
 	bool result;
@@ -178,14 +187,7 @@ bool TextHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCo
 		return false;
 	}
 
-	this->fontShaderH = new FontShaderHandler;
-	if (!this->fontShaderH) {
-		return false;
-	}
-	result = this->fontShaderH->Initialize(device);
-	if (!result) {
-		return false;
-	}
+	
 
 	this->baseViewMatrix = baseViewMatrix;
 	this->screenWidth = screenWidth;
@@ -198,30 +200,10 @@ void TextHandler::Shutdown()
 {
 	this->ReleaseSentences();
 
-	if (this->fontShaderH) {
-		this->fontShaderH->Shutdown();
-		delete this->fontShaderH;
-		this->fontShaderH = nullptr;
-	}
-
 	if (this->font) {
 		this->font->Shutdown();
 		delete this->font;
 		this->font = nullptr;
-	}
-
-	return;
-}
-
-void TextHandler::Render(ID3D11DeviceContext* deviceContext, DirectX::XMMATRIX orthoMatrix)
-{
-	Sentence* tempSentence;
-	for (int i = 0; i < this->sentences.size(); i++) {
-		tempSentence = this->sentences.at(i);
-		this->RenderSentence(deviceContext, i); //Put the sentence vertex buffer on the pipeline
-
-												//Render the sentence
-		this->fontShaderH->Render(deviceContext, tempSentence->indexCount, DirectX::XMMatrixIdentity(), this->baseViewMatrix, orthoMatrix, this->font->GetTexture(), tempSentence->color);
 	}
 
 	return;

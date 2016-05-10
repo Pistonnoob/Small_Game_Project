@@ -45,7 +45,9 @@ bool System::Initialize()
 	//Initialize the graphicHandler
 	this->graphicH->initialize(&this->hwnd, screenWidth, screenHeight, viewMatrix);
 
-	this->graphicH->CreateTextHolder(32);
+
+	this->uiHandler.Initialize(this->graphicH);
+	this->uiHandler.CreateTextHolder(32);
 
 	//Create the GameStateHandler.
 	this->gameSH = new GameStateHandler();
@@ -110,6 +112,8 @@ void System::Run()
 
 void System::Shutdown()
 {
+	this->uiHandler.Shutdown();
+
 	//Release the graphicsHandler
 	if (this->graphicH) {
 		this->graphicH->Shutdown();
@@ -274,7 +278,7 @@ bool System::Update(float dTime)
 	
 	//Update the fps text
 	std::string text = "FPS: " + std::to_string((int)(1000000 / dTime));
-	this->graphicH->UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 1.0f);
+	this->uiHandler.UpdateTextHolder(0, text, 20, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 1.0f);
 
 	//Update models world matrices
 	this->testRot += dTime / 1000000;
@@ -292,7 +296,7 @@ bool System::Update(float dTime)
 	//Render models
 	this->gameSH->Render(this->graphicH, hwnd);
 
-	this->graphicH->TextRender();
+	this->graphicH->UIRender(&this->uiHandler);
 
 	this->graphicH->PresentScene();
 
