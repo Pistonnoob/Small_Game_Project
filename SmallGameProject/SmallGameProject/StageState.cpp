@@ -186,7 +186,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->uiHandler.Initialize(gHandler);
 
-		this->uiHandler.AddElement(100, 100, 100, 100, "testUI.mtl", 1, true);
+		this->uiHandler.AddElement(100, 100, 300, 100, "testUI.mtl", 1, true);
 
 		if (!result) {
 			return false;
