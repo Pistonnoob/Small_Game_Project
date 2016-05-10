@@ -54,7 +54,7 @@ private:
 	bool InitializeEmitter();
 	bool InitializeBuffers(ID3D11Device* device);
 
-	void EmitParticles(float dT);
+	void EmittParticles(float dT);
 	void UpdateParticles(float dT);
 	void KillParticles();
 

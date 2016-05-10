@@ -2,7 +2,9 @@
 #define ALGORITHM_H
 #include <cmath>
 #include <DirectXMath.h>
-
+namespace Math {
+	static const float MATH_PI = 3.14159265358979323846;
+}
 namespace Algorithm {
 	int GetParabola(int x);
 	//Stores the result in x and y
