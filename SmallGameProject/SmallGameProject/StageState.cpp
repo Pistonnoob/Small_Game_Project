@@ -24,6 +24,8 @@ StageState::StageState()
 	this->playerSubject = nullptr;
 	this->playerProjectile = nullptr;
 
+	this->powerUpPointer = nullptr;
+
 	this->exitStage = false;
 
 	this->camPosX = -30.0f;
@@ -217,8 +219,6 @@ int StageState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
-	if (input->isKeyPressed(DIK_1))
- 		this->playerSubject->Notify(&this->player, Events::PICKUP::POWERUP_PICKUP);
 	return result;
 }
 
@@ -238,8 +238,18 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->playerProjectile->Update(newDT);
 	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
-//>>>>>>> beforeMemLeak
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
+
+	//update the timers in the powerup objects, which is held int the GameData singleton
+	float timeInSecounds = deltaTime * 0.000001;
+	this->timeElapsed += timeInSecounds;
+	GameData::Update(timeInSecounds);
+
+	if (timeElapsed > 5.0f)
+	{
+		this->powerUpPointer = GameData::GetRandomPowerup();
+		this->timeElapsed = 0;
+	}
 
 	if (this->exitStage)
 	{
@@ -266,16 +276,18 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
-	//10 sekund
-	float timeInSecounds = deltaTime * 0.000001;
-	this->timeElapsed += timeInSecounds;
-	GameData::Update(timeInSecounds);
-
-	if (timeElapsed > 10.0f)
+	if (this->powerUpPointer != nullptr)
 	{
-		GameData::SpawnRandomPowerup();
-		this->timeElapsed = 0;
+		if (this->powerUpPointer->GetBV()->Intersect(this->player.GetBV()) == true)
+		{
+			this->player.GetEntitySubject()->Notify(&this->player, Events::PICKUP::POWERUP_PICKUP);
+			this->powerUpPointer = nullptr;
+		}
 	}
+	//if
+	//this->playerSubject->Notify(&this->player, Events::PICKUP::POWERUP_PICKUP);
+	//10 sekund
+
 	/*
 	//if(GameData::getNrOfPow)
 	{
@@ -306,6 +318,13 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	//Player and weapon render
 	gHandler->DeferredRender(this->player.GetModel(), &this->myCamera);
 	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+
+
+	//render powerup if any on screen
+	if (this->powerUpPointer != nullptr)
+	{
+		gHandler->DeferredRender(powerUpPointer->GetModel(), &this->myCamera);
+	}
 
 	//renders all the actors in the enemies vector
 	for (int i = 0; i < this->enemies.size(); i++)
@@ -346,6 +365,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
+
 
 	return result;
 }

@@ -49,6 +49,8 @@ private:	//Variables
 	EntitySubject* playerSubject = nullptr;
 	ProjectileHandler* playerProjectile = nullptr;
 
+	PowerUp* powerUpPointer;
+
 	Ai m_AI;
 	vector<Enemy*> enemies;
 

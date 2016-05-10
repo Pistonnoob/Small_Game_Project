@@ -38,11 +38,11 @@ public:
 	virtual ~GameData();
 
 	static GameData* GetInstance();
-	static void SpawnRandomPowerup();
 
 	void Shutdown();
 	static void Update(float deltaTime);
 	static std::list<PowerUp*> getPowerup();
+	static PowerUp* GetRandomPowerup();
 
 	static void unlockPowerUp(Events::UNIQUE_FIRE newPower);
 

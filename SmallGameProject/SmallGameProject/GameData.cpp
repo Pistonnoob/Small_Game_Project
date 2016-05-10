@@ -52,11 +52,6 @@ GameData* GameData::GetInstance()
 	return single;
 }
 
-void GameData::SpawnRandomPowerup()
-{
-	GameData::powerupArsenal.front()->SetTimePowerup(10);
-}
-
 void GameData::Shutdown()
 {
 	
@@ -90,13 +85,11 @@ void GameData::Update(float deltaTime)
 		{
 			expandedPowerup = (*iterator)->Update(deltaTime);
 			//if powerup update return false, the powerup has run out
-			if (!expandedPowerup);
+			if (expandedPowerup == false)
 			{
 				nrOfActivePowerups--;
 			}
-		}
-
-			
+		}	
 	}
 
 }
@@ -116,6 +109,11 @@ std::list<PowerUp*> GameData::getPowerup()
 	return toReturn;
 }
 
+PowerUp * GameData::GetRandomPowerup()
+{
+	return GameData::powerupArsenal.front();
+}
+
 void GameData::unlockPowerUp(Events::UNIQUE_FIRE newPower)
 {
 	powerupArsenal.push_back(new PowerUp(newPower));
@@ -129,7 +127,7 @@ int GameData::getNrOfActivePowerups()
 void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject)
 {
 	unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
-	GameData::powerupArsenal.front()->Initialize(device, deviceContext,"ogreFullG", false, playerSubject);
+	GameData::powerupArsenal.front()->Initialize(device, deviceContext,"ogreFullG", true, playerSubject);
 }
 
 void GameData::ShutdownStageStateGD()
