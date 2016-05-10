@@ -22,6 +22,7 @@ bool BomberEnemy::Initialize(Model* model, EntitySubject* entitySubject, bool is
 
 void BomberEnemy::Shutdown()
 {
+	this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
 	Entity::Shutdown(true);
 }
 

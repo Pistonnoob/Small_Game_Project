@@ -21,6 +21,7 @@ bool RangedEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool i
 
 void RangedEnemy::Shutdown()
 {
+	this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
 	Entity::Shutdown(true);
 }
 

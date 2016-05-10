@@ -199,6 +199,9 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		//Arm thy armies!
         SpawnWave(this->currentLevel, this->currentWave);
+
+		//Add GameData oberver to enemiesSubject
+		this->enemySubject.AddObserver(GameData::GetInstance());
 	}
 
 
@@ -212,6 +215,11 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
+	if (input->isKeyPressed(DIK_T)) {
+		GameData* gd = GameData::GetInstance();
+		int i = 0;
+	}
+		
 	return result;
 }
 
@@ -257,9 +265,12 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	}
 
 	//Enemy - projectile intersection
+	int i = -1;
 	for (auto enemy : this->enemies) {
+		i++;
+
 		if (this->playerProjectile.IntersectionTest(enemy)) {
-			int j = 0;
+
 		}
 	}
 	
