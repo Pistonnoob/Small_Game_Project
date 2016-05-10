@@ -117,7 +117,7 @@ void Player::HandleInput(InputHandler * input, float dTime)
 		this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
 	}
 
-	if (input->isKeyPressed(DIK_F))
+	if (input->isKeyPressed(DIK_SPACE))
 	{
 		this->Fire(0.0);
 	}

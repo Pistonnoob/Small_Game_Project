@@ -131,7 +131,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (!modelResult) {
 			return false;
 		}
-		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere1");
+		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere2");
 		if (!modelResult) {
 			return false;
 		}
@@ -180,7 +180,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(15.0f, 1.0f, 15.0f, 1.0f);
 		this->pointLights.push_back(light);
 
 		if (!result) {
@@ -274,7 +274,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	XMFLOAT3 playerPos = this->player.GetPosition();
 	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 
-
 	return result;
 }
 
@@ -328,8 +327,9 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
 
-		gHandler->ShadowRender(this->enemies[i]->GetModel(), &this->myCamera);
+		gHandler->ShadowRender(&this->m_car, &this->myCamera);
 	}
+
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
