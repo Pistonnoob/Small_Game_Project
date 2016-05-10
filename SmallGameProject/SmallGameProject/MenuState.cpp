@@ -1,6 +1,6 @@
 #include "MenuState.h"
 #include "GameStateHandler.h"
-
+#include "Algorithm.h"
 
 
 MenuState::MenuState()
@@ -38,10 +38,11 @@ int MenuState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCon
 	{
 		//Proceed to initialize thyself
 		//Firstly thy must initialize thy mighty sword of obj!
-		bool victory = m_model.Initialize(device, deviceContext, "Menu");
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
-		worldMatrix *= DirectX::XMMatrixTranslation(0, -4, 0);
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -19.0f));
+		bool victory = m_model.Initialize(device, deviceContext, "Menu2D");
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.2f, 0.0f);
+		worldMatrix = DirectX::XMMatrixRotationX(DirectX::XM_PI / 2) * worldMatrix;
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));
 		victory = this->myCamera.Initialize();
 		this->m_model.SetWorldMatrix(worldMatrix);
 
