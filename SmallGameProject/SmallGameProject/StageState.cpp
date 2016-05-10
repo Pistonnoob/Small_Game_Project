@@ -186,7 +186,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->uiHandler.Initialize(gHandler);
 
-		this->uiHandler.AddElement(100, 100, 100, 100, "testUI.mtl", 1, false);
+		this->uiHandler.AddElement(100, 100, 100, 100, "testUI.mtl", 1, true);
 
 		if (!result) {
 			return false;
@@ -221,6 +221,10 @@ int StageState::HandleInput(InputHandler * input)
 			this->renderUI = false;
 		else
 			this->renderUI = true;
+	}
+
+	if (input->isKeyReleased(DIK_P)) {
+		this->uiHandler.HandleInput(input);
 	}
 
 	return result;
@@ -284,6 +288,10 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
 	this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+
+	if (this->uiHandler.WasButtonPressed(0)) {
+		this->pointLights.at(1).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+	}
 
 	return result;
 }
