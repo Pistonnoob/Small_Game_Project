@@ -257,6 +257,8 @@ void System::ShutdownWindow()
 
 bool System::Update(float dTime) 
 {
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	start = std::chrono::system_clock::now();
 	bool result = true;
 	this->inputH->Update();
 
@@ -279,7 +281,10 @@ bool System::Update(float dTime)
     this->testRot = 3.14;
 
     DirectX::XMFLOAT3 cameraPos = DirectX::XMFLOAT3(this->cameraH->GetCameraPos().x, this->cameraH->GetCameraPos().y, this->cameraH->GetCameraPos().z);
-    
+
+	end = std::chrono::system_clock::now();
+	std::chrono::duration<double> elaspedTime = end - start;
+	start = std::chrono::system_clock::now();
 
 	//Clear the render target views
 	this->graphicH->ClearRTVs();
@@ -290,6 +295,10 @@ bool System::Update(float dTime)
 	this->graphicH->TextRender();
 
 	this->graphicH->PresentScene();
+
+	end = std::chrono::system_clock::now();
+
+	std::chrono::duration<double> elaspedTimeRender = end - start;
 
 	return result;
 }

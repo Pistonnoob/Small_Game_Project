@@ -100,6 +100,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		/*this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));*/
+
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 20.0f / zoomIn, -7.0f / zoomIn));
 		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 6.0f, -50.0f));
 
@@ -131,7 +132,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		if (!modelResult) {
 			return false;
 		}
-		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere1");
+		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "projectile");
 		if (!modelResult) {
 			return false;
 		}
@@ -281,7 +282,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
-
 	if (this->enemyPjHandler.IntersectionTest(&this->player)) {
 		int j = 0;
 		this->exitStage = true;
@@ -318,9 +318,14 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
 		pos = this->enemies.at(i)->GetPosition();
-		
+
+        DirectX::XMFLOAT3 dirVec = this->enemies.at(i)->GetAimDir();
+		float angle = atan2(dirVec.z, dirVec.x);
+
+        DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
+
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_car.SetWorldMatrix(worldMatrix);
+		this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 
 		gHandler->DeferredRender(this->enemies.at(i)->GetModel(), &this->myCamera);
 
