@@ -6,8 +6,8 @@ Player::Player() : Actor()
 	this->posZ = 0.f;
 	this->playerMovmentSpeed = 1;
 	this->playerHighScore = 0;
-	this->health = 100000;	
-	this->damage = 1000;
+	this->health = 100;	
+	this->damage = 100;
 
 	//Initiliaze the forward vecktor as 0,0,1
 	this->forwardDir = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0, 0, 1));

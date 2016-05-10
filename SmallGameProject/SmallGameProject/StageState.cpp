@@ -226,6 +226,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
     RemoveDeadEnemies();
  
 	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
+	
     this->enemyPjHandler.Update(newDT);
 
 	this->playerProjectile.Update(newDT);
