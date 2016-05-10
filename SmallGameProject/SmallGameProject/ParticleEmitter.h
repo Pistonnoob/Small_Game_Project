@@ -40,6 +40,10 @@ public:
 	void SetCameraPos(DirectX::XMFLOAT3 cameraPos);
 	void SetCameraPos(DirectX::XMFLOAT4 cameraPos);
 
+	void SetWorld(DirectX::XMMATRIX world);
+	void ApplyPosition(DirectX::XMFLOAT3 deltaPosition);
+	void ApplyPosition(float dX, float dY, float dZ);
+	void ApplyMatrix(DirectX::XMMATRIX toApply);
 	void GetWorld(DirectX::XMMATRIX& storeIn);
 
 	bool Update(float dT, ID3D11DeviceContext* deviceContext);

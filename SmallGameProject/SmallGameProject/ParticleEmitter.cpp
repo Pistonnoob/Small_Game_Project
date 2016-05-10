@@ -82,6 +82,26 @@ void ParticleEmitter::SetCameraPos(DirectX::XMFLOAT4 cameraPos)
 	this->cameraPos = DirectX::XMFLOAT3(cameraPos.x, cameraPos.y, cameraPos.z);
 }
 
+void ParticleEmitter::SetWorld(DirectX::XMMATRIX world)
+{
+	this->world = world;
+}
+
+void ParticleEmitter::ApplyPosition(DirectX::XMFLOAT3 deltaPosition)
+{
+	this->ApplyPosition(deltaPosition.x, deltaPosition.y, deltaPosition.z);
+}
+
+void ParticleEmitter::ApplyPosition(float dX, float dY, float dZ)
+{
+	this->world *= DirectX::XMMatrixTranslation(dX, dY, dZ);
+}
+
+void ParticleEmitter::ApplyMatrix(DirectX::XMMATRIX toApply)
+{
+	this->world *= toApply;
+}
+
 void ParticleEmitter::GetWorld(DirectX::XMMATRIX& storeIn)
 {
 	storeIn = this->world;
