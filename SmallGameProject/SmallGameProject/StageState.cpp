@@ -245,7 +245,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->timeElapsed += timeInSecounds;
 	GameData::Update(timeInSecounds);
 
-	if (timeElapsed > 5.0f)
+	if (this->timeElapsed > 5.0f)
 	{
 		this->powerUpPointer = GameData::GetRandomPowerup();
 		this->timeElapsed = 0;
@@ -280,27 +280,11 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	{
 		if (this->powerUpPointer->GetBV()->Intersect(this->player.GetBV()) == true)
 		{
-			this->player.GetEntitySubject()->Notify(&this->player, Events::PICKUP::POWERUP_PICKUP);
+			//nu vill jag säga till gameData att  spelaren har plockat upp denna powerup
+			this->playerSubject->Notify(&this->player, this->powerUpPointer->GetType());
 			this->powerUpPointer = nullptr;
 		}
 	}
-	//if
-	//this->playerSubject->Notify(&this->player, Events::PICKUP::POWERUP_PICKUP);
-	//10 sekund
-
-	/*
-	//if(GameData::getNrOfPow)
-	{
-		if (spreadPower.GetBV()->Intersect(this->player.GetBV()))
-		{
-			//this->player.GetEntitySubject()->Notify(static_cast<Entity*>(&this->player), Events::PICKUP::POWERUP_PICKUP);
-			spread.setTime(10);
-		}
-
-	}
-	*/
-
-
 	XMFLOAT3 playerPos = this->player.GetPosition();
 	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 

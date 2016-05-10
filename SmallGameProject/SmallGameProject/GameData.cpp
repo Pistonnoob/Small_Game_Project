@@ -1,4 +1,6 @@
 #include "GameData.h"
+#include <stdlib.h>
+#include <time.h>
 
 bool GameData::isInstatiated = false;
 
@@ -63,13 +65,6 @@ void GameData::Shutdown()
 	isInstatiated = false;
 	delete single;
 	single = nullptr;
-
-	std::list<PowerUp*>::iterator iterator;
-
-	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
-	{
-		delete *iterator;
-	}
 }
 
 void GameData::Update(float deltaTime)
@@ -111,7 +106,19 @@ std::list<PowerUp*> GameData::getPowerup()
 
 PowerUp * GameData::GetRandomPowerup()
 {
-	return GameData::powerupArsenal.front();
+	int randPow = rand() % 3;
+	PowerUp* toReturn = nullptr;
+	randPow = 2;
+
+	std::list<PowerUp*>::iterator walker;
+	walker = GameData::powerupArsenal.begin();
+
+	for (int i = 0; i < randPow; i++)
+	{
+		walker++;
+	}
+
+	return (*walker);
 }
 
 void GameData::unlockPowerUp(Events::UNIQUE_FIRE newPower)
@@ -126,12 +133,35 @@ int GameData::getNrOfActivePowerups()
 
 void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject)
 {
+	srand(time(NULL));
+
 	unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
-	GameData::powerupArsenal.front()->Initialize(device, deviceContext,"ogreFullG", true, playerSubject);
+	unlockPowerUp(Events::UNIQUE_FIRE::SPLITFIRE);
+	unlockPowerUp(Events::UNIQUE_FIRE::REVERSERBULLETS);
+
+	std::list<PowerUp*>::iterator walker;
+	walker = GameData::powerupArsenal.begin();
+	(*walker)->Initialize(device, deviceContext,"ogreFullG", true, playerSubject);
+	walker++;
+	(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+	walker++;
+	(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
 }
 
 void GameData::ShutdownStageStateGD()
 {
+
+	std::list<PowerUp*>::iterator walker;
+	walker = GameData::powerupArsenal.begin();
+	(*walker)->Shutdown();
+	delete (*walker);
+	walker++;
+	(*walker)->Shutdown();
+	delete (*walker);
+	walker++;
+	(*walker)->Shutdown();
+	delete (*walker);
+    /*
 	PowerUp* toRemove = nullptr;
 
 	toRemove = GameData::powerupArsenal.front();
@@ -140,14 +170,12 @@ void GameData::ShutdownStageStateGD()
 	delete toRemove;
 
 	GameData::powerupArsenal.pop_front();
+	*/
 }
 
 void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
-	//Need to finish Entity class
-	//if (Enemy* enemy = dynamic_cast<Enemy*>(entity) && evnt == Events::DEAD) {
-	//	this->enemiesKilled++;
-	//}
+	int i = 0;
 
 	return;
 }

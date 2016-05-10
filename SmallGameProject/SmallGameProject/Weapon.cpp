@@ -73,11 +73,18 @@ void Weapon::ShootWeapon(Entity * entity, Events::UNIQUE_FIRE power)
 {
 	//player powerup
 
-	if (power == Events::UNIQUE_FIRE::ARCFIRE)
+	switch(power)
 	{
-		entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 10);
-	}
-	
+		case Events::UNIQUE_FIRE::ARCFIRE:
+			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 10);
+			break;
+		case Events::UNIQUE_FIRE::SPLITFIRE:
+			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::SPLITFIRE, 3.14 / 4, 10, 1, 3.14 / 2, 10);
+			break;
+		case Events::UNIQUE_FIRE::REVERSERBULLETS:
+			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::SPLITFIRE, 3.14 / 4, 10, 1);
+			break;
+	}	
 }
 
 void Weapon::ShootWeapon(Entity * entity)
