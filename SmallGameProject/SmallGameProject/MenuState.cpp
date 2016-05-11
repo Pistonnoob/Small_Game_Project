@@ -76,6 +76,10 @@ int MenuState::HandleInput(InputHandler * input)
 	{
 		this->doOption = true;
 	}
+	if (input->isMouseKeyPressed(0))
+	{
+		this->doOption = true;
+	}
 	if (input->isKeyPressed(DIK_DOWNARROW))
 	{
 		this->selected++;

@@ -9,6 +9,7 @@ class EmitterClusterExplosion :
 private:
 	struct Particle {
 		//Variables
+		float originX, originZ;
 		float x, y, z, scale;
 		float r, g, b, uCoord;
 		float dX, dZ;
@@ -28,8 +29,8 @@ private:
 		Particle operator()(Particle node) {
 			float x = 0, y = 0;
 			node.time += dT;
-			node.x = node.dX * node.time;
-			node.z = node.dZ * node.time;
+			node.x = node.originX + node.dX * node.time;
+			node.z = node.originZ + node.dZ * node.time;
 			return node;
 		};
 	};
@@ -52,7 +53,7 @@ public:
 
 	void ShutdownSpecific();
 
-	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit);
+	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit, float spawnRadius, int particleCount);
 	bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext);
 	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
 
@@ -61,7 +62,7 @@ public:
 
 	bool SortParticles();
 private:
-	bool InitializeEmitter();
+	bool InitializeEmitter(float spawnRadius);
 	bool InitializeBuffers(ID3D11Device* device);
 
 	void UpdateParticles(float dT);

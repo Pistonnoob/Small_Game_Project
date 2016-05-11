@@ -286,7 +286,7 @@
       <Filter>Source Files\ShaderHandlers</Filter>
     </ClCompile>
     <ClCompile Include="EmitterClusterExplosion.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

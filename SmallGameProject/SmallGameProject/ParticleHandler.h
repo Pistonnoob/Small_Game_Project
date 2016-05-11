@@ -7,6 +7,7 @@
 #include "EmitterPlayerSpawn.h"
 #include "EmitterEnemySpawn.h"
 #include "EmitterExplosion.h"
+#include "EmitterClusterExplosion.h"
 #include "GraphicHandler.h"
 #include "CameraHandler.h"
 

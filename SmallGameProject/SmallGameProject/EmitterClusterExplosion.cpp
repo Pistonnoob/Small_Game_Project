@@ -18,16 +18,17 @@ void EmitterClusterExplosion::ShutdownSpecific()
 	this->particles.clear();
 }
 
-bool EmitterClusterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
+bool EmitterClusterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit, float spawnRadius, int particleCount)
 {
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
 	this->world = DirectX::XMMatrixIdentity();
-
+	this->emitterTime = timeLimit;
+	this->maxParticles = particleCount;
 
 	//Initialize the emitter
-	result = this->InitializeEmitter();
+	result = this->InitializeEmitter(spawningRadius);
 	if (!result)
 		return false;
 
@@ -85,9 +86,11 @@ bool EmitterClusterExplosion::SortParticles()
 	return true;
 }
 
-bool EmitterClusterExplosion::InitializeEmitter()
+bool EmitterClusterExplosion::InitializeEmitter(float spawnRadius)
 {
 	this->velocity = 3.0f;
+	this->velocityDeviation = 3.0f;
+	this->spawningRadius = spawnRadius;
 	this->height = 6.0f;
 	this->particleSize = 0.4f;
 	this->maxParticles = 100;
@@ -101,6 +104,7 @@ bool EmitterClusterExplosion::InitializeEmitter()
 	this->accumulatedTime = 0.0f;
 
 	float positionX, positionY, positionZ, dX, dZ, red, green, blue;
+	float particleVelocity = this->velocity;
 	positionX = positionY = positionZ = dX = dZ = red = green = blue = 0.0f;
 	/*for (auto particle : this->particles)*/
 	for (std::vector<Particle>::iterator particle = this->particles.begin(); particle != this->particles.end(); particle++)
@@ -110,6 +114,7 @@ bool EmitterClusterExplosion::InitializeEmitter()
 		positionX = 0.0f;
 		positionY = this->height;
 		positionZ = 0.0f;
+		particleVelocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * velocityDeviation;
 
 		red = 0.0f;
 		green = 0.0f;
@@ -119,8 +124,9 @@ bool EmitterClusterExplosion::InitializeEmitter()
 		//We want a circle which is 2 PI
 		float fullCircle = 2 * Math::MATH_PI;
 		float eachRotation = fullCircle / this->maxParticles;
-		float myRotation = this->currentParticleCnt * eachRotation;
-
+		float myRotation = /*this->currentParticleCnt * */ 1.0f;
+		myRotation = (((float)rand() - (float)rand()) / RAND_MAX) * this->maxParticles;
+		myRotation *= eachRotation;
 		//Define the velocity
 		Algorithm::GetCircle(dX, dZ, myRotation);
 		//Normalize. Currently turns explosion into a cube
@@ -128,13 +134,20 @@ bool EmitterClusterExplosion::InitializeEmitter()
 		dZ /= total;
 		dX /= total;*/
 		//And apply the velocity each will have
-		dX *= this->velocity;
-		dZ *= this->velocity;
+		dX *= particleVelocity;
+		dZ *= particleVelocity;
+
+		float originDeviation = (((float)rand() - (float)rand()) / RAND_MAX) * this->spawningRadius;
+
+		positionX += dX * originDeviation;
+		positionZ += dZ * originDeviation;
 
 		//Define the particle data
 		(*particle).x = positionX;
+		(*particle).originX = positionX;
 		(*particle).y = positionY;
 		(*particle).z = positionZ;
+		(*particle).originZ = positionZ;
 		(*particle).scale = this->particleSize;
 		(*particle).r = red;
 		(*particle).g = green;

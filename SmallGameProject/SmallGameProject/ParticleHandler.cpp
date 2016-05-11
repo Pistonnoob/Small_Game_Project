@@ -36,9 +36,9 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	std::string theNightSky = "Particles.mtl";
 	bool victory = this->myTextures.Initialize(device, deviceContext, theNightSky);
 	this->device = device;
-	/*EmitterExplosion* newEmitter = new EmitterExplosion();
-	newEmitter->Initialize(device, this->myTextures.GetTexture(0));
-	this->emitters.push_back(newEmitter);*/
+	EmitterClusterExplosion* newEmitter = new EmitterClusterExplosion();
+	newEmitter->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 100);
+	this->emitters.push_back(newEmitter);
 }
 
 void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
