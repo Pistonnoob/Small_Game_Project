@@ -267,7 +267,7 @@ int StageState::HandleInput(InputHandler * input)
 			this->renderUI = true;
 	}
 
-	if (input->isMouseKeyPressed(0)) {
+	if (this->renderUI && input->isMouseKeyPressed(0)) {
 		this->uiHandler.HandleInput(input);
 	}
 

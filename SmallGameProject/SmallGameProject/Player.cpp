@@ -4,7 +4,7 @@ Player::Player() : Actor()
 {
 	this->posX = 0.f;
 	this->posZ = 0.f;
-	this->playerMovmentSpeed = 1;
+	this->playerMovmentSpeed = 100;
 	this->playerHighScore = 0;
 	this->health = 100;	
 	this->damage = 100;
@@ -172,7 +172,7 @@ Weapon * Player::GetWeapon()
 void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
-		this->posX += (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -180,7 +180,7 @@ void Player::MoveRight(float deltaTime)
 void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
-		this->posX -= (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -188,7 +188,7 @@ void Player::MoveLeft(float deltaTime)
 void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
-		this->posZ += (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -196,7 +196,7 @@ void Player::MoveUp(float deltaTime)
 void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
-		this->posZ -= (0.00005f * deltaTime  * this->playerMovmentSpeed);
+		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -334,4 +334,18 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 	//this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
 	this->entityModel->SetWorldMatrix(rotationMatrix * playermodelMatrix);
 
+}
+
+unsigned int Player::GetDamage()
+{
+	return this->damage + GameData::GetInstance()->GetPlayerDamage();
+}
+
+bool Player::IsAlive()
+{
+	if ((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken <= 0) {
+		return false;
+	}
+
+	return true;
 }

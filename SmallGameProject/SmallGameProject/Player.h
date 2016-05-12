@@ -10,6 +10,7 @@
 #include <vector>
 #include "Modifiers.h"
 #include "UIHandler.h"
+#include "GameData.h"
 
 class Player : public Actor {
 
@@ -51,6 +52,9 @@ public:
 	virtual void Fire();
 
 	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
+
+	virtual unsigned int GetDamage();
+	virtual bool IsAlive();
 };
 
 #endif

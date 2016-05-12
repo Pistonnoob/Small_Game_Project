@@ -88,7 +88,7 @@ void GameData::EndStage(bool winner)
 	
 }
 
-int GameData::SpendPointOn(int stat)
+int GameData::SpendPointOn(int stat) //0: dmg, 1: hp, 2: speed
 {
 	if (this->points == 0) {
 		return 1;
