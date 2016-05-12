@@ -68,6 +68,7 @@ private:	//Variables
 	UIHandler uiHandler;
 
     float t;
+	bool pauseStage;
 	bool exitStage;
 	bool isCompleted;
 	std::chrono::time_point<std::chrono::system_clock> timeInStage;

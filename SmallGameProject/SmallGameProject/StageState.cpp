@@ -28,6 +28,7 @@ StageState::StageState()
 	this->playerSubject.AddObserver(GameData::GetInstance());
 	
 	this->exitStage = false;
+	this->pauseStage = false;
 
 	this->spreadPower = PowerUp();
 	this->powerUpSubject = EntitySubject();
@@ -183,7 +184,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->uiHandler.Initialize(gHandler);
 
 		this->uiHandler.AddElement(400, 500, 400, 300, "testUI.mtl", 1, false);
-		this->uiHandler.AddElement(40, 40, 500, 500, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(120, 40, 500, 500, "Continue.mtl", 1, true);
 		this->uiHandler.AddElement(20, 20, 500, 285, "Button.mtl", 1, true);
 		this->uiHandler.AddElement(20, 20, 500, 310, "Button.mtl", 1, true);
 		this->uiHandler.AddElement(20, 20, 500, 335, "Button.mtl", 1, true);
@@ -259,11 +260,6 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
-	if (input->isKeyPressed(DIK_T)) {
-		GameData* gd = GameData::GetInstance();
-		int i = 0;
-	}
-
 	if (input->isKeyPressed(DIK_U)) {
 		if (this->renderUI)
 			this->renderUI = false;
@@ -282,66 +278,73 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 {
 	int result = 1;
 
-	float newDT = deltaTime / 1000000;
+	if (!this->pauseStage) {
+		float newDT = deltaTime / 1000000;
 
-    HandleWaveSpawning(newDT, this->isCompleted);
+		HandleWaveSpawning(newDT, this->isCompleted);
 
-    RemoveDeadEnemies();
+		RemoveDeadEnemies();
 
-	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
-	
-    this->enemyPjHandler.Update(newDT);
+		this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
 
-	this->playerProjectile.Update(newDT);
-	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
+		this->enemyPjHandler.Update(newDT);
 
-	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
+		this->playerProjectile.Update(newDT);
+		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
+
+		this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
 
-	if (this->exitStage)
-	{
-		this->exitStage = false;
-		//Pop ourself
-		GameState* state = this->m_GSH->PopState();
-		//We do not care about the returned state but check if return
-		if (state)
+		if (this->exitStage)
 		{
-			//The state wasn't a nullptr, meaning it didn't have automatic clearing on
-			//Something went somewhat wrong here eh?
+			this->exitStage = false;
+			//Pop ourself
+			GameState* state = this->m_GSH->PopState();
+			//We do not care about the returned state but check if return
+			if (state)
+			{
+				//The state wasn't a nullptr, meaning it didn't have automatic clearing on
+				//Something went somewhat wrong here eh?
+			}
 		}
-	}
 
-	//Player - projectile intersection
-	if (this->enemyPjHandler.IntersectionTest(&this->player)) {
-		
-		if (!this->player.IsAlive()) {
-			this->exitStage = true;
+		//Player - projectile intersection
+		if (this->enemyPjHandler.IntersectionTest(&this->player)) {
+
+			if (!this->player.IsAlive()) {
+				this->exitStage = true;
+			}
 		}
-	}
 
-	//Enemy - projectile intersection
-	int i = -1;
-	for (auto enemy : this->enemies) {
-		i++;
+		//Enemy - projectile intersection
+		int i = -1;
+		for (auto enemy : this->enemies) {
+			i++;
 
-		if (this->playerProjectile.IntersectionTest(enemy)) {
+			if (this->playerProjectile.IntersectionTest(enemy)) {
 
+			}
 		}
+
+		//Enemy - Player intersection
+		for (auto enemy : this->enemies) {
+
+			if (this->player.GetBV()->Intersect(enemy->GetBV())) {
+				int j = 0;
+			}
+		}
+
+		DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
+		this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 	}
 	
-	//Enemy - Player intersection
-	for (auto enemy : this->enemies) {
-
-		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
- 			int j = 0; 
-		}
-	}
 
 	//Check if level is completed
 	if (this->isCompleted && this->enemies.size() == 0) {
 		std::string text = "";
 		if (!this->renderUI) {
 			this->renderUI = true;
+			this->pauseStage = true;
 			GameData::GetInstance()->EndStage(true);
 
 			text = "Level " + std::to_string(this->currentLevel) + " completed!";
@@ -370,6 +373,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		this->uiHandler.UpdateTextHolder(8, text, 275, 325, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 
 		if (this->uiHandler.WasButtonPressed(1)) {
+			this->pauseStage = false;
 			this->exitStage = true;	//end stage for testing
 		}
 		if (this->uiHandler.WasButtonPressed(2)) {
@@ -382,9 +386,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			GameData::GetInstance()->SpendPointOn(2);
 		}
 	}
-
-	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
-	this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 
 	return result;
 }
