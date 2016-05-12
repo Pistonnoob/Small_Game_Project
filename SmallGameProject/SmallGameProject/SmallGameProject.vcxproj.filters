@@ -289,7 +289,7 @@
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
     <ClCompile Include="EmitterSpawnPulse.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -507,7 +507,7 @@
       <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
     <ClInclude Include="EmitterSpawnPulse.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
