@@ -288,6 +288,9 @@
     <ClCompile Include="EmitterClusterExplosion.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
+    <ClCompile Include="EmitterSpawnPulse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -502,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="EmitterClusterExplosion.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterSpawnPulse.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

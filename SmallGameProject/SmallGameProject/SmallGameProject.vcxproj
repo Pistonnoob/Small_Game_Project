@@ -166,6 +166,7 @@
     <ClCompile Include="EmitterHolder.cpp" />
     <ClCompile Include="EmitterPlayerSpawn.cpp" />
     <ClCompile Include="EmitterPrototype.cpp" />
+    <ClCompile Include="EmitterSpawnPulse.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntitySubject.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="EmitterHolder.h" />
     <ClInclude Include="EmitterPlayerSpawn.h" />
     <ClInclude Include="EmitterPrototype.h" />
+    <ClInclude Include="EmitterSpawnPulse.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntitySubject.h" />

@@ -116,9 +116,9 @@ bool EmitterClusterExplosion::InitializeEmitter(float spawnRadius)
 		positionZ = 0.0f;
 		particleVelocity = particleVelocity + (((float)rand() - (float)rand()) / RAND_MAX) * velocityDeviation;
 
-		red = 0.0f;
+		red = 1.0f;
 		green = 0.0f;
-		blue = 1.0f;
+		blue = 0.0f;
 
 		//Calculate the particles dX and dY
 		//We want a circle which is 2 PI
