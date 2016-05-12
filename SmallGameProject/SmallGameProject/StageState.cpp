@@ -481,7 +481,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 void StageState::ReadFile(std::string fileName)
 {
 	std::string line;
-	std::ifstream myFile(fileName);
+	std::ifstream myFile("..\\SmallGameProject\\Resources\\Data\\" + fileName);
 
     if (myFile.is_open())
     {

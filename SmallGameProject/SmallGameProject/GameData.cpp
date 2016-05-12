@@ -178,7 +178,7 @@ void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 bool GameData::SavePlayerData(std::string filename)
 {
 	std::ofstream saveFile;
-	std::string path = "..\\SmallGameProject\\Resources\\PlayerSaves\\" + filename + ".txt";
+	std::string path = "..\\SmallGameProject\\Resources\\Data\\" + filename + ".txt";
 	saveFile.open(path);
 
 	if (!saveFile.is_open()) {
@@ -200,7 +200,7 @@ bool GameData::SavePlayerData(std::string filename)
 bool GameData::LoadPlayerData(std::string filename)
 {
 	std::ifstream loadFile;
-	std::string path = "..\\SmallGameProject\\Resources\\PlayerSaves\\" + filename + ".txt";
+	std::string path = "..\\SmallGameProject\\Resources\\Data\\" + filename + ".txt";
 	loadFile.open(path);
 
 	if (!loadFile.is_open()) {
