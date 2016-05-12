@@ -97,7 +97,7 @@ bool EmitterClusterExplosion::InitializeEmitter(float spawnRadius)
 	this->isCompleted = false;
 	//this->particles.reserve(this->maxParticles);
 	this->particles = std::vector<Particle>(this->maxParticles);
-	this->currentParticleCnt = 0.0f;
+	this->currentParticleCnt = 0;
 	this->particleTimeLimit = 1.0f;
 	this->emitterTime = 2.0f;
 	this->emitterTime = 1.0f;

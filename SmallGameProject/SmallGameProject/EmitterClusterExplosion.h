@@ -32,7 +32,7 @@ private:
 			node.x = node.originX + node.dX * node.time;
 			node.z = node.originZ + node.dZ * node.time;
 			node.r = 1.0f - pow(node.time / node.timeCap, 2);
-			node.g = 0.8 - node.time / node.timeCap;
+			node.g = 0.8f - node.time / node.timeCap;
 			return node;
 		};
 	};

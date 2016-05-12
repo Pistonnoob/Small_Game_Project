@@ -3,7 +3,7 @@
 #include <cmath>
 #include <DirectXMath.h>
 namespace Math {
-	static const float MATH_PI = 3.14159265358979323846;
+	static const float MATH_PI = 3.14159265358979323846f;
 }
 namespace Algorithm {
 	int GetParabola(int x);
