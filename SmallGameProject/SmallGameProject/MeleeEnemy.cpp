@@ -21,6 +21,7 @@ bool MeleeEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool is
 
 void MeleeEnemy::Shutdown()
 {
+ 	this->entitySubject->Notify(this, Events::ENTITY::MELEE_DEAD);
 	Entity::Shutdown(true);
 }
 

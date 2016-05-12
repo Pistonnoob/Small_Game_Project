@@ -10,6 +10,10 @@
 #include "Player.h"
 #include "GameState.h"
 
+const int SCORE_VALUE_BOMBER = 50;
+const int SCORE_VALUE_MELEE = 100;
+const int SCORE_VALUE_RANGED = 150;
+
 class GameData : public Observer
 {
 private:

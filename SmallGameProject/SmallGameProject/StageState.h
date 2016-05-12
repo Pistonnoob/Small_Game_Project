@@ -68,8 +68,10 @@ private:	//Variables
 
     float t;
 	bool exitStage;
+	bool isCompleted;
 
 	bool renderUI;
+
 public:
 	StageState();
 	virtual ~StageState();
@@ -81,8 +83,9 @@ public:
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
+
     virtual void ReadFile(std::string fileName);
-    virtual void HandleWaveSpawning(float deltaTime);
+    virtual void HandleWaveSpawning(float deltaTime, bool& isCompleted);
     virtual void SpawnWave(int levelIndex, int waveIndex);
 	virtual void SpawnEnemy(Type type, int pointIndex);
     virtual void RemoveDeadEnemies();

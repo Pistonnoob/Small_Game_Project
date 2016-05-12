@@ -32,7 +32,9 @@ StageState::StageState()
 	this->spreadPower = PowerUp();
 	this->powerUpSubject = EntitySubject();
 
+	this->isCompleted = false;
 	this->renderUI = false;
+
 }
 
 
@@ -120,6 +122,8 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->m_AI = Ai();
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext);
+		//Add GameData oberver to enemiesSubject
+		this->enemySubject.AddObserver(GameData::GetInstance());
 		
 
 		//the player will rise
@@ -239,6 +243,11 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
+	if (input->isKeyPressed(DIK_T)) {
+		GameData* gd = GameData::GetInstance();
+		int i = 0;
+	}
+
 	if (input->isKeyPressed(DIK_U)) {
 		if (this->renderUI)
 			this->renderUI = false;
@@ -259,10 +268,10 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	float newDT = deltaTime / 1000000;
 
-    HandleWaveSpawning(newDT);
+    HandleWaveSpawning(newDT, this->isCompleted);
 
     RemoveDeadEnemies();
- 
+
 	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
 	
     this->enemyPjHandler.Update(newDT);
@@ -295,9 +304,12 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	}
 
 	//Enemy - projectile intersection
+	int i = -1;
 	for (auto enemy : this->enemies) {
+		i++;
+
 		if (this->playerProjectile.IntersectionTest(enemy)) {
-			int j = 0;
+
 		}
 	}
 	
@@ -307,6 +319,11 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
  			int j = 0; 
 		}
+	}
+
+	//Check if level is completed
+	if (this->isCompleted && this->enemies.size() == 0) {
+		this->exitStage = true;	//end stage for testing
 	}
 
 	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
@@ -501,7 +518,7 @@ void StageState::ReadFile(std::string fileName)
     }
 }
 
-void StageState::HandleWaveSpawning(float deltaTime)
+void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
 {
     this->timeToNextWave -= deltaTime;
     if (this->timeToNextWave <= 0)
@@ -519,6 +536,10 @@ void StageState::HandleWaveSpawning(float deltaTime)
                 this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
                 SpawnWave(this->currentLevel, this->currentWave);
             }
+			else {
+				//If the Level has spawned all waves
+				isCompleted = true;
+			}
         }
     }
 }
