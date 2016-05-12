@@ -31,6 +31,13 @@ StageState::StageState()
 	this->camPosX = -30.0f;
 	this->camPosZ = 0.0f;
 
+	this->latestSpawnPoint = 3;
+
+	this->spawnPos.push_back(DirectX::XMFLOAT2 (-35.0f, 35.0f));
+	this->spawnPos.push_back(DirectX::XMFLOAT2(35.0f, 35.0f));
+	this->spawnPos.push_back(DirectX::XMFLOAT2(-35.0f, -35.0f));
+	this->spawnPos.push_back(DirectX::XMFLOAT2(35.0f, -35.0f));
+
 	this->inc = true;
 }
 
@@ -222,6 +229,9 @@ int StageState::HandleInput(InputHandler * input)
 
 int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
+	XMFLOAT2 pos;
+	DirectX::XMMATRIX worldMatrix;
+
 	int result = 1;
 
 	float newDT = deltaTime / 1000000;
@@ -243,9 +253,21 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->timeElapsed += timeInSecounds;
 	GameData::Update(timeInSecounds);
 
-	if (this->timeElapsed > 5.0f)
+	if (this->timeElapsed > 3.0f)
 	{
 		this->powerUpPointer = GameData::GetRandomPowerup();
+		pos = this->spawnPos.at(this->latestSpawnPoint);
+		this->latestSpawnPoint++;
+		this->latestSpawnPoint %= 4;
+		this->powerUpPointer->SetPosition(pos.x,pos.y);
+
+		//this->powerUpPointer->GetBV()
+
+		//pos = powerUpPointer->GetPosition();
+
+		//worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		//this->powerUpPointer->GetModel()->SetWorldMatrix(worldMatrix);
+
 		this->timeElapsed = 0;
 	}
 
@@ -274,8 +296,10 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
+	//if the powerup vector has values, check if intersection has occured
 	if (this->powerUpPointer != nullptr)
 	{
+		this->powerUpPointer->Update(deltaTime);
 		if (this->powerUpPointer->GetBV()->Intersect(this->player.GetBV()) == true)
 		{
 			//nu vill jag säga till gameData att  spelaren har plockat upp denna powerup
@@ -297,7 +321,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			default:
 				break;
 			}
-			
+
 			this->powerUpPointer = nullptr;
 		}
 	}
@@ -321,7 +345,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 
 	//render powerup if any on screen
-	if (this->powerUpPointer != nullptr)
+	if (this->powerUpPointer != false)
 	{
 		gHandler->DeferredRender(powerUpPointer->GetModel(), &this->myCamera);
 	}

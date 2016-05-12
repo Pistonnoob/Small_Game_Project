@@ -42,6 +42,9 @@ private:	//Variables
 	Model m_ground;
 
     EntitySubject enemySubject;
+	int latestSpawnPoint;
+
+	std::vector<DirectX::XMFLOAT2>spawnPos;
 
 	//player variables
 	Player player;
