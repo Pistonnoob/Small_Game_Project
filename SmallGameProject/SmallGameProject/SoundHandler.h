@@ -1,12 +1,21 @@
 #ifndef SOUNDHANDLER_H
 #define SOUNDHANDLER_H
 
+#pragma comment(lib, "dsound.lib")
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "winmm.lib")
+
 #include <windows.h>
 #include <mmsystem.h>
 #include <dsound.h>
 #include <stdio.h>
+#include <vector>
+#include <string>
 
-class SoundHandler {
+const int NUMBER_OF_SOUNDS = 2;
+
+class SoundHandler
+{
 
 private:
 
@@ -27,24 +36,24 @@ private:
 		unsigned long dataSize;
 	};
 
-	IDirectSound8* m_DirectSound;
-	IDirectSoundBuffer* m_primaryBuffer;
-	IDirectSoundBuffer8* m_secondaryBuffer1;	//Need one secoundary buffer for each sound
+	IDirectSound8* directSound;
+	IDirectSoundBuffer* primaryBuffer;
+	std::vector<IDirectSoundBuffer8*> secondaryBuffers;	//Need one secoundary buffer for each sound
+	std::string fileNames[NUMBER_OF_SOUNDS];
 
-	bool InitializeDirectSound(HWND);
-	void ShutdownDirectSound();
+	bool InitializeDirectSound(HWND hwnd);
 
-	bool LoadWaveFile(char*, IDirectSoundBuffer8**);
-	void ShutdownWaveFile(IDirectSoundBuffer8**);
-
-	bool PlayWaveFile();
+	bool LoadWaveFile(char* filePath, IDirectSoundBuffer8** aSecoundaryBuffer);
+	void ShutdownWaveFile(IDirectSoundBuffer8**aSecondaryBuffer);
 
 public:
 	SoundHandler();
-	~SoundHandler();
-
+	~SoundHandler(); 
+	
 	bool Initialize(HWND hwnd);
 	void Shutdown();
+
+	bool PlayWaveFile(char* fileName);
 
 };
 

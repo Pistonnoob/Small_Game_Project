@@ -14,6 +14,7 @@
 #include "Boss.h"
 #include "GameData.h"
 #include "PowerUp.h"
+#include "AudioHandler.h"
 
 
 struct ToSpawn
@@ -35,6 +36,7 @@ class StageState :
 {
 private:	//Variables
 	CameraHandler myCamera;
+	AudioHandler audioH;
     ProjectileHandler enemyPjHandler;
 
 	PowerUp spreadPower;

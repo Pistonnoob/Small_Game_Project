@@ -81,7 +81,7 @@ void StageState::Shutdown()
 	this->myParticleHandler.Shutdown();
 	this->powerUpSubject.ShutDown();
 	this->spreadPower.Shutdown();
-
+	this->audioH.ShutDown();
 	GameState::Shutdown();
 }
 
@@ -209,6 +209,12 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		//Add GameData oberver to enemiesSubject
 		this->enemySubject.AddObserver(GameData::GetInstance());
+
+		//Initialize Audio
+		this->audioH.Initialize(*gHandler->GetActiveWindow());
+		this->player.AddObservers(&this->audioH);
+		this->enemySubject.AddObserver(&this->audioH);
+
 	}
 
 	return result;
