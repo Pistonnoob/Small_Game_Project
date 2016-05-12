@@ -5,13 +5,14 @@ Player::Player() : Actor()
 	this->posX = 0.f;
 	this->posZ = 0.f;
 	this->playerMovmentSpeed = 100;
-	this->playerHighScore = 0;
 	this->health = 100;	
 	this->damage = 100;
 
 	//Initiliaze the forward vecktor as 0,0,1
 	this->forwardDir = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0, 0, 1));
 	this->playerWeapon = nullptr;
+
+	this->uiHandler = UIHandler();
 }
 
 Player::~Player()
@@ -68,6 +69,11 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 	//give the player model its new 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
+	this->uiHandler.Initialize(graphicsH);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+
 	return true;
 }
 
@@ -78,10 +84,14 @@ void Player::Shutdown()
 		delete this->playerWeapon;
 		this->playerWeapon = nullptr;
 	}
+
 	for (int i = 0; i < this->powerups.size(); i++)
 	{
 		this->powerups.at(i).Shutdown();
 	} 
+
+	this->uiHandler.Shutdown();
+
 	Entity::Shutdown(false);
 }
 
@@ -160,7 +170,14 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	for (auto Powerups = this->powerups.begin(); Powerups != this->powerups.end(); Powerups++)
 	{
 		(Powerups)->Update(deltaTime);
-	}	
+	}
+
+	std::string text = "Damage: " + std::to_string(this->damage + GameData::GetInstance()->GetPlayerDamage());
+	this->uiHandler.UpdateTextHolder(0, text, 200, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
+	this->uiHandler.UpdateTextHolder(1, text, 325, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	text = "Speed: " + std::to_string(this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed());
+	this->uiHandler.UpdateTextHolder(2, text, 450, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 }
 
 Weapon * Player::GetWeapon()
@@ -348,4 +365,9 @@ bool Player::IsAlive()
 	}
 
 	return true;
+}
+
+UIHandler * Player::GetUIHandler()
+{
+	return &this->uiHandler;
 }

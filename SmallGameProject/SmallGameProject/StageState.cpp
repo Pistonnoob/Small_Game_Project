@@ -457,6 +457,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
+	gHandler->UIRender(this->player.GetUIHandler());
 	if (this->renderUI)
 		gHandler->UIRender(&this->uiHandler);
 

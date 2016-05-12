@@ -18,11 +18,12 @@ private:
 	DirectX::XMVECTOR forwardDir;
 
 	int playerMovmentSpeed;
-	int playerHighScore;
 
 	std::vector<PowerUp>powerups;
 
 	Weapon* playerWeapon;
+
+	UIHandler uiHandler;
 
 public:
 	Player();
@@ -55,6 +56,8 @@ public:
 
 	virtual unsigned int GetDamage();
 	virtual bool IsAlive();
+
+	UIHandler* GetUIHandler();
 };
 
 #endif

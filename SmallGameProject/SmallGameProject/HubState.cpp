@@ -201,8 +201,9 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
-
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
+
+	gHandler->UIRender(this->player.GetUIHandler());
 
 	return result;
 }
