@@ -9,6 +9,9 @@
 #include <vector> 
 #include "Player.h"
 #include "GameState.h"
+#include "EntitySubject.h"
+#include "ProjectileHandler.h"
+#include <list>
 
 const int SCORE_VALUE_BOMBER = 50;
 const int SCORE_VALUE_MELEE = 100;
@@ -23,7 +26,10 @@ class GameData : public Observer
 {
 private:
 	static bool isInstatiated;	//Check flag
+	static bool isGameStageInit; //check for powerup list
+
 	static GameData* single;
+	static int nrOfActivePowerups;
 
 	GameData(GameData const&);
 	int playerHighScore;
@@ -43,6 +49,8 @@ private:
 
 	//weapom related
 	std::vector<Weapon>weaponArsenal;
+	static std::list<PowerUp*>powerupArsenal;
+
 	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
 public:
 	virtual ~GameData();
@@ -50,7 +58,16 @@ public:
 	static GameData* GetInstance();
 
 	void Shutdown();
-	void Update(float deltaTime);
+	static void Update(float deltaTime);
+	static std::list<PowerUp*> getPowerup();
+	static PowerUp* GetRandomPowerup();
+
+	static void unlockPowerUp(Events::UNIQUE_FIRE newPower);
+
+	int static getNrOfActivePowerups();
+
+	static void InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject);
+	static void ShutdownStageStateGD();
 
 	void NewStage();
 	void EndStage(bool winner);

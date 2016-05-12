@@ -34,16 +34,6 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 		return false;
 	}
 
-
-	PowerUp spread = PowerUp();
-	PowerUp penetration = PowerUp();
-	PowerUp weave = PowerUp();
-
-
-	this->powerups.push_back(spread);
-	this->powerups.push_back(penetration);
-	this->powerups.push_back(weave);
-
 	//Rotation matrix
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(0);
 
@@ -85,11 +75,6 @@ void Player::Shutdown()
 		this->playerWeapon = nullptr;
 	}
 
-	for (int i = 0; i < this->powerups.size(); i++)
-	{
-		this->powerups.at(i).Shutdown();
-	} 
-
 	this->uiHandler.Shutdown();
 
 	Entity::Shutdown(false);
@@ -102,11 +87,6 @@ Weapon * Player::GetPlayerWeapon()
 
 void Player::PowerPickup(const int & POWER_ENUM)
 {
-}
-
-void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
-{
-	this->powerups.at(powerUp).setTimePowerup(10);
 }
 
 void Player::HandleInput(InputHandler * input, float dTime)
@@ -127,7 +107,7 @@ void Player::HandleInput(InputHandler * input, float dTime)
 	if (input->isKeyPressed(DIK_C))
 	{
 		//how do I update this shiet
-		this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
+		//this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
 	}
 
 	if(input->isMouseKeyPressed(0))	//0 = left, 1 = right, 2 = scroll click, 3 = "Down button" on mouse
@@ -166,18 +146,15 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
-	//update powerups
-	for (auto Powerups = this->powerups.begin(); Powerups != this->powerups.end(); Powerups++)
-	{
-		(Powerups)->Update(deltaTime);
-	}
-
 	std::string text = "Damage: " + std::to_string(this->damage + GameData::GetInstance()->GetPlayerDamage());
 	this->uiHandler.UpdateTextHolder(0, text, 200, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
 	this->uiHandler.UpdateTextHolder(1, text, 325, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 	text = "Speed: " + std::to_string(this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed());
 	this->uiHandler.UpdateTextHolder(2, text, 450, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+
+
+	GameData::Update(deltaTime);
 }
 
 Weapon * Player::GetWeapon()
@@ -225,66 +202,23 @@ void Player::Move(DirectX::XMFLOAT3 moveVec)
 
 void Player::Fire(float deltaT)
 {
-	/*
-	this->SetAimDir(DirectX::XMFLOAT3(0, 0, 1));
-
-	if (this->powerups.at(0).Update(deltaT) == true)
-	{
-		playerWeapon->ShootWeapon(this);
-	}
-	*/
-
-	PowerUp* powerUpPtr = nullptr;
-	int size = this->powerups.size();
-
 	DirectX::XMStoreFloat3(&this->aimDir, this->forwardDir);
 
 	this->aimDir.x = DirectX::XMVectorGetX(this->forwardDir);
 	this->aimDir.z = DirectX::XMVectorGetY(this->forwardDir);
-
 	this->aimDir.y = 0.0f;
 
-
-
-	for (int i = 0; i < size; i++)
+	if (GameData::getNrOfActivePowerups() != 0)
 	{
-		powerUpPtr = &this->powerups.at(i);
-		if (powerUpPtr->getTimeLeft() > 0.0f)
-		{
-			switch (i)
-			{
-			case 0:
-				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::ARCFIRE);
-				break;
-			case 1:
-				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::REVERSERBULLETS);
-				break;
-			case 2:
-				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::SPLITFIRE);
-				break;
-			}
-		}
+		std::list<PowerUp*> activePows = GameData::getPowerup();
+		this->playerWeapon->ShootWeapon(this, activePows.front()->GetType());
 	}
-	this->playerWeapon->ShootWeapon(this);
-}
-
-void Player::Fire()
-{
-	/*
-	PowerUp* powerUpPtr = nullptr;
-	int size = this->powerups.size();
 	
-	DirectX::XMStoreFloat3(&this->aimDir,this->forwardDir);
-	
-	for (int i = 0; i < size; i++)
+	else
 	{
-		powerUpPtr = &this->powerups.at(i);
-		if (powerUpPtr->getTimeLeft() > 0.0f)
-		{
-			playerWeapon->ShootWeapon(this);
-		}
+		this->playerWeapon->ShootWeapon(this);
 	}
-	*/
+	
 }
 
 void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)

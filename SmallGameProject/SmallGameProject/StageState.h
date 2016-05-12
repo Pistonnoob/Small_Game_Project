@@ -7,8 +7,6 @@
 #include "Projectile.h"
 #include "Abilities.h"
 #include "Algorithm.h"
-#include "EntitySubject.h"
-#include "ProjectileHandler.h"
 #include "Weapon.h"
 #include "Player.h"
 #include "Boss.h"
@@ -38,7 +36,6 @@ private:	//Variables
 	CameraHandler myCamera;
     ProjectileHandler enemyPjHandler;
 
-	PowerUp spreadPower;
 	EntitySubject powerUpSubject; 
 
 	Model m_car;
@@ -46,25 +43,36 @@ private:	//Variables
 	Model m_ground;
 
     EntitySubject enemySubject;
+	int latestSpawnPoint;
+
+	std::vector<DirectX::XMFLOAT2>spawnPos;
 
 	//player variables
-	
-	EntitySubject playerSubject;
-	ProjectileHandler playerProjectile;
 	Player player;
-	
+
+	EntitySubject* playerSubject = nullptr;
+	ProjectileHandler* playerProjectile = nullptr;
+
+	PowerUp* powerUpPointer;
+
 	Ai m_AI;
 	std::vector<Enemy*> enemies;
 
 	float timeToNextWave;
 	int currentLevel;
 	int currentWave;
+    
+	//vector<DirectX::XMFLOAT3> spawnPointsPowerUp;
+
+
 	std::vector<Level> levels;
 	std::vector<DirectX::XMFLOAT3> spawnPoints;
 
 	
 	ParticleHandler myParticleHandler;
 
+
+	float timeElapsed;
 	UIHandler uiHandler;
 
     float t;
