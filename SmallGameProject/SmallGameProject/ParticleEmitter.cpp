@@ -110,6 +110,11 @@ void ParticleEmitter::GetWorld(DirectX::XMMATRIX& storeIn)
 	storeIn = this->world;
 }
 
+ID3D11ShaderResourceView * ParticleEmitter::GetTexture()
+{
+	return this->texture;
+}
+
 
 
 bool ParticleEmitter::Update(float dT, ID3D11DeviceContext * deviceContext)

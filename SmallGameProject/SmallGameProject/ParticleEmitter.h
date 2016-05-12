@@ -45,6 +45,7 @@ public:
 	void ApplyPosition(float dX, float dY, float dZ);
 	void ApplyMatrix(DirectX::XMMATRIX toApply);
 	void GetWorld(DirectX::XMMATRIX& storeIn);
+	virtual ID3D11ShaderResourceView* GetTexture();
 
 	bool Update(float dT, ID3D11DeviceContext* deviceContext);
 	bool distanceToCamera(float x, float y, float z);
