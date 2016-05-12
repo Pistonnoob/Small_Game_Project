@@ -8,9 +8,8 @@ HubState::HubState()
 {
 	this->myCamera = CameraHandler();
 	this->myParticleHandler = ParticleHandler();
-
 	this->m_ground = Model();
-	this->portal1 = Model();
+	this->portals = std::vector<Model>();
 
 	this->player = Player();
 
@@ -28,7 +27,10 @@ void HubState::Shutdown()
 {
 	//Release the models
 	this->m_ground.Shutdown();
-	this->portal1.Shutdown();
+
+	for (std::vector<Model>::iterator portal = this->portals.begin(); portal != this->portals.end(); portal++) {
+		(*portal).Shutdown();
+	}
 
 	this->myParticleHandler.Shutdown();
 
@@ -72,13 +74,19 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 			return false;
 		}
 
-		result = this->portal1.Initialize(device, deviceContext, "portal");
-		if (!result) {
-			return false;
+		for (int i = 0; i < NR_OF_MAPS; i++){
+			Model portal = Model();
+			result = portal.Initialize(device, deviceContext, "portal");
+			if (!result) {
+				return false;
+			}
+			this->portals.push_back(portal);
 		}
 
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(-30.0f, 0.0f, 30.0f);
-		this->portal1.SetWorldMatrix(worldMatrix);
+		this->portals.at(0).SetWorldMatrix(worldMatrix); 
+		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 30.0f);
+		this->portals.at(1).SetWorldMatrix(worldMatrix);
 
 		PointLight light;
 		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -94,10 +102,10 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		light.Position = DirectX::XMFLOAT4(-30.0f, 1.0f, 30.0f, 1.0f);
 		this->pointLights.push_back(light);
 
-		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
+		light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, 30.0f, 1.0f);
 		this->pointLights.push_back(light);
 		
 		this->playerSubject = EntitySubject();
@@ -138,6 +146,16 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
 		newStage->Initialize(gHandler, this->m_GSH);
+		newStage->LoadMap(gHandler->GetDevice(), gHandler->GetDeviceContext(), 1);
+		newStage->SetManualClearing(false);
+		this->m_GSH->PushState(newStage);
+	}
+	if ((playerPos.x < 1.5f && playerPos.x > -1.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
+		this->player.SetPosition(0.0f, 0.0f);
+		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
+		StageState* newStage = new StageState();
+		newStage->Initialize(gHandler, this->m_GSH);
+		newStage->LoadMap(gHandler->GetDevice(), gHandler->GetDeviceContext(), 2);
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
@@ -171,7 +189,10 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
-	gHandler->DeferredRender(&this->portal1, &this->myCamera);
+
+	for (std::vector<Model>::iterator portal = this->portals.begin(); portal != this->portals.end(); portal++) {
+		gHandler->DeferredRender(&(*portal), &this->myCamera);
+	}
 	//shadowMap
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);

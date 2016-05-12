@@ -147,14 +147,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		//ze powerups
 		this->spreadPower.Initialize(device, deviceContext, "sphere1", true, &this->powerUpSubject);
 
-		//Place the ground beneeth your feet and thank the gods for their
-		//sanctuary from the oblivion below!
-		this->m_ground = Model();
-
-		result = this->m_ground.Initialize(device, deviceContext, "Stage1NoPlanet");
-		if (!result) {
-			return false;
-		}
+		
 		//this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
 
 		DirectX::XMMATRIX worldMatrix;
@@ -192,21 +185,51 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 			return false;
 		}
 
-		//DirectX::XMFLOAT3 a = this->player.GetPosition();
-		int i = 0;
+       
+	}
 
+	return result;
+}
 
-        ReadFile("Stage1.txt");
+int StageState::LoadMap(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int stageNr)
+{
+	bool result = true;
+	//Place the ground beneeth your feet and thank the gods for their
+	//sanctuary from the oblivion below!
+
+	if (stageNr == 1) {
+		result = this->m_ground.Initialize(device, deviceContext, "Stage1NoPlanet");
+		if (!result) {
+			return false;
+		}
+
+		ReadFile("Stage1.txt");
 
 		this->currentLevel = 0;
 		this->currentWave = 0;
 		this->timeToNextWave = this->levels.at(currentLevel).wave.at(currentWave).time;
 
 		//Arm thy armies!
-        SpawnWave(this->currentLevel, this->currentWave);
+		SpawnWave(this->currentLevel, this->currentWave);
+	}
+	else if(stageNr == 2){
+		result = this->m_ground.Initialize(device, deviceContext, "Stage2");
+		if (!result) {
+			return false;
+		}
+
+		ReadFile("Stage2.txt");
+
+		this->currentLevel = 0;
+		this->currentWave = 0;
+		this->timeToNextWave = this->levels.at(currentLevel).wave.at(currentWave).time;
+
+		//Arm thy armies!
+		SpawnWave(this->currentLevel, this->currentWave);
 	}
 
-	return result;
+	
+	return 0;
 }
 
 int StageState::HandleInput(InputHandler * input)
@@ -357,6 +380,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+	gHandler->ShadowRender(&this->m_ground, &this->myCamera);
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
