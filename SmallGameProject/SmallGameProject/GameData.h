@@ -13,6 +13,10 @@
 #include "ProjectileHandler.h"
 #include <list>
 
+const int SCORE_VALUE_BOMBER = 50;
+const int SCORE_VALUE_MELEE = 100;
+const int SCORE_VALUE_RANGED = 150;
+
 class GameData : public Observer
 {
 private:

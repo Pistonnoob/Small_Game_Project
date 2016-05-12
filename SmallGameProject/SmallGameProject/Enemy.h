@@ -12,7 +12,7 @@ class Enemy : public Actor {
 
 protected:
     float attackCD;
-    bool isAlive;
+
 public:
     Enemy();
     virtual~Enemy();
@@ -26,8 +26,6 @@ public:
     virtual void MoveDown(float deltaTime);
     virtual void Fire(float deltaTime);
     virtual void Move(DirectX::XMFLOAT3 moveVec) ;
-	virtual bool GetIsAlive();
-	virtual void SetIsAlive(bool newIsAlive);
 
 };
 

@@ -16,6 +16,7 @@ StageState::StageState()
 	this->m_AI = Ai();
 
 	this->player = Player();
+	this->uiHandler = UIHandler();
 
 	this->enemySubject = EntitySubject();
     this->enemyPjHandler = ProjectileHandler();
@@ -28,17 +29,22 @@ StageState::StageState()
 
 	this->exitStage = false;
 
-	this->camPosX = -30.0f;
-	this->camPosZ = 0.0f;
-
 	this->latestSpawnPoint = 3;
+
+	/*
+	setting up the starting points for the powerups
+	this will spawn in order 0-4 
+
+	*/
 
 	this->spawnPos.push_back(DirectX::XMFLOAT2 (-35.0f, 35.0f));
 	this->spawnPos.push_back(DirectX::XMFLOAT2(35.0f, 35.0f));
 	this->spawnPos.push_back(DirectX::XMFLOAT2(-35.0f, -35.0f));
 	this->spawnPos.push_back(DirectX::XMFLOAT2(35.0f, -35.0f));
 
-	this->inc = true;
+	this->isCompleted = false;
+	this->renderUI = false;
+
 }
 
 
@@ -66,6 +72,7 @@ void StageState::Shutdown()
 	this->playerProjectile = nullptr;
 	
 	this->player.Shutdown();
+	this->uiHandler.Shutdown();
 
 	//Release the enemies
 	for (int i = 0; i < this->enemies.size(); i++)
@@ -94,15 +101,17 @@ void StageState::Shutdown()
 }
 
 
-int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, GameStateHandler * GSH)
+int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 {
 	int result = 0;
 	this->timeElapsed = 0.0f;
 	this->exitStage = false;
 
+	ID3D11Device* device = gHandler->GetDevice();
+	ID3D11DeviceContext* deviceContext = gHandler->GetDeviceContext();
+
 	//Arm thy father
 	result = this->InitializeBase(GSH, device, deviceContext);
-
 	if (result)
 	{
 		//Open thy eyes!
@@ -111,6 +120,7 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 
 		/*this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 10.0f / zoomIn, -7.0f / zoomIn));
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));*/
+
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 20.0f / zoomIn, -7.0f / zoomIn));
 		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 6.0f, -50.0f));
 
@@ -134,11 +144,14 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_ball = Model();
 
 		bool modelResult = this->m_ball.Initialize(device, this->m_deviceContext, "projectile");
-		if (!modelResult) {
+		if (!modelResult) 
+		{
 			return false;
 		}
+
 		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere2");
-		if (!modelResult) {
+		if (!modelResult)
+		{
 			return false;
 		}
 
@@ -151,7 +164,8 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->m_ground = Model();
 
 		result = this->m_ground.Initialize(device, deviceContext, "testMap");
-		if (!result) {
+		if (!result) 
+		{
 			return false;
 		}
 		//this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
@@ -183,7 +197,12 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		light.Position = DirectX::XMFLOAT4(15.0f, 1.0f, 15.0f, 1.0f);
 		this->pointLights.push_back(light);
 
-		if (!result) {
+		this->uiHandler.Initialize(gHandler);
+
+		this->uiHandler.AddElement(100, 100, 100, 100, "testUI.mtl", 1, false);
+
+		if (!result)
+		{
 			return false;
 		}
 
@@ -209,11 +228,12 @@ int StageState::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceCo
 		this->playerSubject->AddObserver(GameData::GetInstance());
 
 		//the player will rise
-		this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
+		//this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
+		this->player.Initialize(gHandler, "sphere1", "projectile", true, this->playerSubject);
 
+		this->enemySubject.AddObserver(GameData::GetInstance());
 		GameData::InitializeStageStateGD(device, deviceContext, this->playerSubject);
 	}
-
 
 	return result;
 }
@@ -224,23 +244,36 @@ int StageState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
+
+	if (input->isKeyPressed(DIK_T)) {
+		GameData* gd = GameData::GetInstance();
+		int i = 0;
+	}
+
+	if (input->isKeyPressed(DIK_U)) {
+		if (this->renderUI)
+			this->renderUI = false;
+		else
+			this->renderUI = true;
+	}
 	return result;
 }
 
 int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler)
 {
-	XMFLOAT2 pos;
+	DirectX::XMFLOAT2 pos;
 	DirectX::XMMATRIX worldMatrix;
 
 	int result = 1;
 
 	float newDT = deltaTime / 1000000;
+    HandleWaveSpawning(newDT, this->isCompleted);
 
-    HandleWaveSpawning(newDT);
 
     RemoveDeadEnemies();
- 
+
 	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
+	
     this->enemyPjHandler.Update(newDT);
 
 	this->playerProjectile->Update(newDT);
@@ -253,20 +286,13 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	this->timeElapsed += timeInSecounds;
 	GameData::Update(timeInSecounds);
 
-	if (this->timeElapsed > 3.0f)
+	if (this->timeElapsed > 15.0f)
 	{
 		this->powerUpPointer = GameData::GetRandomPowerup();
 		pos = this->spawnPos.at(this->latestSpawnPoint);
 		this->latestSpawnPoint++;
-		this->latestSpawnPoint %= 4;
+		this->latestSpawnPoint %= this->spawnPoints.size();
 		this->powerUpPointer->SetPosition(pos.x,pos.y);
-
-		//this->powerUpPointer->GetBV()
-
-		//pos = powerUpPointer->GetPosition();
-
-		//worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		//this->powerUpPointer->GetModel()->SetWorldMatrix(worldMatrix);
 
 		this->timeElapsed = 0;
 	}
@@ -284,15 +310,31 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}
 
-	if (this->enemyPjHandler.IntersectionTest(&this->player)) {
-		int j = 0;
-		this->exitStage = true;
+	//Player - projectile intersection
+	if (this->enemyPjHandler.IntersectionTest(&this->player))
+	{
+		
+		if (!this->player.IsAlive()) {
+			this->exitStage = true;
+		}
 	}
 
+	//Enemy - projectile intersection
+	int i = -1;
+	for (auto enemy : this->enemies)
+	{
+		i++;
+		if (this->playerProjectile->IntersectionTest(enemy)) 
+		{
+
+		}
+	}
+	
+	//Enemy - Player intersection
 	for (auto enemy : this->enemies) {
 
 		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
- 			int j = 0;
+ 			int j = 0; 
 		}
 	}
 
@@ -325,8 +367,14 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			this->powerUpPointer = nullptr;
 		}
 	}
-	XMFLOAT3 playerPos = this->player.GetPosition();
-	this->pointLights.at(0).Position = XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+
+	//Check if level is completed
+	if (this->isCompleted && this->enemies.size() == 0) {
+		this->exitStage = true;	//end stage for testing
+	}
+
+	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
+	this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 
 	return result;
 }
@@ -334,7 +382,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 {
 	int result = 0;
-    XMFLOAT3 pos;
+	DirectX::XMFLOAT3 pos;
     DirectX::XMMATRIX worldMatrix;
 
 	//Render models
@@ -354,9 +402,14 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
 		pos = this->enemies.at(i)->GetPosition();
-		
+
+        DirectX::XMFLOAT3 dirVec = this->enemies.at(i)->GetAimDir();
+		float angle = atan2(dirVec.z, dirVec.x);
+
+        DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
+
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_car.SetWorldMatrix(worldMatrix);
+		this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 
 		gHandler->DeferredRender(this->enemies.at(i)->GetModel(), &this->myCamera);
 
@@ -374,7 +427,6 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		pos = this->enemies.at(i)->GetPosition();
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
@@ -390,23 +442,25 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
+	if (this->renderUI)
+		gHandler->UIRender(&this->uiHandler);
 
 	return result;
 }
 
 
-void StageState::ReadFile(string fileName)
+void StageState::ReadFile(std::string fileName)
 {
-    string line;
-    ifstream myFile(fileName);
+	std::string line;
+	std::ifstream myFile(fileName);
 
     if (myFile.is_open())
     {
 		int nrOfSpawnPoints = 0;
-        getline(myFile, line);
+		std::getline(myFile, line);
 
-		string xStr;
-		string zStr;
+		std::string xStr;
+		std::string zStr;
 		while(line.at(0) == 'p')
 		{
 			std::stringstream ss;
@@ -440,9 +494,9 @@ void StageState::ReadFile(string fileName)
 			{
 				Wave waveTemp;
 				ToSpawn spawnTemp;
-				string waveLenght = "";
-				string enemyType = "";
-				string nrOfEnemies = "";
+				std::string waveLenght = "";
+				std::string enemyType = "";
+				std::string nrOfEnemies = "";
 
 				//get wave lenght
 				size_t start = 1;
@@ -467,7 +521,7 @@ void StageState::ReadFile(string fileName)
                         {
                             if (line.at(a) != ' ' && line.at(a) != '}')
                             {
-                                string bossCheck = line.substr(a, a + 3);
+								std::string bossCheck = line.substr(a, a + 3);
                                 if (bossCheck.at(bossCheck.size() - 1) == '}')
                                 {
                                     bossCheck.pop_back();
@@ -503,7 +557,7 @@ void StageState::ReadFile(string fileName)
     }
 }
 
-void StageState::HandleWaveSpawning(float deltaTime)
+void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
 {
     this->timeToNextWave -= deltaTime;
     if (this->timeToNextWave <= 0)
@@ -521,6 +575,10 @@ void StageState::HandleWaveSpawning(float deltaTime)
                 this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
                 SpawnWave(this->currentLevel, this->currentWave);
             }
+			else {
+				//If the Level has spawned all waves
+				isCompleted = true;
+			}
         }
     }
 }
@@ -572,7 +630,7 @@ void StageState::RemoveDeadEnemies()
 {
     for (int i = 0; i < this->enemies.size(); i++)
     {
-        if (!this->enemies.at(i)->GetIsAlive())
+        if (!(this->enemies.at(i)->IsAlive()))
         {
             this->enemies.at(i)->Shutdown();
             delete this->enemies.at(i);
@@ -582,7 +640,7 @@ void StageState::RemoveDeadEnemies()
         }
     }
 }
-Type StageState::ConvertToEnemyType(string type)
+Type StageState::ConvertToEnemyType(std::string type)
 {
 	if (type == "B")
 	{

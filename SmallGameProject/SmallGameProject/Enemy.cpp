@@ -44,16 +44,3 @@ void Enemy::Move(DirectX::XMFLOAT3 moveVec)
     this->posZ += moveVec.z;
 }
 
-bool Enemy::GetIsAlive()
-{
-    return this->isAlive;
-}
-
-void Enemy::SetIsAlive(bool newIsAlive)
-{
-    this->isAlive = newIsAlive;
-    if (newIsAlive == false)
-    {
-        this->entitySubject->Notify(this, Events::ENTITY::DEAD);
-    }
-}

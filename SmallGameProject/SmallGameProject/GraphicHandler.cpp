@@ -6,8 +6,9 @@ GraphicHandler::GraphicHandler()
 	this->deferredShaderH = nullptr;
 	this->lightShaderH = nullptr;
 	this->particleShaderH = nullptr;
+	this->uiShaderH = nullptr;
+	this->fontShaderH = nullptr;
 	this->screenQuad = nullptr;
-	this->textH = nullptr;
 	this->activeRTV = 0;
 }
 
@@ -64,6 +65,24 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 		return false;
 	}
 
+	this->fontShaderH = new FontShaderHandler;
+	if (!this->fontShaderH) {
+		return false;
+	}
+	result = this->fontShaderH->Initialize(this->engine->GetDevice());
+	if (!result) {
+		return false;
+	}
+
+	this->uiShaderH = new UIShaderHandler;
+	if (!this->uiShaderH) {
+		return false;
+	}
+	result = this->uiShaderH->Initialize(this->engine->GetDevice());
+	if (!result) {
+		return false;
+	}
+
 	//here is were I put in the shadowShader
 	this->shadowShaderH = new ShadowShaderHandler;
 	if (this->shadowShaderH == false)
@@ -77,15 +96,6 @@ bool GraphicHandler::initialize(HWND* hwnd, int screenWidth, int screenHeight, D
 		return false;
 	}
 	result = this->screenQuad->Initialize(this->engine->GetDevice(), this->engine->GetDeviceContext(), screenWidth, screenHeight);
-	if (!result) {
-		return false;
-	}
-
-	this->textH = new TextHandler;
-	if (!this->textH) {
-		return false;
-	}
-	result = this->textH->Initialize(this->engine->GetDevice(), this->engine->GetDeviceContext(), baseViewMatrix, screenWidth, screenHeight);
 	if (!result) {
 		return false;
 	}
@@ -279,10 +289,12 @@ void GraphicHandler::ShadowRender(Model* model, CameraHandler* camera)
 	delete shadowShaderParams;
 }
 
-void GraphicHandler::TextRender()
+void GraphicHandler::UIRender(UIHandler * uiHandler)
 {
+	this->engine->GetDeviceContext()->OMSetBlendState(this->disableTransparencyBlendState, NULL, 0xffffffff);
+	uiHandler->RenderElements(this->uiShaderH);
 	this->engine->GetDeviceContext()->OMSetBlendState(this->textTransparencyBlendState, NULL, 0xffffffff);
-	this->textH->Render(this->engine->GetDeviceContext(), this->orthographicMatrix);
+	uiHandler->RenderText(this->fontShaderH);
 }
 
 void GraphicHandler::Shutdown()
@@ -300,11 +312,16 @@ void GraphicHandler::Shutdown()
 		this->transparencyBlendState = nullptr;
 	}
 
-	//Delete the textHandler
-	if (this->textH) {
-		this->textH->Shutdown();
-		delete this->textH;
-		this->textH = nullptr;
+	//Release tranparencystate
+	if (this->disableTransparencyBlendState) {
+		this->disableTransparencyBlendState->Release();
+		this->disableTransparencyBlendState = nullptr;
+	}
+
+	//Release tranparencystate
+	if (this->textTransparencyBlendState) {
+		this->textTransparencyBlendState->Release();
+		this->textTransparencyBlendState = nullptr;
 	}
 	
 	//Delete the DeferredShaderHandler object
@@ -326,6 +343,20 @@ void GraphicHandler::Shutdown()
 		this->particleShaderH->Shutdown();
 		delete this->particleShaderH;
 		this->particleShaderH = nullptr;
+	}
+
+	//Delete the FontShaderHandler object
+	if (this->fontShaderH) {
+		this->fontShaderH->Shutdown();
+		delete this->fontShaderH;
+		this->fontShaderH = nullptr;
+	}
+
+	//Delete the UIShaderHandler object
+	if (this->uiShaderH) {
+		this->uiShaderH->Shutdown();
+		delete this->uiShaderH;
+		this->uiShaderH = nullptr;
 	}
 
 	//delete shadowShaderHander object
@@ -353,16 +384,6 @@ ID3D11Device* GraphicHandler::GetDevice()
 ID3D11DeviceContext* GraphicHandler::GetDeviceContext()
 {
 	return this->engine->GetDeviceContext();
-}
-
-int GraphicHandler::CreateTextHolder(int maxLength)
-{
-	return this->textH->CreateSentence(this->engine->GetDevice(), maxLength);
-}
-
-bool GraphicHandler::UpdateTextHolder(int id, const std::string & text, int posX, int posY, const DirectX::XMFLOAT3 & color, float size)
-{
-	return this->textH->UpdateSentence(this->engine->GetDeviceContext(), id, text, posX, posY, color, size);
 }
 
 void GraphicHandler::SetDirectionalLight(DirectionalLight light)

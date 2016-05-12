@@ -179,6 +179,7 @@ void InputHandler::ReadKeyboard()
 void InputHandler::ReadMouse()
 {
 	HRESULT hr;
+	this->OldDIMouseState = this->DIMouseState;
 
 	//Read the mouse device
 	hr = this->DIMouse->GetDeviceState(
@@ -264,6 +265,33 @@ bool InputHandler::isKeyPressed(unsigned int key)
 bool InputHandler::isKeyReleased(unsigned int key)
 {
 	if (this->OldKeyboardState[key] && !this->KeyboarState[key]) {
+		return true;
+	}
+
+	return false;
+}
+
+bool InputHandler::isMouseKeyPressed(unsigned int key)
+{
+	if (!this->OldDIMouseState.rgbButtons[key] && DIMouseState.rgbButtons[key]) {
+		return true;
+	}
+
+	return false;
+}
+
+bool InputHandler::isMouseKeyDown(unsigned int key)
+{
+	if (this->DIMouseState.rgbButtons[key]) {
+		return true;
+	}
+
+	return false;
+}
+
+bool InputHandler::isMouseKeyReleased(unsigned int key)
+{
+	if (this->OldDIMouseState.rgbButtons[key] && !this->DIMouseState.rgbButtons[key]) {
 		return true;
 	}
 

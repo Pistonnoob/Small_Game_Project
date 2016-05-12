@@ -17,7 +17,7 @@ public:
 
 	void Shutdown();
 
-	int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH);
+	int Initialize(GraphicHandler* gHandler, GameStateHandler* GSH);
 
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);

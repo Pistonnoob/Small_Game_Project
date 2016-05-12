@@ -19,7 +19,7 @@ public:
 
 	void Shutdown();
 
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	bool Initialize(GraphicHandler* gHandler);
 
 	int HandleInput(InputHandler* input);
 	int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);

@@ -10,18 +10,15 @@
 #include <vector>
 #include "Modifiers.h"
 #include "GameData.h"
+#include "UIHandler.h"
 
 class Player : public Actor {
 
 private:
 	DirectX::XMVECTOR forwardDir;
 
-	int playerHealth;
 	int playerMovmentSpeed;
-	int playerDamage;
 	int playerHighScore;
-
-	//std::vector<PowerUp>powerups;
 
 	Weapon* playerWeapon;
 
@@ -29,7 +26,7 @@ public:
 	Player();
 	~Player();
 
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string playerModelFilename,
+	bool Initialize(GraphicHandler* graphicsH, std::string playerModelFilename,
 		std::string weaponModelFile, bool isSphere, EntitySubject* entitySub);
 	
 	void Shutdown();
@@ -38,7 +35,6 @@ public:
 	Weapon* GetPlayerWeapon();
 	void PowerPickup(const int &POWER_ENUM);
 
-	//void SetPowerUp(Modifiers::POWERUPS powerUp);
 	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime);
 
 	Weapon* GetWeapon();
@@ -49,7 +45,6 @@ public:
 	virtual void MoveDown(float deltaTime);
 	virtual void Move(DirectX::XMFLOAT3 moveVec);
 
-	//virtual void Fire(float deltaT, PowerUp powerUp, Events::UNIQUE_FIRE shootType);
 	virtual void Fire(float deltaT);
 
 	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);

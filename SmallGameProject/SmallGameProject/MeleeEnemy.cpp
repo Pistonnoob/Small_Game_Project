@@ -5,7 +5,8 @@ MeleeEnemy::MeleeEnemy(float posX, float posZ)
     this->posX = posX;
     this->posZ = posZ;
     this->myType = Type::MELEEE;
-    this->isAlive = true;
+	this->health = 150;
+	this->damage = 10;
 }
 
 MeleeEnemy::~MeleeEnemy()
@@ -20,6 +21,7 @@ bool MeleeEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool is
 
 void MeleeEnemy::Shutdown()
 {
+ 	this->entitySubject->Notify(this, Events::ENTITY::MELEE_DEAD);
 	Entity::Shutdown(true);
 }
 

@@ -22,7 +22,7 @@ public:
 
 	int InitializeBase(GameStateHandler * GSH, ID3D11Device * device, ID3D11DeviceContext * deviceContext);
 
-	virtual int Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, GameStateHandler* GSH) = 0;
+	virtual int Initialize(GraphicHandler* gHandler, GameStateHandler* GSH) = 0;
 	
 	bool GetManualClearing();
 	void SetManualClearing(bool myCase);

@@ -7,7 +7,7 @@ bool GameData::isGameStageInit = false;
 
 int GameData::nrOfActivePowerups = 0;
 
-std::list<PowerUp*> GameData::powerupArsenal = list<PowerUp*>();
+std::list<PowerUp*> GameData::powerupArsenal = std::list<PowerUp*>();
 
 GameData* GameData::single = nullptr;
 
@@ -182,8 +182,21 @@ void GameData::ShutdownStageStateGD()
 
 void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
-	int i = 0;
+	//Need to finish Entity class
+	if (evnt == Events::ENTITY::BOMBER_DEAD) {
+		this->enemiesKilled++;
+		this->playerHighScore += SCORE_VALUE_BOMBER;
+	}
 
+	else if (evnt == Events::ENTITY::MELEE_DEAD) {
+		this->enemiesKilled++;
+		this->playerHighScore += SCORE_VALUE_MELEE;
+	}
+
+	else if (evnt == Events::ENTITY::RANGED_DEAD) {
+		this->enemiesKilled++;
+		this->playerHighScore += SCORE_VALUE_RANGED;
+	}
 	return;
 }
 

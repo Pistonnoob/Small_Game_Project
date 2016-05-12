@@ -8,10 +8,10 @@
 #include "ParticleShaderHandler.h"
 #include "ShadowShaderHandler.h"
 #include "ScreenQuad.h"
-#include "TextHandler.h"
 #include "Model.h"
 #include "CameraHandler.h"
 #include "LightStructs.h"
+#include "UIHandler.h"
 
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
@@ -23,14 +23,14 @@ protected:
 	DeferredShaderHandler* deferredShaderH;
 	LightShaderHandler* lightShaderH;
 	ParticleShaderHandler* particleShaderH;
+	FontShaderHandler* fontShaderH;
+	UIShaderHandler* uiShaderH;
 	ShadowShaderHandler* shadowShaderH;
 	ScreenQuad* screenQuad;
-	TextHandler* textH;
 	ID3D11BlendState* transparencyBlendState;
 	ID3D11BlendState* disableTransparencyBlendState;
 	ID3D11BlendState* textTransparencyBlendState;
 
-	
 	int screenWidth;
 	int screenHeight;
 
@@ -64,8 +64,8 @@ public:
 	void LightRender(DirectX::XMFLOAT4 camPos, std::vector<PointLight> pointLights);
 	void ParticleRender(ParticleShaderParameters* shaderParams, CameraHandler* camera, int amountOfParticles);
 	void ShadowRender(Model* model, CameraHandler* camera);
+	void UIRender(UIHandler* uiHandler);
 
-	void TextRender();
 	void Shutdown();
 
 	void ClearRTVs();
@@ -74,10 +74,6 @@ public:
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
-
-	int CreateTextHolder(int maxLength);
-
-	bool UpdateTextHolder(int id, const std::string& text, int posX, int posY, const DirectX::XMFLOAT3& color, float size);
 
 	void SetDirectionalLight(DirectionalLight light);
 
