@@ -14,7 +14,7 @@ const int SCORE_VALUE_BOMBER = 50;
 const int SCORE_VALUE_MELEE = 100;
 const int SCORE_VALUE_RANGED = 150;
 
-const int EXP_PER_POINT = 100;
+const int EXP_PER_POINT = 10;
 const float EXP_PER_SCORE = 0.1f;
 const int EXP_NEED_INC = 0;
 const int INC_PER_POINT = 10;

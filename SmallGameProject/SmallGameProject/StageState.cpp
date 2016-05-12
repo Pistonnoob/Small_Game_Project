@@ -183,11 +183,11 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->uiHandler.Initialize(gHandler);
 
-		this->uiHandler.AddElement(400, 500, 400, 300, "testUI.mtl", 1, false);
-		this->uiHandler.AddElement(120, 40, 500, 500, "Continue.mtl", 1, true);
-		this->uiHandler.AddElement(20, 20, 500, 285, "Button.mtl", 1, true);
-		this->uiHandler.AddElement(20, 20, 500, 310, "Button.mtl", 1, true);
-		this->uiHandler.AddElement(20, 20, 500, 335, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(400, 500, 500, 300, "testUI.mtl", 1, false);
+		this->uiHandler.AddElement(120, 40, 600, 500, "Continue.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 285, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 310, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 335, "Button.mtl", 1, true);
 
 		this->uiHandler.CreateTextHolder(32); //title
 		this->uiHandler.CreateTextHolder(32); //killed
@@ -232,7 +232,7 @@ int StageState::LoadMap(ID3D11Device* device, ID3D11DeviceContext* deviceContext
 		SpawnWave(this->currentLevel, this->currentWave);
 	}
 	else if(stageNr == 2){
-		result = this->m_ground.Initialize(device, deviceContext, "Stage2");
+		result = this->m_ground.Initialize(device, deviceContext, "Stage1NoPlanet");
 		if (!result) {
 			return false;
 		}
@@ -341,6 +341,18 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	//Check if level is completed
 	if (this->isCompleted && this->enemies.size() == 0) {
+		DirectX::XMFLOAT4 camPos = this->myCamera.GetCameraPos();
+		DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixRotationX(1.1f);
+		//DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixTranslation(camPos.x - 2.5f, camPos.y - 8.0f, camPos.z + 3.0f);
+		//playerDisplay *= DirectX::XMMatrixRotationX(3.0f);
+		playerDisplay *= DirectX::XMMatrixTranslation(camPos.x - 2.5f, camPos.y - 8.0f, camPos.z + 3.0f);
+		this->player.GetModel()->SetWorldMatrix(playerDisplay);
+
+		//DirectX::XMMATRIX weaponWorldMatrix = playerDisplay;
+		////weaponWorldMatrix *= DirectX::XMMatrixRotationY(DirectX::XM_PI / 2);
+		//weaponWorldMatrix *= DirectX::XMMatrixTranslation(1.0f, 1.0f, 0.0f);
+		//this->player.GetWeapon()->GetModel()->SetWorldMatrix(weaponWorldMatrix);
+
 		std::string text = "";
 		if (!this->renderUI) {
 			this->renderUI = true;
@@ -348,29 +360,29 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			GameData::GetInstance()->EndStage(true);
 
 			text = "Level " + std::to_string(this->currentLevel) + " completed!";
-			this->uiHandler.UpdateTextHolder(0, text, 300, 75, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 2.0f);
+			this->uiHandler.UpdateTextHolder(0, text, 400, 75, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 2.0f);
 
 			text = "Mobs killed: " + std::to_string(GameData::GetInstance()->GetEnemiesKilledInStage());
-			this->uiHandler.UpdateTextHolder(1, text, 275, 125, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(1, text, 375, 125, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 
 			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
 			text = "Time: " + std::to_string((int)elaspedTime.count());
-			this->uiHandler.UpdateTextHolder(2, text, 275, 150, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(2, text, 375, 150, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 
 			text = "Score: " + std::to_string(GameData::GetInstance()->GetScoreInStage());
-			this->uiHandler.UpdateTextHolder(3, text, 275, 175, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(3, text, 375, 175, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 
 			text = "Highscore: " + std::to_string(GameData::GetInstance()->GetHighScore());
-			this->uiHandler.UpdateTextHolder(4, text, 275, 200, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(4, text, 375, 200, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 		}
 		text = "Points to spend: " + std::to_string(GameData::GetInstance()->GetPoints());
-		this->uiHandler.UpdateTextHolder(5, text, 275, 250, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(5, text, 375, 250, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 		text = "Damage: " + std::to_string(GameData::GetInstance()->GetPlayerDamage());
-		this->uiHandler.UpdateTextHolder(6, text, 275, 275, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(6, text, 375, 275, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 		text = "Health: " + std::to_string(GameData::GetInstance()->GetPlayerHealth());
-		this->uiHandler.UpdateTextHolder(7, text, 275, 300, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(7, text, 375, 300, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 		text = "Speed: " + std::to_string(GameData::GetInstance()->GetPlayerMoveSpeed());
-		this->uiHandler.UpdateTextHolder(8, text, 275, 325, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(8, text, 375, 325, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
 
 		if (this->uiHandler.WasButtonPressed(1)) {
 			this->pauseStage = false;

@@ -3,19 +3,5 @@ p50,50}
 p-50,-50}
 p50,-50}
 new Level
-t5}
-{B}
-{B}
-{B}
-{B}
-t5}
-{B R}
-{B R}
-{B R}
-{B R}
-t5}
-{B R M}
-{B R M}
-{B R M}
-{B R M}
+t1}
 end

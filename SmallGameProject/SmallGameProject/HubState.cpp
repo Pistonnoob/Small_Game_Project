@@ -69,7 +69,7 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
-		result = this->m_ground.Initialize(device, deviceContext, "Stage1NoPlanet");
+		result = this->m_ground.Initialize(device, deviceContext, "HubWorld");
 		if (!result) {
 			return false;
 		}
