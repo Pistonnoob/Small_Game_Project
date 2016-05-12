@@ -57,8 +57,6 @@ void StageState::Shutdown()
 
 	this->playerSubject = nullptr;
 	this->playerProjectile = nullptr;
-
-	GameData::ShutdownStageStateGD();
 	
 	this->player.Shutdown();
 
@@ -281,7 +279,25 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		if (this->powerUpPointer->GetBV()->Intersect(this->player.GetBV()) == true)
 		{
 			//nu vill jag säga till gameData att  spelaren har plockat upp denna powerup
-			this->playerSubject->Notify(&this->player, this->powerUpPointer->GetType());
+			Events::UNIQUE_FIRE powerUp;
+			powerUp = this->powerUpPointer->GetType();
+
+			//not very happy with this solution
+			switch (powerUp)
+			{
+			case Events::ARCFIRE:
+				this->playerSubject->Notify(&this->player, Events::PICKUP::PICKUP_SPREAD);
+				break;
+			case Events::SPLITFIRE:
+				this->playerSubject->Notify(&this->player, Events::PICKUP::PICKUP_SPITFIRE);
+				break;
+			case Events::REVERSERBULLETS:
+				this->playerSubject->Notify(&this->player, Events::PICKUP::PICKUP_REVERSERBULLETS);
+				break;
+			default:
+				break;
+			}
+			
 			this->powerUpPointer = nullptr;
 		}
 	}

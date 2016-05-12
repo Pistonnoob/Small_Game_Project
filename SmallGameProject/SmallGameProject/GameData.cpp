@@ -3,6 +3,7 @@
 #include <time.h>
 
 bool GameData::isInstatiated = false;
+bool GameData::isGameStageInit = false;
 
 int GameData::nrOfActivePowerups = 0;
 
@@ -61,6 +62,8 @@ void GameData::Shutdown()
 	{
 		weaponArsenal.at(i).ShutDown();
 	}
+
+	GameData::ShutdownStageStateGD();
 	
 	isInstatiated = false;
 	delete single;
@@ -108,7 +111,7 @@ PowerUp * GameData::GetRandomPowerup()
 {
 	int randPow = rand() % 3;
 	PowerUp* toReturn = nullptr;
-	randPow = 2;
+	//randPow = 2;
 
 	std::list<PowerUp*>::iterator walker;
 	walker = GameData::powerupArsenal.begin();
@@ -117,7 +120,6 @@ PowerUp * GameData::GetRandomPowerup()
 	{
 		walker++;
 	}
-
 	return (*walker);
 }
 
@@ -133,19 +135,24 @@ int GameData::getNrOfActivePowerups()
 
 void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject)
 {
-	srand(time(NULL));
+	if (GameData::isGameStageInit == false)
+	{
+		srand((unsigned)time(NULL));
 
-	unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
-	unlockPowerUp(Events::UNIQUE_FIRE::SPLITFIRE);
-	unlockPowerUp(Events::UNIQUE_FIRE::REVERSERBULLETS);
+		unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
+		unlockPowerUp(Events::UNIQUE_FIRE::SPLITFIRE);
+		unlockPowerUp(Events::UNIQUE_FIRE::REVERSERBULLETS);
 
-	std::list<PowerUp*>::iterator walker;
-	walker = GameData::powerupArsenal.begin();
-	(*walker)->Initialize(device, deviceContext,"ogreFullG", true, playerSubject);
-	walker++;
-	(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
-	walker++;
-	(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+		std::list<PowerUp*>::iterator walker;
+		walker = GameData::powerupArsenal.begin();
+		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+		walker++;
+		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+		walker++;
+		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+
+		GameData::isGameStageInit = true;
+	}
 }
 
 void GameData::ShutdownStageStateGD()
@@ -206,9 +213,28 @@ void GameData::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc
 
 void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
-	
+	std::list<PowerUp*>::iterator walker;
+	walker = GameData::powerupArsenal.begin();
+
+	switch (evnt)
+	{
+	case Events::PICKUP::PICKUP_SPREAD:
+		(*walker)->SetTimePowerup(10.0f);
+		break;
+	case Events::PICKUP::PICKUP_SPITFIRE:
+		walker++;
+		(*walker)->SetTimePowerup(10.0f);
+		break;
+	case Events::PICKUP::PICKUP_REVERSERBULLETS:
+		walker++;
+		walker++;
+		(*walker)->SetTimePowerup(10.0f);
+		break;
+	default:
+		break;
+	}
+
 	//flashy particles here
-	GameData::powerupArsenal.front()->SetTimePowerup(10.0f);
 	this->nrOfActivePowerups++;
 	//resulterar till:
 }
