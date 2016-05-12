@@ -6,22 +6,24 @@ GameData* GameData::single = nullptr;
 
 GameData::GameData(GameData const &) : Observer()
 {
-	playerHighScore = 0;
-	playerHealth = 0;
-	playerMovmentSpeed = 0;
-	playerDamage = 0;
+	this->playerHighScore = 0;
+	this->playerHealth = 0;
+	this->playerMovmentSpeed = 0;
+	this->playerDamage = 0;
 
-	enemiesKilled = 0;
+	this->enemiesKilled = 0;
+	this->enemiesKilledStage = 0;
+	this->playerScoreStage = 0;
 
 	//create pistol
-	weaponArsenal.push_back(Weapon());
+	this->weaponArsenal.push_back(Weapon());
 	//shotgun
-	weaponArsenal.push_back(Weapon(15, 10, 5));
+	this->weaponArsenal.push_back(Weapon(15, 10, 5));
 	//uzi
-	weaponArsenal.push_back(Weapon(5, 10, 15));
+	this->weaponArsenal.push_back(Weapon(5, 10, 15));
 
 	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
-		playerUnlockedWeapons[i] = false;
+		this->playerUnlockedWeapons[i] = false;
 }
 
 GameData::~GameData()
@@ -64,22 +66,72 @@ void GameData::Update(float deltaTime)
 
 }
 
+void GameData::NewStage()
+{
+	this->enemiesKilledStage = 0;
+	this->playerScoreStage = 0;
+}
+
+void GameData::EndStage(bool winner)
+{
+	if (winner) {
+		if (this->playerScoreStage > this->playerHighScore) {
+			this->playerHighScore = this->playerScoreStage;
+		}
+		
+		this->experience += (this->playerScoreStage * EXP_PER_SCORE);
+		while (this->experience > EXP_PER_POINT) {
+			this->experience -= EXP_PER_POINT;
+			this->points++;
+		}
+	}
+	
+}
+
+int GameData::SpendPointOn(int stat)
+{
+	if (this->points == 0) {
+		return 1;
+	}
+
+	switch (stat) {
+	case 0:
+		this->playerDamage += INC_PER_POINT;
+		break;
+	case 1:
+		this->playerHealth += INC_PER_POINT;
+		break;
+	case 2:
+		this->playerMovmentSpeed += INC_PER_POINT;
+		break;
+	default:
+		return -1;
+		break;
+	}
+	this->points--;
+
+	return 0;
+}
+
 void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
 	//Need to finish Entity class
 	if (evnt == Events::ENTITY::BOMBER_DEAD) {
 		this->enemiesKilled++;
-		this->playerHighScore += SCORE_VALUE_BOMBER;
+		this->enemiesKilledStage++;
+		this->playerScoreStage += SCORE_VALUE_BOMBER;
 	}
 
 	else if (evnt == Events::ENTITY::MELEE_DEAD) {
 		this->enemiesKilled++;
-		this->playerHighScore += SCORE_VALUE_MELEE;
+		this->enemiesKilledStage++;
+		this->playerScoreStage += SCORE_VALUE_MELEE;
 	}
 
 	else if (evnt == Events::ENTITY::RANGED_DEAD) {
 		this->enemiesKilled++;
-		this->playerHighScore += SCORE_VALUE_RANGED;
+		this->enemiesKilledStage++;
+		this->playerScoreStage += SCORE_VALUE_RANGED;
 	}
 
 	return;
@@ -177,4 +229,39 @@ void GameData::Render(GraphicHandler * gHandler, CameraHandler * camera)
 Weapon * GameData::GetWeapon(int weaponEnum)
 {
 	return &weaponArsenal[0];
+}
+
+int GameData::GetEnemiesKilledInStage()
+{
+	return this->enemiesKilledStage;
+}
+
+int GameData::GetScoreInStage()
+{
+	return this->playerScoreStage;
+}
+
+int GameData::GetHighScore()
+{
+	return this->playerHighScore;
+}
+
+int GameData::GetPlayerDamage()
+{
+	return this->playerDamage;
+}
+
+int GameData::GetPlayerHealth()
+{
+	return this->playerHealth;
+}
+
+int GameData::GetPlayerMoveSpeed()
+{
+	return this->playerMovmentSpeed;
+}
+
+int GameData::GetPoints()
+{
+	return this->points;
 }

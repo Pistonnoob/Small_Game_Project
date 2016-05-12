@@ -34,7 +34,6 @@ StageState::StageState()
 
 	this->isCompleted = false;
 	this->renderUI = false;
-
 }
 
 
@@ -183,7 +182,22 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->uiHandler.Initialize(gHandler);
 
-		this->uiHandler.AddElement(100, 100, 300, 100, "testUI.mtl", 1, true);
+		this->uiHandler.AddElement(400, 500, 400, 300, "testUI.mtl", 1, false);
+		this->uiHandler.AddElement(40, 40, 500, 500, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 500, 285, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 500, 310, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 500, 335, "Button.mtl", 1, true);
+
+		this->uiHandler.CreateTextHolder(32); //title
+		this->uiHandler.CreateTextHolder(32); //killed
+		this->uiHandler.CreateTextHolder(32); //time
+		this->uiHandler.CreateTextHolder(32); //score
+		this->uiHandler.CreateTextHolder(32); //highscore
+
+		this->uiHandler.CreateTextHolder(32); //points
+		this->uiHandler.CreateTextHolder(32); //dmg
+		this->uiHandler.CreateTextHolder(32); //hp
+		this->uiHandler.CreateTextHolder(32); //movespeed
 
 		if (!result) {
 			return false;
@@ -232,6 +246,8 @@ int StageState::LoadMap(ID3D11Device* device, ID3D11DeviceContext* deviceContext
 		SpawnWave(this->currentLevel, this->currentWave);
 	}
 
+	this->timeInStage = std::chrono::system_clock::now();
+	GameData::GetInstance()->NewStage();
 	
 	return 0;
 }
@@ -255,7 +271,7 @@ int StageState::HandleInput(InputHandler * input)
 			this->renderUI = true;
 	}
 
-	if (input->isKeyReleased(DIK_P)) {
+	if (input->isMouseKeyPressed(0)) {
 		this->uiHandler.HandleInput(input);
 	}
 
@@ -323,15 +339,52 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	//Check if level is completed
 	if (this->isCompleted && this->enemies.size() == 0) {
-		this->exitStage = true;	//end stage for testing
+		std::string text = "";
+		if (!this->renderUI) {
+			this->renderUI = true;
+			GameData::GetInstance()->EndStage(true);
+
+			text = "Level " + std::to_string(this->currentLevel) + " completed!";
+			this->uiHandler.UpdateTextHolder(0, text, 300, 75, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 2.0f);
+
+			text = "Mobs killed: " + std::to_string(GameData::GetInstance()->GetEnemiesKilledInStage());
+			this->uiHandler.UpdateTextHolder(1, text, 275, 125, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+
+			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
+			text = "Time: " + std::to_string((int)elaspedTime.count());
+			this->uiHandler.UpdateTextHolder(2, text, 275, 150, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+
+			text = "Score: " + std::to_string(GameData::GetInstance()->GetScoreInStage());
+			this->uiHandler.UpdateTextHolder(3, text, 275, 175, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+
+			text = "Highscore: " + std::to_string(GameData::GetInstance()->GetHighScore());
+			this->uiHandler.UpdateTextHolder(4, text, 275, 200, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		}
+		text = "Points to spend: " + std::to_string(GameData::GetInstance()->GetPoints());
+		this->uiHandler.UpdateTextHolder(5, text, 275, 250, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		text = "Damage: " + std::to_string(GameData::GetInstance()->GetPlayerDamage());
+		this->uiHandler.UpdateTextHolder(6, text, 275, 275, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		text = "Health: " + std::to_string(GameData::GetInstance()->GetPlayerHealth());
+		this->uiHandler.UpdateTextHolder(7, text, 275, 300, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		text = "Speed: " + std::to_string(GameData::GetInstance()->GetPlayerMoveSpeed());
+		this->uiHandler.UpdateTextHolder(8, text, 275, 325, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+
+		if (this->uiHandler.WasButtonPressed(1)) {
+			this->exitStage = true;	//end stage for testing
+		}
+		if (this->uiHandler.WasButtonPressed(2)) {
+			GameData::GetInstance()->SpendPointOn(0);
+		}
+		if (this->uiHandler.WasButtonPressed(3)) {
+			GameData::GetInstance()->SpendPointOn(1);
+		}
+		if (this->uiHandler.WasButtonPressed(4)) {
+			GameData::GetInstance()->SpendPointOn(2);
+		}
 	}
 
 	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
 	this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
-
-	if (this->uiHandler.WasButtonPressed(0)) {
-		this->pointLights.at(1).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
-	}
 
 	return result;
 }

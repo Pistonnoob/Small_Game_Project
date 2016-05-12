@@ -14,6 +14,7 @@
 #include "Boss.h"
 #include "GameData.h"
 #include "PowerUp.h"
+#include <chrono>
 
 
 struct ToSpawn
@@ -69,6 +70,7 @@ private:	//Variables
     float t;
 	bool exitStage;
 	bool isCompleted;
+	std::chrono::time_point<std::chrono::system_clock> timeInStage;
 
 	bool renderUI;
 
