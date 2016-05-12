@@ -1,21 +1,31 @@
-p-50,50}
-p50,50}
-p-50,-50}
-p50,-50}
+p-30,30}
+p30,30}
+p-30,-30}
+p30,-30}
 new Level
+t100}
+{}
+{}
+{}
+{}
 t5}
 {B}
 {B}
 {B}
 {B}
-t5}
+t10}
 {B R}
 {B R}
 {B R}
 {B R}
-t5}
+t15}
 {B R M}
 {B R M}
 {B R M}
 {B R M}
+t20}
+{BOSS}
+{BOSS}
+{BOSS}
+{BOSS}
 end

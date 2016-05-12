@@ -221,7 +221,7 @@ int Model::GetVertexCount()
 
 bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, unsigned long*& outputIndices, std::string& materialLib)
 {
-	DirectX::XMFLOAT3 tempVertex;
+ 	DirectX::XMFLOAT3 tempVertex;
 	DirectX::XMFLOAT2 tempUV;
 	DirectX::XMFLOAT3 tempNormal;
 	unsigned int vertexIndex[3];
@@ -246,7 +246,7 @@ bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, u
 	path.append(filename);
 	path.append(".ace");
 	file.open(path, std::ios::in);
-	if (file.is_open()) { //Model has been loaded before and therefor has binary files to read
+ 	if (file.is_open()) { //Model has been loaded before and therefor has binary files to read
 		std::getline(file, line);
 		ss.str(line);
 		ss >> this->vertexCount >> this->indexCount; //Read the sizes

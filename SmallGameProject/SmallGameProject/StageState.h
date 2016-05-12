@@ -41,10 +41,16 @@ private:	//Variables
 	EntitySubject powerUpSubject; 
 
 	Model m_car;
+    Model MeleeModel;
+    Model RangedModel;
+    Model BomberModel;
     Model m_ball;
 	Model m_ground;
+    Model portal;
 
     EntitySubject enemySubject;
+
+    EntitySubject projectileHandlerSubject;
 
 	//player variables
 	

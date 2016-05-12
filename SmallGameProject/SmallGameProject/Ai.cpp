@@ -125,11 +125,11 @@ void Ai::updateBoss(Boss* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
 	actor->update(playerPos, deltaTime);
 	float distance = distanceBetween(actor->GetPosition(), playerPos);
-	if (distance > 20.0f)
+	if (distance > 100.0f)
 	{
 		this->moveToPlayer(actor, playerPos);
 	}
-	if (distance < 10.0f)
+	if (distance < 60.0f)
 	{
 		this->moveAwayFromPlayer(actor, playerPos);
 	}
@@ -138,39 +138,40 @@ void Ai::updateBoss(Boss* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 //private functions
 void Ai::moveToPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    DirectX::XMFLOAT3 pos = playerPos;
-    if (actor->GetPosition().x < playerPos.x )
+    DirectX::XMFLOAT3 pos = actor->GetPosition();
+    if (pos.x < playerPos.x && actor->GetPosition().x < BORDER_RIGHT)
     {
         this->commands.push_back(new MoveRightCommand());
     }
-    else if (actor->GetPosition().x > playerPos.x )
+    else if (pos.x > playerPos.x && actor->GetPosition().x > BORDER_LEFT)
     {
         this->commands.push_back(new MoveLeftCommand());
     }
-    if (actor->GetPosition().z < playerPos.z )
+    if (pos.z < playerPos.z && actor->GetPosition().z < BORDER_UP)
     {
         this->commands.push_back(new MoveUpCommand());
     }
-    else if (actor->GetPosition().z > playerPos.z)
+    else if (pos.z > playerPos.z && actor->GetPosition().z > BORDER_DOWN)
     {
         this->commands.push_back(new MoveDownCommand());
     }
 }
 void Ai::moveAwayFromPlayer(Enemy* actor, DirectX::XMFLOAT3 playerPos)
 {
-    if (actor->GetPosition().x < playerPos.x)
+    DirectX::XMFLOAT3 pos = actor->GetPosition();
+    if (pos.x < playerPos.x && actor->GetPosition().x > BORDER_LEFT)
     {
         this->commands.push_back(new MoveLeftCommand());
     }
-    else if (actor->GetPosition().x > playerPos.x )
+    else if (pos.x > playerPos.x && actor->GetPosition().x < BORDER_RIGHT)
     {
         this->commands.push_back(new MoveRightCommand());
     }
-    if (actor->GetPosition().z < playerPos.z )
+    if (pos.z < playerPos.z && actor->GetPosition().z > BORDER_DOWN)
     {
         this->commands.push_back(new MoveDownCommand());
     }
-    else if (actor->GetPosition().z > playerPos.z)
+    else if (pos.z > playerPos.z && actor->GetPosition().z < BORDER_UP)
     {
         this->commands.push_back(new MoveUpCommand());
     }
@@ -223,7 +224,8 @@ float Ai::distanceBetween(DirectX::XMFLOAT3 positon1, DirectX::XMFLOAT3 positon2
     float yDiff = abs(positon1.y - positon2.y);
     float zDiff = abs(positon1.z - positon2.z);
 
-    return pow(xDiff + yDiff + zDiff,2);
+    return xDiff + yDiff + zDiff;
+    //return pow(xDiff + yDiff + zDiff, 2);
 }    
 void Ai::seperate(Enemy* actor1, Enemy* actor2, float amplitude, DirectX::XMFLOAT3 dir)
 {

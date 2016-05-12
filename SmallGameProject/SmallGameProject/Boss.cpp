@@ -5,6 +5,9 @@ Boss::Boss(float posX, float posZ)
 	this->posX = posX;
 	this->posZ = posZ;
 	this->abilityUsed = 0;
+    this->myType = Type::BOSS;
+    this->health = 500;
+    this->damage = 10;
 }
 Boss::~Boss()
 {
@@ -29,10 +32,11 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 	int charges			= 1;
 	float triggerDelay	= 1;
 	temp1->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
+    //delete temp1;
 	this->abilities.push_back(temp1);
 
 	SplitFire* temp2 = new SplitFire();
-	arc						= 3.14f * 2;
+	arc						= 3.14f / 2;
 	nrOfProjectiles			= 5;
 	cooldown				= 4;
 	attackDelay				= 1;
@@ -79,6 +83,8 @@ void Boss::Shutdown()
 
 void Boss::update(DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
+
+
 	for (int i = 0; i < this->abilities.size(); i++)
 	{
 		this->abilities.at(i)->Update(this, this->GetEntitySubject(), deltaTime);
@@ -103,5 +109,8 @@ void Boss::update(DirectX::XMFLOAT3 playerPos, float deltaTime)
 			this->abilityUsed = 0;
 		}
 	}
+    this->aimDir.x = playerPos.x - this->posX;
+    this->aimDir.y = 0;
+    this->aimDir.z = playerPos.z - this->posZ;
 
 }
