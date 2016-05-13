@@ -30,6 +30,8 @@ private:
 			node.time += dT;
 			node.x = node.dX * node.time;
 			node.z = node.dZ * node.time;
+			node.r = 1.0f - pow(node.time / node.timeCap, 2);
+			node.g = 0.8 - node.time / node.timeCap;
 			return node;
 		};
 		//void operator()(Particle& element) { element.time += dT; Algorithm::GetEllipse(element.x, element.y, element.time * element.velocity, element.time, element.time); };
@@ -46,7 +48,7 @@ public:
 
 	void ShutdownSpecific();
 
-	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture);
+	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit = 1.0f);
 	bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext);
 	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
 

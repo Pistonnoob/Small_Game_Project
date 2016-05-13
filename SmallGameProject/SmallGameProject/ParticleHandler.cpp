@@ -7,6 +7,7 @@
 
 ParticleHandler::ParticleHandler()
 {
+	this->device = nullptr;
 }
 
 
@@ -27,7 +28,7 @@ void ParticleHandler::Shutdown()
 		this->emitters.pop_back();
 	}
 	this->emitters.clear();
-
+	this->spawnEmitter.Shutdown();
 }
 
 void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext)
@@ -35,10 +36,12 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	this->myTextures = Texture();
 	std::string theNightSky = "Particles.mtl";
 	bool victory = this->myTextures.Initialize(device, deviceContext, theNightSky);
-
-	/*EmitterExplosion* newEmitter = new EmitterExplosion();
-	newEmitter->Initialize(device, this->myTextures.GetTexture(0));
-	this->emitters.push_back(newEmitter);*/
+	this->device = device;
+	EmitterClusterExplosion* newEmitter = new EmitterClusterExplosion();
+	newEmitter->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 100);
+	this->emitters.push_back(newEmitter);
+	this->spawnEmitter = EmitterSpawnPulse();
+	this->spawnEmitter.Initialize(device, this->myTextures.GetTexture(0), 1000.0f);
 }
 
 void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
@@ -50,51 +53,69 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::PLAYER_CREATED:
 	{
-		newEmitter = new EmitterPlayerSpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		/*newEmitter = new EmitterPlayerSpawn();
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 4.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());*/
+		//DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		//this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y, entityPosition.z, 0.2f, 4.0f, 0.1f, 0.8f, 0.8f, 3.0f);
 	}
 		break;
 	case Events::PLAYER_MOVING:
 		break;
 	case Events::PLAYER_DEAD:
 		break;
+    case Events::PLAYER_HIT:
+    {
+        newEmitter = new EmitterClusterExplosion();
+        EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
+        temp->Initialize(device, this->myTextures.GetTexture(0), 0.01f, 0.001f, 1);
+        temp->ApplyPosition(entity->GetPosition());
+    }
+        break;
 	case Events::BOMBER_CREATED:
 	{
 		newEmitter = new EmitterEnemySpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::BOMBER_MOVING:
 		break;
 	case Events::BOMBER_DEAD:
 	{
-		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter = new EmitterClusterExplosion();
+        EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
+        temp->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 100);
+        temp->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::RANGED_CREATED:
 	{
 		newEmitter = new EmitterEnemySpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::RANGED_MOVING:
 		break;
 	case Events::RANGED_DEAD:
 		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 		break;
 	case Events::MELEE_CREATED:
 	{
 		newEmitter = new EmitterEnemySpawn();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::MELEE_MOVING:
 		break;
 	case Events::MELEE_DEAD:
 		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 		break;
 	case Events::IDLE:
 		break;
@@ -102,7 +123,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::DEAD:
 		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0));
+		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
+		newEmitter->ApplyPosition(entity->GetPosition());
 		break;
 	default:
 		break;
@@ -141,6 +163,7 @@ int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
 	{
  		(*emitter)->Update(dT, deviceContext);
 	}
+	this->spawnEmitter.Update(dT, deviceContext);
 	this->KillEmitters();
 	return result;
 }
@@ -150,16 +173,17 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 	int result = 0;
 
 	ParticleShaderParameters parameters;
-
-	if (this->emitters.size())
+	parameters.diffTexture = nullptr;
+	DirectX::XMFLOAT4 cameraPosition = camera->GetCameraPos();
+	int amountOfParticles = 0;
+	for(auto emitter : this->emitters)
 	{
-		int amountOfParticles = 0;
-		this->emitters.at(0)->SetCameraPos(camera->GetCameraPos());
-		this->emitters.at(0)->SortParticles();
-		this->emitters.at(0)->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
-
-		parameters.diffTexture = this->myTextures.GetTexture(0);
-		this->emitters.at(0)->GetWorld(parameters.worldMatrix);
+		emitter->SetCameraPos(cameraPosition);
+		emitter->SortParticles();
+		emitter->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
+		if(parameters.diffTexture == nullptr)
+			parameters.diffTexture = this->myTextures.GetTexture(0);
+		emitter->GetWorld(parameters.worldMatrix);
 		if (!parameters.diffTexture)
 		{
 			result = false;
@@ -167,8 +191,13 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 		gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	}
-
-
+	this->spawnEmitter.SetCameraPos(cameraPosition);
+	this->spawnEmitter.Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
+	if (!parameters.diffTexture)
+	{
+		result = false;
+	}
+	gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	return result;
 }
 

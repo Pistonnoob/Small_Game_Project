@@ -7,6 +7,8 @@
 #include "EmitterPlayerSpawn.h"
 #include "EmitterEnemySpawn.h"
 #include "EmitterExplosion.h"
+#include "EmitterClusterExplosion.h"
+#include "EmitterSpawnPulse.h"
 #include "GraphicHandler.h"
 #include "CameraHandler.h"
 
@@ -15,6 +17,7 @@ class ParticleHandler :
 {
 private:
 	std::vector<ParticleEmitter*> emitters;
+	EmitterSpawnPulse spawnEmitter;
 
 	Texture myTextures;
 	ID3D11Device* device;

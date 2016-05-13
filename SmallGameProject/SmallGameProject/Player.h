@@ -9,7 +9,9 @@
 #include "PowerUp.h"
 #include <vector>
 #include "Modifiers.h"
+#include "GameData.h"
 #include "UIHandler.h"
+#include "GameData.h"
 
 class Player : public Actor {
 
@@ -17,11 +19,10 @@ private:
 	DirectX::XMVECTOR forwardDir;
 
 	int playerMovmentSpeed;
-	int playerHighScore;
-
-	std::vector<PowerUp>powerups;
 
 	Weapon* playerWeapon;
+
+	UIHandler uiHandler;
 
 public:
 	Player();
@@ -36,7 +37,6 @@ public:
 	Weapon* GetPlayerWeapon();
 	void PowerPickup(const int &POWER_ENUM);
 
-	void SetPowerUp(Modifiers::POWERUPS powerUp);
 	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime);
 
 	Weapon* GetWeapon();
@@ -48,9 +48,16 @@ public:
 	virtual void Move(DirectX::XMFLOAT3 moveVec);
 
 	virtual void Fire(float deltaT);
-	virtual void Fire();
 
 	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
+
+	virtual unsigned int GetDamage();
+	virtual bool IsAlive();
+
+	UIHandler* GetUIHandler();
+
+	void SetLevel(int level);
+	void SetWave(int wave);
 };
 
 #endif

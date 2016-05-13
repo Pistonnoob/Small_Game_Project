@@ -16,7 +16,9 @@ MeleeEnemy::~MeleeEnemy()
 bool MeleeEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool isSphere)
 {
     this->aimDir = DirectX::XMFLOAT3(0, 0, 0);
-	return Entity::Initialize(model, entitySubject, isSphere);
+	bool result = Entity::Initialize(model, entitySubject, isSphere);
+	this->entitySubject->Notify(this, Events::ENTITY::MELEE_CREATED);
+	return result;
 }
 
 void MeleeEnemy::Shutdown()

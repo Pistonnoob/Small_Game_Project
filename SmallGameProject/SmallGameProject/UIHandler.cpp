@@ -38,8 +38,8 @@ bool UIHandler::Initialize(GraphicHandler* graphicsH)
 
 void UIHandler::HandleInput(InputHandler * inputH)
 {
-	for (auto button : this->elements) {
-		button.UpdateClicked(inputH->getMousePos(), this->screenWidth, this->screenHeight);
+	for (std::vector<UIElement>::iterator element = this->elements.begin(); element != this->elements.end(); element++) {
+		(*element).UpdateClicked(inputH->getMousePos(), this->screenWidth, this->screenHeight);
 	}
 }
 

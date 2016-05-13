@@ -1,6 +1,6 @@
 #include "MenuState.h"
 #include "GameStateHandler.h"
-
+#include "Algorithm.h"
 
 
 MenuState::MenuState()
@@ -42,10 +42,11 @@ int MenuState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 	{
 		//Proceed to initialize thyself
 		//Firstly thy must initialize thy mighty sword of obj!
-		bool victory = m_model.Initialize(device, deviceContext, "Menu");
-		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.02f, 0.02f, 0.02f);
-		worldMatrix *= DirectX::XMMatrixTranslation(0, -4, 0);
-		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -19.0f));
+		bool victory = m_model.Initialize(device, deviceContext, "Menu2D");
+		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+		worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.2f, 0.0f);
+		worldMatrix = DirectX::XMMatrixRotationX(DirectX::XM_PI / 2) * worldMatrix;
+		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));
 		victory = this->myCamera.Initialize();
 		this->m_model.SetWorldMatrix(worldMatrix);
 
@@ -75,6 +76,10 @@ int MenuState::HandleInput(InputHandler * input)
 	{
 		this->doOption = true;
 	}
+	if (input->isMouseKeyPressed(0))
+	{
+		this->doOption = true;
+	}
 	if (input->isKeyPressed(DIK_DOWNARROW))
 	{
 		this->selected++;
@@ -83,6 +88,25 @@ int MenuState::HandleInput(InputHandler * input)
 	{
 		this->selected--;
 	}
+
+	if (!this->first) {
+		DirectX::XMFLOAT2 mousePos = input->getMousePosInWindow(); //Top left 220, 11; bottom right 580, 200
+
+		if (mousePos.x > 220 && mousePos.x < 580) {
+			if (mousePos.y > 10) {
+				if (mousePos.y < 200) {
+					this->selected = 0;
+				}
+				else if (mousePos.y < 390) {
+					this->selected = 1;
+				}
+				else if (mousePos.y < 580) {
+					this->selected = 2;
+				}
+			}
+		}
+	}
+
 	if (this->selected < 0)
 		this->selected = OPTION_COUNT - 1;
 	this->selected = this->selected % OPTION_COUNT;

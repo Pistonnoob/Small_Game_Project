@@ -10,7 +10,7 @@ Texture::~Texture()
 bool Texture::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string& materialLib)
 {
 	if (!this->LoadMTL(device, deviceContext, materialLib)) {
-		return false;
+	return false;
 	}
 	for (int i = 0; i < this->textureViews.size(); i++) {
 		//Generate mipmaps for this texture
@@ -29,7 +29,7 @@ bool Texture::LoadTarga(const char*filename, int&height, int& width)
 	unsigned char* targaImage;
 
 	//Open the targa file for reading in binary
-	error = fopen_s(&filePtr, filename, "rb");
+ 	error = fopen_s(&filePtr, filename, "rb");
 	if (error != 0) {
 		return false;
 	}

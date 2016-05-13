@@ -8,9 +8,10 @@ HubState::HubState()
 {
 	this->myCamera = CameraHandler();
 	this->myParticleHandler = ParticleHandler();
-
 	this->m_ground = Model();
-	this->portal1 = Model();
+	this->portals = std::vector<Model>();
+	this->hubStatistics = UIHandler();
+	this->renderPlayerStats = false;
 
 	this->player = Player();
 
@@ -28,7 +29,12 @@ void HubState::Shutdown()
 {
 	//Release the models
 	this->m_ground.Shutdown();
-	this->portal1.Shutdown();
+
+	for (std::vector<Model>::iterator portal = this->portals.begin(); portal != this->portals.end(); portal++) {
+		(*portal).Shutdown();
+	}
+
+	this->hubStatistics.Shutdown();
 
 	this->myParticleHandler.Shutdown();
 
@@ -61,24 +67,40 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		if (cameraResult)
 			result = 1;
 
+		//hubInterface
+		this->hubStatistics.Initialize(gHandler);
+
+		//add the background
+		this->hubStatistics.AddElement(600, 100, 400, 500, "testUI.mtl", 1, false);
+		
+		this->hubStatistics.CreateTextHolder(32); // spread
+		this->hubStatistics.CreateTextHolder(32); // spitfire
+		this->hubStatistics.CreateTextHolder(32); // reverse bullets
+
 		//Pull down the visor of epic particle effects
 		//A visor is the moving part of a helmet, namely the part that protects the eyes
 		this->myParticleHandler.Initialize(device, deviceContext);
 
 		//Place the ground beneeth your feet and thank the gods for their
 		//sanctuary from the oblivion below!
-		result = this->m_ground.Initialize(device, deviceContext, "testMap");
+		result = this->m_ground.Initialize(device, deviceContext, "HubWorld");
 		if (!result) {
 			return false;
 		}
 
-		result = this->portal1.Initialize(device, deviceContext, "portal");
-		if (!result) {
-			return false;
+		for (int i = 0; i < NR_OF_MAPS; i++){
+			Model portal = Model();
+			result = portal.Initialize(device, deviceContext, "portal");
+			if (!result) {
+				return false;
+			}
+			this->portals.push_back(portal);
 		}
 
 		DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(-30.0f, 0.0f, 30.0f);
-		this->portal1.SetWorldMatrix(worldMatrix);
+		this->portals.at(0).SetWorldMatrix(worldMatrix); 
+		worldMatrix = DirectX::XMMatrixTranslation(0.0f, 0.0f, 30.0f);
+		this->portals.at(1).SetWorldMatrix(worldMatrix);
 
 		PointLight light;
 		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -94,14 +116,15 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		light.Position = DirectX::XMFLOAT4(-30.0f, 1.0f, 30.0f, 1.0f);
 		this->pointLights.push_back(light);
 
-		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(5.0f, 1.0f, 2.0f, 1.0f);
+		light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, 30.0f, 1.0f);
 		this->pointLights.push_back(light);
 		
 		this->playerSubject = EntitySubject();
 		this->playerSubject.AddObserver(GameData::GetInstance());
+		this->playerSubject.AddObserver(&this->myParticleHandler);
 
 		result = this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
 
@@ -130,18 +153,70 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 	this->player.Update(input, gHandler, &this->myCamera,deltaTime);
 
 	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
-	
-	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
 
 	if ((playerPos.x < -28.5f && playerPos.x > -31.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
 		newStage->Initialize(gHandler, this->m_GSH);
+		newStage->LoadMap(gHandler->GetDevice(), gHandler->GetDeviceContext(), 1);
+		newStage->SetManualClearing(false);
+		this->m_GSH->PushState(newStage);
+	}
+	if ((playerPos.x < 1.5f && playerPos.x > -1.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
+		this->player.SetPosition(0.0f, 0.0f);
+		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
+		StageState* newStage = new StageState();
+		newStage->Initialize(gHandler, this->m_GSH);
+		newStage->LoadMap(gHandler->GetDevice(), gHandler->GetDeviceContext(), 2);
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
 
+	//update ui
+	if ((playerPos.x < 1.5f && playerPos.x > -5.5f) && (playerPos.z < -31.5f && playerPos.z > -40.5f))
+	{
+		int powerUps = GameData::GetInstance()->GetUnlockedPowerups();
+		std::string arcfireText = "";
+		std::string spitfireText = "";
+		std::string reverseText = "";
+
+		if (powerUps == 1)
+		{
+			arcfireText = "Arcfire unlocked";
+			spitfireText = "Splitfire locked";
+			reverseText = "Reversefire locked";
+		}
+
+		else if (powerUps == 2)
+		{
+			arcfireText = "Arcfire unlocked";
+			spitfireText = "Splitfire unlocked";
+			reverseText = "Reversefire locked";
+		}
+
+		else if (powerUps == 3)
+		{
+			//all powers unlocked
+			arcfireText = "Arcfire unlocked";
+			spitfireText = "Splitfire unlocked";
+			reverseText = "Reversefire unlocked";
+		}
+
+		//400, 500
+
+		this->hubStatistics.UpdateTextHolder(0, arcfireText, 100, 500, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
+		this->hubStatistics.UpdateTextHolder(1, spitfireText, 100, 514, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
+		this->hubStatistics.UpdateTextHolder(2, reverseText, 100, 528, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
+	
+		this->renderPlayerStats = true;
+	}
+	else
+	{
+		this->renderPlayerStats = false;
+	}
+
+	
 	if (this->exitStage)
 	{
 		this->exitStage = false;
@@ -171,15 +246,26 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
-	gHandler->DeferredRender(&this->portal1, &this->myCamera);
+
+	for (std::vector<Model>::iterator portal = this->portals.begin(); portal != this->portals.end(); portal++) {
+		gHandler->DeferredRender(&(*portal), &this->myCamera);
+	}
 	//shadowMap
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+	gHandler->ShadowRender(&this->m_ground, &this->myCamera);
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
+
+	gHandler->UIRender(this->player.GetUIHandler());
+	
+	if (this->renderPlayerStats == true)
+	{
+		gHandler->UIRender(&this->hubStatistics);
+	}
 
 	return result;
 }

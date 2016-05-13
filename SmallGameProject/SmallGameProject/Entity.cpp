@@ -7,6 +7,7 @@ Entity::Entity() {
 	this->posX = 0.0f;
 	this->posZ = 0.0f;
 
+	this->damageTaken = 0;
 }
 
 Entity::~Entity()
@@ -136,13 +137,12 @@ unsigned int Entity::GetDamage()
 
 void Entity::ApplyDamage(int dmg)
 {
-	this->health = this->health - dmg;
-	int i = 0;
+	this->damageTaken += dmg;
 }
 
 bool Entity::IsAlive()
 {
-	if (this->health <= 0) {
+	if (this->health - this->damageTaken <= 0) {
 		return false;
 	}
 

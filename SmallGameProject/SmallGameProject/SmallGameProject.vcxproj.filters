@@ -288,6 +288,12 @@
     <ClCompile Include="SoundHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EmitterClusterExplosion.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="EmitterSpawnPulse.cpp">
+      <Filter>Source Files\Observers\ParticleHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -485,9 +491,6 @@
     <ClInclude Include="FireCommand.h">
       <Filter>Header Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="EmitterExplosion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Boss.h">
       <Filter>Header Files\Entities\Actors\Boss</Filter>
     </ClInclude>
@@ -502,6 +505,15 @@
     </ClInclude>
     <ClInclude Include="SoundHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterExplosion.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterClusterExplosion.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterSpawnPulse.h">
+      <Filter>Header Files\Observers\ParticleHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

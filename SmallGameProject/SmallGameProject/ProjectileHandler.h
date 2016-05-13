@@ -24,15 +24,19 @@ private:
 	std::vector<Projectile*> projectiles;
 	std::vector<Projectile*> unique_Projectiles;
 	std::vector<trigger_event> eventsToTrack;
+
+    EntitySubject* subject;
+
 	Model m_ball;
 	void triggerEvent(trigger_event &evnt, float arc, int nrOfBullets);
-
+    void onProjectileRemoved(int i);
 public:
 	ProjectileHandler();
 	virtual ~ProjectileHandler();
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* subject);
 	void ShutDown();
-//<<<<<<< HEAD
+//<<<<<<< 
+
 	void Update(float deltaTime);
 	void Render(GraphicHandler * gHandler, CameraHandler* camera);
 	bool IntersectionTest(Entity* entity);

@@ -10,19 +10,20 @@ EmitterExplosion::EmitterExplosion()
 EmitterExplosion::~EmitterExplosion()
 {
 }
+
 void EmitterExplosion::ShutdownSpecific()
 {
 	this->currentParticleCnt = 0;
 	this->particles.clear();
 }
 
-bool EmitterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
+bool EmitterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
 {
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
 	this->world = DirectX::XMMatrixIdentity();
-
+	this->emitterTime = timeLimit;
 
 	//Initialize the emitter
 	result = this->InitializeEmitter();
@@ -58,7 +59,6 @@ bool EmitterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 
 void EmitterExplosion::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters & emitterParameters, int & amountOfParticles)
 {
-	//NOT IMPLEMENTED
 	this->RenderBuffers(deviceContext);
 
 	ParticleShaderParameters parameters;
@@ -94,8 +94,6 @@ bool EmitterExplosion::InitializeEmitter()
 	this->particles = std::vector<Particle>(this->maxParticles);
 	this->currentParticleCnt = 0.0f;
 	this->particleTimeLimit = 1.0f;
-	this->emitterTime = 2.0f;
-	this->emitterTime = 1.0f;
 	this->accumulatedTime = 0.0f;
 
 	float positionX, positionY, positionZ, dX, dZ, red, green, blue;
@@ -109,9 +107,9 @@ bool EmitterExplosion::InitializeEmitter()
 		positionY = this->height;
 		positionZ = 0.0f;
 
-		red = 0.0f;
+		red = 1.0f;
 		green = 0.0f;
-		blue = 1.0f;
+		blue = 0.0f;
 
 		//Calculate the particles dX and dY
 		//We want a circle which is 2 PI

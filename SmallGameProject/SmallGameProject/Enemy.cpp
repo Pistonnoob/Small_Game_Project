@@ -43,4 +43,3 @@ void Enemy::Move(DirectX::XMFLOAT3 moveVec)
     this->posX += moveVec.x;
     this->posZ += moveVec.z;
 }
-

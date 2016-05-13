@@ -16,7 +16,9 @@ RangedEnemy::~RangedEnemy()
 bool RangedEnemy::Initialize(Model * model, EntitySubject* entitySubject, bool isSphere)
 {
     this->aimDir = DirectX::XMFLOAT3(0, 0, 0);
-	return Entity::Initialize(model, entitySubject, isSphere);
+	bool result = Entity::Initialize(model, entitySubject, isSphere);
+	this->entitySubject->Notify(this, Events::ENTITY::RANGED_CREATED);
+	return result;
 }
 
 void RangedEnemy::Shutdown()

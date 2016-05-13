@@ -49,11 +49,14 @@ void ParticleEmitter::Shutdown()
 	this->ShutdownSpecific();
 }
 
-bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture)
+bool ParticleEmitter::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit)
 {
 	bool result = false;
 	//Set the texture
 	this->texture = texture;
+	//Set the time limit for emitting particles
+	this->emitterTime = timeLimit;
+
 	this->world = DirectX::XMMatrixIdentity();
 	this->vertexBuffer = nullptr;
 	this->indexBuffer = nullptr;
@@ -82,9 +85,34 @@ void ParticleEmitter::SetCameraPos(DirectX::XMFLOAT4 cameraPos)
 	this->cameraPos = DirectX::XMFLOAT3(cameraPos.x, cameraPos.y, cameraPos.z);
 }
 
+void ParticleEmitter::SetWorld(DirectX::XMMATRIX world)
+{
+	this->world = world;
+}
+
+void ParticleEmitter::ApplyPosition(DirectX::XMFLOAT3 deltaPosition)
+{
+	this->ApplyPosition(deltaPosition.x, deltaPosition.y, deltaPosition.z);
+}
+
+void ParticleEmitter::ApplyPosition(float dX, float dY, float dZ)
+{
+	this->world *= DirectX::XMMatrixTranslation(dX, dY, dZ);
+}
+
+void ParticleEmitter::ApplyMatrix(DirectX::XMMATRIX toApply)
+{
+	this->world *= toApply;
+}
+
 void ParticleEmitter::GetWorld(DirectX::XMMATRIX& storeIn)
 {
 	storeIn = this->world;
+}
+
+ID3D11ShaderResourceView * ParticleEmitter::GetTexture()
+{
+	return this->texture;
 }
 
 

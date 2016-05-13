@@ -3,33 +3,33 @@
 
 int Algorithm::GetParabola(int x)
 {
-	return pow(x, 2);
+	return (int)pow(x, 2);
 }
 
 void Algorithm::GetParabola(int& x, int& y, float t)
 {
-	x = t;
-	y = pow(t, 2);
+	x = (int)t;
+	y = (int)pow((int)t, 2);
 }
 
 void Algorithm::GetCircle(int& x, int&y, float t)
 {
     //float t2 = Math::DEGREES_TO_RADIANS * t;
-	x = cos(t);
-	y = sin(t);
+	x = (int)cos(t);
+	y = (int)sin(t);
 }
 
 
 void Algorithm::GetEllipse(int& x, int& y, float t, int a, int b)
 {
-	x = a * cos(t);
-	y = b * sin(t);
+	x = a * (int)cos(t);
+	y = b * (int)sin(t);
 }
 
 void Algorithm::GetLissajousCurve(int& x, int& y, float t, int a, int b, int xLobes, int yLobes)
 {
-	x = a * cos(xLobes * t);
-	y = b * sin(yLobes * t);
+	x = a * (int)cos(xLobes * t);
+	y = b * (int)sin(yLobes * t);
 }
 
 void Algorithm::GetHypotrochoid(int& x, int&y, float t, int bigR, int r, int d)
@@ -41,10 +41,10 @@ void Algorithm::GetHypotrochoid(int& x, int&y, float t, int bigR, int r, int d)
 	tX *= distanceFromOrigo;
 	tY *= distanceFromOrigo;
 	//Angle between origin and innerCircleOrigin.
-	float angle = atan2(tX, tY);
+	double angle = atan2(tX, tY);
 	//Calculate the local x and y
-	x = distanceFromOrigo * cos(angle) + d * cos((distanceFromOrigo / r) * angle);
-	y = distanceFromOrigo * sin(angle) - d * sin((distanceFromOrigo / r) * angle);
+	x = distanceFromOrigo * (int)cos(angle) + d * (int)cos((distanceFromOrigo / r) * angle);
+	y = distanceFromOrigo * (int)sin(angle) - d * (int)sin((distanceFromOrigo / r) * angle);
 }
 
 void Algorithm::GetParabola(float& x, float& y, float t)
@@ -92,27 +92,27 @@ void Algorithm::GetHypotrochoid(float& x, float&y, float t, float bigR, float r,
 
 void Algorithm::GetSawtoothWave(int& x, int& y, float t, int period, int min, int max)
 {
-	x = t;
+	x = (int)t;
 	y = (x % period) * max + min;
 }
 
 void Algorithm::GetTriangleWave(int & x, int & y, float t, int period, int min, int max)
 {
-	x = t;
+	x = (int)t;
 	y = abs((x % period) - max) + min;
 }
 
 void Algorithm::GetSquareWave(int& x, int& y, float t, int period, int max, int min)
 {
-	x = t;
+	x = (int)t;
 	y = (x % period) < max ? min : max;
 }
 
 //Note that the "period" variable have a different inplication in this case
 void Algorithm::GetSineWave(int & x, int & y, float t, int period, int max, int min)
 {
-	x = t;
-	y = (max - min) * sin((float)x / period) + min;
+	x = (int)t;
+	y = (max - min) * (int)sin((float)x / period) + min;
 }
 
 void Algorithm::GetSawtoothWave(float & x, float & y, float t, float period, float min, float max)

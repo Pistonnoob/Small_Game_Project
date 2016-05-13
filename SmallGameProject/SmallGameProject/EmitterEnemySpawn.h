@@ -61,7 +61,7 @@ public:
 
 	void ShutdownSpecific();
 
-	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture);
+	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit = 4.0f);
 	bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext);
 	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
 

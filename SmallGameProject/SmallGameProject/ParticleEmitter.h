@@ -35,12 +35,17 @@ public:
 	virtual void Shutdown();
 	virtual void ShutdownSpecific() = 0;
 
-	virtual bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture);
+	virtual bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit = 2.0f);
 
 	void SetCameraPos(DirectX::XMFLOAT3 cameraPos);
 	void SetCameraPos(DirectX::XMFLOAT4 cameraPos);
 
+	void SetWorld(DirectX::XMMATRIX world);
+	void ApplyPosition(DirectX::XMFLOAT3 deltaPosition);
+	void ApplyPosition(float dX, float dY, float dZ);
+	void ApplyMatrix(DirectX::XMMATRIX toApply);
 	void GetWorld(DirectX::XMMATRIX& storeIn);
+	virtual ID3D11ShaderResourceView* GetTexture();
 
 	bool Update(float dT, ID3D11DeviceContext* deviceContext);
 	bool distanceToCamera(float x, float y, float z);

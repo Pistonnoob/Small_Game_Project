@@ -4,14 +4,15 @@ Player::Player() : Actor()
 {
 	this->posX = 0.f;
 	this->posZ = 0.f;
-	this->playerMovmentSpeed = 1;
-	this->playerHighScore = 0;
+	this->playerMovmentSpeed = 100;
 	this->health = 100;	
 	this->damage = 100;
 
 	//Initiliaze the forward vecktor as 0,0,1
 	this->forwardDir = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0, 0, 1));
 	this->playerWeapon = nullptr;
+
+	this->uiHandler = UIHandler();
 }
 
 Player::~Player()
@@ -28,20 +29,11 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 	if (!Entity::Initialize(device, deviceContext, playerModelFilename, isSphere, entitySub)) {
 		return false;
 	}
+	this->entitySubject->Notify(this, Events::ENTITY::PLAYER_CREATED);
 	this->playerWeapon = new Weapon();
 	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
 		return false;
 	}
-
-
-	PowerUp spread = PowerUp();
-	PowerUp penetration = PowerUp();
-	PowerUp weave = PowerUp();
-
-
-	this->powerups.push_back(spread);
-	this->powerups.push_back(penetration);
-	this->powerups.push_back(weave);
 
 	//Rotation matrix
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(0);
@@ -68,6 +60,13 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 	//give the player model its new 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
+	this->uiHandler.Initialize(graphicsH);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+
 	return true;
 }
 
@@ -78,10 +77,9 @@ void Player::Shutdown()
 		delete this->playerWeapon;
 		this->playerWeapon = nullptr;
 	}
-	for (int i = 0; i < this->powerups.size(); i++)
-	{
-		this->powerups.at(i).Shutdown();
-	} 
+
+	this->uiHandler.Shutdown();
+
 	Entity::Shutdown(false);
 }
 
@@ -94,13 +92,24 @@ void Player::PowerPickup(const int & POWER_ENUM)
 {
 }
 
-void Player::SetPowerUp(Modifiers::POWERUPS powerUp)
-{
-	this->powerups.at(powerUp).setTimePowerup(10);
-}
-
 void Player::HandleInput(InputHandler * input, float dTime)
 {
+	if (input->isKeyPressed(DIK_1))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
+	}
+	if (input->isKeyPressed(DIK_2))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::PLAYER_HIT);
+	}
+	if (input->isKeyPressed(DIK_3))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::RANGED_CREATED);
+	}
+	if (input->isKeyPressed(DIK_4))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
+	}
 	if (input->isKeyDown(DIK_W)) {
 		this->MoveUp(dTime);
 	}
@@ -117,7 +126,7 @@ void Player::HandleInput(InputHandler * input, float dTime)
 	if (input->isKeyPressed(DIK_C))
 	{
 		//how do I update this shiet
-		this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
+		//this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
 	}
 
 	if(input->isMouseKeyPressed(0))	//0 = left, 1 = right, 2 = scroll click, 3 = "Down button" on mouse
@@ -156,11 +165,15 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
-	//update powerups
-	for (auto Powerups = this->powerups.begin(); Powerups != this->powerups.end(); Powerups++)
-	{
-		(Powerups)->Update(deltaTime);
-	}	
+	std::string text = "Damage: " + std::to_string(this->damage + GameData::GetInstance()->GetPlayerDamage());
+	this->uiHandler.UpdateTextHolder(0, text, 150, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
+	this->uiHandler.UpdateTextHolder(1, text, 270, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	text = "Speed: " + std::to_string(this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed());
+	this->uiHandler.UpdateTextHolder(2, text, 390, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+
+
+	GameData::Update(deltaTime);
 }
 
 Weapon * Player::GetWeapon()
@@ -172,7 +185,7 @@ Weapon * Player::GetWeapon()
 void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
-		this->posX += (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -180,7 +193,7 @@ void Player::MoveRight(float deltaTime)
 void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
-		this->posX -= (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -188,7 +201,7 @@ void Player::MoveLeft(float deltaTime)
 void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
-		this->posZ += (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -196,7 +209,7 @@ void Player::MoveUp(float deltaTime)
 void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
-		this->posZ -= (0.00005f * deltaTime  * this->playerMovmentSpeed);
+		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -208,66 +221,23 @@ void Player::Move(DirectX::XMFLOAT3 moveVec)
 
 void Player::Fire(float deltaT)
 {
-	/*
-	this->SetAimDir(DirectX::XMFLOAT3(0, 0, 1));
-
-	if (this->powerups.at(0).Update(deltaT) == true)
-	{
-		playerWeapon->ShootWeapon(this);
-	}
-	*/
-
-	PowerUp* powerUpPtr = nullptr;
-	int size = this->powerups.size();
-
 	DirectX::XMStoreFloat3(&this->aimDir, this->forwardDir);
 
 	this->aimDir.x = DirectX::XMVectorGetX(this->forwardDir);
 	this->aimDir.z = DirectX::XMVectorGetY(this->forwardDir);
-
 	this->aimDir.y = 0.0f;
 
-
-
-	for (int i = 0; i < size; i++)
+	if (GameData::getNrOfActivePowerups() != 0)
 	{
-		powerUpPtr = &this->powerups.at(i);
-		if (powerUpPtr->getTimeLeft() > 0.0f)
-		{
-			switch (i)
-			{
-			case 0:
-				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::ARCFIRE);
-				break;
-			case 1:
-				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::REVERSERBULLETS);
-				break;
-			case 2:
-				this->playerWeapon->ShootWeapon(this, Events::UNIQUE_FIRE::SPLITFIRE);
-				break;
-			}
-		}
+		std::list<PowerUp*> activePows = GameData::getPowerup();
+		this->playerWeapon->ShootWeapon(this, activePows.front()->GetType());
 	}
-	this->playerWeapon->ShootWeapon(this);
-}
-
-void Player::Fire()
-{
-	/*
-	PowerUp* powerUpPtr = nullptr;
-	int size = this->powerups.size();
 	
-	DirectX::XMStoreFloat3(&this->aimDir,this->forwardDir);
-	
-	for (int i = 0; i < size; i++)
+	else
 	{
-		powerUpPtr = &this->powerups.at(i);
-		if (powerUpPtr->getTimeLeft() > 0.0f)
-		{
-			playerWeapon->ShootWeapon(this);
-		}
+		this->playerWeapon->ShootWeapon(this);
 	}
-	*/
+	
 }
 
 void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH)
@@ -334,4 +304,35 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 	//this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
 	this->entityModel->SetWorldMatrix(rotationMatrix * playermodelMatrix);
 
+}
+
+unsigned int Player::GetDamage()
+{
+	return this->damage + GameData::GetInstance()->GetPlayerDamage();
+}
+
+bool Player::IsAlive()
+{
+	if ((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken <= 0) {
+		return false;
+	}
+
+	return true;
+}
+
+UIHandler * Player::GetUIHandler()
+{
+	return &this->uiHandler;
+}
+
+void Player::SetLevel(int level)
+{
+	std::string text = "Level: " + std::to_string(level);
+	this->uiHandler.UpdateTextHolder(3, text, 590, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+}
+
+void Player::SetWave(int wave)
+{
+	std::string text = "Wave: " + std::to_string(wave);
+	this->uiHandler.UpdateTextHolder(4, text, 680, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 }
