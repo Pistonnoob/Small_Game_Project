@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Algorithm.h"
 #include "StageState.h"
+#include "UIHandler.h"
+#include <sstream>
 
 const int NR_OF_MAPS = 2;
 
@@ -20,6 +22,10 @@ private:	//Variables
 	Player player;
 	EntitySubject playerSubject;
 	ParticleHandler myParticleHandler;
+	UIHandler hubStatistics;
+
+	bool renderPlayerStats;
+
 
 	float t;
 

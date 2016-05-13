@@ -409,3 +409,8 @@ int GameData::GetPoints()
 {
 	return this->points;
 }
+
+int GameData::GetUnlockedPowerups() const
+{
+	return this->nrOfUnlockedPowers;
+}

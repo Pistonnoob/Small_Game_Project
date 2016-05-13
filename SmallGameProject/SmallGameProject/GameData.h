@@ -96,6 +96,7 @@ public:
 	int GetPlayerHealth();
 	int GetPlayerMoveSpeed();
 	int GetPoints();
+	int GetUnlockedPowerups() const;
 };
 
 #endif
