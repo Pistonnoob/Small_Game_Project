@@ -7,7 +7,6 @@
 
 ParticleHandler::ParticleHandler()
 {
-	this->spawnEmitter = nullptr;
 	this->device = nullptr;
 }
 
@@ -29,7 +28,7 @@ void ParticleHandler::Shutdown()
 		this->emitters.pop_back();
 	}
 	this->emitters.clear();
-
+	this->spawnEmitter.Shutdown();
 }
 
 void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext)
@@ -41,6 +40,8 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	EmitterClusterExplosion* newEmitter = new EmitterClusterExplosion();
 	newEmitter->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 100);
 	this->emitters.push_back(newEmitter);
+	this->spawnEmitter = EmitterSpawnPulse();
+	this->spawnEmitter.Initialize(device, this->myTextures.GetTexture(0), 1000.0f);
 }
 
 void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)

@@ -17,7 +17,7 @@ class ParticleHandler :
 {
 private:
 	std::vector<ParticleEmitter*> emitters;
-	EmitterSpawnPulse* spawnEmitter;
+	EmitterSpawnPulse spawnEmitter;
 
 	Texture myTextures;
 	ID3D11Device* device;
