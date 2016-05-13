@@ -54,7 +54,7 @@ bool EmitterSpawnPulse::AddSpawnPulse(float x, float y, float z, float minSize, 
 	{
 		this->particles.push_back(toInsert);
 	}
-
+	this->currentParticleCnt++;
 	return result;
 }
 

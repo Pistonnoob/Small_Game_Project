@@ -166,11 +166,11 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 	ParticleShaderParameters parameters;
 	parameters.diffTexture = nullptr;
-
+	DirectX::XMFLOAT4 cameraPosition = camera->GetCameraPos();
+	int amountOfParticles = 0;
 	for(auto emitter : this->emitters)
 	{
-		int amountOfParticles = 0;
-		emitter->SetCameraPos(camera->GetCameraPos());
+		emitter->SetCameraPos(cameraPosition);
 		emitter->SortParticles();
 		emitter->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
 		if(parameters.diffTexture == nullptr)
@@ -183,8 +183,13 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 
 		gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	}
-
-
+	this->spawnEmitter.SetCameraPos(cameraPosition);
+	this->spawnEmitter.Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
+	if (!parameters.diffTexture)
+	{
+		result = false;
+	}
+	gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	return result;
 }
 
