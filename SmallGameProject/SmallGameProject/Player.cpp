@@ -285,7 +285,7 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 	mouseY = (((-2 * mouseY) / screenHeight) + 1);
 
 	//Move the pos to a vector
-	DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet( mouseX, mouseY , 1, 1);
+	DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet( mouseX, mouseY , 0, 1);
 	//DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet(mouseX, 0, mouseY, 1);
 	
 	//Direction vector

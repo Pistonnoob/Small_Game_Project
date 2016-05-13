@@ -138,7 +138,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));*/
 
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 20.0f / zoomIn, -7.0f / zoomIn));
-		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 6.0f, -50.0f));
+		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 120.0f, -0.1f));
 
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
@@ -623,7 +623,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
-	gHandler->ShadowRender(&this->m_ground, &this->myCamera);
+	//gHandler->ShadowRender(&this->m_ground, &this->myCamera);
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 

@@ -196,7 +196,7 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
-	gHandler->ShadowRender(&this->m_ground, &this->myCamera);
+	//gHandler->ShadowRender(&this->m_ground, &this->myCamera);
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
