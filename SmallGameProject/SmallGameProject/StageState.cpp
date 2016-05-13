@@ -167,7 +167,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
             return false;
         }
 
-        modelResult = this->RangedModel.Initialize(device, this->m_deviceContext, "Shuttle");
+        modelResult = this->RangedModel.Initialize(device, this->m_deviceContext, "sphere2");
         if (!modelResult) {
             return false;
         }
