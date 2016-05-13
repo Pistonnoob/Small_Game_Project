@@ -115,7 +115,7 @@ PowerUp * GameData::GetRandomPowerup()
 {
 	int randPow = rand() % 3;
 	PowerUp* toReturn = nullptr;
-	//randPow = 2;
+	randPow = 1;
 
 	std::list<PowerUp*>::iterator walker;
 	walker = GameData::powerupArsenal.begin();
