@@ -64,6 +64,7 @@ void StageState::Shutdown()
     this->MeleeModel.Shutdown();
     this->RangedModel.Shutdown();
     this->BomberModel.Shutdown();
+    this->BossModel.Shutdown();
 
     this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
@@ -167,8 +168,14 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
             return false;
         }
 
-        modelResult = this->RangedModel.Initialize(device, this->m_deviceContext, "sphere2");
+        modelResult = this->RangedModel.Initialize(device, this->m_deviceContext, "Shuttle");
         if (!modelResult) {
+            return false;
+        }
+
+        modelResult = this->BossModel.Initialize(device, this->m_deviceContext, "sphere2");
+        if (!modelResult)
+        {
             return false;
         }
 
@@ -486,6 +493,11 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
         DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
 		float angle = atan2(dirVec.z, dirVec.x);
 
+        if (temp->GetType() == Type::MELEEE)
+        {
+            angle += 3.14f / 2;
+        }
+
         DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
@@ -702,7 +714,7 @@ void StageState::SpawnEnemy(Type type, int pointIndex)
 		break;
 	case(Type::BOSS) :
 		Boss* boss = new Boss(x, z);
-		boss->Initialize(&this->m_car, &this->enemySubject, true, 1);
+		boss->Initialize(&this->BossModel, &this->enemySubject, true, 1);
 		this->enemies.push_back(boss);
 		break;
 	}
