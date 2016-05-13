@@ -145,11 +145,11 @@ void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext*
 
 		std::list<PowerUp*>::iterator walker;
 		walker = GameData::powerupArsenal.begin();
-		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+ 		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
 		walker++;
-		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
 		walker++;
-		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
 
 		GameData::isGameStageInit = true;
 	}

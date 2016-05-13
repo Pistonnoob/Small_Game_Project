@@ -228,7 +228,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->playerSubject->AddObserver(GameData::GetInstance());
 
 		//the player will rise
-		//this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
 		this->player.Initialize(gHandler, "sphere1", "projectile", true, this->playerSubject);
 
 		this->enemySubject.AddObserver(GameData::GetInstance());
@@ -305,8 +304,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		//We do not care about the returned state but check if return
 		if (state)
 		{
-			//The state wasn't a nullptr, meaning it didn't have automatic clearing on
-			//Something went somewhat wrong here eh?
+
 		}
 	}
 

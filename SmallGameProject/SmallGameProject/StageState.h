@@ -60,23 +60,16 @@ private:	//Variables
 	float timeToNextWave;
 	int currentLevel;
 	int currentWave;
-    
-	//vector<DirectX::XMFLOAT3> spawnPointsPowerUp;
-
 
 	std::vector<Level> levels;
 	std::vector<DirectX::XMFLOAT3> spawnPoints;
-//>>>>>>> Develop
 
 	
 	ParticleHandler myParticleHandler;
 
-//<<<<<<< HEAD
 	float timeElapsed;
-//=======
 	UIHandler uiHandler;
 
-//>>>>>>> Develop
     float t;
 	bool exitStage;
 	bool isCompleted;
