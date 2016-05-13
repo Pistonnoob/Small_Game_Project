@@ -79,15 +79,15 @@ bool EmitterPrototype::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 	return true;
 }
 
-void EmitterPrototype::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles)
+void EmitterPrototype::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters* emitterParameters, int& amountOfParticles)
 {
 	//NOT IMPLEMENTED
 	this->RenderBuffers(deviceContext);
 
 	ParticleShaderParameters parameters;
 
-	parameters.worldMatrix = this->world;
-	parameters.diffTexture = this->texture;
+	emitterParameters->worldMatrix = this->world;
+	emitterParameters->diffTexture = this->texture;
 	amountOfParticles = this->currentParticleCnt;
 }
 
