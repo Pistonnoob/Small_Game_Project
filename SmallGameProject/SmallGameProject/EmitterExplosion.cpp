@@ -59,7 +59,6 @@ bool EmitterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 
 void EmitterExplosion::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters & emitterParameters, int & amountOfParticles)
 {
-	//NOT IMPLEMENTED
 	this->RenderBuffers(deviceContext);
 
 	ParticleShaderParameters parameters;
