@@ -66,9 +66,12 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::BOMBER_CREATED:
 	{
-		newEmitter = new EmitterEnemySpawn();
+		/*newEmitter = new EmitterEnemySpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter->ApplyPosition(entity->GetPosition());*/
+
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y + 5, entityPosition.z, 1.2f, 4.0f, 0.1f, 0.8f, 0.8f, 1.0f);
 	}
 		break;
 	case Events::BOMBER_MOVING:
@@ -82,10 +85,13 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	}
 		break;
 	case Events::RANGED_CREATED:
-	{
+	{/*
 		newEmitter = new EmitterEnemySpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter->ApplyPosition(entity->GetPosition());*/
+
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y + 5, entityPosition.z, 1.2f, 4.0f, 0.1f, 0.8f, 0.8f, 1.0f);
 	}
 		break;
 	case Events::RANGED_MOVING:
@@ -97,9 +103,11 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::MELEE_CREATED:
 	{
-		newEmitter = new EmitterEnemySpawn();
+		/*newEmitter = new EmitterEnemySpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter->ApplyPosition(entity->GetPosition());*/
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y + 5, entityPosition.z, 1.2f, 4.0f, 0.1f, 0.8f, 0.8f, 1.0f);
 	}
 		break;
 	case Events::MELEE_MOVING:
