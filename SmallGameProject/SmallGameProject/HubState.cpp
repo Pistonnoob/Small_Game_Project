@@ -132,7 +132,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 
 	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
 	
-	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
+	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
 
 	if ((playerPos.x < -28.5f && playerPos.x > -31.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
 		this->player.SetPosition(0.0f, 0.0f);

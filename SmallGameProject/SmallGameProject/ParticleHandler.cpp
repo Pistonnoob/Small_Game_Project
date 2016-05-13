@@ -56,8 +56,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		/*newEmitter = new EmitterPlayerSpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 4.0f);
 		newEmitter->ApplyPosition(entity->GetPosition());*/
-		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
-		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y, entityPosition.z, 0.2f, 4.0f, 0.1f, 0.8f, 0.8f, 3.0f);
+		//DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		//this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y, entityPosition.z, 0.2f, 4.0f, 0.1f, 0.8f, 0.8f, 3.0f);
 	}
 		break;
 	case Events::PLAYER_MOVING:

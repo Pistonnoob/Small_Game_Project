@@ -239,7 +239,7 @@ void EmitterSpawnPulse::KillParticles()
 		this->particles.clear();
 	}*/
 	//this->particles.erase(std::remove_if(particles.begin(), particles.end(), my_predicate), particles.end());
-	//this->particles.erase(std::remove_if(this->particles.begin(), this->particles.end(), [](Particle p) { p.active = p.time < p.timeCap; return !p.active; }), this->particles.end());
+	this->particles.erase(std::remove_if(this->particles.begin(), this->particles.end(), [](Particle p) { return !p.active; }), this->particles.end());
 	//this->currentParticleCnt = this->particles.size();
 }
 
