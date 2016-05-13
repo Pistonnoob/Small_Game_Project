@@ -146,10 +146,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		if (cameraResult)
 			result = 1;
 
-		//Pull down the visor of epic particle effects
-		//A visor is the moving part of a helmet, namely the part that protects the eyes
-		this->myParticleHandler.Initialize(device, deviceContext);
-
 		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
@@ -169,7 +165,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->player.SetWave(1);
 
 		this->enemySubject.AddObserver(GameData::GetInstance());
-		GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
 
         this->enemyPjHandler.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject);
 		
