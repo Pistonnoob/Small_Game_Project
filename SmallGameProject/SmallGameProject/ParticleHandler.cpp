@@ -64,6 +64,14 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::PLAYER_DEAD:
 		break;
+    case Events::PLAYER_HIT:
+    {
+        newEmitter = new EmitterClusterExplosion();
+        EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
+        temp->Initialize(device, this->myTextures.GetTexture(0), 0.01f, 0.001f, 1);
+        temp->ApplyPosition(entity->GetPosition());
+    }
+        break;
 	case Events::BOMBER_CREATED:
 	{
 		newEmitter = new EmitterEnemySpawn();

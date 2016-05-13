@@ -100,7 +100,7 @@ void Player::HandleInput(InputHandler * input, float dTime)
 	}
 	if (input->isKeyPressed(DIK_2))
 	{
-		this->entitySubject->Notify(this, Events::ENTITY::PLAYER_CREATED);
+		this->entitySubject->Notify(this, Events::ENTITY::PLAYER_HIT);
 	}
 	if (input->isKeyPressed(DIK_3))
 	{
@@ -109,7 +109,6 @@ void Player::HandleInput(InputHandler * input, float dTime)
 	if (input->isKeyPressed(DIK_4))
 	{
 		this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
-		this->MoveUp(dTime);
 	}
 	if (input->isKeyDown(DIK_W)) {
 		this->MoveUp(dTime);
