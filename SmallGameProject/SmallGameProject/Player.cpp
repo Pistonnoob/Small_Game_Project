@@ -156,17 +156,6 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
 	GameData::Update(deltaTime);
-	//update powerups
-	/*
-	for (auto Powerups = this->powerups.begin(); Powerups != this->powerups.end(); Powerups++)
-	{
- 		if ((Powerups)->GetTimeLeft() > 0.0f)
-		{
- 			(Powerups)->Update(deltaTime);
-		}
-	
-	}	
-	*/
 }
 
 Weapon * Player::GetWeapon()

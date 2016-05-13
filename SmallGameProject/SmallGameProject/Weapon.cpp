@@ -76,10 +76,10 @@ void Weapon::ShootWeapon(Entity * entity, Events::UNIQUE_FIRE power)
 	switch(power)
 	{
 		case Events::UNIQUE_FIRE::ARCFIRE:
-			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 10);
+			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 3);
 			break;
 		case Events::UNIQUE_FIRE::SPLITFIRE:
-			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::SPLITFIRE, 3.14 / 4, 10, 1, 3.14 / 2, 10);
+			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::SPLITFIRE, 3.14 / 4, 10, 1, 3.14 / 2, 1);
 			break;
 		case Events::UNIQUE_FIRE::REVERSERBULLETS:
 			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::REVERSERBULLETS, 3.14 / 4, 10, 1);
