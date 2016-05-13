@@ -22,10 +22,12 @@ StageState::StageState()
     this->enemyPjHandler = ProjectileHandler();
 	this->enemySubject.AddObserver(&this->enemyPjHandler);
 
-	this->playerSubject = nullptr;
-	this->playerProjectile = nullptr;
+	this->playerSubject = EntitySubject();
+	this->playerProjectile = ProjectileHandler();
 
 	this->powerUpPointer = nullptr;
+	
+    this->projectileHandlerSubject = EntitySubject();
 
 	this->exitStage = false;
 
@@ -58,18 +60,24 @@ void StageState::Shutdown()
 	this->m_car.Shutdown();
 	this->m_ball.Shutdown();
 	this->m_ground.Shutdown();
+    this->portal.Shutdown();
+    this->MeleeModel.Shutdown();
+    this->RangedModel.Shutdown();
+    this->BomberModel.Shutdown();
 
     this->enemyPjHandler.ShutDown();
     this->enemySubject.ShutDown();
 
-	this->playerSubject->ShutDown();
-	this->playerProjectile->ShutDown();
+    this->projectileHandlerSubject.ShutDown();
 
-	delete this->playerSubject;
+	this->playerSubject.ShutDown();
+	this->playerProjectile.ShutDown();
+	
+	/*delete this->playerSubject;
 	delete this->playerProjectile;
 
 	this->playerSubject = nullptr;
-	this->playerProjectile = nullptr;
+	this->playerProjectile = nullptr;*/
 	
 	this->player.Shutdown();
 	this->uiHandler.Shutdown();
@@ -133,12 +141,12 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		//Pull down the visor of epic particle effects
 		//A visor is the moving part of a helmet, namely the part that protects the eyes
 		this->myParticleHandler.Initialize(device, deviceContext);
-
+        this->projectileHandlerSubject.AddObserver(&this->myParticleHandler);
 		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
-        this->enemyPjHandler.Initialize(device, this->m_deviceContext);
-
+        this->enemyPjHandler.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject);
+		
 		//Form thy armies from the clay!
 		this->m_car = Model();
 		this->m_ball = Model();
@@ -149,11 +157,31 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 			return false;
 		}
 
+        modelResult = this->MeleeModel.Initialize(device, this->m_deviceContext, "MeleeRobot");
+        if (!modelResult) {
+            return false;
+        }
+
+        modelResult = this->BomberModel.Initialize(device, this->m_deviceContext, "Grenade");
+        if (!modelResult) {
+            return false;
+        }
+
+        modelResult = this->RangedModel.Initialize(device, this->m_deviceContext, "sphere2");
+        if (!modelResult) {
+            return false;
+        }
+
 		modelResult = this->m_car.Initialize(device, this->m_deviceContext, "sphere2");
 		if (!modelResult)
 		{
 			return false;
 		}
+
+        modelResult = this->portal.Initialize(device, this->m_deviceContext, "portal");
+        if (!modelResult) {
+            return false;
+        }
 
 		//Colour thy armies in the name of the racist overlord Axel!
 		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
@@ -185,16 +213,41 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
 		this->pointLights.push_back(light);
 
+        //point lights for the portals 
 		light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 		light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 		light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
+        light.Attenuation = DirectX::XMFLOAT4(2.0f, 0.8f, 0.01f, 0.032f);
 		this->pointLights.push_back(light);
+
+        light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
+        light.Attenuation = DirectX::XMFLOAT4(2.0f, 0.8f, 0.01f, 0.032f);
+        this->pointLights.push_back(light);
+
+        light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
+        light.Attenuation = DirectX::XMFLOAT4(2.0f, 0.8f, 0.01f, 0.032f);
+        this->pointLights.push_back(light);
+
+        light.Diffuse = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Ambient = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Specular = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+        light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
+        light.Attenuation = DirectX::XMFLOAT4(2.0f, 0.8f, 0.01f, 0.032f);
+        this->pointLights.push_back(light);
+        //-------
 
 		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 		light.Position = DirectX::XMFLOAT4(15.0f, 1.0f, 15.0f, 1.0f);
+        light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 1.5f, 0.0f);
 		this->pointLights.push_back(light);
 
 		this->uiHandler.Initialize(gHandler);
@@ -206,7 +259,8 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 			return false;
 		}
 
-		int i = 0;
+		//DirectX::XMFLOAT3 a = this->player.GetPosition();
+		//int i = 0;
 
 
         ReadFile("Stage1.txt");
@@ -219,19 +273,33 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
         SpawnWave(this->currentLevel, this->currentWave);
 
 		//powerupts and projectile handlers
-		this->playerSubject = new EntitySubject();
-		this->playerProjectile = new ProjectileHandler();
+		//this->playerSubject = new EntitySubject();
+		//this->playerProjectile = new ProjectileHandler();
 
-		this->playerProjectile->Initialize(device, this->m_deviceContext);
+		this->playerProjectile.Initialize(device, this->m_deviceContext,nullptr);
 
-		this->playerSubject->AddObserver(this->playerProjectile);
-		this->playerSubject->AddObserver(GameData::GetInstance());
+		this->playerSubject.AddObserver(&this->playerProjectile);
+		this->playerSubject.AddObserver(GameData::GetInstance());
 
 		//the player will rise
-		this->player.Initialize(gHandler, "sphere1", "projectile", true, this->playerSubject);
+//<<<<<<< HEAD
+//		this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
+//=======
+		//this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
+		this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
+//>>>>>>> 7c4fe03bba0caf1a82a8eec6e79cbf153d7fa7a7
 
 		this->enemySubject.AddObserver(GameData::GetInstance());
-		GameData::InitializeStageStateGD(device, deviceContext, this->playerSubject);
+
+        //place lighs on portals
+        int i = 1;
+        for (auto point : this->spawnPoints)
+        {
+            this->pointLights.at(i).Position = DirectX::XMFLOAT4(point.x, 1.0f, point.z, 1.0f);
+            i++;
+		GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
+	}
+        //this->pointLights.at(1).Position = DirectX::XMFLOAT4(this->spawnPoints.at(0).x, 1.0f, this->spawnPoints.at(0).z, 1.0f);
 	}
 
 	return result;
@@ -248,7 +316,12 @@ int StageState::HandleInput(InputHandler * input)
 		GameData* gd = GameData::GetInstance();
 		int i = 0;
 	}
-
+    if (input->isKeyPressed(DIK_UPARROW))
+    {
+    }
+    if (input->isKeyPressed(DIK_DOWNARROW))
+    {
+    }
 	if (input->isKeyPressed(DIK_U)) {
 		if (this->renderUI)
 			this->renderUI = false;
@@ -275,7 +348,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	
     this->enemyPjHandler.Update(newDT);
 
-	this->playerProjectile->Update(newDT);
+	this->playerProjectile.Update(newDT);
 	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 
 	this->myParticleHandler.Update(deltaTime / 1000, this->m_deviceContext);
@@ -322,7 +395,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	for (auto enemy : this->enemies)
 	{
 		i++;
-		if (this->playerProjectile->IntersectionTest(enemy)) 
+		if (this->playerProjectile.IntersectionTest(enemy)) 
 		{
 
 		}
@@ -350,13 +423,13 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			switch (powerUp)
 			{
 			case Events::ARCFIRE:
-				this->playerSubject->Notify(&this->player, Events::PICKUP::PICKUP_SPREAD);
+				this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_SPREAD);
 				break;
 			case Events::SPLITFIRE:
-				this->playerSubject->Notify(&this->player, Events::PICKUP::PICKUP_SPITFIRE);
+				this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_SPITFIRE);
 				break;
 			case Events::REVERSERBULLETS:
-				this->playerSubject->Notify(&this->player, Events::PICKUP::PICKUP_REVERSERBULLETS);
+				this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_REVERSERBULLETS);
 				break;
 			default:
 				break;
@@ -389,6 +462,13 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->DeferredRender(this->player.GetModel(), &this->myCamera);
 	gHandler->DeferredRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
 
+    for (auto point : this->spawnPoints)
+    {
+        worldMatrix = DirectX::XMMatrixTranslation(point.x, point.y, point.z);
+        this->portal.SetWorldMatrix(worldMatrix);
+        gHandler->DeferredRender(&this->portal, &this->myCamera);
+    }
+
 
 	//render powerup if any on screen
 	if (this->powerUpPointer != false)
@@ -397,24 +477,27 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	}
 
 	//renders all the actors in the enemies vector
+    Entity* temp;
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
-		pos = this->enemies.at(i)->GetPosition();
+        temp = this->enemies.at(i);
+		pos = temp->GetPosition();
 
-        DirectX::XMFLOAT3 dirVec = this->enemies.at(i)->GetAimDir();
+        DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
 		float angle = atan2(dirVec.z, dirVec.x);
 
         DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
+		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
+        temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
 
-		gHandler->DeferredRender(this->enemies.at(i)->GetModel(), &this->myCamera);
+		gHandler->DeferredRender(temp->GetModel(), &this->myCamera);
 
 	}
 
 	//render shots
-	this->playerProjectile->Render(gHandler, &this->myCamera);
+	this->playerProjectile.Render(gHandler, &this->myCamera);
 
     this->enemyPjHandler.Render(gHandler, &this->myCamera);
 
@@ -607,15 +690,15 @@ void StageState::SpawnEnemy(Type type, int pointIndex)
 	{
 	case(Type::BOMBER) :
 		this->enemies.push_back(new BomberEnemy(x, z));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &this->enemySubject, true);
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->BomberModel, &this->enemySubject, true);
 		break;
 	case(Type::RANGED) :
 		this->enemies.push_back(new RangedEnemy(x, z));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &this->enemySubject, true);
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->RangedModel, &this->enemySubject, true);
 		break;
 	case(Type::MELEEE) :
 		this->enemies.push_back(new MeleeEnemy(x, z));
-		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->m_car, &this->enemySubject, true);
+		this->enemies.at(this->enemies.size() - 1)->Initialize(&this->MeleeModel, &this->enemySubject, true);
 		break;
 	case(Type::BOSS) :
 		Boss* boss = new Boss(x, z);

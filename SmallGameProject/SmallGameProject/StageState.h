@@ -38,19 +38,25 @@ private:	//Variables
 	EntitySubject powerUpSubject; 
 
 	Model m_car;
+    Model MeleeModel;
+    Model RangedModel;
+    Model BomberModel;
     Model m_ball;
 	Model m_ground;
+    Model portal;
 
     EntitySubject enemySubject;
 	int latestSpawnPoint;
 
 	std::vector<DirectX::XMFLOAT2>spawnPos;
 
+    EntitySubject projectileHandlerSubject;
+
 	//player variables
 	Player player;
 
-	EntitySubject* playerSubject = nullptr;
-	ProjectileHandler* playerProjectile = nullptr;
+	EntitySubject playerSubject;
+	ProjectileHandler playerProjectile;
 
 	PowerUp* powerUpPointer;
 

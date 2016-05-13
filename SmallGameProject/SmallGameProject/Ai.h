@@ -15,11 +15,16 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
-static int RANGED_MIN_DESIRED_DISTANCE = 100;
-static int RANGED_MAX_DESIRED_DISTANCE = 500;
+static int RANGED_MIN_DESIRED_DISTANCE = 50;
+static int RANGED_MAX_DESIRED_DISTANCE = 100;
 
-static int MELEE_MIN_DESIRED_DISTANCE = 20;
-static int MELEE_MAX_DESIRED_DISTANCE = 50;
+static int MELEE_MIN_DESIRED_DISTANCE = 15;
+static int MELEE_MAX_DESIRED_DISTANCE = 20;
+
+static float BORDER_LEFT = -44.0f;
+static float BORDER_RIGHT = 44.0f;
+static float BORDER_UP = 44.0f;
+static float BORDER_DOWN = -44.0f;
 
 class Ai {
 

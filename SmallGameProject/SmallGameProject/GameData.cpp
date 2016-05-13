@@ -62,8 +62,10 @@ void GameData::Shutdown()
 	{
 		weaponArsenal.at(i).ShutDown();
 	}
-
-	GameData::ShutdownStageStateGD();
+    if (this->isGameStageInit)
+    {
+        GameData::ShutdownStageStateGD();
+    }
 	
 	isInstatiated = false;
 	delete single;
