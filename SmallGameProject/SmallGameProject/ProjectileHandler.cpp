@@ -8,9 +8,10 @@ ProjectileHandler::~ProjectileHandler()
 {
 
 }
-bool ProjectileHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+bool ProjectileHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* subject)
 {
 	bool result = true;
+    this->subject = subject;
 	result = this->m_ball.Initialize(device, deviceContext, "projectile");
     //result = this->m_ball.Initialize(device, deviceContext, "box");
 
@@ -53,13 +54,9 @@ void ProjectileHandler::Update(float deltaTime)
 			delete temp;
 			//this->projectiles.at(i) = nullptr;
 			this->projectiles.erase(projectiles.begin() + i);
+            this->onProjectileRemoved(i);
 			i--;
 
-			for (int a = 0; a < this->eventsToTrack.size(); a++)
-			{
-				this->eventsToTrack.at(a).end--;
-				this->eventsToTrack.at(a).start--;
-			}
         }
 	}
 	for (int i = 0; i < this->eventsToTrack.size(); i++)
@@ -81,7 +78,13 @@ void ProjectileHandler::Render(GraphicHandler * gHandler, CameraHandler* camera)
     {
         pos = projectile->GetPosition();
         worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y + 0.5f, pos.z);
-        this->m_ball.SetWorldMatrix(worldMatrix);
+
+        DirectX::XMFLOAT3 dirVec = projectile->getMoveDir();
+        float angle = atan2(dirVec.z, dirVec.x);
+
+        DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
+
+        this->m_ball.SetWorldMatrix(rotMatrix * worldMatrix);
         gHandler->DeferredRender(&this->m_ball, camera);
     }
 
@@ -107,6 +110,9 @@ bool ProjectileHandler::IntersectionTest(Entity * entity)
 			this->projectiles.at(i)->Shutdown();
 			delete projectile;
 			this->projectiles.erase(this->projectiles.begin() + i);
+            this->onProjectileRemoved(i);
+
+
 			i--;
 			return true;
 		}
@@ -243,11 +249,11 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
 
 	for (int i = evnt.start; i < evnt.end; i++)
 	{
-        if (i >= this->projectiles.size() || evnt.end < evnt.start)
+        if (evnt.end < evnt.start)
         {
             break;
         }
-        else
+        else if(i < this->projectiles.size())
         {
             switch (evnt.type)
             {
@@ -260,12 +266,7 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
 				nrOfProjectiles = evnt.nrOfProjectiles;
 
                 this->FireInArc(pos, dir, arcSplit, nrOfProjectiles, 25); //constant damage of 25 atm
-				this->projectiles.at(i)->Shutdown();
-				delete this->projectiles.at(i);
-				this->projectiles.erase(this->projectiles.begin() + i);
-				i--;
-				evnt.end--;
-				projectilesToErase++;
+
 
                 break;
 			case(Events::UNIQUE_FIRE::REVERSERBULLETS) :
@@ -283,14 +284,22 @@ void ProjectileHandler::triggerEvent(trigger_event &evnt, float arc, int nrOfBul
         }
 
 	}
-	if (projectilesToErase > 0)
-	{
-		for (int i = 0; i < this->eventsToTrack.size(); i++)
-		{
-			this->eventsToTrack.at(i).start -= projectilesToErase;
-			this->eventsToTrack.at(i).end -= projectilesToErase;
-		}
-	}
 
+}
+
+void ProjectileHandler::onProjectileRemoved(int i)
+{
+    for (int a = 0; a < this->eventsToTrack.size(); a++)
+    {
+        if (i >= this->eventsToTrack.at(a).start && i < this->eventsToTrack.at(a).end)
+        {
+            this->eventsToTrack.at(a).end--;
+        }
+        else if (i <= this->eventsToTrack.at(a).start)
+        {
+            this->eventsToTrack.at(a).start--;
+            this->eventsToTrack.at(a).end--;
+        }
+    }
 }
 

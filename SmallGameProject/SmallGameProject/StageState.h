@@ -39,19 +39,26 @@ private:	//Variables
 	EntitySubject powerUpSubject; 
 
 	Model m_car;
+    Model MeleeModel;
+    Model RangedModel;
+    Model BomberModel;
+    Model BossModel;
     Model m_ball;
 	Model m_ground;
+    Model portal;
 
     EntitySubject enemySubject;
 	int latestSpawnPoint;
 
 	std::vector<DirectX::XMFLOAT2>spawnPos;
 
+    EntitySubject projectileHandlerSubject;
+
 	//player variables
 	Player player;
 
-	EntitySubject* playerSubject = nullptr;
-	ProjectileHandler* playerProjectile = nullptr;
+	EntitySubject playerSubject;
+	ProjectileHandler playerProjectile;
 
 	PowerUp* powerUpPointer;
 
@@ -61,16 +68,12 @@ private:	//Variables
 	float timeToNextWave;
 	int currentLevel;
 	int currentWave;
-    
-	//vector<DirectX::XMFLOAT3> spawnPointsPowerUp;
-
 
 	std::vector<Level> levels;
 	std::vector<DirectX::XMFLOAT3> spawnPoints;
 
 	
 	ParticleHandler myParticleHandler;
-
 
 	float timeElapsed;
 	UIHandler uiHandler;
