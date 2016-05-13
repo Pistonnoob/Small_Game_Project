@@ -57,14 +57,21 @@ bool SoundHandler::Initialize(HWND hwnd)
 	}
 
 	// Load the wave audio files onto a secondary buffer. (Onces for each)
-	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\sound2.wav", &this->secondaryBuffers.at(0));
+	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\click.wav", &this->secondaryBuffers.at(0));
 	this->fileNames[0] = "click";
 	if (!result)
 	{
 		return false;
 	}
-	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\explosion.wav", &this->secondaryBuffers.at(1));
-	this->fileNames[1] = "explosion";
+	
+	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\gun.wav", &this->secondaryBuffers.at(1));
+	this->fileNames[1] = "gun";
+	if (!result)
+	{
+		return false;
+	}
+	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\explosion.wav", &this->secondaryBuffers.at(2));
+	this->fileNames[2] = "explosion";
 	if (!result)
 	{
 		return false;
@@ -135,6 +142,7 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 	FILE* filePtr;
 	unsigned int count;
 	WaveHeaderType waveFileHeader;
+	WaveHeaderType2 waveFileHeader2;
 	WAVEFORMATEX waveFormat;
 	DSBUFFERDESC bufferDesc;
 	HRESULT result;
@@ -142,10 +150,11 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 	unsigned char* waveData;
 	unsigned char *bufferPtr;
 	unsigned long bufferSize;
+	bool otherType = false;
 
 	// Open the wave file in binary.
 	error = fopen_s(&filePtr, filePath, "rb");
-	if (error != 0)
+ 	if (error != 0)
 	{
 		return false;
 	}
@@ -156,6 +165,24 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 	{
 		return false;
 	}
+
+	// Check for the data chunk header.
+	if ((waveFileHeader.dataChunkId[0] != 'd') || (waveFileHeader.dataChunkId[1] != 'a') ||
+		(waveFileHeader.dataChunkId[2] != 't') || (waveFileHeader.dataChunkId[3] != 'a'))
+	{
+		fseek(filePtr, 0, SEEK_SET);
+
+		// Read in the wave file header.
+		count = fread(&waveFileHeader2, sizeof(waveFileHeader2), 1, filePtr);
+		otherType = true;
+		if (count != 1)
+		{
+			return false;
+		}
+		
+
+	}
+
 
 	// Check that the chunk ID is the RIFF format.
 	if ((waveFileHeader.chunkId[0] != 'R') || (waveFileHeader.chunkId[1] != 'I') ||
@@ -202,13 +229,6 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 		return false;
 	}
 
-	// Check for the data chunk header.
-	if ((waveFileHeader.dataChunkId[0] != 'd') || (waveFileHeader.dataChunkId[1] != 'a') ||
-		(waveFileHeader.dataChunkId[2] != 't') || (waveFileHeader.dataChunkId[3] != 'a'))
-	{
-		//return false;
-	}
-
 	// Set the wave format of secondary buffer that this wave file will be loaded onto.
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 	waveFormat.nSamplesPerSec = 44100;
@@ -221,7 +241,14 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 	// Set the buffer description of the secondary sound buffer that the wave file will be loaded onto.
 	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
 	bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME;
-	bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
+	
+	if (!otherType) {
+		bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
+	}
+	else {
+		bufferDesc.dwBufferBytes = waveFileHeader2.dataSize;
+	}
+	
 	bufferDesc.dwReserved = 0;
 	bufferDesc.lpwfxFormat = &waveFormat;
 	bufferDesc.guid3DAlgorithm = GUID_NULL;
@@ -245,21 +272,39 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 	tempBuffer = nullptr;
 
 	// Move to the beginning of the wave data which starts at the end of the data chunk header.
-	fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);
-
+	if (!otherType) {
+		fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);
+		waveData = new unsigned char[waveFileHeader.dataSize];
+	}
+	else {
+		fseek(filePtr, sizeof(WaveHeaderType2), SEEK_SET);
+		waveData = new unsigned char[waveFileHeader2.dataSize];
+	}
+	
 	// Create a temporary buffer to hold the wave file data.
-	waveData = new unsigned char[waveFileHeader.dataSize];
+	
 	if (!waveData)
 	{
 		return false;
 	}
 
 	// Read in the wave file data into the newly created buffer.
-	count = fread(waveData, 1, waveFileHeader.dataSize, filePtr);
-	if (count != waveFileHeader.dataSize)
-	{
-		return false;
+	if (!otherType) {
+		count = fread(waveData, 1, waveFileHeader.dataSize, filePtr);
+		if (count != waveFileHeader.dataSize)
+		{
+			//return false;
+		}
 	}
+	else {
+		count = fread(waveData, 1, waveFileHeader2.dataSize, filePtr);
+		if (count != waveFileHeader2.dataSize)
+		{
+			//return false;
+		}
+	}
+	
+	
 
 	// Close the file once done reading.
 	error = fclose(filePtr);
@@ -269,14 +314,26 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 	}
 
 	// Lock the secondary buffer to write wave data into it.
-	result = (*secondaryBuffer)->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
+	if (!otherType) {
+		result = (*secondaryBuffer)->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
+	}
+	else {
+		result = (*secondaryBuffer)->Lock(0, waveFileHeader2.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
+	}
+	
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Copy the wave data into the buffer.
-	memcpy(bufferPtr, waveData, waveFileHeader.dataSize);
+	if (!otherType) {
+		memcpy(bufferPtr, waveData, waveFileHeader.dataSize);
+	}
+	else {
+		memcpy(bufferPtr, waveData, waveFileHeader2.dataSize);
+	}
+
 
 	// Unlock the secondary buffer after the data has been written to it.
 	result = (*secondaryBuffer)->Unlock((void*)bufferPtr, bufferSize, NULL, 0);

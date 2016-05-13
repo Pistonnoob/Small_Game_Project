@@ -45,7 +45,7 @@ void AudioHandler::PlayAudio(char* fileName)
 void AudioHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 {
 	if (evnt == Events::ENTITY::Fire) {
-		this->soundH->PlayWaveFile("click");
+		this->soundH->PlayWaveFile("gun");
 	}
 	else if (evnt == Events::ENTITY::MELEE_DEAD
 		|| Events::ENTITY::BOMBER_DEAD
@@ -53,6 +53,7 @@ void AudioHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	{
 		this->soundH->PlayWaveFile("explosion");
 	}
+
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)

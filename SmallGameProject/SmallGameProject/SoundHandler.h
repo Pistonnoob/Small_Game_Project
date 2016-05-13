@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-const int NUMBER_OF_SOUNDS = 2;
+const int NUMBER_OF_SOUNDS = 3;
 
 class SoundHandler
 {
@@ -35,6 +35,23 @@ private:
 		char dataChunkId[4];
 		unsigned long dataSize;
 	};
+	struct WaveHeaderType2
+	{
+		char chunkId[4];
+		unsigned long chunkSize;
+		char format[4];
+		char subChunkId[4];
+		unsigned long subChunkSize;
+		unsigned short audioFormat;
+		unsigned short numChannels;
+		unsigned long sampleRate;
+		unsigned long bytesPerSecond;
+		unsigned short blockAlign;
+		unsigned short bitsPerSample;
+		char dataChunkId[38];
+		unsigned long dataSize;
+	};
+
 
 	IDirectSound8* directSound;
 	IDirectSoundBuffer* primaryBuffer;
