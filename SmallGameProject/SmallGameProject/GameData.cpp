@@ -1,6 +1,13 @@
 #include "GameData.h"
+#include <stdlib.h>
+#include <time.h>
 
 bool GameData::isInstatiated = false;
+bool GameData::isGameStageInit = false;
+
+int GameData::nrOfActivePowerups = 0;
+
+std::list<PowerUp*> GameData::powerupArsenal = std::list<PowerUp*>();
 
 GameData* GameData::single = nullptr;
 
@@ -19,6 +26,8 @@ GameData::GameData(GameData const &) : Observer()
 	weaponArsenal.push_back(Weapon(15, 10, 5));
 	//uzi
 	weaponArsenal.push_back(Weapon(5, 10, 15));
+
+	//initialize start powerup, this does in the stageState initialize
 
 	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
 		playerUnlockedWeapons[i] = false;
@@ -53,6 +62,10 @@ void GameData::Shutdown()
 	{
 		weaponArsenal.at(i).ShutDown();
 	}
+    if (this->isGameStageInit)
+    {
+        GameData::ShutdownStageStateGD();
+    }
 	
 	isInstatiated = false;
 	delete single;
@@ -61,7 +74,112 @@ void GameData::Shutdown()
 
 void GameData::Update(float deltaTime)
 {
+	float timeLeft = 0.0f;
+	bool expandedPowerup = true;
+	std::list<PowerUp*>::iterator iterator;
+	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
+	{
+		//only need to update the active powerups
+		timeLeft = (*iterator)->GetTimeLeft();
+		if (timeLeft > 0.0f)
+		{
+			expandedPowerup = (*iterator)->Update(deltaTime);
+			//if powerup update return false, the powerup has run out
+			if (expandedPowerup == false)
+			{
+				nrOfActivePowerups--;
+			}
+		}	
+	}
 
+}
+
+std::list<PowerUp*> GameData::getPowerup()
+{
+	std::list<PowerUp*>toReturn;
+	std::list<PowerUp*>::iterator iterator;
+
+	//iterate throwugh the list
+	for (iterator = GameData::powerupArsenal.begin(); iterator != powerupArsenal.end(); iterator++)
+	{
+		//if the powerup is active
+		if(0.0f < (*iterator)->GetTimeLeft())
+			toReturn.push_back((*iterator));
+	}
+	return toReturn;
+}
+
+PowerUp * GameData::GetRandomPowerup()
+{
+	int randPow = rand() % 3;
+	PowerUp* toReturn = nullptr;
+	//randPow = 2;
+
+	std::list<PowerUp*>::iterator walker;
+	walker = GameData::powerupArsenal.begin();
+
+	for (int i = 0; i < randPow; i++)
+	{
+		walker++;
+	}
+	return (*walker);
+}
+
+void GameData::unlockPowerUp(Events::UNIQUE_FIRE newPower)
+{
+	powerupArsenal.push_back(new PowerUp(newPower));
+}
+
+int GameData::getNrOfActivePowerups()
+{
+	return nrOfActivePowerups;
+}
+
+void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject)
+{
+	if (GameData::isGameStageInit == false)
+	{
+		srand((unsigned)time(NULL));
+
+		unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
+		unlockPowerUp(Events::UNIQUE_FIRE::SPLITFIRE);
+		unlockPowerUp(Events::UNIQUE_FIRE::REVERSERBULLETS);
+
+		std::list<PowerUp*>::iterator walker;
+		walker = GameData::powerupArsenal.begin();
+		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+		walker++;
+		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+		walker++;
+		(*walker)->Initialize(device, deviceContext, "ogreFullG", true, playerSubject);
+
+		GameData::isGameStageInit = true;
+	}
+}
+
+void GameData::ShutdownStageStateGD()
+{
+
+	std::list<PowerUp*>::iterator walker;
+	walker = GameData::powerupArsenal.begin();
+	(*walker)->Shutdown();
+	delete (*walker);
+	walker++;
+	(*walker)->Shutdown();
+	delete (*walker);
+	walker++;
+	(*walker)->Shutdown();
+	delete (*walker);
+    /*
+	PowerUp* toRemove = nullptr;
+
+	toRemove = GameData::powerupArsenal.front();
+
+	toRemove->Shutdown();
+	delete toRemove;
+
+	GameData::powerupArsenal.pop_front();
+	*/
 }
 
 void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
@@ -81,7 +199,6 @@ void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 		this->enemiesKilled++;
 		this->playerHighScore += SCORE_VALUE_RANGED;
 	}
-
 	return;
 }
 
@@ -111,16 +228,30 @@ void GameData::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc
 
 void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 {
-	Player* ptr = nullptr;
+	std::list<PowerUp*>::iterator walker;
+	walker = GameData::powerupArsenal.begin();
 
-	ptr = dynamic_cast<Player*>(entity);
+	switch (evnt)
+	{
+	case Events::PICKUP::PICKUP_SPREAD:
+		(*walker)->SetTimePowerup(10.0f);
+		break;
+	case Events::PICKUP::PICKUP_SPITFIRE:
+		walker++;
+		(*walker)->SetTimePowerup(10.0f);
+		break;
+	case Events::PICKUP::PICKUP_REVERSERBULLETS:
+		walker++;
+		walker++;
+		(*walker)->SetTimePowerup(10.0f);
+		break;
+	default:
+		break;
+	}
 
-	//här behöver avgöras vad som tas upp upp
-
-
+	//flashy particles here
+	this->nrOfActivePowerups++;
 	//resulterar till:
-
-	ptr->SetPowerUp(Modifiers::POWERUPS::SPREAD);
 }
 
 bool GameData::SavePlayerData(std::string filename)

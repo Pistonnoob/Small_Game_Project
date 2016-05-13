@@ -70,9 +70,10 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::BOMBER_DEAD:
 	{
-		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter = new EmitterClusterExplosion();
+        EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
+        temp->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 100);
+        temp->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::RANGED_CREATED:

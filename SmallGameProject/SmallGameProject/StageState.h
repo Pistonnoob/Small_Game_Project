@@ -7,8 +7,6 @@
 #include "Projectile.h"
 #include "Abilities.h"
 #include "Algorithm.h"
-#include "EntitySubject.h"
-#include "ProjectileHandler.h"
 #include "Weapon.h"
 #include "Player.h"
 #include "Boss.h"
@@ -37,35 +35,55 @@ private:	//Variables
 	CameraHandler myCamera;
     ProjectileHandler enemyPjHandler;
 
-	PowerUp spreadPower;
 	EntitySubject powerUpSubject; 
 
 	Model m_car;
+    Model MeleeModel;
+    Model RangedModel;
+    Model BomberModel;
+    Model BossModel;
     Model m_ball;
 	Model m_ground;
+    Model portal;
 
     EntitySubject enemySubject;
+	int latestSpawnPoint;
+
+	std::vector<DirectX::XMFLOAT2>spawnPos;
+
+    EntitySubject projectileHandlerSubject;
 
 	//player variables
-	
+	Player player;
+
 	EntitySubject playerSubject;
 	ProjectileHandler playerProjectile;
-	Player player;
-	
+
+	PowerUp* powerUpPointer;
+
 	Ai m_AI;
 	std::vector<Enemy*> enemies;
 
 	float timeToNextWave;
 	int currentLevel;
 	int currentWave;
+    
+	//vector<DirectX::XMFLOAT3> spawnPointsPowerUp;
+
+
 	std::vector<Level> levels;
 	std::vector<DirectX::XMFLOAT3> spawnPoints;
+//>>>>>>> Develop
 
 	
 	ParticleHandler myParticleHandler;
 
+//<<<<<<< HEAD
+	float timeElapsed;
+//=======
 	UIHandler uiHandler;
 
+//>>>>>>> Develop
     float t;
 	bool exitStage;
 	bool isCompleted;
