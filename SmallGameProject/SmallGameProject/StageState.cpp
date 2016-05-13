@@ -178,17 +178,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
         this->m_ball.SetColor(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 
-
-		//Place the ground beneeth your feet and thank the gods for their
-		//sanctuary from the oblivion below!
-		this->m_ground = Model();
-
-		result = this->m_ground.Initialize(device, deviceContext, "testMap");
-		if (!result) 
-		{
-			return false;
-		}
-
 		DirectX::XMMATRIX worldMatrix;
 		/*worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
 		this->m_ground.SetWorldMatrix(worldMatrix);*/
