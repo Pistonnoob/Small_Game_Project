@@ -311,11 +311,11 @@ UIHandler * Player::GetUIHandler()
 void Player::SetLevel(int level)
 {
 	std::string text = "Level: " + std::to_string(level);
-	this->uiHandler.UpdateTextHolder(3, text, 510, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	this->uiHandler.UpdateTextHolder(3, text, 590, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 }
 
 void Player::SetWave(int wave)
 {
 	std::string text = "Wave: " + std::to_string(wave);
-	this->uiHandler.UpdateTextHolder(4, text, 630, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	this->uiHandler.UpdateTextHolder(4, text, 680, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 }
