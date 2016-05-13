@@ -154,6 +154,8 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		//the player will rise
 		//this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
 		this->player.Initialize(gHandler, "sphere1", "projectile", true, this->playerSubject);
+		this->player.SetLevel(1);
+		this->player.SetWave(1);
 
 		this->enemySubject.AddObserver(GameData::GetInstance());
 		GameData::InitializeStageStateGD(device, deviceContext, this->playerSubject);
@@ -663,10 +665,13 @@ void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
         if (this->currentLevel < this->levels.size())
         {
             this->currentWave++;
+			this->player.SetWave(this->currentWave + 1);
             if (this->currentWave >= this->levels.at(this->currentLevel).wave.size())
             {
                 this->currentWave = 0;
                 this->currentLevel++;
+				this->player.SetWave(this->currentWave + 1);
+				this->player.SetLevel(this->currentLevel + 1);
             }
             if (this->currentLevel < this->levels.size())
             {

@@ -55,6 +55,9 @@ public:
 	virtual bool IsAlive();
 
 	UIHandler* GetUIHandler();
+
+	void SetLevel(int level);
+	void SetWave(int wave);
 };
 
 #endif
