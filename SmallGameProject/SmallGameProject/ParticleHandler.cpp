@@ -7,6 +7,8 @@
 
 ParticleHandler::ParticleHandler()
 {
+	this->spawnEmitter = nullptr;
+	this->device = nullptr;
 }
 
 
