@@ -119,6 +119,11 @@ bool EmitterSpawnPulse::SortParticles()
 	return true;
 }
 
+bool EmitterSpawnPulse::IsCompleted()
+{
+	return false;
+}
+
 bool EmitterSpawnPulse::InitializeEmitter()
 {
 	this->height = 6.0f;

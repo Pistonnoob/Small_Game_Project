@@ -60,8 +60,9 @@ public:
 	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
 
 	int GetIndexCount();
-
 	bool SortParticles();
+
+	virtual bool IsCompleted();
 private:
 	bool InitializeEmitter();
 	bool InitializeBuffers(ID3D11Device* device);
