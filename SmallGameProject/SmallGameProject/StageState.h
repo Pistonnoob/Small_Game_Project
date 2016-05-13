@@ -41,6 +41,7 @@ private:	//Variables
     Model MeleeModel;
     Model RangedModel;
     Model BomberModel;
+    Model BossModel;
     Model m_ball;
 	Model m_ground;
     Model portal;
