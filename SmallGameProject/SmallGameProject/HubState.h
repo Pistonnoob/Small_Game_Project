@@ -6,6 +6,8 @@
 #include "Algorithm.h"
 #include "StageState.h"
 
+const int NR_OF_MAPS = 2;
+
 class HubState :
 	public GameState
 {
@@ -13,7 +15,7 @@ private:	//Variables
 	CameraHandler myCamera;
 
 	Model m_ground;
-	Model portal1;
+	std::vector<Model> portals;
 
 	Player player;
 	EntitySubject playerSubject;

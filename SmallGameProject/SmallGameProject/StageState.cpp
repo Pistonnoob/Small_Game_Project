@@ -30,6 +30,7 @@ StageState::StageState()
     this->projectileHandlerSubject = EntitySubject();
 
 	this->exitStage = false;
+	this->pauseStage = false;
 
 	this->latestSpawnPoint = 3;
 
@@ -46,7 +47,6 @@ StageState::StageState()
 
 	this->isCompleted = false;
 	this->renderUI = false;
-
 }
 
 
@@ -153,6 +153,24 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
 
+		//Add GameData oberver to enemiesSubject
+		this->enemySubject.AddObserver(GameData::GetInstance());
+
+		//powerupts and projectile handlers
+		this->playerProjectile.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject);
+
+		this->playerSubject.AddObserver(&this->playerProjectile);
+		this->playerSubject.AddObserver(GameData::GetInstance());
+
+		//the player will rise
+		//this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
+		this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
+		this->player.SetLevel(1);
+		this->player.SetWave(1);
+
+		this->enemySubject.AddObserver(GameData::GetInstance());
+		GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
+
         this->enemyPjHandler.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject);
 		
 		//Form thy armies from the clay!
@@ -196,21 +214,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		if (!modelResult) {
 			return false;
 		}
-
-		//Colour thy armies in the name of the racist overlord Axel!
-		this->m_car.SetColor(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-        this->m_ball.SetColor(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-
-		//Place the ground beneeth your feet and thank the gods for their
-		//sanctuary from the oblivion below!
-		this->m_ground = Model();
-
-		result = this->m_ground.Initialize(device, deviceContext, "testMap");
-		if (!result) 
-		{
-			return false;
-		}
-		//this->m_ground.SetColor(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
 
 		DirectX::XMMATRIX worldMatrix;
 		/*worldMatrix = DirectX::XMMatrixTranslation(0.0f, -5.0f, 0.0f);
@@ -266,18 +269,50 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->uiHandler.Initialize(gHandler);
 
-		this->uiHandler.AddElement(100, 100, 100, 100, "testUI.mtl", 1, false);
+		this->uiHandler.AddElement(400, 500, 500, 300, "testUI.mtl", 1, false);
+		this->uiHandler.AddElement(120, 40, 600, 500, "Continue.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 385, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 410, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 435, "Button.mtl", 1, true);
+
+		this->uiHandler.CreateTextHolder(32); //title
+		this->uiHandler.CreateTextHolder(32); //killed
+		this->uiHandler.CreateTextHolder(32); //time
+		this->uiHandler.CreateTextHolder(32); //score
+		this->uiHandler.CreateTextHolder(32); //highscore
+
+		this->uiHandler.CreateTextHolder(32); //points
+		this->uiHandler.CreateTextHolder(32); //dmg
+		this->uiHandler.CreateTextHolder(32); //hp
+		this->uiHandler.CreateTextHolder(32); //movespeed
+
+		GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
+
+		this->timeInStage = std::chrono::system_clock::now();
+		GameData::GetInstance()->NewStage();
 
 		if (!result)
 		{
 			return false;
 		}
+	}
 
-		//DirectX::XMFLOAT3 a = this->player.GetPosition();
-		//int i = 0;
+	return result;
+}
 
+int StageState::LoadMap(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int stageNr)
+{
+	bool result = true;
+	//Place the ground beneeth your feet and thank the gods for their
+	//sanctuary from the oblivion below!
 
-        ReadFile("Stage1.txt");
+	if (stageNr == 1) {
+		result = this->m_ground.Initialize(device, deviceContext, "Stage1NoPlanet");
+		if (!result) {
+			return false;
+		}
+
+		ReadFile("Stage1.txt");
 
 		this->currentLevel = 0;
 		this->currentWave = 0;
@@ -285,38 +320,32 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		//Arm thy armies!
         SpawnWave(this->currentLevel, this->currentWave);
-
-		//powerupts and projectile handlers
-		//this->playerSubject = new EntitySubject();
-		//this->playerProjectile = new ProjectileHandler();
-
-		this->playerProjectile.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject);
-
-		this->playerSubject.AddObserver(&this->playerProjectile);
-		this->playerSubject.AddObserver(GameData::GetInstance());
-
-		//the player will rise
-//<<<<<<< HEAD
-//		this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
-//=======
-		//this->player.Initialize(device, deviceContext, "sphere1", "projectile", true, this->playerSubject);
-		this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
-//>>>>>>> 7c4fe03bba0caf1a82a8eec6e79cbf153d7fa7a7
-
-		this->enemySubject.AddObserver(GameData::GetInstance());
-
-        //place lighs on portals
-        int i = 1;
-        for (auto point : this->spawnPoints)
-        {
-            this->pointLights.at(i).Position = DirectX::XMFLOAT4(point.x, 1.0f, point.z, 1.0f);
-            i++;
-		GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
 	}
-        //this->pointLights.at(1).Position = DirectX::XMFLOAT4(this->spawnPoints.at(0).x, 1.0f, this->spawnPoints.at(0).z, 1.0f);
+	else if(stageNr == 2){
+		result = this->m_ground.Initialize(device, deviceContext, "Stage1NoPlanet");
+		if (!result) {
+			return false;
+		}
+
+		ReadFile("Stage2.txt");
+
+		this->currentLevel = 0;
+		this->currentWave = 0;
+		this->timeToNextWave = this->levels.at(currentLevel).wave.at(currentWave).time;
+
+		//Arm thy armies!
+		SpawnWave(this->currentLevel, this->currentWave);
 	}
 
-	return result;
+	//place lighs on portals
+	int i = 1;
+	for (auto point : this->spawnPoints)
+	{
+		this->pointLights.at(i).Position = DirectX::XMFLOAT4(point.x, 1.0f, point.z, 1.0f);
+		i++;
+	}
+	
+	return 0;
 }
 
 int StageState::HandleInput(InputHandler * input)
@@ -326,22 +355,17 @@ int StageState::HandleInput(InputHandler * input)
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
 
-	if (input->isKeyPressed(DIK_T)) {
-		GameData* gd = GameData::GetInstance();
-		int i = 0;
-	}
-    if (input->isKeyPressed(DIK_UPARROW))
-    {
-    }
-    if (input->isKeyPressed(DIK_DOWNARROW))
-    {
-    }
 	if (input->isKeyPressed(DIK_U)) {
 		if (this->renderUI)
 			this->renderUI = false;
 		else
 			this->renderUI = true;
 	}
+
+	if (this->renderUI && input->isMouseKeyPressed(0)) {
+		this->uiHandler.HandleInput(input);
+	}
+
 	return result;
 }
 
@@ -352,66 +376,70 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 	int result = 1;
 
-	float newDT = deltaTime / 1000000;
-    HandleWaveSpawning(newDT, this->isCompleted);
+	if (!this->pauseStage) {
 
-
-    RemoveDeadEnemies();
-
-	this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
-	
-    this->enemyPjHandler.Update(newDT);
-
-	this->playerProjectile.Update(newDT);
-	this->player.Update(input, gHandler, &this->myCamera, deltaTime);
-
-	this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
-
-	//update the timers in the powerup objects, which is held int the GameData singleton
-	float timeInSecounds = deltaTime * 0.000001;
-	this->timeElapsed += timeInSecounds;
-	GameData::Update(timeInSecounds);
-
-	if (this->timeElapsed > 15.0f)
-	{
-		this->powerUpPointer = GameData::GetRandomPowerup();
-		pos = this->spawnPos.at(this->latestSpawnPoint);
-		this->latestSpawnPoint++;
-		this->latestSpawnPoint %= this->spawnPoints.size();
-		this->powerUpPointer->SetPosition(pos.x,pos.y);
-
-		this->timeElapsed = 0;
-	}
-
-	if (this->exitStage)
-	{
-		this->exitStage = false;
-		//Pop ourself
-		GameState* state = this->m_GSH->PopState();
-		//We do not care about the returned state but check if return
-		if (state)
+		if (this->exitStage)
 		{
-
+			this->exitStage = false;
+			//Pop ourself
+			GameState* state = this->m_GSH->PopState();
+			//We do not care about the returned state but check if return
+			if (state)
+			{
+				//The state wasn't a nullptr, meaning it didn't have automatic clearing on
+				//Something went somewhat wrong here eh?
+			}
 		}
-	}
 
-	//Player - projectile intersection
-	if (this->enemyPjHandler.IntersectionTest(&this->player))
-	{
+		float newDT = deltaTime / 1000000;
+
+		HandleWaveSpawning(newDT, this->isCompleted);
+
+		RemoveDeadEnemies();
+
+		this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
+
+
+		this->playerProjectile.Update(newDT);
+		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
+
+		this->enemyPjHandler.Update(newDT);
+
+		this->myParticleHandler.Update(deltaTime, this->m_deviceContext);
+
+		//update the timers in the powerup objects, which is held int the GameData singleton
+		float timeInSecounds = deltaTime * 0.000001;
+		this->timeElapsed += timeInSecounds;
+		GameData::Update(timeInSecounds);
+
+		if (this->timeElapsed > 15.0f)
+		{
+			this->powerUpPointer = GameData::GetRandomPowerup();
+			pos = this->spawnPos.at(this->latestSpawnPoint);
+			this->latestSpawnPoint++;
+			this->latestSpawnPoint %= this->spawnPoints.size();
+			this->powerUpPointer->SetPosition(pos.x,pos.y);
+			this->timeElapsed = 0;
+		}
+
 		
-		if (!this->player.IsAlive()) {
-			this->exitStage = true;
+
+		//Player - projectile intersection
+		if (this->enemyPjHandler.IntersectionTest(&this->player)) {
+
+			if (!this->player.IsAlive()) {
+				this->exitStage = true;
+			}
 		}
-	}
 
-	//Enemy - projectile intersection
-	int i = -1;
-	for (auto enemy : this->enemies)
-	{
-		i++;
-		if (this->playerProjectile.IntersectionTest(enemy)) 
-		{
+		//Enemy - projectile intersection
+		int i = -1;
+		for (auto enemy : this->enemies) {
+			i++;
 
+			if (this->playerProjectile.IntersectionTest(enemy)) {
+
+			}
 		}
 	}
 	
@@ -423,43 +451,107 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 	}*/
 
-	//if the powerup vector has values, check if intersection has occured
-	if (this->powerUpPointer != nullptr)
-	{
-		this->powerUpPointer->Update(deltaTime);
-		if (this->powerUpPointer->GetBV()->Intersect(this->player.GetBV()) == true)
-		{
-			//nu vill jag säga till gameData att  spelaren har plockat upp denna powerup
-			Events::UNIQUE_FIRE powerUp;
-			powerUp = this->powerUpPointer->GetType();
+		//Enemy - Player intersection
+		for (auto enemy : this->enemies) {
 
-			//not very happy with this solution
-			switch (powerUp)
-			{
-			case Events::ARCFIRE:
-				this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_SPREAD);
-				break;
-			case Events::SPLITFIRE:
-				this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_SPITFIRE);
-				break;
-			case Events::REVERSERBULLETS:
-				this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_REVERSERBULLETS);
-				break;
-			default:
-				break;
+			if (this->player.GetBV()->Intersect(enemy->GetBV())) {
+
 			}
-
-			this->powerUpPointer = nullptr;
 		}
-	}
 
+		DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
+		this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+
+		//if the powerup vector has values, check if intersection has occured
+		if (this->powerUpPointer != nullptr)
+		{
+			this->powerUpPointer->Update(deltaTime);
+			if (this->powerUpPointer->GetBV()->Intersect(this->player.GetBV()) == true)
+			{
+				//nu vill jag säga till gameData att  spelaren har plockat upp denna powerup
+				Events::UNIQUE_FIRE powerUp;
+				powerUp = this->powerUpPointer->GetType();
+
+				//not very happy with this solution
+				switch (powerUp)
+				{
+				case Events::ARCFIRE:
+					this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_SPREAD);
+					break;
+				case Events::SPLITFIRE:
+					this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_SPITFIRE);
+					break;
+				case Events::REVERSERBULLETS:
+					this->playerSubject.Notify(&this->player, Events::PICKUP::PICKUP_REVERSERBULLETS);
+					break;
+				default:
+					break;
+				}
+
+				this->powerUpPointer = nullptr;
+			}
+		}
+	
 	//Check if level is completed
 	if (this->isCompleted && this->enemies.size() == 0) {
-		this->exitStage = true;	//end stage for testing
-	}
+		DirectX::XMFLOAT4 camPos = this->myCamera.GetCameraPos();
+		DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixRotationY(-0.5f);;
+		playerDisplay *= DirectX::XMMatrixRotationX(1.1f);
+		//DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixTranslation(camPos.x - 2.5f, camPos.y - 8.0f, camPos.z + 3.0f);
+		//playerDisplay *= DirectX::XMMatrixRotationX(3.0f);
+		playerDisplay *= DirectX::XMMatrixTranslation(camPos.x - 2.5f, camPos.y - 8.0f, camPos.z + 3.0f);
+		this->player.GetModel()->SetWorldMatrix(playerDisplay);
 
-	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
-	this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+		//DirectX::XMMATRIX weaponWorldMatrix = playerDisplay;
+		////weaponWorldMatrix *= DirectX::XMMatrixRotationY(DirectX::XM_PI / 2);
+		//weaponWorldMatrix *= DirectX::XMMatrixTranslation(1.0f, 1.0f, 0.0f);
+		//this->player.GetWeapon()->GetModel()->SetWorldMatrix(weaponWorldMatrix);
+
+		std::string text = "";
+		if (!this->renderUI) {
+			this->renderUI = true;
+			this->pauseStage = true;
+			GameData::GetInstance()->EndStage(true);
+
+			text = "Level " + std::to_string(this->currentLevel) + " completed!";
+			this->uiHandler.UpdateTextHolder(0, text, 320, 90, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 4.0f);
+
+			text = "Mobs killed: " + std::to_string(GameData::GetInstance()->GetEnemiesKilledInStage());
+			this->uiHandler.UpdateTextHolder(1, text, 375, 225, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+
+			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
+			text = "Time: " + std::to_string((int)elaspedTime.count());
+			this->uiHandler.UpdateTextHolder(2, text, 375, 250, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+
+			text = "Score: " + std::to_string(GameData::GetInstance()->GetScoreInStage());
+			this->uiHandler.UpdateTextHolder(3, text, 375, 275, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+
+			text = "Highscore: " + std::to_string(GameData::GetInstance()->GetHighScore());
+			this->uiHandler.UpdateTextHolder(4, text, 375, 300, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+		}
+		text = "Points to spend: " + std::to_string(GameData::GetInstance()->GetPoints());
+		this->uiHandler.UpdateTextHolder(5, text, 375, 350, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+		text = "Damage: " + std::to_string(GameData::GetInstance()->GetPlayerDamage());
+		this->uiHandler.UpdateTextHolder(6, text, 375, 375, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+		text = "Health: " + std::to_string(GameData::GetInstance()->GetPlayerHealth());
+		this->uiHandler.UpdateTextHolder(7, text, 375, 400, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+		text = "Speed: " + std::to_string(GameData::GetInstance()->GetPlayerMoveSpeed());
+		this->uiHandler.UpdateTextHolder(8, text, 375, 425, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
+
+		if (this->uiHandler.WasButtonPressed(1)) {
+			this->pauseStage = false;
+			this->exitStage = true;	//end stage for testing
+		}
+		if (this->uiHandler.WasButtonPressed(2)) {
+			GameData::GetInstance()->SpendPointOn(0);
+		}
+		if (this->uiHandler.WasButtonPressed(3)) {
+			GameData::GetInstance()->SpendPointOn(1);
+		}
+		if (this->uiHandler.WasButtonPressed(4)) {
+			GameData::GetInstance()->SpendPointOn(2);
+		}
+	}
 
 	return result;
 }
@@ -515,13 +607,12 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	}
 
-	//render shots
-	this->playerProjectile.Render(gHandler, &this->myCamera);
-
-    this->enemyPjHandler.Render(gHandler, &this->myCamera);
-
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
-
+	
+	//render shots
+    this->enemyPjHandler.Render(gHandler, &this->myCamera);
+	this->playerProjectile.Render(gHandler, &this->myCamera);
+	
 	//render that shiet
 	//gHandler->DeferredRender(this->spreadPower.GetModel(), &this->myCamera);
 
@@ -537,11 +628,13 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
+	gHandler->ShadowRender(&this->m_ground, &this->myCamera);
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
+	gHandler->UIRender(this->player.GetUIHandler());
 	if (this->renderUI)
 		gHandler->UIRender(&this->uiHandler);
 
@@ -552,7 +645,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 void StageState::ReadFile(std::string fileName)
 {
 	std::string line;
-	std::ifstream myFile(fileName);
+	std::ifstream myFile("..\\SmallGameProject\\Resources\\Data\\" + fileName);
 
     if (myFile.is_open())
     {
@@ -665,10 +758,13 @@ void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
         if (this->currentLevel < this->levels.size())
         {
             this->currentWave++;
+			this->player.SetWave(this->currentWave + 1);
             if (this->currentWave >= this->levels.at(this->currentLevel).wave.size())
             {
                 this->currentWave = 0;
                 this->currentLevel++;
+				this->player.SetWave(this->currentWave + 1);
+				this->player.SetLevel(this->currentLevel + 1);
             }
             if (this->currentLevel < this->levels.size())
             {

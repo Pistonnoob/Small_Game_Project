@@ -11,6 +11,7 @@
 #include "Modifiers.h"
 #include "GameData.h"
 #include "UIHandler.h"
+#include "GameData.h"
 
 class Player : public Actor {
 
@@ -18,9 +19,10 @@ private:
 	DirectX::XMVECTOR forwardDir;
 
 	int playerMovmentSpeed;
-	int playerHighScore;
 
 	Weapon* playerWeapon;
+
+	UIHandler uiHandler;
 
 public:
 	Player();
@@ -48,6 +50,14 @@ public:
 	virtual void Fire(float deltaT);
 
 	void RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler* gHandler, CameraHandler* cameraH);
+
+	virtual unsigned int GetDamage();
+	virtual bool IsAlive();
+
+	UIHandler* GetUIHandler();
+
+	void SetLevel(int level);
+	void SetWave(int wave);
 };
 
 #endif

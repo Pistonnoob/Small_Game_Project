@@ -12,6 +12,7 @@
 #include "Boss.h"
 #include "GameData.h"
 #include "PowerUp.h"
+#include <chrono>
 
 
 struct ToSpawn
@@ -78,8 +79,10 @@ private:	//Variables
 	UIHandler uiHandler;
 
     float t;
+	bool pauseStage;
 	bool exitStage;
 	bool isCompleted;
+	std::chrono::time_point<std::chrono::system_clock> timeInStage;
 
 	bool renderUI;
 
@@ -89,6 +92,7 @@ public:
 	virtual void Shutdown();
 
 	int Initialize(GraphicHandler* gHandler, GameStateHandler* GSH);
+	int LoadMap(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int stageNr);
 
 	virtual int HandleInput(InputHandler* input);
 	virtual int Update(float deltaTime, InputHandler* input, GraphicHandler* gHandler);

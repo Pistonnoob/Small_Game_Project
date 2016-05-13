@@ -23,6 +23,7 @@ protected:
 	Model* entityModel;
 	BoundingVolume* entityBV;
 	int health;
+	int damageTaken;
 	int damage;
 
 public:
@@ -49,7 +50,7 @@ public:
     BoundingVolume* GetBV();
     DirectX::XMFLOAT3 GetPosition();
 	void SetPosition(float newPosX, float newPosZ);
-	unsigned int GetDamage();
+	virtual unsigned int GetDamage();
 	virtual void ApplyDamage(int dmg);
 	virtual bool IsAlive();
 };

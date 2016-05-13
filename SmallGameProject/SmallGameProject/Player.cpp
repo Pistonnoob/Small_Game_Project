@@ -4,14 +4,15 @@ Player::Player() : Actor()
 {
 	this->posX = 0.f;
 	this->posZ = 0.f;
-	this->playerMovmentSpeed = 1;
-	this->playerHighScore = 0;
+	this->playerMovmentSpeed = 100;
 	this->health = 100;	
 	this->damage = 100;
 
 	//Initiliaze the forward vecktor as 0,0,1
 	this->forwardDir = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0, 0, 1));
 	this->playerWeapon = nullptr;
+
+	this->uiHandler = UIHandler();
 }
 
 Player::~Player()
@@ -59,6 +60,13 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 	//give the player model its new 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
+	this->uiHandler.Initialize(graphicsH);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
+
 	return true;
 }
 
@@ -69,6 +77,9 @@ void Player::Shutdown()
 		delete this->playerWeapon;
 		this->playerWeapon = nullptr;
 	}
+
+	this->uiHandler.Shutdown();
+
 	Entity::Shutdown(false);
 }
 
@@ -155,6 +166,14 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
+	std::string text = "Damage: " + std::to_string(this->damage + GameData::GetInstance()->GetPlayerDamage());
+	this->uiHandler.UpdateTextHolder(0, text, 150, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
+	this->uiHandler.UpdateTextHolder(1, text, 270, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	text = "Speed: " + std::to_string(this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed());
+	this->uiHandler.UpdateTextHolder(2, text, 390, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+
+
 	GameData::Update(deltaTime);
 }
 
@@ -167,7 +186,7 @@ Weapon * Player::GetWeapon()
 void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
-		this->posX += (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -175,7 +194,7 @@ void Player::MoveRight(float deltaTime)
 void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
-		this->posX -= (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -183,7 +202,7 @@ void Player::MoveLeft(float deltaTime)
 void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
-		this->posZ += (0.00005f * deltaTime * this->playerMovmentSpeed);
+		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -191,7 +210,7 @@ void Player::MoveUp(float deltaTime)
 void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
-		this->posZ -= (0.00005f * deltaTime  * this->playerMovmentSpeed);
+		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
 	}
 }
 
@@ -286,4 +305,35 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 	//this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
 	this->entityModel->SetWorldMatrix(rotationMatrix * playermodelMatrix);
 
+}
+
+unsigned int Player::GetDamage()
+{
+	return this->damage + GameData::GetInstance()->GetPlayerDamage();
+}
+
+bool Player::IsAlive()
+{
+	if ((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken <= 0) {
+		return false;
+	}
+
+	return true;
+}
+
+UIHandler * Player::GetUIHandler()
+{
+	return &this->uiHandler;
+}
+
+void Player::SetLevel(int level)
+{
+	std::string text = "Level: " + std::to_string(level);
+	this->uiHandler.UpdateTextHolder(3, text, 590, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+}
+
+void Player::SetWave(int wave)
+{
+	std::string text = "Wave: " + std::to_string(wave);
+	this->uiHandler.UpdateTextHolder(4, text, 680, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 }
