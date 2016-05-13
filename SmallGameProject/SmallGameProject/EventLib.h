@@ -1,6 +1,7 @@
 #pragma once
 
 namespace Events {
+
 	enum ENTITY{
 		CREATED,
 		PLAYER_CREATED,
@@ -18,7 +19,7 @@ namespace Events {
 		IDLE,
 		MOVING,
 		DEAD,
-        Fire
+        Fire,
 	};
 	enum UNIQUE_FIRE {
 		ARCFIRE,
@@ -50,6 +51,9 @@ namespace Events {
 	enum PICKUP
 	{
 		WEAPON_PICKUP,
-		POWERUP_PICKUP
+		POWERUP_PICKUP,
+		PICKUP_SPREAD,
+		PICKUP_SPITFIRE,
+		PICKUP_REVERSERBULLETS,
 	};
 }
