@@ -245,20 +245,20 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 {
 	// The angle is calculated in Normal Device Space
 
-	DirectX::XMVECTOR playerPos = DirectX::XMVectorSet(this->posX, 0, this->posZ, 1);
+	DirectX::XMVECTOR playerPos = DirectX::XMVectorSet(this->posX, 0.0f, this->posZ, 1);
 	DirectX::XMVECTOR dirVec;
-	DirectX::XMMATRIX modelWorld;
 	DirectX::XMMATRIX cameraView;
 	DirectX::XMMATRIX cameraViewInverse;
 	DirectX::XMMATRIX projection;
+	DirectX::XMMATRIX projectionInverse;
 	DirectX::XMFLOAT4X4 projectionFloat;
 	int screenWidth = gHandler->GetScreenWidth();
 	int screenHeight = gHandler->GetScreenHeight();
 
-	this->entityModel->GetWorldMatrix(modelWorld);
 	cameraH->GetViewMatrix(cameraView);
 	cameraViewInverse = DirectX::XMMatrixInverse(NULL, cameraView);
 	projection = gHandler->GetPerspectiveMatrix();
+	projectionInverse = DirectX::XMMatrixInverse(NULL, projection);
 	DirectX::XMStoreFloat4x4(&projectionFloat, projection);
 	
 
@@ -269,21 +269,27 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 	// Get the mouse pos in -1, 1
 	mouseX = (((2 * mouseX) / screenWidth) - 1);
 	mouseY = ((-(2 * mouseY) / screenHeight) + 1);
+
 	mouseX /= projectionFloat._11;
 	mouseY /= projectionFloat._22;
 	
-	DirectX::XMVECTOR rayO = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	DirectX::XMFLOAT4 cameraPos = cameraH->GetCameraPos();
+
+	DirectX::XMVECTOR rayO = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 	DirectX::XMVECTOR rayD = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(mouseX, mouseY, 1.0f));
-	
-	DirectX::XMVector3TransformCoord(rayO, cameraViewInverse);
-	DirectX::XMVector3TransformNormal(rayD, cameraViewInverse);
+
+	rayO = DirectX::XMVector3TransformCoord(rayO, cameraViewInverse);
+	rayD = DirectX::XMVector3TransformNormal(rayD, cameraViewInverse);
 
 	float t = 0.0f;
-	XMVECTOR planeNormal = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+	XMVECTOR planeNormal = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	DirectX::XMVECTOR dDot = DirectX::XMVector3Dot(planeNormal, playerPos);
 	float d = DirectX::XMVectorGetX(dDot);
-
-	t = ((-d -DirectX::XMVectorGetX(DirectX::XMVector3Dot(planeNormal, rayO)))/(DirectX::XMVectorGetX(DirectX::XMVector3Dot(planeNormal, rayD))));
+	float topRight = (DirectX::XMVectorGetX(planeNormal) * DirectX::XMVectorGetX(rayO) + DirectX::XMVectorGetY(planeNormal) * DirectX::XMVectorGetY(rayO) + DirectX::XMVectorGetZ(planeNormal) * DirectX::XMVectorGetZ(rayO));
+	float altTopRight = DirectX::XMVectorGetX(DirectX::XMVector3Dot(planeNormal, rayO));
+	float bottom = (DirectX::XMVectorGetX(planeNormal) * DirectX::XMVectorGetX(rayD) + DirectX::XMVectorGetY(planeNormal) * DirectX::XMVectorGetY(rayD) + DirectX::XMVectorGetZ(planeNormal) * DirectX::XMVectorGetZ(rayD));
+	float altBottom = DirectX::XMVectorGetX(DirectX::XMVector3Dot(planeNormal, rayD));
+	t = (-d -altTopRight)/altBottom;
 
 	DirectX::XMVECTOR intersectionPoint = rayO + rayD * t;
 	DirectX::XMVECTOR playerToInter = intersectionPoint - playerPos;
