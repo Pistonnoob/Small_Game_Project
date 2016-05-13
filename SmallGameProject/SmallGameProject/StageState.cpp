@@ -209,9 +209,9 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->uiHandler.AddElement(400, 500, 500, 300, "testUI.mtl", 1, false);
 		this->uiHandler.AddElement(120, 40, 600, 500, "Continue.mtl", 1, true);
-		this->uiHandler.AddElement(20, 20, 600, 285, "Button.mtl", 1, true);
-		this->uiHandler.AddElement(20, 20, 600, 310, "Button.mtl", 1, true);
-		this->uiHandler.AddElement(20, 20, 600, 335, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 385, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 410, "Button.mtl", 1, true);
+		this->uiHandler.AddElement(20, 20, 600, 435, "Button.mtl", 1, true);
 
 		this->uiHandler.CreateTextHolder(32); //title
 		this->uiHandler.CreateTextHolder(32); //killed
@@ -434,29 +434,29 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			GameData::GetInstance()->EndStage(true);
 
 			text = "Level " + std::to_string(this->currentLevel) + " completed!";
-			this->uiHandler.UpdateTextHolder(0, text, 400, 75, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 2.0f);
+			this->uiHandler.UpdateTextHolder(0, text, 320, 90, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 4.0f);
 
 			text = "Mobs killed: " + std::to_string(GameData::GetInstance()->GetEnemiesKilledInStage());
-			this->uiHandler.UpdateTextHolder(1, text, 375, 125, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(1, text, 375, 225, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 
 			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
 			text = "Time: " + std::to_string((int)elaspedTime.count());
-			this->uiHandler.UpdateTextHolder(2, text, 375, 150, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(2, text, 375, 250, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 
 			text = "Score: " + std::to_string(GameData::GetInstance()->GetScoreInStage());
-			this->uiHandler.UpdateTextHolder(3, text, 375, 175, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(3, text, 375, 275, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 
 			text = "Highscore: " + std::to_string(GameData::GetInstance()->GetHighScore());
-			this->uiHandler.UpdateTextHolder(4, text, 375, 200, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+			this->uiHandler.UpdateTextHolder(4, text, 375, 300, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 		}
 		text = "Points to spend: " + std::to_string(GameData::GetInstance()->GetPoints());
-		this->uiHandler.UpdateTextHolder(5, text, 375, 250, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(5, text, 375, 350, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 		text = "Damage: " + std::to_string(GameData::GetInstance()->GetPlayerDamage());
-		this->uiHandler.UpdateTextHolder(6, text, 375, 275, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(6, text, 375, 375, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 		text = "Health: " + std::to_string(GameData::GetInstance()->GetPlayerHealth());
-		this->uiHandler.UpdateTextHolder(7, text, 375, 300, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(7, text, 375, 400, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 		text = "Speed: " + std::to_string(GameData::GetInstance()->GetPlayerMoveSpeed());
-		this->uiHandler.UpdateTextHolder(8, text, 375, 325, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.5f);
+		this->uiHandler.UpdateTextHolder(8, text, 375, 425, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 
 		if (this->uiHandler.WasButtonPressed(1)) {
 			this->pauseStage = false;
@@ -512,13 +512,12 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	}
 
-	//render shots
-	this->playerProjectile->Render(gHandler, &this->myCamera);
-
-    this->enemyPjHandler.Render(gHandler, &this->myCamera);
-
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
-
+	
+	//render shots
+    this->enemyPjHandler.Render(gHandler, &this->myCamera);
+	this->playerProjectile->Render(gHandler, &this->myCamera);
+	
 	//render that shiet
 	//gHandler->DeferredRender(this->spreadPower.GetModel(), &this->myCamera);
 
