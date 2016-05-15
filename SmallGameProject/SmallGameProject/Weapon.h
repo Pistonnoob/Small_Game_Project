@@ -15,11 +15,12 @@ private:
 	float attackDamage;
 	float playerSpeed;
 	float attackSpeed;
+	float health;
 
 	Model* weaponModel;
 public:
 	Weapon();
-	Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed);
+	Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed, const float &health);
 
 	~Weapon();
 
@@ -32,6 +33,7 @@ public:
 	float GetAttackDamageMod() const;
 	float GetAttackSpeedMod() const;
 	float GetPlayerSpeedMod() const;
+	float GetHealthMod() const;
 
 	void ShootWeapon(Entity* entity, Events::UNIQUE_FIRE power);
 	void ShootWeapon(Entity* entity);

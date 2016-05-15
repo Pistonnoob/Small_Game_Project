@@ -30,10 +30,11 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 		return false;
 	}
 	this->entitySubject->Notify(this, Events::ENTITY::PLAYER_CREATED);
-	this->playerWeapon = new Weapon();
-	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
-		return false;
-	}
+	//this->playerWeapon = new Weapon();
+	//if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
+	//	return false;
+	//}
+	this->playerWeapon = GameData::GetInstance()->GetWeapon();
 
 	//Rotation matrix
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(0);
@@ -72,11 +73,11 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 
 void Player::Shutdown()
 {
-	if (this->playerWeapon) {
-		this->playerWeapon->ShutDown();
-		delete this->playerWeapon;
-		this->playerWeapon = nullptr;
-	}
+	//if (this->playerWeapon) {
+		//this->playerWeapon->ShutDown();
+		//delete this->playerWeapon;
+		//this->playerWeapon = nullptr;
+	//}
 
 	this->uiHandler.Shutdown();
 
@@ -160,16 +161,20 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	//weapon matrix
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
 	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
+
+	DirectX::XMMATRIX weaponRot = DirectX::XMMatrixRotationY(1.5) * weaponWorldMatrix;
+	weaponWorldMatrix = DirectX::XMMatrixScaling(0.75f, 0.75f, 0.75f) * weaponRot;
+
 	offset = DirectX::XMMatrixTranslation(2.5f, 1.0f, 0.0f);
 	weaponWorldMatrix = offset * weaponWorldMatrix;
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
-	std::string text = "Damage: " + std::to_string(this->damage + GameData::GetInstance()->GetPlayerDamage());
+	std::string text = "Damage: " + std::to_string(this->GetDamage());
 	this->uiHandler.UpdateTextHolder(0, text, 150, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
 	this->uiHandler.UpdateTextHolder(1, text, 270, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
-	text = "Speed: " + std::to_string(this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed());
+	text = "Speed: " + std::to_string((this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	this->uiHandler.UpdateTextHolder(2, text, 390, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 
 
@@ -179,6 +184,11 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 Weapon * Player::GetWeapon()
 {
 	return this->playerWeapon;
+}
+
+void Player::setWeapon(Weapon* weap)
+{
+	this->playerWeapon = weap;
 }
 
 
@@ -316,12 +326,15 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 
 unsigned int Player::GetDamage()
 {
-	return this->damage + GameData::GetInstance()->GetPlayerDamage();
+	GameData* ptr = nullptr;
+	ptr = GameData::GetInstance();
+
+	return (this->damage + ptr->GetPlayerDamage()) * ptr->GetWeaponAttackMod();
 }
 
 bool Player::IsAlive()
 {
-	if ((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken <= 0) {
+	if (((this->health + GameData::GetInstance()->GetPlayerHealth()) * GameData::GetInstance()->GetWeaponHealthMod()) - this->damageTaken <= 0) {
 		return false;
 	}
 

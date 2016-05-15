@@ -12,13 +12,14 @@ Weapon::Weapon()
 }
 
 //if you want to change the base-Stats
-Weapon::Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed)
+Weapon::Weapon(const float &attackDamage, const float &playerSpeed, const float &attackSpeed, const float &health)
 {
 	this->weaponModel = new Model();
 
 	this->attackDamage = attackDamage;
 	this->playerSpeed = playerSpeed;
 	this->attackSpeed = attackSpeed;
+	this->health = health;
 }
 
 Weapon::~Weapon()
@@ -32,9 +33,9 @@ bool Weapon::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext
 	result = this->weaponModel->Initialize(device, deviceContext, objFilename);
 
 	//setting the starting values
-	this->attackDamage = 10.0f;
-	this->attackSpeed = 10.0f;
-	this->playerSpeed = 10.0f;
+	//this->attackDamage = 10.0f;
+	//this->attackSpeed = 10.0f;
+	//this->playerSpeed = 10.0f;
 
 	return result;
 }
@@ -67,6 +68,11 @@ float Weapon::GetAttackSpeedMod() const
 float Weapon::GetPlayerSpeedMod() const
 {
 	return this->playerSpeed;
+}
+
+float Weapon::GetHealthMod() const
+{
+	return this->health;
 }
 
 void Weapon::ShootWeapon(Entity * entity, Events::UNIQUE_FIRE power)

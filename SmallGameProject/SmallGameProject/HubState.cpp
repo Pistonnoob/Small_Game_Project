@@ -52,6 +52,8 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 	ID3D11Device* device = gHandler->GetDevice();
 	ID3D11DeviceContext* deviceContext = gHandler->GetDeviceContext();
 
+	GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
+
 	//Arm thy father
 	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
@@ -142,6 +144,25 @@ int HubState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
+	if (input->isKeyPressed(DIK_1))
+	{
+		GameData::GetInstance()->equipWeapon(Modifiers::WEAPON::PISTOL);
+		this->player.setWeapon(GameData::GetInstance()->GetWeapon());
+	}
+
+	if (input->isKeyPressed(DIK_2))
+	{
+		GameData::GetInstance()->equipWeapon(Modifiers::WEAPON::SHOTGUN);
+		this->player.setWeapon(GameData::GetInstance()->GetWeapon());
+	}
+
+	if (input->isKeyPressed(DIK_3))
+	{
+		GameData::GetInstance()->equipWeapon(Modifiers::WEAPON::UZI);
+		this->player.setWeapon(GameData::GetInstance()->GetWeapon());
+	}
+	
+
 
 	return result;
 }
@@ -202,6 +223,8 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 			spitfireText = "Splitfire unlocked";
 			reverseText = "Reversefire unlocked";
 		}
+
+		
 
 		//400, 500
 
