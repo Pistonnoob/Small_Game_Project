@@ -98,9 +98,8 @@ void GameData::Update(float deltaTime)
 
 }
 
-std::list<PowerUp*> GameData::getPowerup()
+PowerUp* GameData::getPowerup()
 {
-	std::list<PowerUp*>toReturn;
 	std::list<PowerUp*>::iterator iterator;
 
 	//iterate throwugh the list
@@ -108,9 +107,9 @@ std::list<PowerUp*> GameData::getPowerup()
 	{
 		//if the powerup is active
 		if(0.0f < (*iterator)->GetTimeLeft())
-			toReturn.push_back((*iterator));
+			return (*iterator);
 	}
-	return toReturn;
+	return nullptr;
 }
 
 PowerUp * GameData::GetRandomPowerup()
