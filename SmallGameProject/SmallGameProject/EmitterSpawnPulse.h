@@ -32,6 +32,7 @@ private:
 			node.scale = y;
 			node.x = node.x;
 			node.z = node.z;
+			node.a = 0.3f;
 			node.active = node.time < node.timeCap;
 			return node;
 		};

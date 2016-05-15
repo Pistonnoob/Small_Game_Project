@@ -141,7 +141,6 @@ void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext*
 {
 	if (GameData::isGameStageInit == false)
 	{
-		srand((unsigned)time(NULL));
 
 		unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
 		unlockPowerUp(Events::UNIQUE_FIRE::SPLITFIRE);

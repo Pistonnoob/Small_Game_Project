@@ -32,6 +32,7 @@ private:
 			node.z = node.dZ * node.time;
 			node.r = 1.0f - pow(node.time / node.timeCap, 2);
 			node.g = 0.8 - node.time / node.timeCap;
+			node.a = 0.4f * (node.r + node.g);
 			return node;
 		};
 		//void operator()(Particle& element) { element.time += dT; Algorithm::GetEllipse(element.x, element.y, element.time * element.velocity, element.time, element.time); };
