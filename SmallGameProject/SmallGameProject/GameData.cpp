@@ -194,7 +194,7 @@ void GameData::NewStage()
 void GameData::EndStage(bool winner, float time)
 {
 	if (winner) {
-		this->playerScoreStage = this->playerScoreStage * (GOAL_TIME / this->playerScoreStage);
+		this->playerScoreStage = this->playerScoreStage * (GOAL_TIME / time);
 		if (this->playerScoreStage > this->playerHighScore) {
 			this->playerHighScore = this->playerScoreStage;
 		}
