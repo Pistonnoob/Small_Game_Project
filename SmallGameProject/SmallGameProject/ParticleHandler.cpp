@@ -4,7 +4,6 @@
 #include "RangedEnemy.h"
 #include "BomberEnemy.h"
 
-
 ParticleHandler::ParticleHandler()
 {
 	this->device = nullptr;
@@ -105,9 +104,16 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::RANGED_MOVING:
 		break;
 	case Events::RANGED_DEAD:
+	{
 		newEmitter = new EmitterExplosion();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		DirectX::XMFLOAT3 position = entity->GetPosition();
+		DirectX::XMFLOAT3 aimDir = entity->GetAimDir();
+		position.x += aimDir.x;
+		position.y += aimDir.y;
+		position.z += aimDir.z;
+		newEmitter->ApplyPosition(position);
+	}
 		break;
 	case Events::MELEE_CREATED:
 	{
