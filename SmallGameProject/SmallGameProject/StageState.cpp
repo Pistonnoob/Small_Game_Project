@@ -437,15 +437,6 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			}
 		}
 	}
-	
-	//Enemy - Player intersection
-	/*for (auto enemy : this->enemies)
-	{
-		if (this->player.GetBV()->Intersect(enemy->GetBV())) {
- 			int j = 0; 
-		}
-	}*/
-
 		//Enemy - Player intersection
 		for (auto enemy : this->enemies) {
 
@@ -623,7 +614,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
-	gHandler->ShadowRender(&this->m_ground, &this->myCamera);
+	//gHandler->ShadowRender(&this->m_ground, &this->myCamera);
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 
@@ -748,6 +739,10 @@ void StageState::ReadFile(std::string fileName)
 void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
 {
     this->timeToNextWave -= deltaTime;
+    if (this->enemies.size() == 0)
+    {
+        this->timeToNextWave = 0;
+    }
     if (this->timeToNextWave <= 0)
     {
         if (this->currentLevel < this->levels.size())
