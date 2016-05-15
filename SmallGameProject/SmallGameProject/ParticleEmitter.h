@@ -51,7 +51,7 @@ public:
 	bool Update(float dT, ID3D11DeviceContext* deviceContext);
 	bool distanceToCamera(float x, float y, float z);
 	virtual bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext) = 0;
-	virtual void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles) = 0;
+	virtual void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters *emitterParameters, int& amountOfParticles) = 0;
 	virtual bool SortParticles() = 0;
 
 	virtual bool IsCompleted();

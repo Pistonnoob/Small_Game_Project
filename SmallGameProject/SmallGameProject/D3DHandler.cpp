@@ -447,6 +447,11 @@ void D3DHandler::StartUpValues()
 	this->enableDepth = nullptr;
 }
 
+HWND * D3DHandler::GetActiveWindow()
+{
+	return this->activeWindow;
+}
+
 void D3DHandler::Shutdown()
 {
 	if (this->enableDepth) {

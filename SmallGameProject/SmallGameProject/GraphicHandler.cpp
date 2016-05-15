@@ -411,6 +411,11 @@ int GraphicHandler::GetScreenHeight()
 	return this->screenHeight;
 }
 
+HWND * GraphicHandler::GetActiveWindow()
+{
+	return this->engine->GetActiveWindow();
+}
+
 void GraphicHandler::ClearRTVs()
 {
 	this->deferredShaderH->ClearRenderTargets(this->engine->GetDeviceContext());

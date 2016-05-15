@@ -12,7 +12,8 @@
 #include "GameData.h"
 #include "UIHandler.h"
 #include "GameData.h"
-
+#include "Algorithm.h"
+using namespace DirectX;
 class Player : public Actor {
 
 private:

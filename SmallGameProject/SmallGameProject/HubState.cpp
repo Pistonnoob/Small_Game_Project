@@ -10,6 +10,8 @@ HubState::HubState()
 	this->myParticleHandler = ParticleHandler();
 	this->m_ground = Model();
 	this->portals = std::vector<Model>();
+	this->hubStatistics = UIHandler();
+	this->renderPlayerStats = false;
 
 	this->player = Player();
 
@@ -31,6 +33,8 @@ void HubState::Shutdown()
 	for (std::vector<Model>::iterator portal = this->portals.begin(); portal != this->portals.end(); portal++) {
 		(*portal).Shutdown();
 	}
+
+	this->hubStatistics.Shutdown();
 
 	this->myParticleHandler.Shutdown();
 
@@ -62,6 +66,16 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->myCamera.UpdateCamera();
 		if (cameraResult)
 			result = 1;
+
+		//hubInterface
+		this->hubStatistics.Initialize(gHandler);
+
+		//add the background
+		this->hubStatistics.AddElement(600, 100, 400, 500, "testUI.mtl", 1, false);
+		
+		this->hubStatistics.CreateTextHolder(32); // spread
+		this->hubStatistics.CreateTextHolder(32); // spitfire
+		this->hubStatistics.CreateTextHolder(32); // reverse bullets
 
 		//Pull down the visor of epic particle effects
 		//A visor is the moving part of a helmet, namely the part that protects the eyes
@@ -159,6 +173,50 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 		this->m_GSH->PushState(newStage);
 	}
 
+	//update ui
+	if ((playerPos.x < 1.5f && playerPos.x > -5.5f) && (playerPos.z < -31.5f && playerPos.z > -40.5f))
+	{
+		int powerUps = GameData::GetInstance()->GetUnlockedPowerups();
+		std::string arcfireText = "";
+		std::string spitfireText = "";
+		std::string reverseText = "";
+
+		if (powerUps == 1)
+		{
+			arcfireText = "Arcfire unlocked";
+			spitfireText = "Splitfire locked";
+			reverseText = "Reversefire locked";
+		}
+
+		else if (powerUps == 2)
+		{
+			arcfireText = "Arcfire unlocked";
+			spitfireText = "Splitfire unlocked";
+			reverseText = "Reversefire locked";
+		}
+
+		else if (powerUps == 3)
+		{
+			//all powers unlocked
+			arcfireText = "Arcfire unlocked";
+			spitfireText = "Splitfire unlocked";
+			reverseText = "Reversefire unlocked";
+		}
+
+		//400, 500
+
+		this->hubStatistics.UpdateTextHolder(0, arcfireText, 100, 500, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
+		this->hubStatistics.UpdateTextHolder(1, spitfireText, 100, 514, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
+		this->hubStatistics.UpdateTextHolder(2, reverseText, 100, 528, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
+	
+		this->renderPlayerStats = true;
+	}
+	else
+	{
+		this->renderPlayerStats = false;
+	}
+
+	
 	if (this->exitStage)
 	{
 		this->exitStage = false;
@@ -203,6 +261,11 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
 	gHandler->UIRender(this->player.GetUIHandler());
+	
+	if (this->renderPlayerStats == true)
+	{
+		gHandler->UIRender(&this->hubStatistics);
+	}
 
 	return result;
 }

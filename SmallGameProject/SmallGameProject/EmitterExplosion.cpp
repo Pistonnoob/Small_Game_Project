@@ -57,14 +57,12 @@ bool EmitterExplosion::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 	return true;
 }
 
-void EmitterExplosion::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters & emitterParameters, int & amountOfParticles)
+void EmitterExplosion::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters* emitterParameters, int & amountOfParticles)
 {
 	this->RenderBuffers(deviceContext);
 
-	ParticleShaderParameters parameters;
-
-	parameters.worldMatrix = this->world;
-	parameters.diffTexture = this->texture;
+	emitterParameters->worldMatrix = this->world;
+	emitterParameters->diffTexture = this->texture;
 	amountOfParticles = this->currentParticleCnt;
 }
 

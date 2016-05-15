@@ -3,7 +3,7 @@ p30,30}
 p-30,-30}
 p30,-30}
 new Level
-t100}
+t5}
 {R}
 {M}
 {B}
@@ -27,7 +27,7 @@ t15}
 {B R M}
 t20}
 {BOSS}
-{BOSS}
-{BOSS}
-{BOSS}
+{}
+{}
+{}
 end

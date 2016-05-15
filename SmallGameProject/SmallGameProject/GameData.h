@@ -27,6 +27,7 @@ class GameData : public Observer
 private:
 	static bool isInstatiated;	//Check flag
 	static bool isGameStageInit; //check for powerup list
+	static int nrOfUnlockedPowers;
 
 	static GameData* single;
 	static int nrOfActivePowerups;
@@ -95,6 +96,7 @@ public:
 	int GetPlayerHealth();
 	int GetPlayerMoveSpeed();
 	int GetPoints();
+	int GetUnlockedPowerups() const;
 };
 
 #endif

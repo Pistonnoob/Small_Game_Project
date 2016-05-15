@@ -285,6 +285,9 @@
     <ClCompile Include="UIShaderHandler.cpp">
       <Filter>Source Files\ShaderHandlers</Filter>
     </ClCompile>
+    <ClCompile Include="SoundHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="EmitterClusterExplosion.cpp">
       <Filter>Source Files\Observers\ParticleHandler</Filter>
     </ClCompile>
@@ -499,6 +502,9 @@
     </ClInclude>
     <ClInclude Include="UIShaderHandler.h">
       <Filter>Header Files\ShaderHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundHandler.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EmitterExplosion.h">
       <Filter>Header Files\Observers\ParticleHandler</Filter>
