@@ -64,14 +64,17 @@ void AudioHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 
 void AudioHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
+		this->soundH->PlayWaveFile("gun");
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
 {
+	this->soundH->PlayWaveFile("gun");
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
 {
+	this->soundH->PlayWaveFile("gun");
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
