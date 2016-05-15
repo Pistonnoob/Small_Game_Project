@@ -56,8 +56,8 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		/*newEmitter = new EmitterPlayerSpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 4.0f);
 		newEmitter->ApplyPosition(entity->GetPosition());*/
-		//DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
-		//this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y, entityPosition.z, 0.2f, 4.0f, 0.1f, 0.8f, 0.8f, 3.0f);
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y + 5, entityPosition.z, 1.2f, 4.0f, 0.1f, 0.8f, 0.8f, 1.0f);
 	}
 		break;
 	case Events::PLAYER_MOVING:
@@ -74,9 +74,12 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
         break;
 	case Events::BOMBER_CREATED:
 	{
-		newEmitter = new EmitterEnemySpawn();
+		/*newEmitter = new EmitterEnemySpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter->ApplyPosition(entity->GetPosition());*/
+
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y + 5, entityPosition.z, 1.2f, 4.0f, 0.1f, 0.8f, 0.8f, 1.0f);
 	}
 		break;
 	case Events::BOMBER_MOVING:
@@ -90,10 +93,13 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	}
 		break;
 	case Events::RANGED_CREATED:
-	{
+	{/*
 		newEmitter = new EmitterEnemySpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter->ApplyPosition(entity->GetPosition());*/
+
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y + 5, entityPosition.z, 1.2f, 4.0f, 0.1f, 0.8f, 0.8f, 1.0f);
 	}
 		break;
 	case Events::RANGED_MOVING:
@@ -105,9 +111,11 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::MELEE_CREATED:
 	{
-		newEmitter = new EmitterEnemySpawn();
+		/*newEmitter = new EmitterEnemySpawn();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 3.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter->ApplyPosition(entity->GetPosition());*/
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		this->spawnEmitter.AddSpawnPulse(entityPosition.x, entityPosition.y + 5, entityPosition.z, 1.2f, 4.0f, 0.1f, 0.8f, 0.8f, 1.0f);
 	}
 		break;
 	case Events::MELEE_MOVING:
@@ -180,7 +188,7 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 	{
 		emitter->SetCameraPos(cameraPosition);
 		emitter->SortParticles();
-		emitter->Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
+		emitter->Render(gHandler->GetDeviceContext(), &parameters, amountOfParticles);
 		if(parameters.diffTexture == nullptr)
 			parameters.diffTexture = this->myTextures.GetTexture(0);
 		emitter->GetWorld(parameters.worldMatrix);
@@ -192,7 +200,7 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 		gHandler->ParticleRender(&parameters, camera, amountOfParticles);
 	}
 	this->spawnEmitter.SetCameraPos(cameraPosition);
-	this->spawnEmitter.Render(gHandler->GetDeviceContext(), parameters, amountOfParticles);
+	this->spawnEmitter.Render(gHandler->GetDeviceContext(), &parameters, amountOfParticles);
 	if (!parameters.diffTexture)
 	{
 		result = false;

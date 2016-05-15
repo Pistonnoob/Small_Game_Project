@@ -28,9 +28,10 @@ private:
 			float x = 0.0f, y = 0.0f;
 			node.time += dT;
 			//Let it reach the max 6 times during its lifetime
-			Algorithm::GetSawtoothWave(x, y, node.time, node.timeCap / 6.0f, node.minScale, node.maxScale);
-			node.x = x;
-			node.y = y;
+			Algorithm::GetSawtoothWave(x, y, node.time, node.timeCap / 6.0f, node.minScale * (1.0f + node.time), node.maxScale * (node.time));
+			node.scale = y;
+			node.x = node.x;
+			node.z = node.z;
 			node.active = node.time < node.timeCap;
 			return node;
 		};
@@ -57,7 +58,7 @@ public:
 
 	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit = 1.0f);
 	bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext);
-	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
+	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters* emitterParameters, int& amountOfParticles);
 
 	int GetIndexCount();
 	bool SortParticles();
