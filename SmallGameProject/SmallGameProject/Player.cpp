@@ -235,9 +235,9 @@ void Player::Fire(float deltaT)
 	this->aimDir.z = DirectX::XMVectorGetZ(this->forwardDir);
 	this->aimDir.y = 0.0f;
 
-	if (GameData::getNrOfActivePowerups() != 0)
+	PowerUp* activePows = GameData::getPowerup();
+	if (activePows)
 	{
-		PowerUp* activePows = GameData::getPowerup();
 		this->playerWeapon->ShootWeapon(this, activePows->GetType());
 	}
 	

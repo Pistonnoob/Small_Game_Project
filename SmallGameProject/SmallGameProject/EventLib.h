@@ -23,6 +23,7 @@ namespace Events {
         Fire,
 	};
 	enum UNIQUE_FIRE {
+		NONE,
 		ARCFIRE,
 		SPLITFIRE,
 		REVERSERBULLETS,

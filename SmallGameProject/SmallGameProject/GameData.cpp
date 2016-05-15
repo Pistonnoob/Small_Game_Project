@@ -299,13 +299,22 @@ void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 	{
 	case Events::PICKUP::PICKUP_SPREAD:
 		(*walker)->SetTimePowerup(10.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		break;
 	case Events::PICKUP::PICKUP_SPITFIRE:
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
 		(*walker)->SetTimePowerup(10.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		break;
 	case Events::PICKUP::PICKUP_REVERSERBULLETS:
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
 		(*walker)->SetTimePowerup(10.0f);
 		break;

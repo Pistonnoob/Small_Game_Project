@@ -3,7 +3,8 @@
 
 #include "Enemy.h"
 
-static float EXPLOSION_DELAY = 1.0f;
+static float EXPLOSION_DELAY = 5.0f;
+static float B_MOVEMENT_SPEED = 20.0f;
 
 class BomberEnemy : public Enemy {
 
@@ -17,6 +18,10 @@ public:
 	void Shutdown();
 	virtual bool ChargeExplosion(float deltaTime);
 
+	virtual void MoveRight(float deltaTime);
+	virtual void MoveLeft(float deltaTime);
+	virtual void MoveUp(float deltaTime);
+	virtual void MoveDown(float deltaTime);
 	virtual void Fire(float deltaTime);
 
 };
