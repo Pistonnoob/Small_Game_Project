@@ -135,6 +135,7 @@ bool EmitterExplosion::InitializeEmitter()
 		(*particle).r = red;
 		(*particle).g = green;
 		(*particle).b = blue;
+		(*particle).a = 0.4f;
 		(*particle).uCoord = 0.25f;
 		(*particle).time = 0.0f;
 		(*particle).timeCap = this->particleTimeLimit;
@@ -267,7 +268,8 @@ bool EmitterExplosion::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 	{
 		//If the next node doesn't exist, return false. Our particle cnt is wrong
 		this->vertices[index].position = DirectX::XMFLOAT4(node.x, node.y, node.z, node.scale);
-		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.uCoord);
+		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.a);
+		this->vertices[index].particleIndex = node.uCoord;
 		index++;
 	}
 

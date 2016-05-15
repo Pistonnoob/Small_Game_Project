@@ -11,7 +11,7 @@ private:
 		//Variables
 		float x, y, z, scale;
 		float minScale, maxScale;
-		float r, g, b, uCoord;
+		float r, g, b, a, uCoord;
 		//Not the true distance but close enough
 		float timeCap;
 		float time;

@@ -10,6 +10,7 @@ protected:	//Variables
 	struct VertexType {
 		DirectX::XMFLOAT4 position;
 		DirectX::XMFLOAT4 color;
+		float particleIndex;
 	};
 
 	DirectX::XMMATRIX world;

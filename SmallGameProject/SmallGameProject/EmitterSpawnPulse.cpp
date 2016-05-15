@@ -35,6 +35,7 @@ bool EmitterSpawnPulse::AddSpawnPulse(float x, float y, float z, float minSize, 
 	toInsert.r = r;
 	toInsert.g = g;
 	toInsert.b = b;
+	toInsert.a = 0.4f;
 	toInsert.uCoord = 0.0f;
 	//Insert it into our particle list
 	if (this->particles.size())
@@ -256,7 +257,8 @@ bool EmitterSpawnPulse::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 	{
 		//If the next node doesn't exist, return false. Our particle cnt is wrong
 		this->vertices[index].position = DirectX::XMFLOAT4(node.x, node.y, node.z, node.scale);
-		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.uCoord);
+		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.a);
+		this->vertices[index].particleIndex = node.uCoord;
 		index++;
 	}
 
