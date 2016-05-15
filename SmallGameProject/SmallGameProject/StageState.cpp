@@ -106,6 +106,8 @@ void StageState::Shutdown()
 	this->myParticleHandler.Shutdown();
 	this->powerUpSubject.ShutDown();
 
+	this->audioH.ShutDown();
+
 	GameState::Shutdown();
 }
 
@@ -130,6 +132,11 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->enemySubject.AddObserver(&this->myParticleHandler);
 		this->playerSubject.AddObserver(&this->myParticleHandler);
 
+		//Initialize Audio
+		this->audioH.Initialize(*gHandler->GetActiveWindow());
+		this->playerSubject.AddObserver(&this->audioH);
+		this->enemySubject.AddObserver(&this->audioH);
+
 		//Open thy eyes!
 		bool cameraResult = this->myCamera.Initialize();
 		float zoomIn = 1.0f / 6.0f;
@@ -148,6 +155,9 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
+
+
+
 
 		//Add GameData oberver to enemiesSubject
 		this->enemySubject.AddObserver(GameData::GetInstance());
@@ -330,6 +340,7 @@ int StageState::LoadMap(ID3D11Device* device, ID3D11DeviceContext* deviceContext
 
 		//Arm thy armies!
 		SpawnWave(this->currentLevel, this->currentWave);
+
 	}
 
 	//place lighs on portals

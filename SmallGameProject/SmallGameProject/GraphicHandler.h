@@ -82,6 +82,8 @@ public:
 
 	int GetScreenWidth();
 	int GetScreenHeight();
+
+	HWND* GetActiveWindow();
 };
 
 #endif

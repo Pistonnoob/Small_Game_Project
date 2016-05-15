@@ -30,6 +30,8 @@ public:
 	void SetViewport();
 
 	void Shutdown();
+
+	HWND* GetActiveWindow();
 protected:
 	void CreateDeviceAndContext() throw(...);
 	// checks the quality level support for 4x MSAA

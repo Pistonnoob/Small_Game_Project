@@ -7,6 +7,8 @@ bool GameData::isGameStageInit = false;
 
 int GameData::nrOfActivePowerups = 0;
 
+int GameData::nrOfUnlockedPowers = 1;
+
 std::list<PowerUp*> GameData::powerupArsenal = std::list<PowerUp*>();
 
 GameData* GameData::single = nullptr;
@@ -113,9 +115,8 @@ std::list<PowerUp*> GameData::getPowerup()
 
 PowerUp * GameData::GetRandomPowerup()
 {
-	int randPow = rand() % 3;
+	int randPow = rand() % GameData::nrOfUnlockedPowers;
 	PowerUp* toReturn = nullptr;
-	//randPow = 2;
 
 	std::list<PowerUp*>::iterator walker;
 	walker = GameData::powerupArsenal.begin();
@@ -250,6 +251,18 @@ void GameData::OnNotify(Entity* entity, Events::ENTITY evnt)
 		this->enemiesKilled++;
 		this->enemiesKilledStage++;
 		this->playerScoreStage += SCORE_VALUE_RANGED;
+	}
+
+	//check if achivement is unlocked
+	if(this->enemiesKilled == 10 && GameData::nrOfUnlockedPowers == 1)
+	{
+		//unlock spitfire
+		GameData::nrOfUnlockedPowers++;
+	}
+	if (this->enemiesKilled == 20 && GameData::nrOfUnlockedPowers == 2)
+	{
+		//unlock reversed
+		GameData::nrOfUnlockedPowers++;
 	}
 	return;
 }
@@ -395,4 +408,9 @@ int GameData::GetPlayerMoveSpeed()
 int GameData::GetPoints()
 {
 	return this->points;
+}
+
+int GameData::GetUnlockedPowerups() const
+{
+	return this->nrOfUnlockedPowers;
 }
