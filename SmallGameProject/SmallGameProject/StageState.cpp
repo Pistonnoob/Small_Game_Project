@@ -820,7 +820,8 @@ void StageState::SpawnWave(int levelIndex, int waveIndex)
 
 		DirectX::XMFLOAT2 pos;
 		//this->powerUpPointer = GameData::GetRandomPowerup();
-		pos = DirectX::XMFLOAT2(0,0);
+		int spawnPoint = rand() % 4;
+		pos = this->spawnPos.at(spawnPoint);
 		//this->latestSpawnPoint++;
 		//this->latestSpawnPoint %= this->spawnPoints.size();
 		this->powerUpPointer->SetPosition(pos.x, pos.y);
