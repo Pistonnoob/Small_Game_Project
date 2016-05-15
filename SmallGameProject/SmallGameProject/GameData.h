@@ -19,8 +19,8 @@ const int SCORE_VALUE_RANGED = 150;
 
 const int EXP_PER_POINT = 10;
 const float EXP_PER_SCORE = 0.1f;
-const int EXP_NEED_INC = 0;
 const int INC_PER_POINT = 10;
+const float GOAL_TIME = 20.0f;
 
 class GameData : public Observer
 {
@@ -70,7 +70,7 @@ public:
 	static void ShutdownStageStateGD();
 
 	void NewStage();
-	void EndStage(bool winner);
+	void EndStage(bool winner, float time);
 	int SpendPointOn(int stat);
 
 	void OnNotify(Entity* entity, Events::ENTITY evnt);

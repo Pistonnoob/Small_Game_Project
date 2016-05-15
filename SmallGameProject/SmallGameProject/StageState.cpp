@@ -506,15 +506,15 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		if (!this->renderUI) {
 			this->renderUI = true;
 			this->pauseStage = true;
-			GameData::GetInstance()->EndStage(true);
+			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
+			GameData::GetInstance()->EndStage(true, elaspedTime.count);
 
 			text = "Level " + std::to_string(this->currentLevel) + " completed!";
 			this->uiHandler.UpdateTextHolder(0, text, 320, 90, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 4.0f);
 
 			text = "Mobs killed: " + std::to_string(GameData::GetInstance()->GetEnemiesKilledInStage());
 			this->uiHandler.UpdateTextHolder(1, text, 375, 225, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
-
-			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
+			
 			text = "Time: " + std::to_string((int)elaspedTime.count());
 			this->uiHandler.UpdateTextHolder(2, text, 375, 250, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 
