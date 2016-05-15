@@ -616,10 +616,24 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
 
-		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_car.SetWorldMatrix(worldMatrix);
+		temp = this->enemies.at(i);
+		pos = temp->GetPosition();
 
-		gHandler->ShadowRender(&this->m_car, &this->myCamera);
+		DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
+		float angle = atan2(dirVec.z, dirVec.x);
+
+		if (temp->GetType() == Type::MELEEE)
+		{
+			angle += 3.14f / 2;
+		}
+
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
+
+		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
+		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
+
+		gHandler->ShadowRender(temp->GetModel(), &this->myCamera);
 	}
 
 
