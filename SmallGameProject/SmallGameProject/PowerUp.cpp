@@ -35,23 +35,17 @@ Events::UNIQUE_FIRE PowerUp::GetType() const
 
 bool PowerUp::Update(float dt)
 {
-	
-	//this->HandleInput(input, deltaTime);
-
-	DirectX::XMMATRIX powerUpMatrix = DirectX::XMMATRIX();
-	this->entityModel->GetWorldMatrix(powerUpMatrix);
-
 	//Initial offset
-	DirectX::XMMATRIX offset = DirectX::XMMatrixTranslation(this->posX, 0, this->posZ);
+	
 	//create the new world matrix
-	powerUpMatrix = offset;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f);
+	worldMatrix *= DirectX::XMMatrixTranslation(this->posX, 0, this->posZ);
 
 	//Set the model matrix
-	this->entityModel->SetWorldMatrix(powerUpMatrix);
+	this->entityModel->SetWorldMatrix(worldMatrix);
 
 	//Update the bounding box pos and rotation
-	this->entityModel->GetWorldMatrix(powerUpMatrix);
-	this->entityBV->UpdateBoundingVolume(powerUpMatrix);
+	this->entityBV->UpdateBoundingVolume(worldMatrix);
 
 	float convTime = dt / 1000000;
 	bool activePow = true;
