@@ -40,7 +40,22 @@ bool BomberEnemy::ChargeExplosion(float deltaTime)
 	}
 	return canExplode;
 }
-
+void BomberEnemy::MoveRight(float deltaTime)
+{
+	this->posX += B_MOVEMENT_SPEED * deltaTime;
+}
+void BomberEnemy::MoveLeft(float deltaTime)
+{
+	this->posX -= B_MOVEMENT_SPEED * deltaTime;
+}
+void BomberEnemy::MoveUp(float deltaTime)
+{
+	this->posZ += B_MOVEMENT_SPEED * deltaTime;
+}
+void BomberEnemy::MoveDown(float deltaTime)
+{
+	this->posZ -= B_MOVEMENT_SPEED * deltaTime;
+}
 void BomberEnemy::Fire(float deltaTime)
 {
 	if (this->attackCD > EXPLOSION_DELAY)

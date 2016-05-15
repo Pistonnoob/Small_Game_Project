@@ -26,7 +26,22 @@ void MeleeEnemy::Shutdown()
  	this->entitySubject->Notify(this, Events::ENTITY::MELEE_DEAD);
 	Entity::Shutdown(true);
 }
-
+void MeleeEnemy::MoveRight(float deltaTime)
+{
+	this->posX += M_MOVEMENT_SPEED * deltaTime;
+}
+void MeleeEnemy::MoveLeft(float deltaTime)
+{
+	this->posX -= M_MOVEMENT_SPEED * deltaTime;
+}
+void MeleeEnemy::MoveUp(float deltaTime)
+{
+	this->posZ += M_MOVEMENT_SPEED * deltaTime;
+}
+void MeleeEnemy::MoveDown(float deltaTime)
+{
+	this->posZ -= M_MOVEMENT_SPEED * deltaTime;
+}
 void MeleeEnemy::Fire(float deltaTime)
 {
 	if (this->attackCD > M_ATTACK_DELAY)

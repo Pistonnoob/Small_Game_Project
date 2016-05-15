@@ -109,6 +109,9 @@ void StageState::Shutdown()
 	this->audioH.ShutDown();
 
 	GameState::Shutdown();
+
+	this->powerUpPointer->Shutdown();
+	delete this->powerUpPointer;
 }
 
 
@@ -296,6 +299,9 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->timeInStage = std::chrono::system_clock::now();
 		GameData::GetInstance()->NewStage();
 
+		this->powerUpPointer = new PowerUp(Events::UNIQUE_FIRE::NONE);
+		this->powerUpPointer->Initialize(device, deviceContext, "power_supplier_box_reduced", true, &playerSubject);
+
 		if (!result)
 		{
 			return false;
@@ -418,7 +424,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		this->timeElapsed += timeInSecounds;
 		GameData::Update(timeInSecounds);
 
-		if (this->timeElapsed > 15.0f)
+		/*if (this->timeElapsed > 15.0f)
 		{
 			this->powerUpPointer = GameData::GetRandomPowerup();
 			pos = this->spawnPos.at(this->latestSpawnPoint);
@@ -426,7 +432,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			this->latestSpawnPoint %= this->spawnPoints.size();
 			this->powerUpPointer->SetPosition(pos.x,pos.y);
 			this->timeElapsed = 0;
-		}
+		}*/
 
 		
 
@@ -460,7 +466,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
 
 		//if the powerup vector has values, check if intersection has occured
-		if (this->powerUpPointer != nullptr)
+		if (this->powerUpPointer != nullptr && this->powerUpPointer->GetType() != Events::UNIQUE_FIRE::NONE)
 		{
 			this->powerUpPointer->Update(deltaTime);
 			if (this->powerUpPointer->GetBV()->Intersect(this->player.GetBV()) == true)
@@ -484,8 +490,9 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 				default:
 					break;
 				}
-
-				this->powerUpPointer = nullptr;
+				this->powerUpPointer->setType(Events::UNIQUE_FIRE::NONE);
+				//this->powerUpPointer->Shutdown();
+				//this->powerUpPointer = nullptr;
 			}
 		}
 	
@@ -574,7 +581,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 
 	//render powerup if any on screen
-	if (this->powerUpPointer != false)
+	if (this->powerUpPointer != false && this->powerUpPointer->GetType() != Events::UNIQUE_FIRE::NONE)
 	{
 		gHandler->DeferredRender(powerUpPointer->GetModel(), &this->myCamera);
 	}
@@ -687,11 +694,17 @@ void StageState::ReadFile(std::string fileName)
 				std::string waveLenght = "";
 				std::string enemyType = "";
 				std::string nrOfEnemies = "";
+				std::string powerUp = "";
 
 				//get wave lenght
 				size_t start = 1;
-				size_t end = line.find("}");
+				size_t end = line.find(",");
 				waveLenght = line.substr(start, end - 1);
+
+				start = end + 1;
+				powerUp = line.substr(start, start + 1);
+				powerUp.pop_back();
+				waveTemp.powerUp = this->ConvertToPowerUpType(powerUp);
 
 				std::stringstream ss(waveLenght);
 				ss >> waveTemp.time;
@@ -797,6 +810,23 @@ void StageState::SpawnWave(int levelIndex, int waveIndex)
         int point = this->levels.at(levelIndex).wave.at(waveIndex).toSpawn.at(i).spawnIndex;
         SpawnEnemy(type, point);
     }
+	if (this->levels.at(levelIndex).wave.at(waveIndex).powerUp != Events::UNIQUE_FIRE::NONE)
+	{
+		Events::UNIQUE_FIRE type = this->levels.at(levelIndex).wave.at(waveIndex).powerUp;
+
+		//this->powerUpPointer = new PowerUp(type);
+
+		this->powerUpPointer->setType(type);
+
+		DirectX::XMFLOAT2 pos;
+		//this->powerUpPointer = GameData::GetRandomPowerup();
+		pos = DirectX::XMFLOAT2(0,0);
+		//this->latestSpawnPoint++;
+		//this->latestSpawnPoint %= this->spawnPoints.size();
+		this->powerUpPointer->SetPosition(pos.x, pos.y);
+		this->timeElapsed = 0;
+	}
+
 }
 void StageState::SpawnEnemy(Type type, int pointIndex)
 {
@@ -858,5 +888,25 @@ Type StageState::ConvertToEnemyType(std::string type)
 	else
 	{
 		return Type::NONE;
+	}
+}
+
+Events::UNIQUE_FIRE StageState::ConvertToPowerUpType(std::string type)
+{
+	if (type == "A")
+	{
+		return Events::UNIQUE_FIRE::ARCFIRE;
+	}
+	else if (type == "R")
+	{
+		return Events::UNIQUE_FIRE::REVERSERBULLETS;
+	}
+	else if (type == "S")
+	{
+		return Events::UNIQUE_FIRE::SPLITFIRE;
+	}
+	else
+	{
+		return Events::UNIQUE_FIRE::NONE;
 	}
 }
