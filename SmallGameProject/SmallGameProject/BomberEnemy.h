@@ -6,7 +6,6 @@
 static float EXPLOSION_DELAY = 5.0f;
 static float B_MOVEMENT_SPEED = 20.0f;
 
-
 class BomberEnemy : public Enemy {
 
 private:

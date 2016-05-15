@@ -110,9 +110,8 @@ void GameData::Update(float deltaTime)
 
 }
 
-std::list<PowerUp*> GameData::getPowerup()
+PowerUp* GameData::getPowerup()
 {
-	std::list<PowerUp*>toReturn;
 	std::list<PowerUp*>::iterator iterator;
 
 	//iterate throwugh the list
@@ -120,9 +119,9 @@ std::list<PowerUp*> GameData::getPowerup()
 	{
 		//if the powerup is active
 		if(0.0f < (*iterator)->GetTimeLeft())
-			toReturn.push_back((*iterator));
+			return (*iterator);
 	}
-	return toReturn;
+	return nullptr;
 }
 
 PowerUp * GameData::GetRandomPowerup()
@@ -152,8 +151,8 @@ int GameData::getNrOfActivePowerups()
 
 void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* playerSubject)
 {
-
-		srand((unsigned)time(NULL));
+	if (GameData::isGameStageInit == false)
+	{
 
 		unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
 		unlockPowerUp(Events::UNIQUE_FIRE::SPLITFIRE);
@@ -161,7 +160,7 @@ void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext*
 
 		std::list<PowerUp*>::iterator walker;
 		walker = GameData::powerupArsenal.begin();
- 		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
+		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
 		walker++;
 		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
 		walker++;
@@ -175,6 +174,7 @@ void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext*
 		ptr->weaponArsenal.at(2)->Initialize(device, deviceContext, "Lazer");
 
 		GameData::isGameStageInit = true;
+	}
 }
 
 void GameData::ShutdownStageStateGD()
@@ -199,9 +199,10 @@ void GameData::NewStage()
 	this->playerScoreStage = 0;
 }
 
-void GameData::EndStage(bool winner)
+void GameData::EndStage(bool winner, float time)
 {
 	if (winner) {
+		this->playerScoreStage = this->playerScoreStage * (GOAL_TIME / time);
 		if (this->playerScoreStage > this->playerHighScore) {
 			this->playerHighScore = this->playerScoreStage;
 		}
@@ -308,13 +309,22 @@ void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 	{
 	case Events::PICKUP::PICKUP_SPREAD:
 		(*walker)->SetTimePowerup(10.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		break;
 	case Events::PICKUP::PICKUP_SPITFIRE:
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
 		(*walker)->SetTimePowerup(10.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		break;
 	case Events::PICKUP::PICKUP_REVERSERBULLETS:
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
 		(*walker)->SetTimePowerup(10.0f);
 		break;

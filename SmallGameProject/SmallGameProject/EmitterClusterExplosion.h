@@ -11,7 +11,7 @@ private:
 		//Variables
 		float originX, originZ;
 		float x, y, z, scale;
-		float r, g, b, uCoord;
+		float r, g, b, a, uCoord;
 		float dX, dZ;
 		//Not the true distance but close enough
 		float timeCap;
@@ -33,6 +33,7 @@ private:
 			node.z = node.originZ + node.dZ * node.time;
 			node.r = 1.0f - pow(node.time / node.timeCap, 2);
 			node.g = 0.8f - node.time / node.timeCap;
+			node.a = node.r;
 			return node;
 		};
 	};

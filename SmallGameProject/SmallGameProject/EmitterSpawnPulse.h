@@ -11,7 +11,7 @@ private:
 		//Variables
 		float x, y, z, scale;
 		float minScale, maxScale;
-		float r, g, b, uCoord;
+		float r, g, b, a, uCoord;
 		//Not the true distance but close enough
 		float timeCap;
 		float time;
@@ -32,6 +32,7 @@ private:
 			node.scale = y;
 			node.x = node.x;
 			node.z = node.z;
+			node.a = 0.3f;
 			node.active = node.time < node.timeCap;
 			return node;
 		};

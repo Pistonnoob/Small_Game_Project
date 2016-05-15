@@ -12,8 +12,7 @@ float4 main(PSInput input) : SV_TARGET
 {
 	float4 outputColor = particleTexture.Sample(mySampler, input.tex);
 
-	outputColor.rgb = outputColor.rgb * input.color.rgb;
-	outputColor.a *= 0.4f;
+	outputColor = outputColor * input.color;
 
 	return outputColor;
 }

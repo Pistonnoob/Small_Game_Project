@@ -92,14 +92,13 @@ bool EmitterClusterExplosion::InitializeEmitter(float spawnRadius)
 	this->velocityDeviation = 3.0f;
 	this->spawningRadius = spawnRadius;
 	this->height = 6.0f;
-	this->particleSize = 0.4f;
+	this->particleSize = 0.2f;
 	this->maxParticles = 100;
 	this->isCompleted = false;
 	//this->particles.reserve(this->maxParticles);
 	this->particles = std::vector<Particle>(this->maxParticles);
 	this->currentParticleCnt = 0;
 	this->particleTimeLimit = 1.0f;
-	this->emitterTime = 2.0f;
 	this->emitterTime = 1.0f;
 	this->accumulatedTime = 0.0f;
 
@@ -138,7 +137,6 @@ bool EmitterClusterExplosion::InitializeEmitter(float spawnRadius)
 		dZ *= particleVelocity;
 
 		float originDeviation = (((float)rand() - (float)rand()) / RAND_MAX) * this->spawningRadius;
-
 		positionX += dX * originDeviation;
 		positionZ += dZ * originDeviation;
 
@@ -152,6 +150,7 @@ bool EmitterClusterExplosion::InitializeEmitter(float spawnRadius)
 		(*particle).r = red;
 		(*particle).g = green;
 		(*particle).b = blue;
+		(*particle).a = 0.4f;
 		(*particle).uCoord = 0.25f;
 		(*particle).time = 0.0f;
 		(*particle).timeCap = this->particleTimeLimit;
@@ -281,7 +280,8 @@ bool EmitterClusterExplosion::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 	{
 		//If the next node doesn't exist, return false. Our particle cnt is wrong
 		this->vertices[index].position = DirectX::XMFLOAT4(node.x, node.y, node.z, node.scale);
-		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.uCoord);
+		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.a);
+		this->vertices[index].particleIndex = node.uCoord;
 		index++;
 	}
 

@@ -380,7 +380,6 @@ bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, u
 		this->vertexCount = vertexIndices.size();
 		this->indexCount = vertexIndices.size();
 		outputIndices = new unsigned long[this->indexCount];
-		this->vertPositions = tempVertices;
 
 		for (int i = 0; i < this->vertexCount; i++) { //Create the output vertex array
 			Vertex tempVertex;
@@ -388,6 +387,7 @@ bool Model::LoadObj(const char* filename, std::vector<Vertex>* outputVertices, u
 			tempVertex.texture = tempUvs.at(uvIndices.at(i) - 1);
 			tempVertex.normal = tempNormals.at(normalIndices.at(i) - 1);
 			outputVertices->push_back(tempVertex);
+			this->vertPositions.push_back(tempVertex.position);
 
 			outputIndices[i] = i;
 		}

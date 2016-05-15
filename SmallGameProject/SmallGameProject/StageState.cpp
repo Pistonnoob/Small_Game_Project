@@ -147,7 +147,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 0.0f, -20.0f));*/
 
 		this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 20.0f / zoomIn, -7.0f / zoomIn));
-		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 6.0f, -50.0f));
+		//this->myCamera.SetCameraPos(DirectX::XMFLOAT3(0.0f, 120.0f, -0.1f));
 
 		this->myCamera.SetLookAt(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
@@ -512,15 +512,15 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		if (!this->renderUI) {
 			this->renderUI = true;
 			this->pauseStage = true;
-			GameData::GetInstance()->EndStage(true);
+			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
+			GameData::GetInstance()->EndStage(true, elaspedTime.count());
 
 			text = "Level " + std::to_string(this->currentLevel) + " completed!";
 			this->uiHandler.UpdateTextHolder(0, text, 320, 90, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 4.0f);
 
 			text = "Mobs killed: " + std::to_string(GameData::GetInstance()->GetEnemiesKilledInStage());
 			this->uiHandler.UpdateTextHolder(1, text, 375, 225, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
-
-			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
+			
 			text = "Time: " + std::to_string((int)elaspedTime.count());
 			this->uiHandler.UpdateTextHolder(2, text, 375, 250, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 
@@ -620,10 +620,24 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
 
-		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		this->m_car.SetWorldMatrix(worldMatrix);
+		temp = this->enemies.at(i);
+		pos = temp->GetPosition();
 
-		gHandler->ShadowRender(&this->m_car, &this->myCamera);
+		DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
+		float angle = atan2(dirVec.z, dirVec.x);
+
+		if (temp->GetType() == Type::MELEEE)
+		{
+			angle += 3.14f / 2;
+		}
+
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
+
+		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
+		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
+
+		gHandler->ShadowRender(temp->GetModel(), &this->myCamera);
 	}
 
 
@@ -817,7 +831,8 @@ void StageState::SpawnWave(int levelIndex, int waveIndex)
 
 		DirectX::XMFLOAT2 pos;
 		//this->powerUpPointer = GameData::GetRandomPowerup();
-		pos = DirectX::XMFLOAT2(0,0);
+		int spawnPoint = rand() % 4;
+		pos = this->spawnPos.at(spawnPoint);
 		//this->latestSpawnPoint++;
 		//this->latestSpawnPoint %= this->spawnPoints.size();
 		this->powerUpPointer->SetPosition(pos.x, pos.y);
