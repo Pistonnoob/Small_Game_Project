@@ -23,6 +23,7 @@ struct ToSpawn
 struct Wave
 {
 	int time;
+	Events::UNIQUE_FIRE powerUp;
 	std::vector<ToSpawn> toSpawn;
 };
 struct Level
@@ -105,6 +106,7 @@ public:
 	virtual void SpawnEnemy(Type type, int pointIndex);
     virtual void RemoveDeadEnemies();
 	virtual Type ConvertToEnemyType(std::string type);
+	virtual Events::UNIQUE_FIRE ConvertToPowerUpType(std::string type);
 
 private:	//Functions
 

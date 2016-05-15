@@ -28,6 +28,11 @@ void PowerUp::SetTimePowerup(float timeActive)
 	this->timeLeft = timeActive;
 }
 
+void PowerUp::setType(Events::UNIQUE_FIRE type)
+{
+	this->type = type;
+}
+
 Events::UNIQUE_FIRE PowerUp::GetType() const
 {
 	return this->type;

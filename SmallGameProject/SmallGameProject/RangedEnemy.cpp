@@ -27,7 +27,22 @@ void RangedEnemy::Shutdown()
 	Entity::Shutdown(true);
 }
 
-
+void RangedEnemy::MoveRight(float deltaTime)
+{
+	this->posX += R_MOVEMENT_SPEED * deltaTime;
+}
+void RangedEnemy::MoveLeft(float deltaTime)
+{
+	this->posX -= R_MOVEMENT_SPEED * deltaTime;
+}
+void RangedEnemy::MoveUp(float deltaTime)
+{
+	this->posZ += R_MOVEMENT_SPEED * deltaTime;
+}
+void RangedEnemy::MoveDown(float deltaTime)
+{
+	this->posZ -= R_MOVEMENT_SPEED * deltaTime;
+}
 void RangedEnemy::Fire(float deltaTime)
 {
     if (this->attackCD > R_ATTACK_DELAY)
