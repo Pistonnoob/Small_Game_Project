@@ -19,6 +19,8 @@ GameData::GameData(GameData const &) : Observer()
 	this->playerHealth = 0;
 	this->playerMovmentSpeed = 0;
 	this->playerDamage = 0;
+	this->experience = 0;
+	this->points = 0;
 
 	this->enemiesKilled = 0;
 	this->enemiesKilledStage = 0;
@@ -358,6 +360,8 @@ bool GameData::SavePlayerData(std::string filename)
 		saveFile << playerMovmentSpeed << "\r\n";
 		saveFile << playerDamage << "\r\n";
 		saveFile << enemiesKilled << "\r\n";
+		saveFile << experience << "\r\n";
+		saveFile << points << "\r\n";
 
 		saveFile.close();
 	}
@@ -381,6 +385,8 @@ bool GameData::LoadPlayerData(std::string filename)
 		loadFile >> playerMovmentSpeed;
 		loadFile >> playerDamage;
 		loadFile >> enemiesKilled;
+		loadFile >> experience;
+		loadFile >> points;
 
 		loadFile.close();
 	}

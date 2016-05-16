@@ -15,6 +15,8 @@
 #include "AudioHandler.h"
 #include <chrono>
 
+const int LEVELS_TO_CHECKPOINT = 2;
+
 struct ToSpawn
 {
     int spawnIndex;
@@ -83,6 +85,7 @@ private:	//Variables
     float t;
 	bool pauseStage;
 	bool exitStage;
+	bool checkpoint;
 	bool isCompleted;
 	std::chrono::time_point<std::chrono::system_clock> timeInStage;
 

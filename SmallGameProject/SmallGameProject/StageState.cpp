@@ -46,6 +46,7 @@ StageState::StageState()
 	this->spawnPos.push_back(DirectX::XMFLOAT2(35.0f, -35.0f));
 
 	this->isCompleted = false;
+	this->checkpoint = false;
 	this->renderUI = false;
 }
 

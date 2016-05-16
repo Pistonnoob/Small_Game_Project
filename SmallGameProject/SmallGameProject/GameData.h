@@ -39,7 +39,6 @@ private:
 	int playerHealth;
 	int playerMovmentSpeed;
 	int playerDamage;
-	float attackSpeed;
 
 	int experience;
 	int points;

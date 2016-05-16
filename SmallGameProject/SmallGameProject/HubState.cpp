@@ -149,6 +149,8 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		result = this->player.Initialize(gHandler, "sphere1", "projectile", true, &this->playerSubject);
 
+		GameData::GetInstance()->LoadPlayerData("PlayerSave");
+
 		if (!result) {
 			return false;
 		}
@@ -215,6 +217,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 	
 	if (this->exitStage)
 	{
+		GameData::GetInstance()->SavePlayerData("PlayerSave");
 		this->exitStage = false;
 		//Pop ourself
 		GameState* state = this->m_GSH->PopState();
