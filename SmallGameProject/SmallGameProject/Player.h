@@ -13,6 +13,9 @@
 #include "UIHandler.h"
 #include "GameData.h"
 #include "Algorithm.h"
+
+static float SHOOT_DELAY = 0.25f;
+
 using namespace DirectX;
 class Player : public Actor {
 
@@ -20,6 +23,7 @@ private:
 	DirectX::XMVECTOR forwardDir;
 
 	int playerMovmentSpeed;
+	float shootCounter;
 
 	Weapon* playerWeapon;
 

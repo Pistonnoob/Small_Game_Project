@@ -5,6 +5,7 @@ Player::Player() : Actor()
 	this->posX = 0.f;
 	this->posZ = 0.f;
 	this->playerMovmentSpeed = 100;
+	this->shootCounter = 0;
 	this->health = 100;	
 	this->damage = 100;
 
@@ -96,6 +97,7 @@ void Player::PowerPickup(const int & POWER_ENUM)
 
 void Player::HandleInput(InputHandler * input, float dTime)
 {
+	this->shootCounter -= (dTime / 1000000);
 	if (input->isKeyPressed(DIK_1))
 	{
 		this->entitySubject->Notify(this, Events::ENTITY::BOMBER_DEAD);
@@ -131,10 +133,12 @@ void Player::HandleInput(InputHandler * input, float dTime)
 		//this->entitySubject->Notify(this, Events::PICKUP::POWERUP_PICKUP);
 	}
 
-	if(input->isMouseKeyPressed(0))	//0 = left, 1 = right, 2 = scroll click, 3 = "Down button" on mouse
+	if (input->isMouseKeyDown(0) && this->shootCounter <= 0)//0 = left, 1 = right, 2 = scroll click, 3 = "Down button" on mouse
 	{
+		this->shootCounter = SHOOT_DELAY;
 		this->Fire(0.0);
 	}
+
 }
 
 void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime)
