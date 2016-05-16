@@ -603,6 +603,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	//renders all the actors in the enemies vector
     Entity* temp;
+	Boss* bossEnt = nullptr;
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
         temp = this->enemies.at(i);
@@ -611,7 +612,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
         DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
 		float angle = atan2(dirVec.z, dirVec.x);
 
-        if (temp->GetType() == Type::MELEEE)
+        if (temp->GetType() == Type::MELEEE) 
         {
             angle += 3.14f / 2;
         }
@@ -619,9 +620,16 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
         DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
-        temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
+		
+		if (temp->GetType() == Type::BOSS)
+		{
+			//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 
+			worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f) * worldMatrix;
+
+		}
+		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
+		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
 		gHandler->DeferredRender(temp->GetModel(), &this->myCamera);
 
 	}
@@ -802,7 +810,7 @@ void StageState::HandleWaveSpawning(float deltaTime)
         {
             this->currentWave++;
 			this->player.SetWave(this->currentWave + 1);
-            if (this->currentWave >= this->levels.at(this->currentLevel).wave.size())
+            if (this->currentWave >= this->levels.at(this->currentLevel).wave.size() && this->enemies.size() == 0)
             {
                 this->currentWave = 0;
                 this->currentLevel++;

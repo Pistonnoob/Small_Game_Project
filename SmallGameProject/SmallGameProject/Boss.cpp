@@ -69,7 +69,6 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 	}
 
 	return Entity::Initialize(model, entitySubject, isSphere);
-
 }
 void Boss::Shutdown()
 {
@@ -112,5 +111,5 @@ void Boss::update(DirectX::XMFLOAT3 playerPos, float deltaTime)
     this->aimDir.x = playerPos.x - this->posX;
     this->aimDir.y = 0;
     this->aimDir.z = playerPos.z - this->posZ;
-
 }
+

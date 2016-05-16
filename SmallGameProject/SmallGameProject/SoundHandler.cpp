@@ -190,7 +190,6 @@ bool SoundHandler::LoadWaveFile(char * filePath, IDirectSoundBuffer8 **secondary
 
 	}
 
-
 	// Check that the chunk ID is the RIFF format.
 	if ((waveFileHeader.chunkId[0] != 'R') || (waveFileHeader.chunkId[1] != 'I') ||
 		(waveFileHeader.chunkId[2] != 'F') || (waveFileHeader.chunkId[3] != 'F'))
