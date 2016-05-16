@@ -110,8 +110,8 @@ void StageState::Shutdown()
 
 	GameState::Shutdown();
 
-	this->powerUpPointer->Shutdown();
-	delete this->powerUpPointer;
+	//this->powerUpPointer->Shutdown();
+	//delete this->powerUpPointer;
 }
 
 int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
@@ -296,8 +296,8 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->timeInStage = std::chrono::system_clock::now();
 		GameData::GetInstance()->NewStage();
 
-		this->powerUpPointer = new PowerUp(Events::UNIQUE_FIRE::NONE);
-		this->powerUpPointer->Initialize(device, deviceContext, "power_supplier_box_reduced", true, &playerSubject);
+		//this->powerUpPointer = new PowerUp(Events::UNIQUE_FIRE::NONE);
+		//this->powerUpPointer->Initialize(device, deviceContext, "power_supplier_box_reduced", true, &playerSubject);
 
 		if (!result)
 		{
@@ -488,9 +488,9 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 				default:
 					break;
 				}
-				this->powerUpPointer->setType(Events::UNIQUE_FIRE::NONE);
+				//this->powerUpPointer->setType(Events::UNIQUE_FIRE::NONE);
 				//this->powerUpPointer->Shutdown();
-				//this->powerUpPointer = nullptr;
+				this->powerUpPointer = nullptr;
 			}
 		}
 	
@@ -828,10 +828,10 @@ void StageState::SpawnWave(int levelIndex, int waveIndex)
 
 		//this->powerUpPointer = new PowerUp(type);
 
-		this->powerUpPointer->setType(type);
+		//this->powerUpPointer->setType(type);
 
 		DirectX::XMFLOAT2 pos;
-		//this->powerUpPointer = GameData::GetRandomPowerup();
+		this->powerUpPointer = GameData::GetRandomPowerup();
 		int spawnPoint = rand() % 4;
 		pos = this->spawnPos.at(spawnPoint);
 		//this->latestSpawnPoint++;
@@ -906,7 +906,29 @@ Type StageState::ConvertToEnemyType(std::string type)
 
 Events::UNIQUE_FIRE StageState::ConvertToPowerUpType(std::string type)
 {
-	if (type == "A")
+	if (type != "N")
+	{
+		int rng = rand() % 3;
+
+		switch (rng)
+		{
+		case(0) :
+			return Events::UNIQUE_FIRE::ARCFIRE;
+			break;
+		case(1) :
+			return Events::UNIQUE_FIRE::REVERSERBULLETS;
+			break;
+		case(2) :
+			return Events::UNIQUE_FIRE::SPLITFIRE;
+			break;
+		}
+		
+	}
+	else
+	{
+		return Events::UNIQUE_FIRE::NONE;
+	}
+	/*if (type == "A")
 	{
 		return Events::UNIQUE_FIRE::ARCFIRE;
 	}
@@ -921,5 +943,5 @@ Events::UNIQUE_FIRE StageState::ConvertToPowerUpType(std::string type)
 	else
 	{
 		return Events::UNIQUE_FIRE::NONE;
-	}
+	}*/
 }
