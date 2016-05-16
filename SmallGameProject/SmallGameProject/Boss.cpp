@@ -57,6 +57,13 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 	temp3->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
 	this->abilities.push_back(temp3);
 
+	//DirectX::XMMATRIX bossWorldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f);
+	//DirectX::XMMATRIX worldMatrix;
+
+	//this->GetModel()->GetWorldMatrix(worldMatrix);
+
+	//this->GetModel()->SetWorldMatrix(bossWorldMatrix * worldMatrix);
+
 	return Entity::Initialize(model, entitySubject, isSphere);
 }
 bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere, std::vector<Ability*> abilities)
