@@ -31,7 +31,7 @@ GameData::GameData(GameData const &) : Observer()
 	//uzi
 	this->weaponArsenal.push_back(new Weapon(0.5f, 1.5f, 1.5f, 0.5f));
 
-	this->equipWeapon(Modifiers::WEAPON::SHOTGUN);
+	this->equipWeapon(Modifiers::WEAPON::PISTOL);
 
 	//initialize start powerup, this does in the stageState initialize
 
@@ -213,7 +213,12 @@ void GameData::EndStage(bool winner, float time)
 			this->points++;
 		}
 	}
-	
+	std::list<PowerUp*>::iterator walker = GameData::powerupArsenal.begin();
+	(*walker)->SetTimePowerup(0.0f);
+	walker++;
+	(*walker)->SetTimePowerup(0.0f);
+	walker++;
+	(*walker)->SetTimePowerup(0.0f);
 }
 
 int GameData::SpendPointOn(int stat) //0: dmg, 1: hp, 2: speed

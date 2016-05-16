@@ -11,7 +11,6 @@ HubState::HubState()
 	this->m_ground = Model();
 	this->portals = std::vector<Model>();
 	this->hubStatistics = UIHandler();
-	this->renderPlayerStats = false;
 
 	this->player = Player();
 
@@ -73,11 +72,31 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->hubStatistics.Initialize(gHandler);
 
 		//add the background
-		this->hubStatistics.AddElement(600, 100, 400, 500, "testUI.mtl", 1, false);
-		
+		this->hubStatistics.CreateTextHolder(32); // Powerups
 		this->hubStatistics.CreateTextHolder(32); // spread
 		this->hubStatistics.CreateTextHolder(32); // spitfire
 		this->hubStatistics.CreateTextHolder(32); // reverse bullets
+		int powerUps = GameData::GetInstance()->GetUnlockedPowerups();
+		std::string titleText = "Power-ups status:";
+		std::string arcfireText = "Arcfire unlocked";
+		std::string spitfireText = "Splitfire locked";
+		std::string reverseText = "Reversefire locked";
+		if (powerUps == 2)
+		{
+			spitfireText = "Splitfire unlocked";
+		}
+
+		else if (powerUps == 3)
+		{
+			spitfireText = "Splitfire unlocked";
+			reverseText = "Reversefire unlocked";
+		}
+
+		//400, 500
+		this->hubStatistics.UpdateTextHolder(0, titleText, 10, 175, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+		this->hubStatistics.UpdateTextHolder(1, arcfireText, 10, 200, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+		this->hubStatistics.UpdateTextHolder(2, spitfireText, 10, 220, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+		this->hubStatistics.UpdateTextHolder(3, reverseText, 10, 240, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
 
 		//Pull down the visor of epic particle effects
 		//A visor is the moving part of a helmet, namely the part that protects the eyes
@@ -193,52 +212,6 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
-
-	//update ui
-	if ((playerPos.x < 1.5f && playerPos.x > -5.5f) && (playerPos.z < -31.5f && playerPos.z > -40.5f))
-	{
-		int powerUps = GameData::GetInstance()->GetUnlockedPowerups();
-		std::string arcfireText = "";
-		std::string spitfireText = "";
-		std::string reverseText = "";
-
-		if (powerUps == 1)
-		{
-			arcfireText = "Arcfire unlocked";
-			spitfireText = "Splitfire locked";
-			reverseText = "Reversefire locked";
-		}
-
-		else if (powerUps == 2)
-		{
-			arcfireText = "Arcfire unlocked";
-			spitfireText = "Splitfire unlocked";
-			reverseText = "Reversefire locked";
-		}
-
-		else if (powerUps == 3)
-		{
-			//all powers unlocked
-			arcfireText = "Arcfire unlocked";
-			spitfireText = "Splitfire unlocked";
-			reverseText = "Reversefire unlocked";
-		}
-
-		
-
-		//400, 500
-
-		this->hubStatistics.UpdateTextHolder(0, arcfireText, 100, 500, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
-		this->hubStatistics.UpdateTextHolder(1, spitfireText, 100, 514, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
-		this->hubStatistics.UpdateTextHolder(2, reverseText, 100, 528, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
-	
-		this->renderPlayerStats = true;
-	}
-	else
-	{
-		this->renderPlayerStats = false;
-	}
-
 	
 	if (this->exitStage)
 	{
@@ -284,11 +257,7 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
 
 	gHandler->UIRender(this->player.GetUIHandler());
-	
-	if (this->renderPlayerStats == true)
-	{
-		gHandler->UIRender(&this->hubStatistics);
-	}
+	gHandler->UIRender(&this->hubStatistics);
 
 	return result;
 }
