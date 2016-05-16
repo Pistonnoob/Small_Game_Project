@@ -4,17 +4,44 @@ p-30,-30}
 p30,-30}
 new Level
 t5,A}
-{R}
 {M}
+{M}
+{M}
+{M}
+t10,S}
 {B}
-{}
-t5,S}
-{}
-{}
-{M}
-{}
+{B}
+{B}
+{B}
 t10,R}
-{M}
+{R}
+{R}
+{R}
+{R}
+new Level
+t5,A}
+{R, M}
+{R, M}
+{R, M}
+{R, M}
+t10, A}
+{B, B}
+{R, B}
+{B, B}
+{R, B}
+t10, A}
+{B, B, B, B, B, B}
+{}
+{}
+{B, B, B, B, B, B}
+t10, A}
+{R, R}
+{R, R}
+{R, R}
+{R, R}
+new level
+t20, A}
+{BOSS}
 {}
 {}
 {}
