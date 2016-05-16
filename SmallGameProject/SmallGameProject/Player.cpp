@@ -173,7 +173,7 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 
 	std::string text = "Damage: " + std::to_string(this->GetDamage());
 	this->uiHandler.UpdateTextHolder(0, text, 150, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
-	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
+	text = "Health: " + std::to_string(int(((this->health + GameData::GetInstance()->GetPlayerHealth()) * GameData::GetInstance()->GetWeaponHealthMod()) - this->damageTaken));
 	this->uiHandler.UpdateTextHolder(1, text, 270, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 	text = "Speed: " + std::to_string(int((this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed()));
 	this->uiHandler.UpdateTextHolder(2, text, 390, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
@@ -203,7 +203,7 @@ void Player::setWeapon(Weapon* weap)
 void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
-		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
@@ -211,7 +211,7 @@ void Player::MoveRight(float deltaTime)
 void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
-		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
@@ -219,7 +219,7 @@ void Player::MoveLeft(float deltaTime)
 void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
-		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
@@ -227,7 +227,7 @@ void Player::MoveUp(float deltaTime)
 void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
-		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
