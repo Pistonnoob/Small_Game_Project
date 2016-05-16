@@ -9,6 +9,7 @@
 #include "EmitterExplosion.h"
 #include "EmitterClusterExplosion.h"
 #include "EmitterSpawnPulse.h"
+#include "EmitterHolder.h"
 #include "GraphicHandler.h"
 #include "CameraHandler.h"
 
@@ -18,6 +19,7 @@ class ParticleHandler :
 private:
 	std::vector<ParticleEmitter*> emitters;
 	EmitterSpawnPulse spawnEmitter;
+	EmitterHolder holderEmitter;
 
 	Texture myTextures;
 	ID3D11Device* device;

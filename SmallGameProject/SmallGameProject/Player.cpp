@@ -114,6 +114,10 @@ void Player::HandleInput(InputHandler * input, float dTime)
 	{
 		this->entitySubject->Notify(this, Events::ENTITY::RANGED_DEAD);
 	}
+	if (input->isKeyPressed(DIK_5))
+	{
+		this->entitySubject->Notify(this, Events::ENTITY::PROJECTILE_DEAD);
+	}
 	if (input->isKeyDown(DIK_W)) {
 		this->MoveUp(dTime);
 	}

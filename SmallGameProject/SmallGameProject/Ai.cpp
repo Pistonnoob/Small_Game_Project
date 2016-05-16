@@ -54,7 +54,9 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
             this->commands.at(action) = nullptr;
             this->commands.erase(this->commands.begin() + action);
 
-        }
+		}
+		else
+			break;
     }
 	DirectX::XMFLOAT3 pos = actor->GetPosition();
 
