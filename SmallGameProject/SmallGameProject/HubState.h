@@ -24,9 +24,6 @@ private:	//Variables
 	ParticleHandler myParticleHandler;
 	UIHandler hubStatistics;
 
-	bool renderPlayerStats;
-
-
 	float t;
 
 	DirectX::XMFLOAT3 playerPos;

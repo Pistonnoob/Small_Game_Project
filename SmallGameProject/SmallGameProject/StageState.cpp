@@ -389,6 +389,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 		if (this->exitStage)
 		{
+			GameData::GetInstance()->EndStage(false, 0.0f);
 			this->exitStage = false;
 			//Pop ourself
 			GameState* state = this->m_GSH->PopState();
