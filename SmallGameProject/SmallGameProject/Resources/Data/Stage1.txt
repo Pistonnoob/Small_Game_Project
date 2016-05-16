@@ -25,21 +25,132 @@ t5,A}
 {R, M}
 {R, M}
 t10, A}
-{B, B}
-{R, B}
-{B, B}
-{R, B}
+{B}
+{B}
+{B}
+{B}
+new Level
 t10, A}
-{B, B, B, B, B, B}
+{B, B}
+{R, R}
+{B, B}
+{R, R}
+t10, A}
+{M, B}
+{M, B}
+{M, B}
+{M, B}
+t10, A}
+{B, B}
+{B, B}
+{B, B}
+{B, B}
+new Level
+t10, A}
+{M, M, R}
+{M, M, R}
+{M, M, R}
+{M, M, R}
+t5, A}
+{B, B, M}
+{B, B, M}
+{B, B, M}
+{B, B, M}
+new Level
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+new Level
+t1, A}
+{M, M, M}
 {}
 {}
-{B, B, B, B, B, B}
-t10, A}
-{R, R}
-{R, R}
-{R, R}
-{R, R}
-new level
+{}
+t3, A}
+{}
+{}
+{}
+{M, M, M}
+t1, A}
+{R}
+{M, M, M}
+{M, M, M}
+{R}
+new Level
+t1, A}
+{R, B}
+{}
+{}
+{R,B}
+t1, A}
+{}
+{B, B}
+{B, B}
+{}
+t3, A}
+{R}
+{R}
+{R}
+{R}
+new Level
+t1, A}
+{R, B}
+{R, B}
+{R, B}
+{R, B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+t1, A}
+{B}
+{B}
+{B}
+{B}
+new Level
 t20, A}
 {BOSS}
 {}
