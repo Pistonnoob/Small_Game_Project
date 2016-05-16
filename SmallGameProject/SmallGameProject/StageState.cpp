@@ -586,6 +586,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	//renders all the actors in the enemies vector
     Entity* temp;
+	Boss* bossEnt = nullptr;
 	for (int i = 0; i < this->enemies.size(); i++)
 	{
         temp = this->enemies.at(i);
@@ -602,10 +603,22 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
         DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
-        temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
+		
+		if (dynamic_cast<Boss*>(temp) != nullptr)
+		{
+			//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 
-		gHandler->DeferredRender(temp->GetModel(), &this->myCamera);
+			worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f) * worldMatrix;
+			temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
+			gHandler->DeferredRender(temp->GetModel(), &this->myCamera);
+		}
+		else
+		{
+			//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
+			temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
+			gHandler->DeferredRender(temp->GetModel(), &this->myCamera);
+		}
+
 
 	}
 

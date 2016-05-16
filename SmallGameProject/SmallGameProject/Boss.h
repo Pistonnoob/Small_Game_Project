@@ -21,7 +21,6 @@ public:
 	void Shutdown();
 
 	virtual void update(DirectX::XMFLOAT3 playerPos, float deltaTime);
-
 };
 
 #endif
