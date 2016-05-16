@@ -175,7 +175,7 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	this->uiHandler.UpdateTextHolder(0, text, 150, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
 	this->uiHandler.UpdateTextHolder(1, text, 270, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
-	text = "Speed: " + std::to_string((this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
+	text = "Speed: " + std::to_string(int((this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed()));
 	this->uiHandler.UpdateTextHolder(2, text, 390, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 	if (GameData::GetInstance()->getPowerup()) {
 		text = "PowerUp Timer: " + std::to_string(int(GameData::GetInstance()->getPowerup()->GetTimeLeft()));
