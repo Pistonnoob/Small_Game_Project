@@ -35,6 +35,7 @@ bool EmitterSpawnPulse::AddSpawnPulse(float x, float y, float z, float minSize, 
 	toInsert.r = r;
 	toInsert.g = g;
 	toInsert.b = b;
+	toInsert.a = 0.4f;
 	toInsert.uCoord = 0.0f;
 	//Insert it into our particle list
 	if (this->particles.size())
@@ -88,7 +89,7 @@ bool EmitterSpawnPulse::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCon
 	this->KillParticles();
 
 	//Update the particles
-	this->UpdateParticles(this->accumulatedTime);
+	this->UpdateParticles(dT);
 
 	//Update the dynamic vertex buffer with the new position of each particle
 	result = this->UpdateBuffers(deviceContext);
@@ -98,14 +99,12 @@ bool EmitterSpawnPulse::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCon
 	return true;
 }
 
-void EmitterSpawnPulse::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters & emitterParameters, int & amountOfParticles)
+void EmitterSpawnPulse::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters* emitterParameters, int & amountOfParticles)
 {
 	this->RenderBuffers(deviceContext);
 
-	ParticleShaderParameters parameters;
-
-	parameters.worldMatrix = this->world;
-	parameters.diffTexture = this->texture;
+	emitterParameters->worldMatrix = this->world;
+	emitterParameters->diffTexture = this->texture;
 	amountOfParticles = this->currentParticleCnt;
 }
 
@@ -225,7 +224,17 @@ bool EmitterSpawnPulse::InitializeBuffers(ID3D11Device * device)
 void EmitterSpawnPulse::UpdateParticles(float dT)
 {
 	//Version 2. Possible future experimental parallel version
-	Particle_Update up(dT);
+	Particle_Update up(dT / 1000000);
+	/*for (std::vector<Particle>::iterator particle = this->particles.begin(); particle != this->particles.end(); particle++)
+	{
+		float x = 0.0f, y = 0.0f;
+		particle->time += dT / 1000000;
+		Algorithm::GetSawtoothWave(x, y, particle->time, particle->timeCap / 6.0f, particle->minScale, particle->maxScale);
+		particle->scale = y;
+		particle->x = particle->x;
+		particle->z = particle->z;
+		particle->active = particle->time < particle->timeCap;
+	}*/
 	//std::for_each(this->particles.begin(), this->particles.end(), up);
 	std::transform(this->particles.begin(), this->particles.end(), this->particles.begin(), up);
 	////The parallel version. Wants to be compiled using cl.exe "/EHsc" without the ""
@@ -240,7 +249,7 @@ void EmitterSpawnPulse::KillParticles()
 	}*/
 	//this->particles.erase(std::remove_if(particles.begin(), particles.end(), my_predicate), particles.end());
 	this->particles.erase(std::remove_if(this->particles.begin(), this->particles.end(), [](Particle p) { return !p.active; }), this->particles.end());
-	//this->currentParticleCnt = this->particles.size();
+	this->currentParticleCnt = this->particles.size();
 }
 
 bool EmitterSpawnPulse::UpdateBuffers(ID3D11DeviceContext * deviceContext)
@@ -256,7 +265,8 @@ bool EmitterSpawnPulse::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 	{
 		//If the next node doesn't exist, return false. Our particle cnt is wrong
 		this->vertices[index].position = DirectX::XMFLOAT4(node.x, node.y, node.z, node.scale);
-		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.uCoord);
+		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.a);
+		this->vertices[index].particleIndex = node.uCoord;
 		index++;
 	}
 

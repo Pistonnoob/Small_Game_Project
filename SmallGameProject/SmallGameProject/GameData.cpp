@@ -25,27 +25,26 @@ GameData::GameData(GameData const &) : Observer()
 	this->playerScoreStage = 0;
 
 	//create pistol
-	this->weaponArsenal.push_back(Weapon());
+  	this->weaponArsenal.push_back(new Weapon(1.0f, 1.0f, 1.0f, 1.0f));
 	//shotgun
-	this->weaponArsenal.push_back(Weapon(15, 10, 5));
+	this->weaponArsenal.push_back(new Weapon(1.5f, 0.5f, 0.5f, 1.5f));
 	//uzi
-	this->weaponArsenal.push_back(Weapon(5, 10, 15));
+	this->weaponArsenal.push_back(new Weapon(0.5f, 1.5f, 1.5f, 0.5f));
+
+	this->equipWeapon(Modifiers::WEAPON::SHOTGUN);
 
 	//initialize start powerup, this does in the stageState initialize
 
 	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
 		this->playerUnlockedWeapons[i] = false;
+
 }
 
 GameData::~GameData()
 {
 	//isInstatiated = false;
 	//delete this->single;
-	for (int i = 0; i < 3; i++)
-	{
-		weaponArsenal.at(i).ShutDown();
-	}
-	
+	int temp = 0;
 }
 
 GameData* GameData::GetInstance()
@@ -61,14 +60,27 @@ GameData* GameData::GetInstance()
 
 void GameData::Shutdown()
 {
-	
-	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
-	{
-		weaponArsenal.at(i).ShutDown();
-	}
+
     if (this->isGameStageInit)
     {
-        GameData::ShutdownStageStateGD();
+		for (int i = 0; i < Modifiers::nrOfWeapons; i++)
+		{
+			weaponArsenal.at(i)->ShutDown();
+			delete weaponArsenal.at(i);
+			weaponArsenal.at(i) = nullptr;
+		}
+
+
+		std::list<PowerUp*>::iterator walker;
+		walker = GameData::powerupArsenal.begin();
+		(*walker)->Shutdown();
+		delete (*walker);
+		walker++;
+		(*walker)->Shutdown();
+		delete (*walker);
+		walker++;
+		(*walker)->Shutdown();
+		delete (*walker);
     }
 	
 	isInstatiated = false;
@@ -98,9 +110,8 @@ void GameData::Update(float deltaTime)
 
 }
 
-std::list<PowerUp*> GameData::getPowerup()
+PowerUp* GameData::getPowerup()
 {
-	std::list<PowerUp*>toReturn;
 	std::list<PowerUp*>::iterator iterator;
 
 	//iterate throwugh the list
@@ -108,9 +119,9 @@ std::list<PowerUp*> GameData::getPowerup()
 	{
 		//if the powerup is active
 		if(0.0f < (*iterator)->GetTimeLeft())
-			toReturn.push_back((*iterator));
+			return (*iterator);
 	}
-	return toReturn;
+	return nullptr;
 }
 
 PowerUp * GameData::GetRandomPowerup()
@@ -142,7 +153,6 @@ void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext*
 {
 	if (GameData::isGameStageInit == false)
 	{
-		srand((unsigned)time(NULL));
 
 		unlockPowerUp(Events::UNIQUE_FIRE::ARCFIRE);
 		unlockPowerUp(Events::UNIQUE_FIRE::SPLITFIRE);
@@ -150,11 +160,18 @@ void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext*
 
 		std::list<PowerUp*>::iterator walker;
 		walker = GameData::powerupArsenal.begin();
- 		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
-		walker++;
 		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
 		walker++;
 		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
+		walker++;
+		(*walker)->Initialize(device, deviceContext, "power_supplier_box_reduced", true, playerSubject);
+
+		GameData* ptr = nullptr;
+		ptr = GameData::GetInstance();
+
+		ptr->weaponArsenal.at(0)->Initialize(device, deviceContext, "Gun");
+		ptr->weaponArsenal.at(1)->Initialize(device, deviceContext, "Lazer");
+		ptr->weaponArsenal.at(2)->Initialize(device, deviceContext, "Lazer");
 
 		GameData::isGameStageInit = true;
 	}
@@ -163,16 +180,7 @@ void GameData::InitializeStageStateGD(ID3D11Device* device, ID3D11DeviceContext*
 void GameData::ShutdownStageStateGD()
 {
 
-	std::list<PowerUp*>::iterator walker;
-	walker = GameData::powerupArsenal.begin();
-	(*walker)->Shutdown();
-	delete (*walker);
-	walker++;
-	(*walker)->Shutdown();
-	delete (*walker);
-	walker++;
-	(*walker)->Shutdown();
-	delete (*walker);
+
     /*
 	PowerUp* toRemove = nullptr;
 
@@ -191,9 +199,10 @@ void GameData::NewStage()
 	this->playerScoreStage = 0;
 }
 
-void GameData::EndStage(bool winner)
+void GameData::EndStage(bool winner, float time)
 {
 	if (winner) {
+		this->playerScoreStage = this->playerScoreStage * (GOAL_TIME / time);
 		if (this->playerScoreStage > this->playerHighScore) {
 			this->playerHighScore = this->playerScoreStage;
 		}
@@ -300,13 +309,22 @@ void GameData::OnNotify(Entity * entity, Events::PICKUP evnt)
 	{
 	case Events::PICKUP::PICKUP_SPREAD:
 		(*walker)->SetTimePowerup(10.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		break;
 	case Events::PICKUP::PICKUP_SPITFIRE:
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
 		(*walker)->SetTimePowerup(10.0f);
+		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		break;
 	case Events::PICKUP::PICKUP_REVERSERBULLETS:
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
+		(*walker)->SetTimePowerup(0.0f);
 		walker++;
 		(*walker)->SetTimePowerup(10.0f);
 		break;
@@ -361,7 +379,6 @@ bool GameData::LoadPlayerData(std::string filename)
 
 		loadFile.close();
 	}
-
 	return true;
 }
 
@@ -370,9 +387,9 @@ void GameData::Render(GraphicHandler * gHandler, CameraHandler * camera)
 	system("pause");
 }
 
-Weapon * GameData::GetWeapon(int weaponEnum)
+Weapon * GameData::GetWeapon()
 {
-	return &weaponArsenal[0];
+	return weaponArsenal[this->equipedWeapon];
 }
 
 int GameData::GetEnemiesKilledInStage()
@@ -413,4 +430,24 @@ int GameData::GetPoints()
 int GameData::GetUnlockedPowerups() const
 {
 	return this->nrOfUnlockedPowers;
+}
+
+float GameData::GetWeaponAttackMod() const
+{
+	return this->weaponArsenal.at(this->equipedWeapon)->GetAttackDamageMod();
+}
+
+float GameData::GetWeaponHealthMod() const
+{
+	return this->weaponArsenal.at(this->equipedWeapon)->GetHealthMod();
+}
+
+float GameData::GetWeaponMovementSpeed() const
+{
+	return this->weaponArsenal.at(this->equipedWeapon)->GetAttackSpeedMod();
+}
+
+void GameData::equipWeapon(Modifiers::WEAPON toEquip)
+{
+	this->equipedWeapon = toEquip;
 }

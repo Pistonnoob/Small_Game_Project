@@ -19,8 +19,8 @@ const int SCORE_VALUE_RANGED = 150;
 
 const int EXP_PER_POINT = 10;
 const float EXP_PER_SCORE = 0.1f;
-const int EXP_NEED_INC = 0;
 const int INC_PER_POINT = 10;
+const float GOAL_TIME = 20.0f;
 
 class GameData : public Observer
 {
@@ -28,15 +28,18 @@ private:
 	static bool isInstatiated;	//Check flag
 	static bool isGameStageInit; //check for powerup list
 	static int nrOfUnlockedPowers;
+	Modifiers::WEAPON equipedWeapon;
 
 	static GameData* single;
 	static int nrOfActivePowerups;
 
 	GameData(GameData const&);
 	int playerHighScore;
+
 	int playerHealth;
 	int playerMovmentSpeed;
 	int playerDamage;
+	float attackSpeed;
 
 	int experience;
 	int points;
@@ -48,8 +51,8 @@ private:
 	//Achivement Related
 	int enemiesKilled;
 
-	//weapom related
-	std::vector<Weapon>weaponArsenal;
+	//weapon related
+	std::vector<Weapon*>weaponArsenal;
 	static std::list<PowerUp*>powerupArsenal;
 
 	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
@@ -60,7 +63,7 @@ public:
 
 	void Shutdown();
 	static void Update(float deltaTime);
-	static std::list<PowerUp*> getPowerup();
+	static PowerUp* getPowerup();
 	static PowerUp* GetRandomPowerup();
 
 	static void unlockPowerUp(Events::UNIQUE_FIRE newPower);
@@ -71,7 +74,7 @@ public:
 	static void ShutdownStageStateGD();
 
 	void NewStage();
-	void EndStage(bool winner);
+	void EndStage(bool winner, float time);
 	int SpendPointOn(int stat);
 
 	void OnNotify(Entity* entity, Events::ENTITY evnt);
@@ -88,7 +91,7 @@ public:
 
 	void Render(GraphicHandler * gHandler, CameraHandler* camera);
 
-	Weapon* GetWeapon(int weaponEnum);
+	Weapon* GetWeapon();
 	int GetEnemiesKilledInStage();
 	int GetScoreInStage();
 	int GetHighScore();
@@ -97,6 +100,13 @@ public:
 	int GetPlayerMoveSpeed();
 	int GetPoints();
 	int GetUnlockedPowerups() const;
+	
+	float GetWeaponAttackMod() const;
+	float GetWeaponHealthMod() const;
+	float GetWeaponMovementSpeed() const;
+
+
+	void equipWeapon(Modifiers::WEAPON);
 };
 
 #endif

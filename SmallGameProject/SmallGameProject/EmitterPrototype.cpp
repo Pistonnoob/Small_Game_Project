@@ -79,15 +79,15 @@ bool EmitterPrototype::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCont
 	return true;
 }
 
-void EmitterPrototype::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles)
+void EmitterPrototype::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters* emitterParameters, int& amountOfParticles)
 {
 	//NOT IMPLEMENTED
 	this->RenderBuffers(deviceContext);
 
 	ParticleShaderParameters parameters;
 
-	parameters.worldMatrix = this->world;
-	parameters.diffTexture = this->texture;
+	emitterParameters->worldMatrix = this->world;
+	emitterParameters->diffTexture = this->texture;
 	amountOfParticles = this->currentParticleCnt;
 }
 
@@ -313,6 +313,7 @@ void EmitterPrototype::EmittParticles(float dT)
 			this->particles[index].r = red;
 			this->particles[index].g = green;
 			this->particles[index].b = blue;
+			this->particles[index].a = 0.4f;
 			this->particles[index].velocity = velocity;
 			this->particles[index].active = true;
 			this->particles[index].scale = 0.4f;
@@ -397,7 +398,8 @@ bool EmitterPrototype::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 	for (int i = 0; i < this->currentParticleCnt; i++)
 	{
 		this->vertices[i].position = DirectX::XMFLOAT4(this->particles[i].x, this->particles[i].y, this->particles[i].z, this->particles[i].scale);
-		this->vertices[i].color = DirectX::XMFLOAT4(this->particles[i].r, this->particles[i].g, this->particles[i].b, this->particles[i].uCoord);
+		this->vertices[i].color = DirectX::XMFLOAT4(this->particles[i].r, this->particles[i].g, this->particles[i].b, this->particles[i].a);
+		this->vertices[i].particleIndex = this->particles[i].uCoord;
 
 	}
 

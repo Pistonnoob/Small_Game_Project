@@ -52,6 +52,8 @@ int HubState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 	ID3D11Device* device = gHandler->GetDevice();
 	ID3D11DeviceContext* deviceContext = gHandler->GetDeviceContext();
 
+	GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
+
 	//Arm thy father
 	result = this->InitializeBase(GSH, device, deviceContext);
 	if (result)
@@ -142,6 +144,25 @@ int HubState::HandleInput(InputHandler * input)
 
 	if (input->isKeyPressed(DIK_ESCAPE))
 		this->exitStage = true;
+	if (input->isKeyPressed(DIK_1))
+	{
+		GameData::GetInstance()->equipWeapon(Modifiers::WEAPON::PISTOL);
+		this->player.setWeapon(GameData::GetInstance()->GetWeapon());
+	}
+
+	if (input->isKeyPressed(DIK_2))
+	{
+		GameData::GetInstance()->equipWeapon(Modifiers::WEAPON::SHOTGUN);
+		this->player.setWeapon(GameData::GetInstance()->GetWeapon());
+	}
+
+	if (input->isKeyPressed(DIK_3))
+	{
+		GameData::GetInstance()->equipWeapon(Modifiers::WEAPON::UZI);
+		this->player.setWeapon(GameData::GetInstance()->GetWeapon());
+	}
+	
+
 
 	return result;
 }
@@ -203,6 +224,8 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 			reverseText = "Reversefire unlocked";
 		}
 
+		
+
 		//400, 500
 
 		this->hubStatistics.UpdateTextHolder(0, arcfireText, 100, 500, DirectX::XMFLOAT3(0, 0, 0), 1.0f);
@@ -254,7 +277,7 @@ int HubState::Render(GraphicHandler * gHandler, HWND hwnd)
 
 	gHandler->ShadowRender(this->player.GetModel(), &this->myCamera);
 	gHandler->ShadowRender(this->player.GetWeapon()->GetModel(), &this->myCamera);
-	gHandler->ShadowRender(&this->m_ground, &this->myCamera);
+	//gHandler->ShadowRender(&this->m_ground, &this->myCamera);
 
 	gHandler->LightRender(this->myCamera.GetCameraPos(), this->pointLights);
 

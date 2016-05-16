@@ -4,7 +4,6 @@
 #include <cstdlib>
 Ai::Ai()
 {
-    srand(unsigned(time(0)));
     this->nrOfActions = 2;
 }
 Ai::~Ai()
@@ -73,11 +72,11 @@ void Ai::updateBomber(BomberEnemy* actor, DirectX::XMFLOAT3 playerPos, float del
 {
 
 	float distance = distanceBetween(actor->GetPosition(), playerPos);
-    if (distance > 7.5f)
+    if (distance > 5.5f)
     {
         moveToPlayer(actor, playerPos);
     }
-	if (distance < 250.0f)
+	if (distance < 16.0f)
 	{
 		bool canExlpode = actor->ChargeExplosion(deltaTime);
 		if (canExlpode == true)

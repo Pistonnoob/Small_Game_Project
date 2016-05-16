@@ -30,10 +30,11 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 		return false;
 	}
 	this->entitySubject->Notify(this, Events::ENTITY::PLAYER_CREATED);
-	this->playerWeapon = new Weapon();
-	if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
-		return false;
-	}
+	//this->playerWeapon = new Weapon();
+	//if (!this->playerWeapon->Initialize(device, deviceContext, weaponModelFile)) {
+	//	return false;
+	//}
+	this->playerWeapon = GameData::GetInstance()->GetWeapon();
 
 	//Rotation matrix
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(0);
@@ -66,17 +67,18 @@ bool Player::Initialize(GraphicHandler* graphicsH, std::string playerModelFilena
 	this->uiHandler.CreateTextHolder(32);
 	this->uiHandler.CreateTextHolder(32);
 	this->uiHandler.CreateTextHolder(32);
+	this->uiHandler.CreateTextHolder(32);
 
 	return true;
 }
 
 void Player::Shutdown()
 {
-	if (this->playerWeapon) {
-		this->playerWeapon->ShutDown();
-		delete this->playerWeapon;
-		this->playerWeapon = nullptr;
-	}
+	//if (this->playerWeapon) {
+		//this->playerWeapon->ShutDown();
+		//delete this->playerWeapon;
+		//this->playerWeapon = nullptr;
+	//}
 
 	this->uiHandler.Shutdown();
 
@@ -160,17 +162,28 @@ void Player::Update(InputHandler* input, GraphicHandler* gHandler, CameraHandler
 	//weapon matrix
 	this->entityModel->GetWorldMatrix(playerWorldMatrix);
 	DirectX::XMMATRIX weaponWorldMatrix = playerWorldMatrix;
+
+	DirectX::XMMATRIX weaponRot = DirectX::XMMatrixRotationY(1.5) * weaponWorldMatrix;
+	weaponWorldMatrix = DirectX::XMMatrixScaling(0.75f, 0.75f, 0.75f) * weaponRot;
+
 	offset = DirectX::XMMatrixTranslation(2.5f, 1.0f, 0.0f);
 	weaponWorldMatrix = offset * weaponWorldMatrix;
 
 	this->playerWeapon->GetModel()->SetWorldMatrix(weaponWorldMatrix);
 
-	std::string text = "Damage: " + std::to_string(this->damage + GameData::GetInstance()->GetPlayerDamage());
+	std::string text = "Damage: " + std::to_string(this->GetDamage());
 	this->uiHandler.UpdateTextHolder(0, text, 150, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
-	text = "Health: " + std::to_string((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken);
+	text = "Health: " + std::to_string(int(((this->health + GameData::GetInstance()->GetPlayerHealth()) * GameData::GetInstance()->GetWeaponHealthMod()) - this->damageTaken));
 	this->uiHandler.UpdateTextHolder(1, text, 270, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
-	text = "Speed: " + std::to_string(this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed());
+	text = "Speed: " + std::to_string(int((this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed()));
 	this->uiHandler.UpdateTextHolder(2, text, 390, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	if (GameData::GetInstance()->getPowerup()) {
+		text = "PowerUp Timer: " + std::to_string(int(GameData::GetInstance()->getPowerup()->GetTimeLeft()));
+	}
+	else {
+		text = "";
+	}
+	this->uiHandler.UpdateTextHolder(3, text, 510, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 
 
 	GameData::Update(deltaTime);
@@ -181,11 +194,16 @@ Weapon * Player::GetWeapon()
 	return this->playerWeapon;
 }
 
+void Player::setWeapon(Weapon* weap)
+{
+	this->playerWeapon = weap;
+}
+
 
 void Player::MoveRight(float deltaTime)
 {
 	if (this->posX < 42.0f) {
-		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
@@ -193,7 +211,7 @@ void Player::MoveRight(float deltaTime)
 void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
-		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
@@ -201,7 +219,7 @@ void Player::MoveLeft(float deltaTime)
 void Player::MoveUp(float deltaTime)
 {
 	if (this->posZ < 42.0f) {
-		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
@@ -209,7 +227,7 @@ void Player::MoveUp(float deltaTime)
 void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
-		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()));
+		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
 }
 
@@ -224,13 +242,13 @@ void Player::Fire(float deltaT)
 	DirectX::XMStoreFloat3(&this->aimDir, this->forwardDir);
 
 	this->aimDir.x = DirectX::XMVectorGetX(this->forwardDir);
-	this->aimDir.z = DirectX::XMVectorGetY(this->forwardDir);
+	this->aimDir.z = DirectX::XMVectorGetZ(this->forwardDir);
 	this->aimDir.y = 0.0f;
 
-	if (GameData::getNrOfActivePowerups() != 0)
+	PowerUp* activePows = GameData::getPowerup();
+	if (activePows)
 	{
-		std::list<PowerUp*> activePows = GameData::getPowerup();
-		this->playerWeapon->ShootWeapon(this, activePows.front()->GetType());
+		this->playerWeapon->ShootWeapon(this, activePows->GetType());
 	}
 	
 	else
@@ -244,36 +262,22 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 {
 	// The angle is calculated in Normal Device Space
 
-	DirectX::XMVECTOR playerPos = DirectX::XMVectorSet(this->posX, 0, this->posZ, 1);
-	DirectX::XMMATRIX modelWorld;
+	DirectX::XMVECTOR playerPos = DirectX::XMVectorSet(this->posX, 0.0f, this->posZ, 1);
+	DirectX::XMVECTOR dirVec;
 	DirectX::XMMATRIX cameraView;
+	DirectX::XMMATRIX cameraViewInverse;
 	DirectX::XMMATRIX projection;
+	DirectX::XMMATRIX projectionInverse;
+	DirectX::XMFLOAT4X4 projectionFloat;
 	int screenWidth = gHandler->GetScreenWidth();
 	int screenHeight = gHandler->GetScreenHeight();
 
-	this->entityModel->GetWorldMatrix(modelWorld);
 	cameraH->GetViewMatrix(cameraView);
+	cameraViewInverse = DirectX::XMMatrixInverse(NULL, cameraView);
 	projection = gHandler->GetPerspectiveMatrix();
+	projectionInverse = DirectX::XMMatrixInverse(NULL, projection);
+	DirectX::XMStoreFloat4x4(&projectionFloat, projection);
 	
-	//DirectX::XMMATRIX clipMatrix = modelWorld * cameraView * projection;
-
-	//playerPos = DirectX::XMVector3TransformCoord(playerPos, modelWorld);
-	playerPos = DirectX::XMVector4Transform(playerPos, cameraView);
-	playerPos = DirectX::XMVector4Transform(playerPos, projection);
-
-	//Move player pos to a float4 to be able to devide each value with w
-	DirectX::XMFLOAT4 v;
-	DirectX::XMStoreFloat4(&v, playerPos);
-
-	v.x = v.x / v.w;
-	v.y = v.y / v.w;
-	v.z = v.z / v.w;
-
-	// Re-save it
-	playerPos = DirectX::XMLoadFloat4(&v);
-
-	DirectX::XMFLOAT4X4 tempProj;
-	DirectX::XMStoreFloat4x4(&tempProj, projection);
 
 	//Move the cords to the window
 	float mouseX = mousePos.x - (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
@@ -281,39 +285,64 @@ void Player::RotatePlayerTowardsMouse(DirectX::XMFLOAT2 mousePos, GraphicHandler
 
 	// Get the mouse pos in -1, 1
 	mouseX = (((2 * mouseX) / screenWidth) - 1);
-	mouseY = (((-2 * mouseY) / screenHeight) + 1);
+	mouseY = ((-(2 * mouseY) / screenHeight) + 1);
 
-	//Move the pos to a vector
-	DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet( mouseX, mouseY , 1, 1);
-	//DirectX::XMVECTOR mousePosV = DirectX::XMVectorSet(mouseX, 0, mouseY, 1);
-	
-	//Direction vector
-	DirectX::XMVECTOR dirVec = DirectX::XMVector2Normalize(DirectX::XMVectorSubtract(mousePosV, playerPos));
-	this->forwardDir = dirVec;
-	float angle = atan2(DirectX::XMVectorGetY(dirVec), DirectX::XMVectorGetX(dirVec));
-	
-	//Create the rotation matrix
+	mouseX /= projectionFloat._11;
+	mouseY /= projectionFloat._22;
+
+	DirectX::XMFLOAT4 cameraPos = cameraH->GetCameraPos();
+
+	DirectX::XMVECTOR rayO = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+	DirectX::XMVECTOR rayD = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(mouseX, mouseY, 1.0f));
+
+	rayO = DirectX::XMVector3TransformCoord(rayO, cameraViewInverse);
+	rayD = DirectX::XMVector3TransformNormal(rayD, cameraViewInverse);
+
+	float t = 0.0f;
+	XMVECTOR planeNormal = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR dDot = DirectX::XMVector3Dot(planeNormal, playerPos);
+	float d = DirectX::XMVectorGetX(dDot);
+	float topRight = (DirectX::XMVectorGetX(planeNormal) * DirectX::XMVectorGetX(rayO) + DirectX::XMVectorGetY(planeNormal) * DirectX::XMVectorGetY(rayO) + DirectX::XMVectorGetZ(planeNormal) * DirectX::XMVectorGetZ(rayO));
+	float altTopRight = DirectX::XMVectorGetX(DirectX::XMVector3Dot(planeNormal, rayO));
+	float bottom = (DirectX::XMVectorGetX(planeNormal) * DirectX::XMVectorGetX(rayD) + DirectX::XMVectorGetY(planeNormal) * DirectX::XMVectorGetY(rayD) + DirectX::XMVectorGetZ(planeNormal) * DirectX::XMVectorGetZ(rayD));
+	float altBottom = DirectX::XMVectorGetX(DirectX::XMVector3Dot(planeNormal, rayD));
+	t = (-d -altTopRight)/altBottom;
+
+	DirectX::XMVECTOR intersectionPoint = rayO + rayD * t;
+	DirectX::XMVECTOR playerToInter = intersectionPoint - playerPos;
+	dirVec = DirectX::XMVector3Normalize(playerToInter);
+
+	//Calculate the float angle between intersectionPoint and player pos
+	float angle = 0.0f;
+	angle = atan2(DirectX::XMVectorGetZ(playerToInter), DirectX::XMVectorGetX(playerToInter));
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationY(-angle);
 
+
+	this->forwardDir = dirVec;
+
+	
 	//Apply rotation
 	DirectX::XMMATRIX weaponModelMatrix;
 	DirectX::XMMATRIX playermodelMatrix;
 	this->playerWeapon->GetModel()->GetWorldMatrix(weaponModelMatrix);
 	this->entityModel->GetWorldMatrix(playermodelMatrix);
 
-	//this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
+	this->playerWeapon->GetModel()->SetWorldMatrix(rotationMatrix * weaponModelMatrix);
 	this->entityModel->SetWorldMatrix(rotationMatrix * playermodelMatrix);
 
 }
 
 unsigned int Player::GetDamage()
 {
-	return this->damage + GameData::GetInstance()->GetPlayerDamage();
+	GameData* ptr = nullptr;
+	ptr = GameData::GetInstance();
+
+	return (this->damage + ptr->GetPlayerDamage()) * ptr->GetWeaponAttackMod();
 }
 
 bool Player::IsAlive()
 {
-	if ((this->health + GameData::GetInstance()->GetPlayerHealth()) - this->damageTaken <= 0) {
+	if (((this->health + GameData::GetInstance()->GetPlayerHealth()) * GameData::GetInstance()->GetWeaponHealthMod()) - this->damageTaken <= 0) {
 		return false;
 	}
 
@@ -328,11 +357,11 @@ UIHandler * Player::GetUIHandler()
 void Player::SetLevel(int level)
 {
 	std::string text = "Level: " + std::to_string(level);
-	this->uiHandler.UpdateTextHolder(3, text, 590, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	this->uiHandler.UpdateTextHolder(4, text, 710, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 }
 
 void Player::SetWave(int wave)
 {
 	std::string text = "Wave: " + std::to_string(wave);
-	this->uiHandler.UpdateTextHolder(4, text, 680, 20, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
+	this->uiHandler.UpdateTextHolder(5, text, 710, 40, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.5f);
 }

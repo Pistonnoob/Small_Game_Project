@@ -4,6 +4,7 @@
 #include "Enemy.h"
 
 static float M_ATTACK_DELAY = 3.0f;
+static float M_MOVEMENT_SPEED = 10.0f;
 
 class MeleeEnemy : public Enemy {
 
@@ -16,6 +17,10 @@ public:
 	bool Initialize(Model* model, EntitySubject* entitySubject, bool isSphere);
 	void Shutdown();
 
+	virtual void MoveRight(float deltaTime);
+	virtual void MoveLeft(float deltaTime);
+	virtual void MoveUp(float deltaTime);
+	virtual void MoveDown(float deltaTime);
 	virtual void Fire(float deltaTime);
 };
 

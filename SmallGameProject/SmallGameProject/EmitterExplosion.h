@@ -10,7 +10,7 @@ private:
 	struct Particle {
 		//Variables
 		float x, y, z, scale;
-		float r, g, b, uCoord;
+		float r, g, b, a, uCoord;
 		float dX, dZ;
 		//Not the true distance but close enough
 		float timeCap;
@@ -32,6 +32,7 @@ private:
 			node.z = node.dZ * node.time;
 			node.r = 1.0f - pow(node.time / node.timeCap, 2);
 			node.g = 0.8 - node.time / node.timeCap;
+			node.a = 0.4f * (node.r + node.g);
 			return node;
 		};
 		//void operator()(Particle& element) { element.time += dT; Algorithm::GetEllipse(element.x, element.y, element.time * element.velocity, element.time, element.time); };
@@ -50,7 +51,7 @@ public:
 
 	bool Initialize(ID3D11Device* device, ID3D11ShaderResourceView* texture, float timeLimit = 1.0f);
 	bool UpdateSpecific(float dT, ID3D11DeviceContext* deviceContext);
-	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters& emitterParameters, int& amountOfParticles);
+	void Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters* emitterParameters, int& amountOfParticles);
 
 	ID3D11ShaderResourceView* GetTexture();
 	int GetIndexCount();

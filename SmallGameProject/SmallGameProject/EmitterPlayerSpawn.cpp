@@ -64,15 +64,13 @@ bool EmitterPlayerSpawn::UpdateSpecific(float dT, ID3D11DeviceContext * deviceCo
 	return true;
 }
 
-void EmitterPlayerSpawn::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters & emitterParameters, int & amountOfParticles)
+void EmitterPlayerSpawn::Render(ID3D11DeviceContext * deviceContext, ParticleShaderParameters* emitterParameters, int & amountOfParticles)
 {
 	//NOT IMPLEMENTED
 	this->RenderBuffers(deviceContext);
 
-	ParticleShaderParameters parameters;
-
-	parameters.worldMatrix = this->world;
-	parameters.diffTexture = this->texture;
+	emitterParameters->worldMatrix = this->world;
+	emitterParameters->diffTexture = this->texture;
 	amountOfParticles = this->currentParticleCnt;
 }
 
@@ -236,6 +234,7 @@ void EmitterPlayerSpawn::EmittParticles(float dT)
 			toInsert.r = red;
 			toInsert.g = green;
 			toInsert.b = blue;
+			toInsert.a = 0.4f;
 			toInsert.uCoord = 0.25f;
 			toInsert.time = timeIndex * (1 / this->particlesPerSecond);
 			toInsert.timeCap = this->particleTimeLimit;
@@ -330,7 +329,8 @@ bool EmitterPlayerSpawn::UpdateBuffers(ID3D11DeviceContext * deviceContext)
 	{
 		//If the next node doesn't exist, return false. Our particle cnt is wrong
 		this->vertices[index].position = DirectX::XMFLOAT4(node.x, node.y, node.z, node.scale);
-		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.uCoord);
+		this->vertices[index].color = DirectX::XMFLOAT4(node.r, node.g, node.b, node.a);
+		this->vertices[index].particleIndex = node.uCoord;
 		index++;
 	}
 		

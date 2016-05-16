@@ -15,6 +15,7 @@ public:
 
 	float GetTimeLeft() const;
 	void SetTimePowerup(float timeActive);
+	void setType(Events::UNIQUE_FIRE type);
 	Events::UNIQUE_FIRE GetType() const;
 
 

@@ -12,7 +12,8 @@
 #include "GameData.h"
 #include "UIHandler.h"
 #include "GameData.h"
-
+#include "Algorithm.h"
+using namespace DirectX;
 class Player : public Actor {
 
 private:
@@ -40,6 +41,7 @@ public:
 	void Update(InputHandler* input,GraphicHandler* gHandler, CameraHandler* cameraH, float deltaTime);
 
 	Weapon* GetWeapon();
+	void setWeapon(Weapon* weap);
 
 	virtual void MoveRight(float deltaTime);
 	virtual void MoveLeft(float deltaTime);

@@ -408,5 +408,3 @@ bool SoundHandler::PlayWaveFile(char* fileName)
 
 	return false;	//If there was matching file name
 }
-
-
