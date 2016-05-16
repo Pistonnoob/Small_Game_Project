@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 
-const int NUMBER_OF_SOUNDS = 3;
+const int NUMBER_OF_SOUNDS = 4;
 
 class SoundHandler
 {

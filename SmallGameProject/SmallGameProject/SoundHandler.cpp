@@ -76,6 +76,13 @@ bool SoundHandler::Initialize(HWND hwnd)
 	{
 		return false;
 	}
+	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\teleport.wav", &this->secondaryBuffers.at(3));
+	this->fileNames[3] = "teleport";
+	if (!result)
+	{
+		return false;
+	}
+
 
 
 	return true;
@@ -387,6 +394,7 @@ bool SoundHandler::PlayWaveFile(char* fileName)
 				return false;
 			}
 
+
 			// Play the contents of the secondary sound buffer.
 			result = secondaryBuffer->Play(0, 0, 0);
 			if (FAILED(result))
@@ -401,5 +409,3 @@ bool SoundHandler::PlayWaveFile(char* fileName)
 
 	return false;	//If there was matching file name
 }
-
-

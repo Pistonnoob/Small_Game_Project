@@ -48,24 +48,33 @@ void AudioHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		this->soundH->PlayWaveFile("gun");
 	}
 	else if (evnt == Events::ENTITY::MELEE_DEAD
-		|| Events::ENTITY::BOMBER_DEAD
-		|| Events::ENTITY::RANGED_DEAD) 
+		|| evnt == Events::ENTITY::BOMBER_DEAD
+		|| evnt == Events::ENTITY::RANGED_DEAD)
 	{
 		this->soundH->PlayWaveFile("explosion");
+	}
+	else if(evnt == Events::MELEE_CREATED 
+		|| evnt == Events::BOMBER_CREATED
+		|| evnt == Events::RANGED_CREATED)
+	{
+		this->soundH->PlayWaveFile("teleport");
 	}
 
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets)
 {
+	this->soundH->PlayWaveFile("gun");
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay)
 {
+	this->soundH->PlayWaveFile("gun");
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::UNIQUE_FIRE evnt, float arc, int nrOfBullets, float triggerDelay, float arcOnSplit, int projectilesOnSplit)
 {
+	this->soundH->PlayWaveFile("gun");
 }
 
 void AudioHandler::OnNotify(Entity * entity, Events::ABILITY_TRIGGER evnt, float arc, int nrOfBullets)
