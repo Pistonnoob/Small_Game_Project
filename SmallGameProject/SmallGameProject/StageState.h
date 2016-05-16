@@ -15,7 +15,7 @@
 #include "AudioHandler.h"
 #include <chrono>
 
-const int LEVELS_TO_CHECKPOINT = 2;
+const int LEVELS_TO_CHECKPOINT = 5;
 
 struct ToSpawn
 {

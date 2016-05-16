@@ -808,25 +808,28 @@ void StageState::HandleWaveSpawning(float deltaTime)
     {
         if (this->currentLevel < this->levels.size())
         {
-            this->currentWave++;
-			this->player.SetWave(this->currentWave + 1);
-            if (this->currentWave >= this->levels.at(this->currentLevel).wave.size() && this->enemies.size() == 0)
-            {
-                this->currentWave = 0;
-                this->currentLevel++;
-				this->player.SetWave(this->currentWave + 1);
-				this->player.SetLevel(this->currentLevel + 1);
-            }
-            if (this->currentLevel < this->levels.size())
-            {
-                this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
-                SpawnWave(this->currentLevel, this->currentWave);
-            }
-			else {
-				//If the Level has spawned all waves
-				this->isCompleted = true;
-				this->currentLevel--;
+			if (this->currentWave < this->levels.at(this->currentLevel).wave.size() - 1) {
+				this->currentWave++;
 			}
+			else {
+				if (this->enemies.size() == 0) {
+					if (this->currentLevel + 1 < this->levels.size()) {
+						this->currentLevel++;
+						this->currentWave = 0;
+					}
+					else {
+						this->isCompleted = true;
+						return;
+					}
+				}
+				else {
+					return;
+				}
+			}
+			SpawnWave(this->currentLevel, this->currentWave);
+			this->timeToNextWave = this->levels.at(this->currentLevel).wave.at(this->currentWave).time;
+			this->player.SetWave(this->currentWave + 1);
+			this->player.SetLevel(this->currentLevel + 1);
         }
     }
 }
