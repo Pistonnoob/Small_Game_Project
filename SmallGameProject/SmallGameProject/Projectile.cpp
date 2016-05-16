@@ -48,6 +48,10 @@ DirectX::XMFLOAT3 Projectile::getMoveDir()
 {
     return this->moveDir;
 }
+DirectX::XMFLOAT3 Projectile::GetAimDir()
+{
+	return this->moveDir;
+}
 DirectX::XMFLOAT3 Projectile::getPos()
 {
     DirectX::XMFLOAT3 pos = DirectX::XMFLOAT3(this->posX, 0, this->posZ);

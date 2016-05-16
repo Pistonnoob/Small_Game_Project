@@ -28,12 +28,11 @@ private:
 			float x = 0.0f, y = 0.0f;
 			node.time += dT;
 			//Let it scale from max to min through its lifetime
-			float existedFor = node.time / node.timeCap;
-			float newScale = node.maxScale * existedFor + node.minScale;
+			float newScale = node.maxScale * (1.0f - node.time / node.timeCap) + node.minScale;
 			node.scale = newScale;
-			node.x = node.originX + node.dX * node.time;
-			node.z = node.originZ + node.dZ * node.time;
-			node.a = 0.3f;
+			/*node.x = node.originX + node.dX * node.time;
+			node.z = node.originZ + node.dZ * node.time;*/
+			node.a = min(0.6f, 1.0f - node.time / node.timeCap);
 			node.active = node.time < node.timeCap;
 			return node;
 		};

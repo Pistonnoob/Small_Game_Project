@@ -19,7 +19,8 @@ public:
     void setMoveDir(DirectX::XMFLOAT3 newMoveDir);
     void setPos(DirectX::XMFLOAT3 newPos);
     DirectX::XMFLOAT3 getOrigin();
-    DirectX::XMFLOAT3 getMoveDir();
+	DirectX::XMFLOAT3 getMoveDir();
+	DirectX::XMFLOAT3 GetAimDir();
     DirectX::XMFLOAT3 getPos();
 	unsigned int GetDamage();
 

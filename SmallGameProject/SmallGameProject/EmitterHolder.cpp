@@ -40,7 +40,7 @@ bool EmitterHolder::AddParticle(float x, float y, float z, float minSize, float 
 	toInsert.g = g;
 	toInsert.b = b;
 	toInsert.a = 0.4f;
-	toInsert.uCoord = 0.0f;
+	toInsert.uCoord = textureIndex;
 	if (this->currentParticleCnt < this->maxParticles)
 	{
 		//Insert it into our particle list

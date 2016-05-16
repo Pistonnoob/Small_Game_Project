@@ -112,9 +112,9 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
 		DirectX::XMFLOAT3 position = entity->GetPosition();
 		DirectX::XMFLOAT3 aimDir = entity->GetAimDir();
-		position.x += aimDir.x;
-		position.y += aimDir.y;
-		position.z += aimDir.z;
+		position.x += aimDir.x / 2;
+		position.y += aimDir.y / 2;
+		position.z += aimDir.z / 2;
 		newEmitter->ApplyPosition(position);
 	}
 		break;
@@ -130,9 +130,16 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::MELEE_MOVING:
 		break;
 	case Events::MELEE_DEAD:
+	{
 		newEmitter = new EmitterExplosion();
+		DirectX::XMFLOAT3 position = entity->GetPosition();
+		DirectX::XMFLOAT3 aimDir = entity->GetAimDir();
+		position.x += aimDir.x / 2;
+		position.y += aimDir.y / 2;
+		position.z += aimDir.z / 2;
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		newEmitter->ApplyPosition(position);
+	}
 		break;
 	case Events::PROJECTILE_CREATED:
 		break;
@@ -140,10 +147,11 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	{
 		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
 		DirectX::XMFLOAT3 entityDirection = entity->GetAimDir();
-		entityDirection.x = 1 - entityDirection.x;
-		entityDirection.y = 1 - entityDirection.y;
-		entityDirection.z = 1 - entityDirection.z;
-		this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.4f, 1.2f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 1.2f, entityDirection.x, entityDirection.z);
+		/*entityDirection.x = entityDirection.x * 0.2f;
+		entityDirection.y = entityDirection.y * 0.2f;
+		entityDirection.z = entityDirection.z * 0.2f;*/
+		//entityDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 0.6f, entityDirection.x, entityDirection.z);
 	}
 		break;
 	case Events::PROJECTILE_DEAD:
@@ -201,6 +209,7 @@ int ParticleHandler::Update(float dT, ID3D11DeviceContext * deviceContext)
  		(*emitter)->Update(dT, deviceContext);
 	}
 	this->spawnEmitter.Update(dT, deviceContext);
+	this->holderEmitter.Update(dT, deviceContext);
 	this->KillEmitters();
 	return result;
 }
@@ -230,6 +239,14 @@ int ParticleHandler::Render(GraphicHandler * gHandler, CameraHandler * camera)
 	}
 	this->spawnEmitter.SetCameraPos(cameraPosition);
 	this->spawnEmitter.Render(gHandler->GetDeviceContext(), &parameters, amountOfParticles);
+	if (!parameters.diffTexture)
+	{
+		result = false;
+	}
+	gHandler->ParticleRender(&parameters, camera, amountOfParticles);
+
+	this->holderEmitter.SetCameraPos(cameraPosition);
+	this->holderEmitter.Render(gHandler->GetDeviceContext(), &parameters, amountOfParticles);
 	if (!parameters.diffTexture)
 	{
 		result = false;
