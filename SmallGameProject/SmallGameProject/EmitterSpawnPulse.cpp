@@ -19,7 +19,7 @@ void EmitterSpawnPulse::ShutdownSpecific()
 
 bool EmitterSpawnPulse::AddSpawnPulse(float x, float y, float z, float minSize, float maxSize, float r, float g, float b, float time)
 {
-	bool result = false;
+	bool result = true;
 
 	//Define the particle we want to insert
 	Particle toInsert;

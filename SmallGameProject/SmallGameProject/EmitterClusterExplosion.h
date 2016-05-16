@@ -13,7 +13,6 @@ private:
 		float x, y, z, scale;
 		float r, g, b, a, uCoord;
 		float dX, dZ;
-		//Not the true distance but close enough
 		float timeCap;
 		float time;
 		bool active;

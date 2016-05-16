@@ -41,6 +41,8 @@ void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * de
 	this->emitters.push_back(newEmitter);
 	this->spawnEmitter = EmitterSpawnPulse();
 	this->spawnEmitter.Initialize(device, this->myTextures.GetTexture(0), 1000.0f);
+	this->holderEmitter = EmitterHolder();
+	this->holderEmitter.Initialize(device, this->myTextures.GetTexture(0), 1000.0f);
 }
 
 void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
@@ -63,14 +65,14 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::PLAYER_DEAD:
 		break;
-    case Events::PLAYER_HIT:
-    {
-        newEmitter = new EmitterClusterExplosion();
-        EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
-        temp->Initialize(device, this->myTextures.GetTexture(0), 0.1f, 0.01f, 10, 0.15f);
-        temp->ApplyPosition(entity->GetPosition());
-    }
-        break;
+	case Events::PLAYER_HIT:
+	{
+		newEmitter = new EmitterClusterExplosion();
+		EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
+		temp->Initialize(device, this->myTextures.GetTexture(0), 0.1f, 0.01f, 10, 0.15f);
+		temp->ApplyPosition(entity->GetPosition());
+	}
+		break;
 	case Events::BOMBER_CREATED:
 	{
 		/*newEmitter = new EmitterEnemySpawn();
@@ -86,9 +88,9 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	case Events::BOMBER_DEAD:
 	{
 		newEmitter = new EmitterClusterExplosion();
-        EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
-        temp->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 6, 0.1f);
-        temp->ApplyPosition(entity->GetPosition());
+		EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
+		temp->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 100, 0.2f);
+		temp->ApplyPosition(entity->GetPosition());
 	}
 		break;
 	case Events::RANGED_CREATED:
@@ -131,18 +133,35 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
 		newEmitter->ApplyPosition(entity->GetPosition());
 		break;
+	case Events::PROJECTILE_CREATED:
+		break;
+	case Events::PROJECTILE_MOVING:
+	{
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		DirectX::XMFLOAT3 entityDirection = entity->GetAimDir();
+		this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.4f, 1.2f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 1.2f, entityDirection.x, entityDirection.z);
+	}
+		break;
+	case Events::PROJECTILE_DEAD:
+	{
+		newEmitter = new EmitterClusterExplosion();
+		EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
+		temp->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 6, 0.1f);
+		temp->ApplyPosition(entity->GetPosition());
+	}
+		break;
 	case Events::IDLE:
 		break;
 	case Events::MOVING:
 		break;
 	case Events::DEAD:
-		newEmitter = new EmitterExplosion();
-		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
-		newEmitter->ApplyPosition(entity->GetPosition());
+		break;
+	case Events::Fire:
 		break;
 	default:
 		break;
 	}
+
 	if (newEmitter)
 	{
 		this->emitters.push_back(newEmitter);
