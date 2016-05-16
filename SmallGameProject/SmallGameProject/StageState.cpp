@@ -905,7 +905,29 @@ Type StageState::ConvertToEnemyType(std::string type)
 
 Events::UNIQUE_FIRE StageState::ConvertToPowerUpType(std::string type)
 {
-	if (type == "A")
+	if (type != "N")
+	{
+		int rng = rand() % 3;
+
+		switch (rng)
+		{
+		case(0) :
+			return Events::UNIQUE_FIRE::ARCFIRE;
+			break;
+		case(1) :
+			return Events::UNIQUE_FIRE::REVERSERBULLETS;
+			break;
+		case(2) :
+			return Events::UNIQUE_FIRE::SPLITFIRE;
+			break;
+		}
+		
+	}
+	else
+	{
+		return Events::UNIQUE_FIRE::NONE;
+	}
+	/*if (type == "A")
 	{
 		return Events::UNIQUE_FIRE::ARCFIRE;
 	}
@@ -920,5 +942,5 @@ Events::UNIQUE_FIRE StageState::ConvertToPowerUpType(std::string type)
 	else
 	{
 		return Events::UNIQUE_FIRE::NONE;
-	}
+	}*/
 }
