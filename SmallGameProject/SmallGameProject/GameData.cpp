@@ -65,14 +65,6 @@ void GameData::Shutdown()
 
     if (this->isGameStageInit)
     {
-		for (int i = 0; i < Modifiers::nrOfWeapons; i++)
-		{
-			weaponArsenal.at(i)->ShutDown();
-			delete weaponArsenal.at(i);
-			weaponArsenal.at(i) = nullptr;
-		}
-
-
 		std::list<PowerUp*>::iterator walker;
 		walker = GameData::powerupArsenal.begin();
 		(*walker)->Shutdown();
@@ -84,6 +76,12 @@ void GameData::Shutdown()
 		(*walker)->Shutdown();
 		delete (*walker);
     }
+	for (int i = 0; i < Modifiers::nrOfWeapons; i++)
+	{
+		weaponArsenal.at(i)->ShutDown();
+		delete weaponArsenal.at(i);
+		weaponArsenal.at(i) = nullptr;
+	}
 	
 	isInstatiated = false;
 	delete single;

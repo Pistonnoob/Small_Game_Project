@@ -134,6 +134,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->enemySubject.AddObserver(&this->myParticleHandler);
 		this->playerSubject.AddObserver(&this->myParticleHandler);
+		this->projectileHandlerSubject.AddObserver(&this->myParticleHandler);
 
 		//Initialize Audio
 		this->audioH.Initialize(*gHandler->GetActiveWindow());
@@ -158,7 +159,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		//Arm thy mind with the knowledge that will lead thy armies to battle!
 		this->m_AI = Ai();
-
 
 
 
