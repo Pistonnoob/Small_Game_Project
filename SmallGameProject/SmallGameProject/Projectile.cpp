@@ -22,13 +22,14 @@ void Projectile::Initialize(Model* model, EntitySubject* entitySubject, float po
 }
 void Projectile::Shutdown()
 {
-	//this->entitySubject->Notify(this,Events::ENTITY::Proj)
+	this->entitySubject->Notify(this, Events::ENTITY::PROJECTILE_DEAD);
     Entity::Shutdown(true);
 }
 void Projectile::update(float deltaTime)
 {
     this->posX += (this->moveDir.x * 100) * deltaTime;
     this->posZ += (this->moveDir.z * 100) * deltaTime;
+	this->entitySubject->Notify(this, Events::ENTITY::PROJECTILE_MOVING);
 }
 void Projectile::setMoveDir(DirectX::XMFLOAT3 newMoveDir)
 {
