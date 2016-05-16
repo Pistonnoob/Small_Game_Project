@@ -394,6 +394,7 @@ bool SoundHandler::PlayWaveFile(char* fileName)
 				return false;
 			}
 
+
 			// Play the contents of the secondary sound buffer.
 			result = secondaryBuffer->Play(0, 0, 0);
 			if (FAILED(result))
