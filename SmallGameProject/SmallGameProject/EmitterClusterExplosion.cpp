@@ -18,7 +18,7 @@ void EmitterClusterExplosion::ShutdownSpecific()
 	this->particles.clear();
 }
 
-bool EmitterClusterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit, float spawnRadius, int particleCount)
+bool EmitterClusterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderResourceView * texture, float timeLimit, float spawnRadius, int particleCount, float particleSize)
 {
 	bool result = false;
 	//Set the texture
@@ -26,6 +26,7 @@ bool EmitterClusterExplosion::Initialize(ID3D11Device * device, ID3D11ShaderReso
 	this->world = DirectX::XMMatrixIdentity();
 	this->emitterTime = timeLimit;
 	this->maxParticles = particleCount;
+	this->particleSize = particleSize;
 
 	//Initialize the emitter
 	result = this->InitializeEmitter(spawningRadius);
@@ -92,8 +93,6 @@ bool EmitterClusterExplosion::InitializeEmitter(float spawnRadius)
 	this->velocityDeviation = 3.0f;
 	this->spawningRadius = spawnRadius;
 	this->height = 6.0f;
-	this->particleSize = 0.2f;
-	this->maxParticles = 100;
 	this->isCompleted = false;
 	//this->particles.reserve(this->maxParticles);
 	this->particles = std::vector<Particle>(this->maxParticles);
