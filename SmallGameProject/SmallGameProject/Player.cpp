@@ -214,6 +214,9 @@ void Player::MoveRight(float deltaTime)
 	if (this->posX < 42.0f) {
 		this->posX += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
+	else {
+		this->posX = 42.0f;
+	}
 }
 
 
@@ -221,6 +224,9 @@ void Player::MoveLeft(float deltaTime)
 {
 	if (this->posX > -42.0f) {
 		this->posX -= (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
+	}
+	else {
+		this->posX = -42.0f;
 	}
 }
 
@@ -230,6 +236,9 @@ void Player::MoveUp(float deltaTime)
 	if (this->posZ < 42.0f) {
 		this->posZ += (0.0000005f * deltaTime * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
 	}
+	else {
+		this->posZ = 42.0f;
+	}
 }
 
 
@@ -237,6 +246,9 @@ void Player::MoveDown(float deltaTime)
 {
 	if (this->posZ > -42.0f) {
 		this->posZ -= (0.0000005f * deltaTime  * (this->playerMovmentSpeed + GameData::GetInstance()->GetPlayerMoveSpeed()) * GameData::GetInstance()->GetWeaponMovementSpeed());
+	}
+	else {
+		this->posZ = -42.0f;
 	}
 }
 
