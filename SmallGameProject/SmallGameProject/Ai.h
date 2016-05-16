@@ -21,10 +21,10 @@ static int RANGED_MAX_DESIRED_DISTANCE = 100;
 static int MELEE_MIN_DESIRED_DISTANCE = 15;
 static int MELEE_MAX_DESIRED_DISTANCE = 20;
 
-static float BORDER_LEFT = -44.0f;
-static float BORDER_RIGHT = 44.0f;
-static float BORDER_UP = 44.0f;
-static float BORDER_DOWN = -44.0f;
+static float BORDER_LEFT = -42.0f;
+static float BORDER_RIGHT = 42.0f;
+static float BORDER_UP = 42.0f;
+static float BORDER_DOWN = -42.0f;
 
 class Ai {
 
