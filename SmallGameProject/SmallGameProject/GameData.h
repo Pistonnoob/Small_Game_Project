@@ -28,15 +28,18 @@ private:
 	static bool isInstatiated;	//Check flag
 	static bool isGameStageInit; //check for powerup list
 	static int nrOfUnlockedPowers;
+	Modifiers::WEAPON equipedWeapon;
 
 	static GameData* single;
 	static int nrOfActivePowerups;
 
 	GameData(GameData const&);
 	int playerHighScore;
+
 	int playerHealth;
 	int playerMovmentSpeed;
 	int playerDamage;
+	float attackSpeed;
 
 	int experience;
 	int points;
@@ -48,8 +51,8 @@ private:
 	//Achivement Related
 	int enemiesKilled;
 
-	//weapom related
-	std::vector<Weapon>weaponArsenal;
+	//weapon related
+	std::vector<Weapon*>weaponArsenal;
 	static std::list<PowerUp*>powerupArsenal;
 
 	bool playerUnlockedWeapons[Modifiers::nrOfWeapons];
@@ -88,7 +91,7 @@ public:
 
 	void Render(GraphicHandler * gHandler, CameraHandler* camera);
 
-	Weapon* GetWeapon(int weaponEnum);
+	Weapon* GetWeapon();
 	int GetEnemiesKilledInStage();
 	int GetScoreInStage();
 	int GetHighScore();
@@ -97,6 +100,13 @@ public:
 	int GetPlayerMoveSpeed();
 	int GetPoints();
 	int GetUnlockedPowerups() const;
+	
+	float GetWeaponAttackMod() const;
+	float GetWeaponHealthMod() const;
+	float GetWeaponMovementSpeed() const;
+
+
+	void equipWeapon(Modifiers::WEAPON);
 };
 
 #endif

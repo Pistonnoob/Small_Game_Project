@@ -37,7 +37,7 @@ StageState::StageState()
 	/*
 	setting up the starting points for the powerups
 	this will spawn in order 0-4 
-
+	
 	*/
 
 	this->spawnPos.push_back(DirectX::XMFLOAT2 (-35.0f, 35.0f));
@@ -113,7 +113,6 @@ void StageState::Shutdown()
 	this->powerUpPointer->Shutdown();
 	delete this->powerUpPointer;
 }
-
 
 int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 {
@@ -293,8 +292,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->uiHandler.CreateTextHolder(32); //dmg
 		this->uiHandler.CreateTextHolder(32); //hp
 		this->uiHandler.CreateTextHolder(32); //movespeed
-
-		GameData::InitializeStageStateGD(device, deviceContext, &this->playerSubject);
 
 		this->timeInStage = std::chrono::system_clock::now();
 		GameData::GetInstance()->NewStage();
