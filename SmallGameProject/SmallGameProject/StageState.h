@@ -15,7 +15,7 @@
 #include "AudioHandler.h"
 #include <chrono>
 
-const int LEVELS_TO_CHECKPOINT = 2;
+const int LEVELS_TO_CHECKPOINT = 5;
 
 struct ToSpawn
 {
@@ -104,7 +104,7 @@ public:
 	virtual int Render(GraphicHandler* gHandler, HWND hwnd);
 
     virtual void ReadFile(std::string fileName);
-    virtual void HandleWaveSpawning(float deltaTime, bool& isCompleted);
+    virtual void HandleWaveSpawning(float deltaTime);
     virtual void SpawnWave(int levelIndex, int waveIndex);
 	virtual void SpawnEnemy(Type type, int pointIndex);
     virtual void RemoveDeadEnemies();

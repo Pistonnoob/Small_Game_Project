@@ -402,9 +402,21 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			}
 		}
 
+
 		float newDT = deltaTime / 1000000;
 
-		HandleWaveSpawning(newDT, this->isCompleted);
+		if (!this->checkpoint && (this->currentLevel + 1) % LEVELS_TO_CHECKPOINT == 0 && this->currentWave == this->levels.at(this->currentLevel).wave.size() - 1 && this->enemies.size() == 0) {
+			this->checkpoint = true;
+			if (this->currentLevel == this->levels.size() - 1) {
+				this->isCompleted = true;
+			}
+		}
+		else {
+			if (this->checkpoint) {
+				this->checkpoint = false;
+			}
+			HandleWaveSpawning(newDT);
+		}
 
 		RemoveDeadEnemies();
 
@@ -433,7 +445,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			this->timeElapsed = 0;
 		}*/
 
-		
+
 
 		//Player - projectile intersection
 		if (this->enemyPjHandler.IntersectionTest(&this->player)) {
@@ -452,7 +464,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 			}
 		}
-	}
+
 		//Enemy - Player intersection
 		for (auto enemy : this->enemies) {
 
@@ -494,9 +506,10 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 				this->powerUpPointer = nullptr;
 			}
 		}
+	}
 	
 	//Check if level is completed
-	if (this->isCompleted && this->enemies.size() == 0) {
+	if ((this->checkpoint || this->isCompleted) && this->enemies.size() == 0) {
 		DirectX::XMFLOAT4 camPos = this->myCamera.GetCameraPos();
 		DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixRotationY(-0.5f);;
 		playerDisplay *= DirectX::XMMatrixRotationX(1.1f);
@@ -517,7 +530,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
 			GameData::GetInstance()->EndStage(true, elaspedTime.count());
 
-			text = "Level " + std::to_string(this->currentLevel) + " completed!";
+			text = "Level " + std::to_string(this->currentLevel + 1) + " completed!";
 			this->uiHandler.UpdateTextHolder(0, text, 320, 90, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 4.0f);
 
 			text = "Mobs killed: " + std::to_string(GameData::GetInstance()->GetEnemiesKilledInStage());
@@ -542,8 +555,11 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		this->uiHandler.UpdateTextHolder(8, text, 375, 425, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 1.5f);
 
 		if (this->uiHandler.WasButtonPressed(1)) {
+			if (this->isCompleted) {
+				this->exitStage = true;	//end stage for testing
+			}
+			this->renderUI = false;
 			this->pauseStage = false;
-			this->exitStage = true;	//end stage for testing
 		}
 		if (this->uiHandler.WasButtonPressed(2)) {
 			GameData::GetInstance()->SpendPointOn(0);
@@ -773,7 +789,7 @@ void StageState::ReadFile(std::string fileName)
     }
 }
 
-void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
+void StageState::HandleWaveSpawning(float deltaTime)
 {
     this->timeToNextWave -= deltaTime;
     if (this->enemies.size() == 0)
@@ -800,7 +816,8 @@ void StageState::HandleWaveSpawning(float deltaTime, bool& isCompleted)
             }
 			else {
 				//If the Level has spawned all waves
-				isCompleted = true;
+				this->isCompleted = true;
+				this->currentLevel--;
 			}
         }
     }
