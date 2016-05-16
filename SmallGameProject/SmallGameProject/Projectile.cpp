@@ -22,6 +22,7 @@ void Projectile::Initialize(Model* model, EntitySubject* entitySubject, float po
 }
 void Projectile::Shutdown()
 {
+	//this->entitySubject->Notify(this,Events::ENTITY::Proj)
     Entity::Shutdown(true);
 }
 void Projectile::update(float deltaTime)

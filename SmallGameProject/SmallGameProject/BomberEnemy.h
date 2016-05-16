@@ -3,7 +3,7 @@
 
 #include "Enemy.h"
 
-static float EXPLOSION_DELAY = 5.0f;
+static float EXPLOSION_DELAY = 0.5f;
 static float B_MOVEMENT_SPEED = 20.0f;
 
 class BomberEnemy : public Enemy {

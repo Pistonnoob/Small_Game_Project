@@ -107,6 +107,11 @@ bool ProjectileHandler::IntersectionTest(Entity * entity)
 			
 			entity->ApplyDamage(projectile->GetDamage());
 			
+			if (entity->GetType() == Type::PLAYER)
+			{
+				this->subject->Notify(projectile, Events::ENTITY::PLAYER_HIT);
+			}
+
 			this->projectiles.at(i)->Shutdown();
 			delete projectile;
 			this->projectiles.erase(this->projectiles.begin() + i);
@@ -234,7 +239,7 @@ void ProjectileHandler::FireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, 
 		z = DirectX::XMVectorGetZ(dirr);
 
 		this->projectiles.push_back(new Projectile(dmg));
-		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, nullptr, pos.x, pos.z, DirectX::XMFLOAT3(x, y, z));
+		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, this->subject, pos.x, pos.z, DirectX::XMFLOAT3(x, y, z));
 
 		dirr = DirectX::XMVector3Transform(dirr, rotation);
 	}
