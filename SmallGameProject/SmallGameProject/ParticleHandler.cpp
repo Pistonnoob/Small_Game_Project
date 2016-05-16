@@ -28,6 +28,7 @@ void ParticleHandler::Shutdown()
 	}
 	this->emitters.clear();
 	this->spawnEmitter.Shutdown();
+	this->holderEmitter.Shutdown();
 }
 
 void ParticleHandler::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext)
@@ -139,6 +140,9 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	{
 		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
 		DirectX::XMFLOAT3 entityDirection = entity->GetAimDir();
+		entityDirection.x = 1 - entityDirection.x;
+		entityDirection.y = 1 - entityDirection.y;
+		entityDirection.z = 1 - entityDirection.z;
 		this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.4f, 1.2f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 1.2f, entityDirection.x, entityDirection.z);
 	}
 		break;
