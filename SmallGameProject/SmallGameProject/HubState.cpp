@@ -196,7 +196,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 
 	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
 
-	if ((playerPos.x < -28.5f && playerPos.x > -31.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
+	if ((playerPos.x < -28.0f && playerPos.x > -32.0f) && (playerPos.z < 32.0f && playerPos.z > 28.0f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
@@ -205,7 +205,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
-	if ((playerPos.x < 1.5f && playerPos.x > -1.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
+	if ((playerPos.x < 2.0f && playerPos.x > -2.0f) && (playerPos.z < 32.0f && playerPos.z > 28.0f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
