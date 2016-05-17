@@ -181,10 +181,12 @@ bool SphereBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* box)
 void SphereBoundingVolume::UpdateBoundingVolume(DirectX::XMMATRIX modelWorldMatrix)
 {
 	DirectX::XMVECTOR pos = DirectX::XMLoadFloat3(&this->localCenter);	// local pos of model and 1 in y
+	//DirectX::XMVECTOR pos = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);	// local pos of model and 1 in y
 	pos = DirectX::XMVector3TransformCoord(pos, modelWorldMatrix);
-	DirectX::XMFLOAT4X4 worldMatrixFloat;
-	DirectX::XMStoreFloat4x4(&worldMatrixFloat, modelWorldMatrix);
-	float scale = worldMatrixFloat._11;
-	this->radius = this->localRadius * scale;
+	//DirectX::XMFLOAT4X4 worldMatrixFloat;
+	//DirectX::XMStoreFloat4x4(&worldMatrixFloat, modelWorldMatrix);
+	//float scale = worldMatrixFloat._11;
+	//this->radius = this->localRadius * scale;
+	this->radius = this->localRadius;
 	DirectX::XMStoreFloat3(&this->center, pos);
 }

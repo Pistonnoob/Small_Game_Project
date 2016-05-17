@@ -6,7 +6,7 @@ Player::Player() : Actor()
 	this->posZ = 0.f;
 	this->playerMovmentSpeed = 100;
 	this->shootCounter = 0;
-	this->health = 100;	
+	this->health = 10000;	
 	this->damage = 100;
 	this->myType = Type::PLAYER;
 

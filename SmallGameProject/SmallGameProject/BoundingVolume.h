@@ -17,6 +17,7 @@ public:
 	virtual void GenerateBounds(Model* model) = 0;
 	virtual bool Intersect(BoundingVolume* otherBoundingVolume) = 0;
 	virtual void UpdateBoundingVolume(DirectX::XMMATRIX modelWorldMatrix) = 0;
+	virtual DirectX::XMFLOAT3 getCenter();
 };
 
 #endif

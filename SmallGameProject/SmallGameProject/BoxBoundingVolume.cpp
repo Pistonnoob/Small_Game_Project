@@ -247,7 +247,7 @@ float* BoxBoundingVolume::getLengths()
 	return this->allLength;
 }
 
-const DirectX::XMFLOAT3 BoxBoundingVolume::getCenter()
+DirectX::XMFLOAT3 BoxBoundingVolume::getCenter()
 {
 	return this->center;
 }

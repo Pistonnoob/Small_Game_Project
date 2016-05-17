@@ -453,7 +453,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			i++;
 
 			if (this->playerProjectile.IntersectionTest(enemy)) {
-
+				int lol = 0;
 			}
 		}
 
@@ -613,26 +613,17 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
         DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
 		float angle = atan2(dirVec.z, dirVec.x);
 
-        if (temp->GetType() == Type::MELEEE || temp->GetType() == Type::BOSS) 
-        {
-            angle -= 3.14f / 2;
-        }
-
         DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 		
-		if (temp->GetType() == Type::BOSS)
-		{
-			//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
-
-			worldMatrix = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f) * worldMatrix;
-
-		}
 		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
 		gHandler->DeferredRender(temp->GetModel(), &this->myCamera);
-
+		/*DirectX::XMFLOAT3 bbPos = temp->GetBV()->getCenter();
+		worldMatrix = DirectX::XMMatrixTranslation(bbPos.x, bbPos.y, bbPos.z);
+		this->m_car.SetWorldMatrix(worldMatrix);
+		gHandler->DeferredRender(&this->m_car, &this->myCamera);*/
 	}
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
@@ -653,21 +644,9 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
 		float angle = atan2(dirVec.z, dirVec.x);
 
-		if (temp->GetType() == Type::MELEEE || temp->GetType() == Type::BOSS)
-        {
-            angle -= 3.14f / 2;
-        }
-
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-        if (temp->GetType() == Type::BOSS)
-        {
-            //this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
-
-            worldMatrix = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f) * worldMatrix;
-
-        }
 
 		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
