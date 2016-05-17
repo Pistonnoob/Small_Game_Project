@@ -57,6 +57,7 @@ private:
 	IDirectSoundBuffer* primaryBuffer;
 	std::vector<IDirectSoundBuffer8*> secondaryBuffers;	//Need one secoundary buffer for each sound
 	std::string fileNames[NUMBER_OF_SOUNDS];
+	bool foundSoundDevice = true;	//Assume that we will find a sound device
 
 	bool InitializeDirectSound(HWND hwnd);
 
