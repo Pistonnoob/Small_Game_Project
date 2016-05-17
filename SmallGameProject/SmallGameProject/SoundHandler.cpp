@@ -9,6 +9,7 @@ SoundHandler::SoundHandler()
 	for (int i = 0; i < NUMBER_OF_SOUNDS; i++) {
 		this->fileNames[i] = "";
 	}
+
 }
 
 SoundHandler::~SoundHandler()
@@ -52,37 +53,39 @@ bool SoundHandler::Initialize(HWND hwnd)
 		return false;
 	}
 
-	for (int i = 0; i < NUMBER_OF_SOUNDS; i++) {
-		this->secondaryBuffers.push_back(nullptr);
-	}
+	if (this->foundSoundDevice == true) {
+		
+		for (int i = 0; i < NUMBER_OF_SOUNDS; i++) {
+			this->secondaryBuffers.push_back(nullptr);
+		}
 
-	// Load the wave audio files onto a secondary buffer. (Onces for each)
-	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\click.wav", &this->secondaryBuffers.at(0));
-	this->fileNames[0] = "click";
-	if (!result)
-	{
-		return false;
-	}
-	
-	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\gun.wav", &this->secondaryBuffers.at(1));
-	this->fileNames[1] = "gun";
-	if (!result)
-	{
-		return false;
-	}
-	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\explosion.wav", &this->secondaryBuffers.at(2));
-	this->fileNames[2] = "explosion";
-	if (!result)
-	{
-		return false;
-	}
-	result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\teleport.wav", &this->secondaryBuffers.at(3));
-	this->fileNames[3] = "teleport";
-	if (!result)
-	{
-		return false;
-	}
+		// Load the wave audio files onto a secondary buffer. (Onces for each)
+		result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\click.wav", &this->secondaryBuffers.at(0));
+		this->fileNames[0] = "click";
+		if (!result)
+		{
+			return false;
+		}
 
+		result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\gun.wav", &this->secondaryBuffers.at(1));
+		this->fileNames[1] = "gun";
+		if (!result)
+		{
+			return false;
+		}
+		result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\explosion.wav", &this->secondaryBuffers.at(2));
+		this->fileNames[2] = "explosion";
+		if (!result)
+		{
+			return false;
+		}
+		result = LoadWaveFile("..\\SmallGameProject\\Resources\\Sounds\\teleport.wav", &this->secondaryBuffers.at(3));
+		this->fileNames[3] = "teleport";
+		if (!result)
+		{
+			return false;
+		}
+	}
 
 
 	return true;
@@ -98,48 +101,50 @@ bool SoundHandler::InitializeDirectSound(HWND hwnd)
 	result = DirectSoundCreate8(NULL, &directSound, NULL);
 	if (FAILED(result))
 	{
-		return false;
+		this->foundSoundDevice = false;
 	}
+	if (this->foundSoundDevice == true) {
+	
+		// Set the cooperative level to priority so the format of the primary sound buffer can be modified.
+		result = directSound->SetCooperativeLevel(hwnd, DSSCL_PRIORITY);
+		if (FAILED(result))
+		{
+			return false;
+		}
 
-	// Set the cooperative level to priority so the format of the primary sound buffer can be modified.
-	result = directSound->SetCooperativeLevel(hwnd, DSSCL_PRIORITY);
-	if (FAILED(result))
-	{
-		return false;
+		// Setup the primary buffer description.
+		bufferDesc.dwSize = sizeof(DSBUFFERDESC);
+		bufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME;
+		bufferDesc.dwBufferBytes = 0;
+		bufferDesc.dwReserved = 0;
+		bufferDesc.lpwfxFormat = NULL;
+		bufferDesc.guid3DAlgorithm = GUID_NULL;
+
+		// Get control of the primary sound buffer on the default sound device.
+		result = directSound->CreateSoundBuffer(&bufferDesc, &primaryBuffer, NULL);
+		if (FAILED(result))
+		{
+			this->foundSoundDevice = false;
+		}
+
+		// Setup the format of the primary sound bufffer.
+		// In this case it is a .WAV file recorded at 44,100 samples per second in 16-bit stereo (cd audio format).
+		waveFormat.wFormatTag = WAVE_FORMAT_PCM;
+		waveFormat.nSamplesPerSec = 44100;
+		waveFormat.wBitsPerSample = 16;
+		waveFormat.nChannels = 2;
+		waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
+		waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
+		waveFormat.cbSize = 0;
+
+		// Set the primary buffer to be the wave format specified.
+		result = primaryBuffer->SetFormat(&waveFormat);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	
 	}
-
-	// Setup the primary buffer description.
-	bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-	bufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME;
-	bufferDesc.dwBufferBytes = 0;
-	bufferDesc.dwReserved = 0;
-	bufferDesc.lpwfxFormat = NULL;
-	bufferDesc.guid3DAlgorithm = GUID_NULL;
-
-	// Get control of the primary sound buffer on the default sound device.
-	result = directSound->CreateSoundBuffer(&bufferDesc, &primaryBuffer, NULL);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Setup the format of the primary sound bufffer.
-	// In this case it is a .WAV file recorded at 44,100 samples per second in 16-bit stereo (cd audio format).
-	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-	waveFormat.nSamplesPerSec = 44100;
-	waveFormat.wBitsPerSample = 16;
-	waveFormat.nChannels = 2;
-	waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
-	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-	waveFormat.cbSize = 0;
-
-	// Set the primary buffer to be the wave format specified.
-	result = primaryBuffer->SetFormat(&waveFormat);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
 	return true;
 }
 
@@ -371,40 +376,41 @@ bool SoundHandler::PlayWaveFile(char* fileName)
 {
 	HRESULT result;
 
-	for (int i = 0; i < NUMBER_OF_SOUNDS; i++) {
+	if (this->foundSoundDevice == true) {
+		for (int i = 0; i < NUMBER_OF_SOUNDS; i++) {
 
-		//Check if we have loaded a sound file with the same file name
-		if (fileName == this->fileNames[i]) {
+			//Check if we have loaded a sound file with the same file name
+			if (fileName == this->fileNames[i]) {
 
-			//Try to play the sound
-			IDirectSoundBuffer8* secondaryBuffer = this->secondaryBuffers.at(i);
+				//Try to play the sound
+				IDirectSoundBuffer8* secondaryBuffer = this->secondaryBuffers.at(i);
 
-			// Set position at the beginning of the sound buffer.
-			result = secondaryBuffer->SetCurrentPosition(0);
-			if (FAILED(result))
-			{
-				return false;
+				// Set position at the beginning of the sound buffer.
+				result = secondaryBuffer->SetCurrentPosition(0);
+				if (FAILED(result))
+				{
+					return false;
+				}
+
+				// Set volume of the buffer to 100%.
+				result = secondaryBuffer->SetVolume(DSBVOLUME_MAX);
+				if (FAILED(result))
+				{
+					return false;
+				}
+
+
+				// Play the contents of the secondary sound buffer.
+				result = secondaryBuffer->Play(0, 0, 0);
+				if (FAILED(result))
+				{
+					return false;
+				}
+
+				return true;	//If we managed to play the sound
 			}
 
-			// Set volume of the buffer to 100%.
-			result = secondaryBuffer->SetVolume(DSBVOLUME_MAX);
-			if (FAILED(result))
-			{
-				return false;
-			}
-
-
-			// Play the contents of the secondary sound buffer.
-			result = secondaryBuffer->Play(0, 0, 0);
-			if (FAILED(result))
-			{
-				return false;
-			}
-
-			return true;	//If we managed to play the sound
 		}
-
 	}
-
 	return false;	//If there was matching file name
 }

@@ -196,7 +196,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 
 	DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
 
-	if ((playerPos.x < -28.5f && playerPos.x > -31.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
+	if ((playerPos.x < -28.0f && playerPos.x > -32.0f) && (playerPos.z < 32.0f && playerPos.z > 28.0f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
@@ -205,7 +205,7 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
-	if ((playerPos.x < 1.5f && playerPos.x > -1.5f) && (playerPos.z < 31.5f && playerPos.z > 28.5f)) {
+	if ((playerPos.x < 2.0f && playerPos.x > -2.0f) && (playerPos.z < 32.0f && playerPos.z > 28.0f)) {
 		this->player.SetPosition(0.0f, 0.0f);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
 		StageState* newStage = new StageState();
@@ -214,6 +214,27 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
+
+	int powerUps = GameData::GetInstance()->GetUnlockedPowerups();
+	std::string arcfireText = "Arcfire unlocked";
+	std::string spitfireText = "Splitfire locked";
+	std::string reverseText = "Reversefire locked";
+	if (powerUps == 2)
+	{
+		spitfireText = "Splitfire unlocked";
+	}
+
+	else if (powerUps == 3)
+	{
+		spitfireText = "Splitfire unlocked";
+		reverseText = "Reversefire unlocked";
+	}
+
+	//400, 500
+	this->hubStatistics.UpdateTextHolder(1, arcfireText, 10, 200, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+	this->hubStatistics.UpdateTextHolder(2, spitfireText, 10, 220, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+	this->hubStatistics.UpdateTextHolder(3, reverseText, 10, 240, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+
 	
 	if (this->exitStage)
 	{

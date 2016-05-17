@@ -402,6 +402,19 @@ bool GameData::LoadPlayerData(std::string filename)
 
 		loadFile.close();
 	}
+
+	//check if achivement is unlocked
+	if (this->enemiesKilled > 40)
+	{
+		//unlock spitfire
+		GameData::nrOfUnlockedPowers = 3;
+	}
+	else if (this->enemiesKilled > 20)
+	{
+		//unlock reversed
+		GameData::nrOfUnlockedPowers = 2;
+	}
+
 	return true;
 }
 

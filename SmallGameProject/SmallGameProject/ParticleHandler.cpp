@@ -112,9 +112,9 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
 		DirectX::XMFLOAT3 position = entity->GetPosition();
 		DirectX::XMFLOAT3 aimDir = entity->GetAimDir();
-		position.x += aimDir.x / 2;
+		/*position.x += aimDir.x / 2;
 		position.y += aimDir.y / 2;
-		position.z += aimDir.z / 2;
+		position.z += aimDir.z / 2;*/
 		newEmitter->ApplyPosition(position);
 	}
 		break;
