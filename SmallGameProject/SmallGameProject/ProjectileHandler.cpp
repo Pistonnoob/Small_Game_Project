@@ -87,15 +87,6 @@ void ProjectileHandler::Render(GraphicHandler * gHandler, CameraHandler* camera)
         this->m_ball.SetWorldMatrix(rotMatrix * worldMatrix);
         gHandler->DeferredRender(&this->m_ball, camera);
     }
-
-	for (auto projectile : this->projectiles)
-	{
-		pos = projectile->GetPosition();
-		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y + 0.5f, pos.z);
-		this->m_ball.SetWorldMatrix(worldMatrix);
-		gHandler->ShadowRender(&this->m_ball, camera);
-	}
-
 }
 bool ProjectileHandler::IntersectionTest(Entity * entity)
 {
