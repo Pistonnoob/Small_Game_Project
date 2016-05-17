@@ -75,6 +75,7 @@ public:
 	static void ShutdownStageStateGD();
 
 	void NewStage();
+	void CheckPoint(float time);
 	void EndStage(bool winner, float time);
 	int SpendPointOn(int stat);
 

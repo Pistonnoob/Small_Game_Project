@@ -524,7 +524,12 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			this->renderUI = true;
 			this->pauseStage = true;
 			std::chrono::duration<double> elaspedTime = std::chrono::system_clock::now() - this->timeInStage;
-			GameData::GetInstance()->EndStage(true, elaspedTime.count());
+			if (this->checkpoint) {
+				GameData::GetInstance()->CheckPoint(elaspedTime.count());
+			}
+			else {
+				GameData::GetInstance()->EndStage(true, elaspedTime.count());
+			}
 
 			text = "Level " + std::to_string(this->currentLevel + 1) + " completed!";
 			this->uiHandler.UpdateTextHolder(0, text, 320, 90, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 4.0f);

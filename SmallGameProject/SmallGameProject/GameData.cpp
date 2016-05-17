@@ -199,6 +199,20 @@ void GameData::NewStage()
 	this->playerScoreStage = 0;
 }
 
+void GameData::CheckPoint(float time)
+{
+	this->playerScoreStage = this->playerScoreStage * (GOAL_TIME / time);
+	if (this->playerScoreStage > this->playerHighScore) {
+		this->playerHighScore = this->playerScoreStage;
+	}
+
+	this->experience += (this->playerScoreStage * EXP_PER_SCORE);
+	while (this->experience > EXP_PER_POINT) {
+		this->experience -= EXP_PER_POINT;
+		this->points++;
+	}
+}
+
 void GameData::EndStage(bool winner, float time)
 {
 	if (winner) {
