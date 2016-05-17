@@ -8,7 +8,9 @@ class SphereBoundingVolume : public BoundingVolume {
 
 private:
 	DirectX::XMFLOAT3 center;
+	DirectX::XMFLOAT3 localCenter;
 	float radius;
+	float localRadius;
 
 	void GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model);
 

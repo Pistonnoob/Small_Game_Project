@@ -77,8 +77,8 @@ void SphereBoundingVolume::GenerateBounds(Model* model)
 	 
 	DirectX::XMFLOAT3 midleVert = DirectX::XMFLOAT3(minVert.x + ((maxVert.x - minVert.x) / 2), minVert.y + ((maxVert.y - minVert.y) / 2), minVert.z + ((maxVert.z - minVert.z) / 2));	//Calculate the midle Vertex
 
-	this->center = DirectX::XMFLOAT3(midleVert);	//Set the bounding spheres midle to the center of the modle
-	this->radius = abs(midleVert.x - minVert.x);	//Set the radius of the sphere to the distance from the midle to the minimum vertex
+	this->localCenter = DirectX::XMFLOAT3(midleVert);	//Set the bounding spheres midle to the center of the modle
+	this->localRadius = abs(midleVert.x - minVert.x);	//Set the radius of the sphere to the distance from the midle to the minimum vertex
 
 }
 
@@ -180,7 +180,11 @@ bool SphereBoundingVolume::BoxIntersectionTest(BoxBoundingVolume* box)
 
 void SphereBoundingVolume::UpdateBoundingVolume(DirectX::XMMATRIX modelWorldMatrix)
 {
-	DirectX::XMVECTOR pos = DirectX::XMVectorSet(0, 1, 0, 1);	// local pos of model and 1 in y
+	DirectX::XMVECTOR pos = DirectX::XMLoadFloat3(&this->localCenter);	// local pos of model and 1 in y
 	pos = DirectX::XMVector3TransformCoord(pos, modelWorldMatrix);
+	DirectX::XMFLOAT4X4 worldMatrixFloat;
+	DirectX::XMStoreFloat4x4(&worldMatrixFloat, modelWorldMatrix);
+	float scale = worldMatrixFloat._11;
+	this->radius = this->localRadius * scale;
 	DirectX::XMStoreFloat3(&this->center, pos);
 }
