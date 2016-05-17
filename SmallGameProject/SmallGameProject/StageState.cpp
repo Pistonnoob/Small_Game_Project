@@ -619,10 +619,10 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
 		gHandler->DeferredRender(temp->GetModel(), &this->myCamera);
-		DirectX::XMFLOAT3 bbPos = temp->GetBV()->getCenter();
+		/*DirectX::XMFLOAT3 bbPos = temp->GetBV()->getCenter();
 		worldMatrix = DirectX::XMMatrixTranslation(bbPos.x, bbPos.y, bbPos.z);
 		this->m_car.SetWorldMatrix(worldMatrix);
-		gHandler->DeferredRender(&this->m_car, &this->myCamera);
+		gHandler->DeferredRender(&this->m_car, &this->myCamera);*/
 	}
 
 	gHandler->DeferredRender(&this->m_ground, &this->myCamera);
