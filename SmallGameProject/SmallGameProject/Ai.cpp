@@ -61,6 +61,19 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 	DirectX::XMFLOAT3 pos = actor->GetPosition();
 
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+
+    if (actor->GetType() == Type::BOSS)
+    {
+        DirectX::XMFLOAT3 dirVec = actor->GetAimDir();
+        float angle = atan2(dirVec.z, dirVec.x);
+
+        angle -= 3.14f / 2;
+        DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
+
+        worldMatrix = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f) * worldMatrix;
+        worldMatrix = rotMatrix * worldMatrix;
+
+    }
 	actor->GetBV()->UpdateBoundingVolume(worldMatrix);
 
     for (int i = 0; i < commands.size(); i++)
@@ -126,11 +139,11 @@ void Ai::updateBoss(Boss* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 {
 	actor->update(playerPos, deltaTime);
 	float distance = distanceBetween(actor->GetPosition(), playerPos);
-	if (distance > 100.0f)
+	if (distance > 50.0f)
 	{
 		this->moveToPlayer(actor, playerPos);
 	}
-	if (distance < 60.0f)
+	if (distance < 20.0f)
 	{
 		this->moveAwayFromPlayer(actor, playerPos);
 	}

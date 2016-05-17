@@ -458,12 +458,12 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 		}
 
 		//Enemy - Player intersection
-		for (auto enemy : this->enemies) {
+		/*for (auto enemy : this->enemies) {
 
 			if (this->player.GetBV()->Intersect(enemy->GetBV())) {
 
 			}
-		}
+		}*/
 
 		//player light
 		DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
@@ -613,9 +613,9 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
         DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
 		float angle = atan2(dirVec.z, dirVec.x);
 
-        if (temp->GetType() == Type::MELEEE) 
+        if (temp->GetType() == Type::MELEEE || temp->GetType() == Type::BOSS) 
         {
-            angle += 3.14f / 2;
+            angle -= 3.14f / 2;
         }
 
         DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
@@ -626,7 +626,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		{
 			//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 
-			worldMatrix = DirectX::XMMatrixScaling(3.0f, 3.0f, 3.0f) * worldMatrix;
+			worldMatrix = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f) * worldMatrix;
 
 		}
 		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
@@ -653,14 +653,22 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		DirectX::XMFLOAT3 dirVec = temp->GetAimDir();
 		float angle = atan2(dirVec.z, dirVec.x);
 
-		if (temp->GetType() == Type::MELEEE)
-		{
-			angle += 3.14f / 2;
-		}
+		if (temp->GetType() == Type::MELEEE || temp->GetType() == Type::BOSS)
+        {
+            angle -= 3.14f / 2;
+        }
 
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
 
 		worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+        if (temp->GetType() == Type::BOSS)
+        {
+            //this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
+
+            worldMatrix = DirectX::XMMatrixScaling(0.2f, 0.2f, 0.2f) * worldMatrix;
+
+        }
+
 		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
 
