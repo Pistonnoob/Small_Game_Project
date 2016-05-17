@@ -61,8 +61,12 @@ void Ai::updateActor(Enemy* actor, DirectX::XMFLOAT3 playerPos, float deltaTime)
 	DirectX::XMFLOAT3 pos = actor->GetPosition();
 
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
+	DirectX::XMFLOAT3 dirVec = actor->GetAimDir();
+	float angle = atan2(dirVec.z, dirVec.x);
 
-	actor->GetBV()->UpdateBoundingVolume(worldMatrix);
+	DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationY(-angle);
+
+	actor->GetBV()->UpdateBoundingVolume(rotMatrix*worldMatrix);
 
     for (int i = 0; i < commands.size(); i++)
     {
