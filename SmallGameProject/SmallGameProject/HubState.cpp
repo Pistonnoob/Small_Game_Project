@@ -214,6 +214,27 @@ int HubState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHand
 		newStage->SetManualClearing(false);
 		this->m_GSH->PushState(newStage);
 	}
+
+	int powerUps = GameData::GetInstance()->GetUnlockedPowerups();
+	std::string arcfireText = "Arcfire unlocked";
+	std::string spitfireText = "Splitfire locked";
+	std::string reverseText = "Reversefire locked";
+	if (powerUps == 2)
+	{
+		spitfireText = "Splitfire unlocked";
+	}
+
+	else if (powerUps == 3)
+	{
+		spitfireText = "Splitfire unlocked";
+		reverseText = "Reversefire unlocked";
+	}
+
+	//400, 500
+	this->hubStatistics.UpdateTextHolder(1, arcfireText, 10, 200, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+	this->hubStatistics.UpdateTextHolder(2, spitfireText, 10, 220, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+	this->hubStatistics.UpdateTextHolder(3, reverseText, 10, 240, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f);
+
 	
 	if (this->exitStage)
 	{
