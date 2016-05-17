@@ -414,9 +414,8 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 
 		this->m_AI.updateActors(this->enemies, this->player.GetPosition(), newDT);
 
-
-		this->playerProjectile.Update(newDT);
 		this->player.Update(input, gHandler, &this->myCamera, deltaTime);
+		this->playerProjectile.Update(newDT);
 
 		this->enemyPjHandler.Update(newDT);
 

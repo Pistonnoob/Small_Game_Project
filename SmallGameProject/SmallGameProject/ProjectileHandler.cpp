@@ -119,8 +119,8 @@ bool ProjectileHandler::IntersectionTest(Entity * entity)
         {
             radius = 4;
         }
-        if(xDiff + zDiff < radius)
-        //if (entity->GetBV()->Intersect(projectile->GetBV())) 
+        //if(xDiff + zDiff < radius)
+        if (entity->GetBV()->Intersect(projectile->GetBV())) 
         {
 			
 			entity->ApplyDamage(projectile->GetDamage());
