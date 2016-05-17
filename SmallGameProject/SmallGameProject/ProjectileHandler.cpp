@@ -147,7 +147,7 @@ void ProjectileHandler::OnNotify(Entity* entity, Events::ENTITY evnt)
 		dir.z = z;
 
 		this->projectiles.push_back(new Projectile(entity->GetDamage()));
-		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, nullptr, pos.x, pos.z, dir);
+		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, this->subject, pos.x, pos.z, dir);
 		break;
 	}
 }
