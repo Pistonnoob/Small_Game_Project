@@ -17,9 +17,11 @@ const int SCORE_VALUE_BOMBER = 50;
 const int SCORE_VALUE_MELEE = 100;
 const int SCORE_VALUE_RANGED = 150;
 
-const int EXP_PER_POINT = 10;
+const int EXP_PER_POINT = 100;
 const float EXP_PER_SCORE = 0.1f;
-const int INC_PER_POINT = 10;
+const int DMG_INC_PER_POINT = 5;
+const int HEALTH_INC_PER_POINT = 20;
+const int SPEED_INC_PER_POINT = 2;
 const float GOAL_TIME = 20.0f;
 
 class GameData : public Observer

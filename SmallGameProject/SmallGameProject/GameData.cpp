@@ -229,13 +229,13 @@ int GameData::SpendPointOn(int stat) //0: dmg, 1: hp, 2: speed
 
 	switch (stat) {
 	case 0:
-		this->playerDamage += INC_PER_POINT;
+		this->playerDamage += DMG_INC_PER_POINT;
 		break;
 	case 1:
-		this->playerHealth += INC_PER_POINT;
+		this->playerHealth += HEALTH_INC_PER_POINT;
 		break;
 	case 2:
-		this->playerMovmentSpeed += INC_PER_POINT;
+		this->playerMovmentSpeed += SPEED_INC_PER_POINT;
 		break;
 	default:
 		return -1;
