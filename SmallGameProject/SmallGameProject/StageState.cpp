@@ -232,10 +232,10 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		PointLight light;
 		light.Diffuse = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-		light.Ambient = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		light.Ambient = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
-		light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 0.18f, 0.032f);
+		light.Attenuation = DirectX::XMFLOAT4(13.0f, 0.8f, 0.10f, 0.20f);
 		this->pointLights.push_back(light);
 
         //point lights for the portals 
@@ -266,14 +266,6 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
         light.Position = DirectX::XMFLOAT4(-5.0f, 1.0f, 2.0f, 1.0f);
         light.Attenuation = DirectX::XMFLOAT4(2.0f, 0.8f, 0.01f, 0.032f);
         this->pointLights.push_back(light);
-        //-------
-
-		light.Diffuse = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Ambient = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Specular = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		light.Position = DirectX::XMFLOAT4(15.0f, 1.0f, 15.0f, 1.0f);
-        light.Attenuation = DirectX::XMFLOAT4(50.0f, 1.0f, 1.5f, 0.0f);
-		this->pointLights.push_back(light);
 
 		this->uiHandler.Initialize(gHandler);
 
@@ -473,8 +465,12 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 			}
 		}
 
+		//player light
 		DirectX::XMFLOAT3 playerPos = this->player.GetPosition();
 		this->pointLights.at(0).Position = DirectX::XMFLOAT4(playerPos.x, 1.0f, playerPos.z, 1.0f);
+		float hpPerCent = this->player.GetHealthInPercentage();
+		this->pointLights.at(0).Diffuse = DirectX::XMFLOAT4(1.0f - hpPerCent, hpPerCent, 0.0f, 1.0f);
+		//this->pointLights.at(0).Ambient = DirectX::XMFLOAT4(1.0f - hpPerCent, hpPerCent, 0.0f, 1.0f);
 
 		//if the powerup vector has values, check if intersection has occured
 		if (this->powerUpPointer != nullptr && this->powerUpPointer->GetType() != Events::UNIQUE_FIRE::NONE)

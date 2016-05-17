@@ -59,6 +59,7 @@ public:
 
 	virtual unsigned int GetDamage();
 	virtual bool IsAlive();
+	float GetHealthInPercentage();
 
 	UIHandler* GetUIHandler();
 

@@ -370,6 +370,13 @@ bool Player::IsAlive()
 	return true;
 }
 
+float Player::GetHealthInPercentage()
+{
+	int max = ((this->health + GameData::GetInstance()->GetPlayerHealth()) * GameData::GetInstance()->GetWeaponHealthMod());
+	int current = max - this->damageTaken;
+	return (float)current / (float)max;
+}
+
 UIHandler * Player::GetUIHandler()
 {
 	return &this->uiHandler;
