@@ -103,7 +103,34 @@ bool ProjectileHandler::IntersectionTest(Entity * entity)
 	int i = -1;
 	for (auto projectile : this->projectiles) {
 		i++;
-		if (entity->GetBV()->Intersect(projectile->GetBV())) {
+        DirectX::XMFLOAT3 p1 = entity->GetPosition();
+        DirectX::XMFLOAT3 p2 = projectile->GetPosition();
+        float xDiff = abs(p1.x - p2.x);
+        float zDiff = abs(p1.z - p2.z);
+        float radius = 10.0f;
+        if (entity->GetType() == Type::BOSS)
+        {
+            radius = 10;
+        }
+        if (entity->GetType() == Type::PLAYER)
+        {
+            radius = 5;
+        }
+        if (entity->GetType() == Type::MELEEE)
+        {
+            radius = 5;
+        }
+        if (entity->GetType() == Type::RANGED)
+        {
+            radius = 7;
+        }
+        if (entity->GetType() == Type::BOMBER)
+        {
+            radius = 4;
+        }
+        if(xDiff + zDiff < radius)
+        //if (entity->GetBV()->Intersect(projectile->GetBV())) 
+        {
 			
 			entity->ApplyDamage(projectile->GetDamage());
 			
