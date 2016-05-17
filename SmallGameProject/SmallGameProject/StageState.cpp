@@ -206,7 +206,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
             return false;
         }
 
-        modelResult = this->BossModel.Initialize(device, this->m_deviceContext, "sphere2");
+        modelResult = this->BossModel.Initialize(device, this->m_deviceContext, "tank");
         if (!modelResult)
         {
             return false;
