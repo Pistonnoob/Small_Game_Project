@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib newTank.mtl
+mtllib tank.mtl
 v 1.690889 2.588548 -0.868330
 v 1.690889 2.600211 -0.934477
 v 1.690889 2.633795 -0.992646
