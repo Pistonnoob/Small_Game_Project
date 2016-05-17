@@ -650,7 +650,7 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 		//this->m_car.SetWorldMatrix(rotMatrix * worldMatrix);
 		temp->GetModel()->SetWorldMatrix(rotMatrix * worldMatrix);
 
-		//gHandler->ShadowRender(temp->GetModel(), &this->myCamera);
+		gHandler->ShadowRender(temp->GetModel(), &this->myCamera);
 	}
 
 

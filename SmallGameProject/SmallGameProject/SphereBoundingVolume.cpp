@@ -14,7 +14,6 @@ SphereBoundingVolume::~SphereBoundingVolume()
 
 void SphereBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX::XMFLOAT3& maxVertex, Model* model)
 {
-	DirectX::XMVECTOR vertVec;
 	DirectX::XMFLOAT3 vertFloat;
 	int vertCount = model->GetVertexCount();
 	DirectX::XMFLOAT3 maxVert = DirectX::XMFLOAT3(-D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX);
@@ -23,8 +22,7 @@ void SphereBoundingVolume::GenerateMinMax(DirectX::XMFLOAT3& minVertex, DirectX:
 
 	for (int i = 0; i < vertCount; i++) {
 
-		vertVec = DirectX::XMLoadFloat3(&vertPos->at(i));
-		XMStoreFloat3(&vertFloat, vertVec);
+		vertFloat = vertPos->at(i);
 
 		if (vertFloat.x > maxVert.x) {
 			maxVert.x = vertFloat.x;
