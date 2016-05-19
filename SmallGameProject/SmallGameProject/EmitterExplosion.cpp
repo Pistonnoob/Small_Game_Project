@@ -84,7 +84,7 @@ bool EmitterExplosion::SortParticles()
 bool EmitterExplosion::InitializeEmitter()
 {
 	this->velocity = 3.0f;
-	this->height = 6.0f;
+	this->height = 0.0f;
 	this->particleSize = 0.4f;
 	this->maxParticles = 100;
 	this->isCompleted = false;

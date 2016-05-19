@@ -110,7 +110,7 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	{
 		newEmitter = new EmitterExplosion();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
-		DirectX::XMFLOAT3 position = entity->GetPosition();
+		DirectX::XMFLOAT3 position = entity->GetBV()->getCenter();
 		DirectX::XMFLOAT3 aimDir = entity->GetAimDir();
 		/*position.x += aimDir.x / 2;
 		position.y += aimDir.y / 2;
@@ -145,6 +145,7 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::PROJECTILE_MOVING:
 	{
+
 		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
 		DirectX::XMFLOAT3 entityDirection = entity->GetAimDir();
 		/*entityDirection.x = entityDirection.x * 0.2f;
