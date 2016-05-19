@@ -170,7 +170,9 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		newEmitter = new EmitterClusterExplosion();
 		EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
 		temp->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 6, 0.1f);
-		temp->ApplyPosition(entity->GetPosition());
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		entityPosition.y += 1.5f;
+		temp->ApplyPosition(entityPosition);
 	}
 		break;
 	case Events::IDLE:
