@@ -12,7 +12,7 @@ private:
 
 public:
     Projectile(unsigned int damage);
-    void Initialize(Model* model,EntitySubject* entitySubject, float posX, float posZ, DirectX::XMFLOAT3 moveDir);
+    void Initialize(Model* model,EntitySubject* entitySubject, float posX, float posZ, DirectX::XMFLOAT3 moveDir, Type type);
     void Shutdown();
     virtual ~Projectile();
     void update(float deltaTime);

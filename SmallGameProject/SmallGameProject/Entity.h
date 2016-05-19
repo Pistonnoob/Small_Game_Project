@@ -10,7 +10,9 @@ enum Type {
     RANGED,
     BOMBER,
     PLAYER,
-    BOSS
+    BOSS,
+    PLAYER_PROJECTILE,
+    ENEMY_PROJECTILE
 };
 
 class Entity {

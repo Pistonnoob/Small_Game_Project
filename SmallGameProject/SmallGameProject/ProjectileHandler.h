@@ -27,13 +27,15 @@ private:
 
     EntitySubject* subject;
 
+    Type projectileType;
+
 	Model m_ball;
 	void triggerEvent(trigger_event &evnt, float arc, int nrOfBullets);
     void onProjectileRemoved(int i);
 public:
 	ProjectileHandler();
 	virtual ~ProjectileHandler();
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* subject);
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* subject, Type myType);
 	void ShutDown();
 //<<<<<<< 
 

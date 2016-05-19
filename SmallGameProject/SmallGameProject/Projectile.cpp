@@ -12,12 +12,13 @@ Projectile::~Projectile()
 {
 
 }
-void Projectile::Initialize(Model* model, EntitySubject* entitySubject, float posX, float posZ, DirectX::XMFLOAT3 moveDir)
+void Projectile::Initialize(Model* model, EntitySubject* entitySubject, float posX, float posZ, DirectX::XMFLOAT3 moveDir, Type type)
 {
     this->posX = posX;
     this->posZ = posZ;
     this->moveDir = moveDir;
     this->origin = DirectX::XMFLOAT3(posX, 0, posZ);
+    this->myType = type;
     Entity::Initialize(model, entitySubject, true);
 }
 void Projectile::Shutdown()

@@ -166,7 +166,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		this->enemySubject.AddObserver(GameData::GetInstance());
 
 		//powerupts and projectile handlers
-		this->playerProjectile.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject);
+		this->playerProjectile.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject, Type::PLAYER_PROJECTILE);
 
 		this->playerSubject.AddObserver(&this->playerProjectile);
 		this->playerSubject.AddObserver(GameData::GetInstance());
@@ -179,7 +179,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 
 		this->enemySubject.AddObserver(GameData::GetInstance());
 
-        this->enemyPjHandler.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject);
+        this->enemyPjHandler.Initialize(device, this->m_deviceContext, &this->projectileHandlerSubject, Type::ENEMY_PROJECTILE);
 		
 		//Form thy armies from the clay!
 		this->m_car = Model();

@@ -8,13 +8,13 @@ ProjectileHandler::~ProjectileHandler()
 {
 
 }
-bool ProjectileHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* subject)
+bool ProjectileHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, EntitySubject* subject, Type myType)
 {
 	bool result = true;
     this->subject = subject;
 	result = this->m_ball.Initialize(device, deviceContext, "projectile");
     //result = this->m_ball.Initialize(device, deviceContext, "box");
-
+    this->projectileType = myType;
 	return result;
 }
 void ProjectileHandler::ShutDown()
@@ -145,7 +145,6 @@ bool ProjectileHandler::IntersectionTest(Entity * entity)
 }
 void ProjectileHandler::OnNotify(Entity* entity, Events::ENTITY evnt)
 {
-
 	switch (evnt)
 	{
 	case(Events::ENTITY::Fire) :
@@ -165,7 +164,7 @@ void ProjectileHandler::OnNotify(Entity* entity, Events::ENTITY evnt)
 		dir.z = z;
 
 		this->projectiles.push_back(new Projectile(entity->GetDamage()));
-		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, this->subject, pos.x, pos.z, dir);
+		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, this->subject, pos.x, pos.z, dir, this->projectileType);
 		break;
 	}
 }
@@ -257,7 +256,7 @@ void ProjectileHandler::FireInArc(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 dir, 
 		z = DirectX::XMVectorGetZ(dirr);
 
 		this->projectiles.push_back(new Projectile(dmg));
-		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, this->subject, pos.x, pos.z, DirectX::XMFLOAT3(x, y, z));
+		this->projectiles.at(this->projectiles.size() - 1)->Initialize(&this->m_ball, this->subject, pos.x, pos.z, DirectX::XMFLOAT3(x, y, z), this->projectileType);
 
 		dirr = DirectX::XMVector3Transform(dirr, rotation);
 	}

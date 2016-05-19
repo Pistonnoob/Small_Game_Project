@@ -85,7 +85,7 @@ void Weapon::ShootWeapon(Entity * entity, Events::UNIQUE_FIRE power)
 			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::ARCFIRE, 0.3f, 3);
 			break;
 		case Events::UNIQUE_FIRE::SPLITFIRE:
-			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::SPLITFIRE, 3.14 / 4, 1, 1.0 * 0.75f / 3.0f, 3.14 / 2, 5);
+			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::SPLITFIRE, 3.14 / 4, 1, 1.0 * 0.4f / 3.0f, 3.14 / 2, 5);
 			break;
 		case Events::UNIQUE_FIRE::REVERSERBULLETS:
 			entity->GetEntitySubject()->Notify(entity, Events::UNIQUE_FIRE::REVERSERBULLETS, 0.1f, 3, 0.7f);
