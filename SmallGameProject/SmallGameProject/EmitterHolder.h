@@ -33,7 +33,7 @@ private:
 			/*node.x = node.originX + node.dX * node.time;
 			node.z = node.originZ + node.dZ * node.time;*/
 			node.a = min(0.6f, 1.0f - node.time / node.timeCap);
-			node.active = node.time < node.timeCap;
+			node.active = node.time < node.timeCap && node.a > 0.0f;
 			return node;
 		};
 		//void operator()(Particle& element) { element.time += dT; Algorithm::GetEllipse(element.x, element.y, element.time * element.velocity, element.time, element.time); };

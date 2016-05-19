@@ -145,14 +145,24 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::PROJECTILE_MOVING:
 	{
-
+	 	Type shotBy = entity->GetType();
 		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
 		DirectX::XMFLOAT3 entityDirection = entity->GetAimDir();
 		/*entityDirection.x = entityDirection.x * 0.2f;
 		entityDirection.y = entityDirection.y * 0.2f;
 		entityDirection.z = entityDirection.z * 0.2f;*/
 		//entityDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-		this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 0.6f, entityDirection.x, entityDirection.z);
+		switch (shotBy)
+		{
+		case PLAYER_PROJECTILE:
+			this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.3f, 1.0f, 0.3f, float(1 / 4) * 2, 0.1f, entityDirection.x, entityDirection.z);
+			break;
+		case ENEMY_PROJECTILE:
+			this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 0.3f, entityDirection.x, entityDirection.z);
+			break;
+		default:
+			break;
+		}
 	}
 		break;
 	case Events::PROJECTILE_DEAD:
