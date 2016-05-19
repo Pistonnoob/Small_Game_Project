@@ -6,8 +6,8 @@ Boss::Boss(float posX, float posZ)
 	this->posZ = posZ;
 	this->abilityUsed = 0;
     this->myType = Type::BOSS;
-    this->health = 500;
-    this->damage = 10;
+    this->health = 2000;
+    this->damage = 15;
 }
 Boss::~Boss()
 {
@@ -27,8 +27,8 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 	ArcFire* temp1 = new ArcFire();
 	float arc			= 0.0f;
 	int nrOfProjectiles	= 1;
-	float cooldown		= 0.5f;
-	float attackDelay	= 0.5f;
+	float cooldown		= 0.2f;
+	float attackDelay	= 0.2f;
 	int charges			= 1;
 	float triggerDelay	= 1;
 	temp1->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
@@ -38,22 +38,22 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 	SplitFire* temp2 = new SplitFire();
 	arc						= 3.14f / 2;
 	nrOfProjectiles			= 5;
-	cooldown				= 4;
-	attackDelay				= 1;
+	cooldown				= 2;
+	attackDelay				= 0.5f;
 	charges					= 1;
-	triggerDelay			= 0.5f;
+	triggerDelay			= 0.2f;
 	int projeciltesOnSplit	= 5;
-	float splitArc			= 3.14f / 2;
+	float splitArc			= (3.14f / 2) / 3;
 	temp2->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay, projeciltesOnSplit, splitArc);
 	this->abilities.push_back(temp2);
 
 	ReverseFire* temp3 = new ReverseFire();
 	arc					= 3.14f * 2;
 	nrOfProjectiles		= 15;
-	cooldown			= 8;
-	attackDelay			= 3;
+	cooldown			= 6;
+	attackDelay			= 1.5f;
 	charges				= 1;
-	triggerDelay		= 2.5f;
+	triggerDelay		= 0.35f;
 	temp3->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
 	this->abilities.push_back(temp3);
 

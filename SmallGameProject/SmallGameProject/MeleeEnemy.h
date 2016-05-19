@@ -3,7 +3,7 @@
 
 #include "Enemy.h"
 
-static float M_ATTACK_DELAY = 1.0f;
+static float M_ATTACK_DELAY = 0.75f;
 static float M_MOVEMENT_SPEED = 10.0f;
 
 class MeleeEnemy : public Enemy {

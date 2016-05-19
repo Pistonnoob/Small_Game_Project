@@ -46,7 +46,7 @@ void MeleeEnemy::Fire(float deltaTime)
 {
 	if (this->attackCD > M_ATTACK_DELAY)
 	{
-		this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, 3.14 / 2, 5);
+		this->entitySubject->Notify(this, Events::UNIQUE_FIRE::ARCFIRE, (3.14 / 2) / 3, 5);
 		this->attackCD = 0;
 	}
 	else

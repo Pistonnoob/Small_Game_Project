@@ -122,7 +122,7 @@ void Ai::updateMelee(MeleeEnemy* actor, DirectX::XMFLOAT3 playerPos, float delta
     {
         moveAwayFromPlayer(actor, playerPos);
     }
-	else
+    if (distance < MELEE_MAX_DESIRED_DISTANCE)
 	{
 		this->commands.push_back(new FireCommand());
 	}
