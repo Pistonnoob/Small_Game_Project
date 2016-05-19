@@ -130,7 +130,7 @@ int StartState::HandleInput(InputHandler * input)
 			input->isKeyPressed(DIK_F6) ||
 			input->isKeyPressed(DIK_F7) ||
 			input->isKeyPressed(DIK_F8) ||
-			input->isKeyPressed(DIK_F9) ||
+			/*input->isKeyPressed(DIK_F9) ||*/
 			input->isKeyPressed(DIK_F10) ||
 			input->isKeyPressed(DIK_NUMLOCK) ||
 			input->isKeyPressed(DIK_SCROLL) ||
