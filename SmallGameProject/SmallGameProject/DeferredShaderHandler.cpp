@@ -43,7 +43,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	WCHAR* psFilename = L"../SmallGameProject/DeferredPixelShader.hlsl";
 
 	//Compile the vertex shader code
-	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", 0, 0, &vertexShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_OPTIMIZATION_LEVEL3, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
@@ -55,7 +55,7 @@ bool DeferredShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int scr
 	}
 
 	//Compile the geometry shader code
-	hresult = D3DCompileFromFile(gsFilename, NULL, NULL, "main", "gs_5_0", 0, 0, &geoShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(gsFilename, NULL, NULL, "main", "gs_5_0", D3D10_SHADER_OPTIMIZATION_LEVEL3, 0, &geoShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, gsFilename);
