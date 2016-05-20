@@ -8,6 +8,7 @@ Boss::Boss(float posX, float posZ)
     this->myType = Type::BOSS;
     this->health = 2000;
     this->damage = 15;
+    this->attackDelay = 2.0f;
 }
 Boss::~Boss()
 {
@@ -32,14 +33,13 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 	int charges			= 1;
 	float triggerDelay	= 1;
 	temp1->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
-    //delete temp1;
 	this->abilities.push_back(temp1);
 
 	SplitFire* temp2 = new SplitFire();
 	arc						= 3.14f / 2;
 	nrOfProjectiles			= 5;
 	cooldown				= 2;
-	attackDelay				= 0.5f;
+	attackDelay				= 0.8f;
 	charges					= 1;
 	triggerDelay			= 0.2f;
 	int projeciltesOnSplit	= 5;
@@ -49,9 +49,9 @@ bool Boss::Initialize(Model* model, EntitySubject* entitySubject, bool isSphere,
 
 	ReverseFire* temp3 = new ReverseFire();
 	arc					= 3.14f * 2;
-	nrOfProjectiles		= 15;
+	nrOfProjectiles		= 10;
 	cooldown			= 6;
-	attackDelay			= 1.5f;
+	attackDelay			= 2.5f;
 	charges				= 1;
 	triggerDelay		= 0.35f;
 	temp3->Initialize(arc, nrOfProjectiles, cooldown, attackDelay, charges, triggerDelay);
