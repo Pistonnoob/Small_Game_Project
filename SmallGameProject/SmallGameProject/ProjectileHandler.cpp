@@ -79,7 +79,7 @@ void ProjectileHandler::Render(GraphicHandler * gHandler, CameraHandler* camera)
 {
 	DirectX::XMFLOAT3 pos;
 	DirectX::XMMATRIX worldMatrix;
-    for (auto projectile : this->projectiles)
+    for (auto& projectile : this->projectiles)
     {
         pos = projectile->GetPosition();
         worldMatrix = DirectX::XMMatrixTranslation(pos.x, pos.y + 0.5f, pos.z);
@@ -97,7 +97,7 @@ bool ProjectileHandler::IntersectionTest(Entity * entity)
 {
 	bool result = false;
 	int i = -1;
-	for (auto projectile : this->projectiles) {
+	for (auto& projectile : this->projectiles) {
 		i++;
         DirectX::XMFLOAT3 p1 = entity->GetPosition();
         DirectX::XMFLOAT3 p2 = projectile->GetPosition();
