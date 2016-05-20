@@ -152,7 +152,7 @@ void D3DHandler::CreateDeviceAndContext() throw(...)
 		0,							// default adapter
 		this->clientDriverType,		// D3D_DRIVER_TYPE_HARDWARE, created in the default constructor
 		0,							// no software device
-		D3D11_CREATE_DEVICE_DEBUG,	// flag
+		0,	// flag
 		0, 
 		0,						// default feature level array
 		D3D11_SDK_VERSION,

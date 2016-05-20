@@ -33,7 +33,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 	WCHAR* psFilename = L"../SmallGameProject/LightPixelShader.hlsl";
 
 	//Compile the vertex shader code
-	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &vertexShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", 0, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
@@ -45,7 +45,7 @@ bool LightShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd, int nrOfRe
 	}
 
 	//Compile the pixel shader code
-	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3DCOMPILE_DEBUG, 0, &pixelShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", 0, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);

@@ -33,7 +33,7 @@ bool FontShaderHandler::Initialize(ID3D11Device* device)
 	WCHAR* psFilename = L"../SmallGameProject/FontPixelShader.hlsl";
 
 	//Compile the vertex shader code
-	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", 0, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, vsFilename);
@@ -42,7 +42,7 @@ bool FontShaderHandler::Initialize(ID3D11Device* device)
 	}
 
 	//Compile the pixel shader code
-	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", 0, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, psFilename);

@@ -240,7 +240,7 @@ void ShadowShaderHandler::LoadVertexShaderFromFile() throw(...)
 	ID3D10Blob* errorMessage;
 
 
-	resultHelper = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &this->vertexShaderBuffer, &errorMessage);
+	resultHelper = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", 0, 0, &this->vertexShaderBuffer, &errorMessage);
 	
 	if (FAILED(resultHelper))
 	{

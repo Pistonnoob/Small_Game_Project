@@ -37,7 +37,7 @@ bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	WCHAR* psFilename = L"../SmallGameProject/ParticlePixelShader.hlsl";
 
 	//Compile the vertex shader code
-	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3DCOMPILE_DEBUG, 0, &vertexShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", 0, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
@@ -49,7 +49,7 @@ bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	}
 
 	//Compile the geometry shader code
-	hresult = D3DCompileFromFile(gsFilename, NULL, NULL, "main", "gs_5_0", D3DCOMPILE_DEBUG, 0, &geoShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(gsFilename, NULL, NULL, "main", "gs_5_0", 0, 0, &geoShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, gsFilename);
@@ -61,7 +61,7 @@ bool ParticleShaderHandler::Initialize(ID3D11Device* device, HWND* hwnd)
 	}
 
 	//Compile the pixel shader code
-	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3DCOMPILE_DEBUG, 0, &pixelShaderBuffer, &errorMessage);
+	hresult = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", 0, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(hresult)) {
 		if (errorMessage) {
 			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
