@@ -6,7 +6,7 @@ BomberEnemy::BomberEnemy(float posX, float posZ)
     this->posZ = posZ;
     this->myType = Type::BOMBER;
 	this->health = 100;
-	this->damage = 50;
+	this->damage = 15;
 }
 
 BomberEnemy::~BomberEnemy()
