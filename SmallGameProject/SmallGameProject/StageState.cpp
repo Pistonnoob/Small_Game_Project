@@ -235,7 +235,7 @@ int StageState::Initialize(GraphicHandler* gHandler, GameStateHandler * GSH)
 		light.Ambient = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		light.Specular = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 		light.Position = DirectX::XMFLOAT4(0.0f, 1.0f, -4.0f, 1.0f);
-		light.Attenuation = DirectX::XMFLOAT4(13.0f, 0.8f, 0.10f, 0.20f);
+		light.Attenuation = DirectX::XMFLOAT4(13.0f, 0.4f, 0.10f, 0.20f);
 		this->pointLights.push_back(light);
 
         //point lights for the portals 
