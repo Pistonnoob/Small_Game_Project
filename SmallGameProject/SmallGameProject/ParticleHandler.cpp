@@ -155,7 +155,7 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		switch (shotBy)
 		{
 		case PLAYER_PROJECTILE:
-			this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.3f, 1.0f, 0.3f, float(1 / 4) * 2, 0.1f, entityDirection.x, entityDirection.z);
+			this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.3f, 1.0f, 0.3f, float(1 / 4) * 2, 0.3f, entityDirection.x, entityDirection.z);
 			break;
 		case ENEMY_PROJECTILE:
 			this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 0.3f, entityDirection.x, entityDirection.z);
