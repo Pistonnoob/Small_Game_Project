@@ -110,7 +110,7 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 	{
 		newEmitter = new EmitterExplosion();
 		newEmitter->Initialize(this->device, this->myTextures.GetTexture(0), 1.0f);
-		DirectX::XMFLOAT3 position = entity->GetPosition();
+		DirectX::XMFLOAT3 position = entity->GetBV()->getCenter();
 		DirectX::XMFLOAT3 aimDir = entity->GetAimDir();
 		/*position.x += aimDir.x / 2;
 		position.y += aimDir.y / 2;
@@ -145,13 +145,24 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		break;
 	case Events::PROJECTILE_MOVING:
 	{
+	 	Type shotBy = entity->GetType();
 		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
 		DirectX::XMFLOAT3 entityDirection = entity->GetAimDir();
 		/*entityDirection.x = entityDirection.x * 0.2f;
 		entityDirection.y = entityDirection.y * 0.2f;
 		entityDirection.z = entityDirection.z * 0.2f;*/
 		//entityDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-		this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 0.6f, entityDirection.x, entityDirection.z);
+		switch (shotBy)
+		{
+		case PLAYER_PROJECTILE:
+			this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.3f, 1.0f, 0.3f, float(1 / 4) * 2, 0.1f, entityDirection.x, entityDirection.z);
+			break;
+		case ENEMY_PROJECTILE:
+			this->holderEmitter.AddParticle(entityPosition.x, entityPosition.y, entityPosition.z, 0.05f, 0.3f, 0.9f, 0.05f, 0.05f, float(1 / 4) * 2, 0.3f, entityDirection.x, entityDirection.z);
+			break;
+		default:
+			break;
+		}
 	}
 		break;
 	case Events::PROJECTILE_DEAD:
@@ -159,7 +170,9 @@ void ParticleHandler::OnNotify(Entity * entity, Events::ENTITY evnt)
 		newEmitter = new EmitterClusterExplosion();
 		EmitterClusterExplosion* temp = (EmitterClusterExplosion*)newEmitter;
 		temp->Initialize(device, this->myTextures.GetTexture(0), 4.0f, 0.1f, 6, 0.1f);
-		temp->ApplyPosition(entity->GetPosition());
+		DirectX::XMFLOAT3 entityPosition = entity->GetPosition();
+		entityPosition.y += 1.5f;
+		temp->ApplyPosition(entityPosition);
 	}
 		break;
 	case Events::IDLE:
