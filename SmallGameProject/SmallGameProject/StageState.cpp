@@ -506,7 +506,7 @@ int StageState::Update(float deltaTime, InputHandler* input, GraphicHandler* gHa
 	//Check if level is completed
 	if ((this->checkpoint || this->isCompleted) && this->enemies.size() == 0) {
 		DirectX::XMFLOAT4 camPos = this->myCamera.GetCameraPos();
-		DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixRotationY(-0.5f);;
+		DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixRotationY(-2.2f);;
 		playerDisplay *= DirectX::XMMatrixRotationX(1.1f);
 		//DirectX::XMMATRIX playerDisplay = DirectX::XMMatrixTranslation(camPos.x - 2.5f, camPos.y - 8.0f, camPos.z + 3.0f);
 		//playerDisplay *= DirectX::XMMatrixRotationX(3.0f);
