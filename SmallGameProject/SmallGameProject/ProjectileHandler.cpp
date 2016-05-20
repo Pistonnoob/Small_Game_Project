@@ -12,7 +12,12 @@ bool ProjectileHandler::Initialize(ID3D11Device* device, ID3D11DeviceContext* de
 {
 	bool result = true;
     this->subject = subject;
-	result = this->m_ball.Initialize(device, deviceContext, "projectile");
+	if (myType == Type::ENEMY_PROJECTILE) {
+		result = this->m_ball.Initialize(device, deviceContext, "projectile");
+	}
+	else {
+		result = this->m_ball.Initialize(device, deviceContext, "projectileG");
+	}
     //result = this->m_ball.Initialize(device, deviceContext, "box");
     this->projectileType = myType;
 	return result;

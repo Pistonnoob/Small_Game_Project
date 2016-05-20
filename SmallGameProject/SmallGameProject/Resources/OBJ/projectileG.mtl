@@ -1,0 +1,8 @@
+newmtl projectileRed
+illum 4
+Kd 0.00 1.00 0.00
+Ka 0.00 1.00 0.00 
+Ks 1.00 0.10 0.10 
+Ns 1.0000
+Tf 1.00 1.00 1.00
+Ni 1.00
