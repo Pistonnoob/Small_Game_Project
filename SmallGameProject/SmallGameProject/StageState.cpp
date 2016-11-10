@@ -254,6 +254,6 @@ int StageState::Render(GraphicHandler * gHandler, HWND hwnd)
 	gHandler->LightRender(this->myCamera.GetCameraPos());
 
 	this->myParticleHandler.Render(gHandler, &this->myCamera);
-
+	gHandler->SetDeferredRTVs();
 	return result;
 }
